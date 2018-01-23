@@ -2,7 +2,42 @@
 
 Modified from https://github.com/MakingSense/code-style-guides/blob/master/CSharp/README.md
 
+## Table of Contents
+
+1. [General](#general)
+1. [Layout](#layout)
+1. [Spacing](#spacing)
+1. [Ordering](#ordering)
+1. [Naming](#naming)
+1. [Unity Specific](#unity-specific)
+
 ## General
+
+### Only one public class per .cs file
+Feel free to include as many internal classes to that public class as you want. However, there should only be one main public classs per file.
+
+### All classes and enums should be in a namespace
+
+Enums can be both in the scope of a class and a namespace. We prefer to put it in the scope of the namespace for ease of access.
+
+```csharp
+namespace GameStudio
+{
+
+    public enum GameState
+    {
+        Idle,
+        Ready,
+        Playing,
+        Game Over
+    }
+
+    public class GameManager : Monobehaviour
+    {
+        //...
+    }
+}
+```
 
 ### Use var instead of explicit types
 
@@ -124,6 +159,8 @@ public void SomeMethod()
 ```
 
 ### Remove unused or redundant *using* statements (or directives)
+
+They are usually grayed out and suggested to be removed anyways.
 
 ### Use single line and lambda getters for simple methods and read-only properties
 
@@ -485,3 +522,33 @@ public class GameManager : MonoBehaviour
     public bool respawnOnDeath = false;
 //...
 }
+```
+
+### Don't leave blank Unity Messages in your code
+
+They still add overhead even though they don't contain anything!
+
+```csharp
+// Bad
+void Start()
+{
+
+}
+
+void Update()
+{
+
+}
+```
+
+### Use the Generic overload of a method if it exists
+
+Most notable for GetComponent.
+
+```csharp
+// Bad
+ HingeJoint hinge = gameObject.GetComponent(typeof(HingeJoint)) as HingeJoint;
+
+// Good
+ HingeJoint hinge = gameObject.GetComponent<HingeJoint>();
+```
