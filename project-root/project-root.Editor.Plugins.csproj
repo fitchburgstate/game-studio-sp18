@@ -5,16 +5,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8C3967EF-EA5C-CD2A-F191-ADB2A5FEC7D2}</ProjectGuid>
+    <ProjectGuid>{A6731AE9-1EFC-B8CC-D9B9-C5B33FE1E08A}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>com.unity.postprocessing.Editor</AssemblyName>
+    <AssemblyName>Assembly-CSharp-Editor-firstpass</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile></TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
-    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityProjectType>EditorPlugins:7</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
     <RootNamespace></RootNamespace>
@@ -321,44 +321,53 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="project-root.Plugins.csproj">
+      <Project>{34C39F0A-EE8D-8D15-C9A1-B15E7A0DFB76}</Project>
+      <Name>project-root.Plugins</Name>
+    </ProjectReference>
+    <ProjectReference Include="com.unity.postprocessing.Editor.csproj">
+      <Project>{8C3967EF-EA5C-CD2A-F191-ADB2A5FEC7D2}</Project>
+      <Name>com.unity.postprocessing.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="com.unity.postprocessing.Runtime.csproj">
       <Project>{43CE4B77-0ED1-06DF-D6D8-916516C0693A}</Project>
       <Name>com.unity.postprocessing.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Attributes\DecoratorAttribute.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Attributes\PostProcessEditorAttribute.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\BaseEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Decorators\AttributeDecorator.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Decorators\Decorators.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Decorators\TrackballDecorator.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\EffectListEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Effects\AmbientOcclusionEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Effects\AutoExposureEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Effects\BloomEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Effects\ColorGradingEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Effects\DefaultPostProcessEffectEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Effects\DepthOfFieldEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Effects\ScreenSpaceReflectionsEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Effects\VignetteEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\PostProcessDebugEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\PostProcessEffectBaseEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\PostProcessEffectEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\PostProcessLayerEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\PostProcessProfileEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\PostProcessVolumeEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Tools\CubeLutAssetFactory.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Tools\CubeLutAssetImporter.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Tools\DefineSetter.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Tools\ProfileFactory.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Tools\ResourceAssetFactory.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Tools\VolumeFactory.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Utils\CurveEditor.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Utils\EditorUtilities.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Utils\GlobalSettings.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Utils\SerializedParameterOverride.cs" />
-    <Compile Include="Assets\Plugins\PostProcessing\Editor\Utils\Styling.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\EditorTextures.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\EditorUtility.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\InControlBuilder.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\InControlInputModuleEditor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\InControlManagerEditor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\InputManagerAssetGenerator.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\iOS\ICadePostProcessor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\iOS\XCodeAPI\PBX\Elements.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\iOS\XCodeAPI\PBX\Lexer.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\iOS\XCodeAPI\PBX\Objects.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\iOS\XCodeAPI\PBX\Parser.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\iOS\XCodeAPI\PBX\Sections.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\iOS\XCodeAPI\PBX\Serializer.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\iOS\XCodeAPI\PBX\Utils.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\iOS\XCodeAPI\PBXProject.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\NativeProfileListGenerator.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\ProfileListGenerator.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\ReorderableList\GenericListAdaptor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\ReorderableList\Internal\GUIHelper.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\ReorderableList\Internal\ReorderableListResources.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\ReorderableList\IReorderableListAdaptor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\ReorderableList\ReorderableListControl.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\ReorderableList\ReorderableListFlags.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\ReorderableList\ReorderableListGUI.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\ReorderableList\SerializedPropertyAdaptor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Editor\UnityProfileListGenerator.cs" />
+    <Compile Include="Assets\Plugins\InControl\Source\Touch\Editor\TouchBuilder.cs" />
+    <Compile Include="Assets\Plugins\InControl\Source\Touch\Editor\TouchButtonControlEditor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Source\Touch\Editor\TouchControlEditor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Source\Touch\Editor\TouchManagerEditor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Source\Touch\Editor\TouchStickControlEditor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Source\Touch\Editor\TouchSwipeControlEditor.cs" />
+    <Compile Include="Assets\Plugins\InControl\Source\Touch\Editor\TouchTrackControlEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\InControl\Readme\CHANGELOG.txt" />

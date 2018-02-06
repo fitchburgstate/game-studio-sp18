@@ -5,19 +5,16 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
 
-    // Use this for initialization
-    void Start ()
+    private GameObject _bigBoy = null;
+    public GameObject inspectorVar;
+    public const int Heck = 5;
+
+    public void Start ()
     {
         var go = new GameObject();
     }
 
     private void Heck ()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update ()
     {
 
     }
