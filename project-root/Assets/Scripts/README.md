@@ -552,3 +552,15 @@ Most notable for GetComponent.
 // Good
  HingeJoint hinge = gameObject.GetComponent<HingeJoint>();
 ```
+
+### Use Lists instead of Arrays
+
+It is easier to add/remove items in Lists than it is to add/remove items in Arrays.
+
+```csharp
+// Bad
+GameObject[] enemies;
+
+// Good
+List<GameObject> enemies = new List<GameObject>();
+```
