@@ -6,7 +6,7 @@ using InControl;
 
 namespace CharacterScripts
 {
-    public class Player : Character, IMoveable<CharacterController, InputDevice>
+    public class Player : Character, IMoveable<CharacterController>
     {
         #region Variables
         // ---------- SET THESE IN THE INSPECTOR ---------- \\
@@ -48,10 +48,10 @@ namespace CharacterScripts
 
         private void Update()
         {
-            Move(controller, myDeviceManager.Device);
+            Move(controller);
         }
 
-        public void Move(CharacterController controller, InputDevice device)
+        public void Move(CharacterController controller)
         {
             moveDirection = new Vector3(myDeviceManager.HorizontalInput, 0, myDeviceManager.VerticalInput);
             moveDirection = transform.TransformDirection(moveDirection);
@@ -60,7 +60,10 @@ namespace CharacterScripts
             agent.destination = playerParent.transform.position;
             agent.updateRotation = false;
 
-            if (device != null)
+            //Debug.Log("Controller Active is " + myDeviceManager.isController);
+            //Debug.Log("Mouse/Keyboard Active is " + myDeviceManager.isMouseKeyboard);
+            
+            if ((myDeviceManager.Device.DeviceStyle == InputDeviceStyle.XboxOne) || (myDeviceManager.Device.DeviceStyle == InputDeviceStyle.Xbox360))
             {
                 headDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
 
@@ -74,26 +77,24 @@ namespace CharacterScripts
                     playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(headDirection), Time.deltaTime * rotateChar);
                 }
             }
-
-            else if (device == null) // If there is no controller, raycast where the mouse pointer is located on the screen and rotate the player accordingly
+            else if ((myDeviceManager.Device.DeviceStyle == InputDeviceStyle.Unknown))
             {
                 var cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
                 var floorHit = new RaycastHit();
 
                 if (Physics.Raycast(cameraRay, out floorHit, cameraRayLength, floorMask))
                 {
                     var playerToMouse = floorHit.point - transform.position;
                     playerToMouse.y = 0f;
-                    var newRotation = Quaternion.LookRotation(playerToMouse);
                     playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(playerToMouse), Time.deltaTime * rotateChar);
                 }
             }
 
+
             controller.Move(moveDirection * Time.deltaTime);
         }
 
-        public void Dash(CharacterController controller, InputDevice device)
+        public void Dash(CharacterController controller)
         {
 
         }

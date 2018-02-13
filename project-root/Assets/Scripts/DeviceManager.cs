@@ -8,10 +8,6 @@ namespace CharacterScripts
 {
     public class DeviceManager : MonoBehaviour
     {
-        public InputDevice Device { get; set; }
-
-        private Controls controls;
-
         public float VerticalInput
         {
             get
@@ -66,9 +62,14 @@ namespace CharacterScripts
 
         private float verticalInput;
         private float horizontalInput;
-
         private float rightStickVertical;
         private float rightStickHorizontal;
+
+        public InputDevice Device { get; set; }
+        private Controls controls;
+
+        public bool isController;
+        public bool isMouseKeyboard;
 
         private void OnEnable()
         {
@@ -77,21 +78,15 @@ namespace CharacterScripts
 
         private void Update()
         {
-            Device = InputManager.ActiveDevice; // Since the game is singleplayer, we don't need to assign a specific controller, we can just call on the active device
+            Device = InputManager.ActiveDevice;
 
-            if (Device != null)
-            {
-                HorizontalInput = controls.move.X;
-                VerticalInput = controls.move.Y;
+            HorizontalInput = controls.move.X;
+            VerticalInput = controls.move.Y;
+            RightStickHorizontal = controls.look.X;
+            RightStickVertical = controls.look.Y;
 
-                RightStickHorizontal = controls.look.X;
-                RightStickVertical = controls.look.Y;
-            }
-            else if (Device == null)
-            {
-                HorizontalInput = controls.move.X;
-                VerticalInput = controls.move.Y;
-            }
+            InputManager.OnActiveDeviceChanged += Device => Debug.Log("Switched: " + Device.Name);
+            Debug.Log("Active Device is " + Device.DeviceStyle);
         }
     }
 }

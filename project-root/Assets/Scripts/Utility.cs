@@ -2,11 +2,11 @@
 using UnityEngine;
 using System.Linq;
 
-public interface IMoveable<T, V>
+public interface IMoveable<T>
 {
-    void Move(T controller, V device);
+    void Move(T controller);
 
-    void Dash(T controller, V device);
+    void Dash(T controller);
 
 }
 

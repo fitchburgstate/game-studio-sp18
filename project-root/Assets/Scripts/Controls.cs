@@ -73,37 +73,41 @@ namespace CharacterScripts
             controls.right.AddDefaultBinding(InputControlType.LeftStickRight);
             controls.right.AddDefaultBinding(InputControlType.DPadRight);
 
-            controls.lookLeft.AddDefaultBinding(Mouse.NegativeX);
+            //controls.lookLeft.AddDefaultBinding(Mouse.NegativeX);
             controls.lookLeft.AddDefaultBinding(InputControlType.RightStickLeft);
 
-            controls.lookRight.AddDefaultBinding(Mouse.PositiveX);
+            //controls.lookRight.AddDefaultBinding(Mouse.PositiveX);
             controls.lookRight.AddDefaultBinding(InputControlType.RightStickRight);
 
-            controls.lookDown.AddDefaultBinding(Mouse.NegativeY);
+            //controls.lookDown.AddDefaultBinding(Mouse.NegativeY);
             controls.lookDown.AddDefaultBinding(InputControlType.RightStickDown);
 
-            controls.lookUp.AddDefaultBinding(Mouse.PositiveY);
+            //controls.lookUp.AddDefaultBinding(Mouse.PositiveY);
             controls.lookUp.AddDefaultBinding(InputControlType.RightStickUp);
 
-            //controls.ListenOptions.IncludeUnknownControllers = true;
-            //controls.ListenOptions.MaxAllowedBindings = 8;
+            #region Unused
+            /*
+            controls.ListenOptions.IncludeUnknownControllers = true;
+            controls.ListenOptions.MaxAllowedBindings = 8;
 
-            //controls.ListenOptions.OnBindingFound = (action, binding) => {
-            //    if (binding == new KeyBindingSource(Key.Escape))
-            //    {
-            //        action.StopListeningForBinding();
-            //        return false;
-            //    }
-            //    return true;
-            //};
+            controls.ListenOptions.OnBindingFound = (action, binding) => {
+                if (binding == new KeyBindingSource(Key.Escape))
+                {
+                    action.StopListeningForBinding();
+                    return false;
+                }
+                return true;
+            };
 
-            //controls.ListenOptions.OnBindingAdded += (action, binding) => {
-            //    Debug.Log("Binding added... " + binding.DeviceName + ": " + binding.Name);
-            //};
+            controls.ListenOptions.OnBindingAdded += (action, binding) => {
+                Debug.Log("Binding added... " + binding.DeviceName + ": " + binding.Name);
+            };
 
-            //controls.ListenOptions.OnBindingRejected += (action, binding, reason) => {
-            //    Debug.Log("Binding rejected... " + reason);
-            //};
+            controls.ListenOptions.OnBindingRejected += (action, binding, reason) => {
+                Debug.Log("Binding rejected... " + reason);
+            };
+            */
+            #endregion
 
             return controls;
         }

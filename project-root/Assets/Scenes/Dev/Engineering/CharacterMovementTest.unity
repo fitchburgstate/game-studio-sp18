@@ -409,6 +409,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114354401425053682, guid: e60ae9f5d1eff0c4a93c61859d8f34b4,
+        type: 2}
+      propertyPath: enableXInput
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e60ae9f5d1eff0c4a93c61859d8f34b4, type: 2}
   m_IsPrefabParent: 0
@@ -519,6 +524,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8d6dd3563c8be4b97d18691acf2fec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isController: 0
+  isMouseKeyboard: 0
 --- !u!1 &1379915166
 GameObject:
   m_ObjectHideFlags: 0
