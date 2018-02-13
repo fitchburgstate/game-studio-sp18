@@ -14,18 +14,21 @@ namespace CharacterScripts
         [Range(0, 20)] public float rotateChar;
         // ------------------------------------------------ \\ 
 
+        // Variables that must be set at Start
         private GameObject playerBody;
         private GameObject playerParent;
         private CharacterController controller;
         private NavMeshAgent agent;
-        public Camera mainCamera;
+        private Camera mainCamera;
 
+        // Player movement variables
         private Vector3 moveDirection = Vector3.zero;
         private Vector3 headDirection = Vector3.zero;
 
-        int floorMask;
-        float cameraRayLength = 100f;
-        DeviceManager myDeviceManager;
+        // Mouse turning variables
+        private int floorMask;
+        private float cameraRayLength = 100f;
+        private DeviceManager myDeviceManager;
 
         #endregion
 
@@ -45,14 +48,7 @@ namespace CharacterScripts
 
         private void Update()
         {
-            if (myDeviceManager.Device != null)
-            {
-                Move(controller, myDeviceManager.Device);
-            }
-            else
-            {
-                Move(controller, myDeviceManager.Device);
-            }
+            Move(controller, myDeviceManager.Device);
         }
 
         public void Move(CharacterController controller, InputDevice device)
@@ -79,7 +75,7 @@ namespace CharacterScripts
                 }
             }
 
-            else if (device == null)
+            else if (device == null) // If there is no controller, raycast where the mouse pointer is located on the screen and rotate the player accordingly
             {
                 var cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -93,6 +89,7 @@ namespace CharacterScripts
                     playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(playerToMouse), Time.deltaTime * rotateChar);
                 }
             }
+
             controller.Move(moveDirection * Time.deltaTime);
         }
 

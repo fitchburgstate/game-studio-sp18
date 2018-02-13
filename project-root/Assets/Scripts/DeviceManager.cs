@@ -81,16 +81,16 @@ namespace CharacterScripts
 
             if (Device != null)
             {
-                HorizontalInput = Device.LeftStick.X;
-                VerticalInput = Device.LeftStick.Y;
+                HorizontalInput = controls.move.X;
+                VerticalInput = controls.move.Y;
 
-                RightStickHorizontal = Device.RightStick.X;
-                RightStickVertical = Device.RightStick.Y;
+                RightStickHorizontal = controls.look.X;
+                RightStickVertical = controls.look.Y;
             }
-            else 
+            else if (Device == null)
             {
-                HorizontalInput = Input.GetAxis("Horizontal");
-                VerticalInput = Input.GetAxis("Vertical");
+                HorizontalInput = controls.move.X;
+                VerticalInput = controls.move.Y;
             }
         }
     }

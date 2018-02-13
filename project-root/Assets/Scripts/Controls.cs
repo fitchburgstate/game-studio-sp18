@@ -21,6 +21,9 @@ namespace CharacterScripts
         public PlayerAction lookDown;
         public PlayerAction lookUp;
 
+        public PlayerTwoAxisAction move;
+        public PlayerTwoAxisAction look;
+
         public Controls()
         {
             confirm = CreatePlayerAction("Confirm");
@@ -36,6 +39,9 @@ namespace CharacterScripts
             lookRight = CreatePlayerAction("Look Right");
             lookDown = CreatePlayerAction("Look Down");
             lookUp = CreatePlayerAction("Look Up");
+
+            move = CreateTwoAxisPlayerAction(left, right, down, up);
+            look = CreateTwoAxisPlayerAction(lookLeft, lookRight, lookDown, lookUp);
         }
 
         public static Controls DefaultBindings()
@@ -79,9 +85,27 @@ namespace CharacterScripts
             controls.lookUp.AddDefaultBinding(Mouse.PositiveY);
             controls.lookUp.AddDefaultBinding(InputControlType.RightStickUp);
 
+            //controls.ListenOptions.IncludeUnknownControllers = true;
+            //controls.ListenOptions.MaxAllowedBindings = 8;
+
+            //controls.ListenOptions.OnBindingFound = (action, binding) => {
+            //    if (binding == new KeyBindingSource(Key.Escape))
+            //    {
+            //        action.StopListeningForBinding();
+            //        return false;
+            //    }
+            //    return true;
+            //};
+
+            //controls.ListenOptions.OnBindingAdded += (action, binding) => {
+            //    Debug.Log("Binding added... " + binding.DeviceName + ": " + binding.Name);
+            //};
+
+            //controls.ListenOptions.OnBindingRejected += (action, binding, reason) => {
+            //    Debug.Log("Binding rejected... " + reason);
+            //};
 
             return controls;
         }
     }
 }
-
