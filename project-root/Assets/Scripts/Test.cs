@@ -13,9 +13,4 @@ public class Test : MonoBehaviour
     {
         var go = new GameObject();
     }
-
-    private void Heck ()
-    {
-        // fuck
-    }
 }
