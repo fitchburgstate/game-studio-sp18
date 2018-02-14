@@ -44,70 +44,65 @@ namespace CharacterScripts
             look = CreateTwoAxisPlayerAction(lookLeft, lookRight, lookDown, lookUp);
         }
 
-        public static Controls DefaultBindings()
+        public static Controls ControllerBindings()
         {
             var controls = new Controls();
-
-            controls.confirm.AddDefaultBinding(Key.Return);
+            
             controls.confirm.AddDefaultBinding(InputControlType.Action1);
-
-            controls.cancel.AddDefaultBinding(Key.Delete);
+            
             controls.cancel.AddDefaultBinding(InputControlType.Action2);
 
             controls.pause.AddDefaultBinding(Key.Escape);
             controls.pause.AddDefaultBinding(InputControlType.Command);
-
-            controls.up.AddDefaultBinding(Key.W);
+            
             controls.up.AddDefaultBinding(InputControlType.LeftStickUp);
             controls.up.AddDefaultBinding(InputControlType.DPadUp);
-
-            controls.down.AddDefaultBinding(Key.S);
+            
             controls.down.AddDefaultBinding(InputControlType.LeftStickDown);
             controls.down.AddDefaultBinding(InputControlType.DPadDown);
-
-            controls.left.AddDefaultBinding(Key.A);
+            
             controls.left.AddDefaultBinding(InputControlType.LeftStickLeft);
             controls.left.AddDefaultBinding(InputControlType.DPadLeft);
-
-            controls.right.AddDefaultBinding(Key.D);
+            
             controls.right.AddDefaultBinding(InputControlType.LeftStickRight);
             controls.right.AddDefaultBinding(InputControlType.DPadRight);
-
-            //controls.lookLeft.AddDefaultBinding(Mouse.NegativeX);
+            
             controls.lookLeft.AddDefaultBinding(InputControlType.RightStickLeft);
-
-            //controls.lookRight.AddDefaultBinding(Mouse.PositiveX);
+            
             controls.lookRight.AddDefaultBinding(InputControlType.RightStickRight);
-
-            //controls.lookDown.AddDefaultBinding(Mouse.NegativeY);
+            
             controls.lookDown.AddDefaultBinding(InputControlType.RightStickDown);
-
-            //controls.lookUp.AddDefaultBinding(Mouse.PositiveY);
+            
             controls.lookUp.AddDefaultBinding(InputControlType.RightStickUp);
 
-            #region Unused
-            /*
-            controls.ListenOptions.IncludeUnknownControllers = true;
-            controls.ListenOptions.MaxAllowedBindings = 8;
+            return controls;
+        }
+        
+        public static Controls KeyboardBindings()
+        {
+            var controls = new Controls();
 
-            controls.ListenOptions.OnBindingFound = (action, binding) => {
-                if (binding == new KeyBindingSource(Key.Escape))
-                {
-                    action.StopListeningForBinding();
-                    return false;
-                }
-                return true;
-            };
+            controls.confirm.AddDefaultBinding(Key.Return);
 
-            controls.ListenOptions.OnBindingAdded += (action, binding) => {
-                Debug.Log("Binding added... " + binding.DeviceName + ": " + binding.Name);
-            };
+            controls.cancel.AddDefaultBinding(Key.Delete);
 
-            controls.ListenOptions.OnBindingRejected += (action, binding, reason) => {
-                Debug.Log("Binding rejected... " + reason);
-            };
-            */
-            #endregion
+            controls.pause.AddDefaultBinding(Key.Escape);
+
+            controls.up.AddDefaultBinding(Key.W);
+
+            controls.down.AddDefaultBinding(Key.S);
+
+            controls.left.AddDefaultBinding(Key.A);
+
+            controls.right.AddDefaultBinding(Key.D);
+
+            controls.lookLeft.AddDefaultBinding(Mouse.NegativeX);
+
+            controls.lookRight.AddDefaultBinding(Mouse.PositiveX);
+
+            controls.lookDown.AddDefaultBinding(Mouse.NegativeY);
+
+            controls.lookUp.AddDefaultBinding(Mouse.PositiveY);
 
             return controls;
         }

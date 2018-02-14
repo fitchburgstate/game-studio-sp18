@@ -65,28 +65,56 @@ namespace CharacterScripts
         private float rightStickVertical;
         private float rightStickHorizontal;
 
-        public InputDevice Device { get; set; }
-        private Controls controls;
-
+        [Tooltip("If true, the active device is a controller. If false, the active device is the keyboard / mouse.")]
         public bool isController;
-        public bool isMouseKeyboard;
 
-        private void OnEnable()
+        public InputDevice Device { get; set; }
+        public Controls controls;
+
+        private void Awake()
         {
-            controls = Controls.DefaultBindings();
+            if (InputManager.Devices.Count == 0)
+            {
+                controls = Controls.KeyboardBindings();
+                isController = false;
+            }
+            else if (InputManager.Devices.Count > 0)
+            {
+                controls = Controls.ControllerBindings();
+                isController = true;
+            }
         }
 
         private void Update()
         {
-            Device = InputManager.ActiveDevice;
-
             HorizontalInput = controls.move.X;
             VerticalInput = controls.move.Y;
             RightStickHorizontal = controls.look.X;
             RightStickVertical = controls.look.Y;
 
-            InputManager.OnActiveDeviceChanged += Device => Debug.Log("Switched: " + Device.Name);
-            Debug.Log("Active Device is " + Device.DeviceStyle);
+            if (controls.pause.WasReleased)
+            {
+                SetBinding();
+            }
+
+
+            //Debug.Log(isController);
+            //InputManager.OnActiveDeviceChanged += Device => Debug.Log("Switched: " + Device.Name);
+            //Debug.Log("Active Device is " + Device.DeviceStyle);
+        }
+
+        public void SetBinding()
+        {
+            if (isController)
+            {
+                controls = Controls.KeyboardBindings();
+                isController = false;
+            }
+            else if (!isController)
+            {
+                controls = Controls.ControllerBindings();
+                isController = true;
+            }
         }
     }
 }
