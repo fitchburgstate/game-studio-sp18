@@ -15,82 +15,35 @@ namespace Hunter.Character
 
         [Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
         [Range(0, 20)] public float rotateChar = 12f;
-
-        [Tooltip("This variable is the amount of health points that the player has. Can be adjusted between a value of 1 and 200.")]
-        [Range(1, 200)] public int playerHealth;
         // ------------------------------------------------ \\ 
 
         // Variables that must be set at Start
-        private GameObject playerBody;
-        private GameObject playerParent;
-        private CharacterController controller;
+        private GameObject player;
+        private GameObject playerRoot;
         private NavMeshAgent agent;
         private Camera mainCamera;
-
-        // Player movement variables
-        private Vector3 moveDirection = Vector3.zero;
-        private Vector3 headDirection = Vector3.zero;
-
-        // Mouse turning variables
-        private int floorMask;
-        private float cameraRayLength = 100f;
         #endregion
 
-        private void Awake()
+        private void Start()
         {
-            playerBody = gameObject.transform.GetChild(0).gameObject;
-            playerParent = gameObject;
-            controller = GetComponent<CharacterController>();
+            player = gameObject.transform.GetChild(0).gameObject; // This will find the player-root gameobject, which means that the only child of this gameobject should be player-root
+            playerRoot = gameObject;
             agent = GetComponent<NavMeshAgent>();
-
             mainCamera = GameObject.FindObjectOfType<Camera>();
-            myDeviceManager = mainCamera.GetComponent<DeviceManager>();
-
-            floorMask = LayerMask.GetMask("Floor");
-            playerParent.transform.forward = mainCamera.transform.forward;
+            playerRoot.transform.forward = mainCamera.transform.forward;
         }
 
 
-        public void Move(CharacterController controller, Vector3 moveDirecton, Vector3 lookDirection)
+        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject playerRoot)
         {
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
 
-            agent.destination = playerParent.transform.position;
+            agent.destination = this.playerRoot.transform.position;
             agent.updateRotation = false;
-            Vector3 result = Vector3.zero;
 
-            playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * rotateChar);
-            //if (!myDeviceManager.isController)
-            //{
-            //    // If the player is using a mouse and keyboard, use raycasting to find the location of the mouse
-            //    // The player will ALWAYS face the mouse direction, even when the mouse is not active
-            //    var cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //    var floorHit = new RaycastHit();
+            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * rotateChar);
 
-            //    if (Physics.Raycast(cameraRay, out floorHit, cameraRayLength, floorMask))
-            //    {
-            //        var playerToMouse = floorHit.point - transform.position;
-            //        playerToMouse.y = 0f;
-            //        playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(playerToMouse), Time.deltaTime * rotateChar);
-            //    }
-            //}
-
-            //if (myDeviceManager.isController)
-            //{
-            //    headDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
-
-            //    // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
-            //    if (moveDirection != Vector3.zero && headDirection == Vector3.zero)                {
-            //        playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(moveDirection), Time.deltaTime * rotateChar);
-            //    }
-            //    // If the right stick is being used, override the character body's rotation to align with the right stick
-            //    else if (headDirection != Vector3.zero)
-            //    {
-            //        playerBody.transform.parent = playerParent.transform;
-            //        playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(headDirection), Time.deltaTime * rotateChar);
-            //    }
-            //}
             controller.Move(moveDirection * Time.deltaTime);
         }
 
