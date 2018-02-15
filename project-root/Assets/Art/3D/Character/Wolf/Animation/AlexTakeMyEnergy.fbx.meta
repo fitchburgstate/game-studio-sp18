@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 6189c9576e661954a89fa5d5e239f2fa
-timeCreated: 1518714578
+guid: 183556de7f4b34d40b23cb6270db0422
+timeCreated: 1518730025
 licenseType: Pro
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Eye Controller
-    100002: //RootNode
+    100000: //RootNode
+    100002: Eye Controller
     100004: Head
     100006: Hip Controller
     100008: IK Chain001
@@ -86,8 +86,8 @@ ModelImporter:
     100156: Upper Jaw Nub
     100158: Upper Spine
     100160: WolfEyes
-    400000: Eye Controller
-    400002: //RootNode
+    400000: //RootNode
+    400002: Eye Controller
     400004: Head
     400006: Hip Controller
     400008: IK Chain001
@@ -174,7 +174,7 @@ ModelImporter:
     3300000: WolfEyes
     4300000: RetopWolfBody
     4300002: WolfEyes
-    7400000: Take 001
+    7400000: lunge
     9500000: //RootNode
     13700000: RetopWolfBody
   externalObjects: {}
@@ -203,7 +203,35 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: lunge
+      takeName: Take 001
+      firstFrame: 130
+      lastFrame: 154
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
