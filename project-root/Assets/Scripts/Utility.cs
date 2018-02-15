@@ -10,19 +10,19 @@ public interface IMoveable<T>
 
 }
 
-public interface IDamageable<T, V>
-{
-    void TakeDamage(T healthValue, V amount);
+//public interface IDamageable<T, V>
+//{
+//    void TakeDamage(T healthValue, V amount);
 
-    void DealDamage(T targetHealthValue, V amount);
-}
+//    void DealDamage(T targetHealthValue, V amount);
+//}
 
-public interface IHealth<T>
-{
-    void SetMaxHealth(T amount);
+//public interface IHealth<T>
+//{
+//    void SetMaxHealth(T amount);
 
-    void SetStartingHealth(T amount);
+//    void SetStartingHealth(T amount);
 
-    void SetCurrentHealth(T amount);
+//    void SetCurrentHealth(T amount);
 
-}
+//}
