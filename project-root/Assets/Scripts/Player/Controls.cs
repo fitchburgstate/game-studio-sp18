@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using InControl;
 
-namespace CharacterScripts
+namespace Hunter.Character
 {
     public class Controls : PlayerActionSet
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UserInterfaceScripts
+namespace Hunter
 {
     public class CameraFollow : MonoBehaviour
     {

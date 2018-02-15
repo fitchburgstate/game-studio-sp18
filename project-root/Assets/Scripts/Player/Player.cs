@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using InControl;
 
-namespace CharacterScripts
+namespace Hunter.Character
 {
-    public class Player : Character, IMoveable<CharacterController>
+    public sealed class Player : Character, IMoveable<CharacterController>
     {
         #region Variables
         // ---------- SET THESE IN THE INSPECTOR ---------- \\
@@ -15,6 +15,9 @@ namespace CharacterScripts
 
         [Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
         [Range(0, 20)] public float rotateChar = 12f;
+
+        [Tooltip("This variable is the amount of health points that the player has. Can be adjusted between a value of 1 and 200.")]
+        [Range(1, 200)] public int playerHealth;
         // ------------------------------------------------ \\ 
 
         // Variables that must be set at Start
@@ -32,10 +35,9 @@ namespace CharacterScripts
         private int floorMask;
         private float cameraRayLength = 100f;
         private DeviceManager myDeviceManager;
-
         #endregion
 
-        private void Start()
+        private void Awake()
         {
             playerBody = gameObject.transform.GetChild(0).gameObject;
             playerParent = gameObject;
