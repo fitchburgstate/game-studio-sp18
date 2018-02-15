@@ -46,6 +46,6 @@
 *.c4d filter=lfs diff=lfs merge=lfs -text
 
 # Scene, prefab and ScriptableObject files
-*.unity merge=unityyamlmerge
+*.unity merge=unityyamlmerge -lockable
 *.prefab merge=unityyamlmerge
 *.asset merge=unityyamlmerge
