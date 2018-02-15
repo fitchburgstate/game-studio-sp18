@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using InControl;
 
-namespace Hunter.Character
+namespace Hunter
 {
     public class DeviceManager : MonoBehaviour
     {

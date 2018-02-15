@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using InControl;
+
 
 namespace Hunter.Character
 {
-    public sealed class Player : Character, IMoveable<CharacterController>
+    public sealed class Player : Character, IMoveable
     {
         #region Variables
         // ---------- SET THESE IN THE INSPECTOR ---------- \\
@@ -34,7 +34,6 @@ namespace Hunter.Character
         // Mouse turning variables
         private int floorMask;
         private float cameraRayLength = 100f;
-        private DeviceManager myDeviceManager;
         #endregion
 
         private void Awake()
@@ -51,51 +50,47 @@ namespace Hunter.Character
             playerParent.transform.forward = mainCamera.transform.forward;
         }
 
-        private void Update()
-        {
-            Move(controller);
-        }
 
-        public void Move(CharacterController controller)
+        public void Move(CharacterController controller, Vector3 moveDirecton, Vector3 lookDirection)
         {
-            moveDirection = new Vector3(myDeviceManager.HorizontalInput, 0, myDeviceManager.VerticalInput);
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
 
             agent.destination = playerParent.transform.position;
             agent.updateRotation = false;
+            Vector3 result = Vector3.zero;
 
-            if (!myDeviceManager.isController)
-            {
-                // If the player is using a mouse and keyboard, use raycasting to find the location of the mouse
-                // The player will ALWAYS face the mouse direction, even when the mouse is not active
-                var cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-                var floorHit = new RaycastHit();
+            playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * rotateChar);
+            //if (!myDeviceManager.isController)
+            //{
+            //    // If the player is using a mouse and keyboard, use raycasting to find the location of the mouse
+            //    // The player will ALWAYS face the mouse direction, even when the mouse is not active
+            //    var cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //    var floorHit = new RaycastHit();
 
-                if (Physics.Raycast(cameraRay, out floorHit, cameraRayLength, floorMask))
-                {
-                    var playerToMouse = floorHit.point - transform.position;
-                    playerToMouse.y = 0f;
-                    playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(playerToMouse), Time.deltaTime * rotateChar);
-                }
-            }
+            //    if (Physics.Raycast(cameraRay, out floorHit, cameraRayLength, floorMask))
+            //    {
+            //        var playerToMouse = floorHit.point - transform.position;
+            //        playerToMouse.y = 0f;
+            //        playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(playerToMouse), Time.deltaTime * rotateChar);
+            //    }
+            //}
 
-            if (myDeviceManager.isController)
-            {
-                headDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
+            //if (myDeviceManager.isController)
+            //{
+            //    headDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
 
-                // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
-                if (moveDirection != Vector3.zero && headDirection == Vector3.zero)                {
-                    playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(moveDirection), Time.deltaTime * rotateChar);
-                }
-                // If the right stick is being used, override the character body's rotation to align with the right stick
-                else if (headDirection != Vector3.zero)
-                {
-                    playerBody.transform.parent = playerParent.transform;
-                    playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(headDirection), Time.deltaTime * rotateChar);
-                }
-            }
-
+            //    // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
+            //    if (moveDirection != Vector3.zero && headDirection == Vector3.zero)                {
+            //        playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(moveDirection), Time.deltaTime * rotateChar);
+            //    }
+            //    // If the right stick is being used, override the character body's rotation to align with the right stick
+            //    else if (headDirection != Vector3.zero)
+            //    {
+            //        playerBody.transform.parent = playerParent.transform;
+            //        playerBody.transform.rotation = Quaternion.Slerp(playerBody.transform.rotation, Quaternion.LookRotation(headDirection), Time.deltaTime * rotateChar);
+            //    }
+            //}
             controller.Move(moveDirection * Time.deltaTime);
         }
 

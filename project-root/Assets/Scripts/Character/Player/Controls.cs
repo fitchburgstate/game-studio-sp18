@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using InControl;
 
-namespace Hunter.Character
-{
+namespace Hunter { 
+
     public class Controls : PlayerActionSet
     {
         public PlayerAction confirm;
