@@ -8,42 +8,39 @@ namespace Hunter.Character
 {
     public sealed class Player : Character, IMoveable
     {
-        #region Variables
         // ---------- SET THESE IN THE INSPECTOR ---------- \\
         [Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
         [Range(0, 20)] public float speed = 5f;
 
         [Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
-        [Range(0, 20)] public float rotateChar = 12f;
+        [Range(0, 2000)] public float rotateChar = 12f;
+
+        private float speedRamp;
+
+        public AnimationCurve rotateAnimation;
         // ------------------------------------------------ \\ 
 
-        // Variables that must be set at Start
-        private GameObject player;
-        private GameObject playerRoot;
-        private NavMeshAgent agent;
-        private Camera mainCamera;
-        #endregion
-
-        private void Start()
-        {
-            player = gameObject.transform.GetChild(0).gameObject; // This will find the player-root gameobject, which means that the only child of this gameobject should be player-root
-            playerRoot = gameObject;
-            agent = GetComponent<NavMeshAgent>();
-            mainCamera = GameObject.FindObjectOfType<Camera>();
-            playerRoot.transform.forward = mainCamera.transform.forward;
-        }
-
-
-        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject playerRoot)
+        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
 
-            agent.destination = this.playerRoot.transform.position;
+            agent.destination = playerRoot.transform.position;
             agent.updateRotation = false;
 
-            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * rotateChar);
+            if (moveDirection.magnitude != 0 || finalDirection.magnitude != 0)
+            {
+                var targetRotation = new Vector3(playerRoot.transform.localEulerAngles.x, Mathf.Atan2(finalDirection.x, finalDirection.z) * Mathf.Rad2Deg, playerRoot.transform.localEulerAngles.z);
 
+                speedRamp = Mathf.Clamp(speedRamp + Time.deltaTime, 0, 1);
+                var changeChar = rotateAnimation.Evaluate(speedRamp) * rotateChar;
+
+                playerRoot.transform.localRotation = Quaternion.RotateTowards(playerRoot.transform.localRotation, Quaternion.Euler(targetRotation), changeChar);
+            }
+            else
+            {
+                speedRamp = 0;
+            }
             controller.Move(moveDirection * Time.deltaTime);
         }
 

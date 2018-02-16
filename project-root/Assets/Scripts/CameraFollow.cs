@@ -14,7 +14,7 @@ namespace Hunter
         public float smoothing = 5f;
 
         private Vector3 offset;
-        private string deviceChangeText = ("Press Escape on the keyboard to change device inputs!"); // For debugging purposes
+        private string deviceChangeText = ("The keyboard/mouse controls do not currently work correctly, please use a controller!"); // For debugging purposes
 
         void Start()
         {
@@ -30,7 +30,7 @@ namespace Hunter
 
         private void OnGUI() // For debugging purposes
         {
-            deviceChangeText = GUI.TextField(new Rect(10, 10, 350, 20), deviceChangeText, 100);
+            deviceChangeText = GUI.TextField(new Rect(10, 10, 500, 20), deviceChangeText, 100);
         }
 
     }
