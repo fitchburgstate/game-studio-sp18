@@ -9,6 +9,8 @@ public class AIInputModule : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private Vector3 lookDirection = Vector3.zero;
 
+    private float rayDistance = 10f;
+
     private GameObject enemyRoot;
     private NavMeshAgent agent;
 
@@ -20,6 +22,8 @@ public class AIInputModule : MonoBehaviour
 
     private void Update()
     {
-
+        var moveEnemy = GetComponent<IMoveable>();
+        var characterController = GetComponent<CharacterController>();
+        var finalDirection = Vector3.zero;
     }
 }

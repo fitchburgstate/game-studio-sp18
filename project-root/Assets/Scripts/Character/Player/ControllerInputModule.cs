@@ -16,8 +16,6 @@ public class ControllerInputModule : MonoBehaviour
     private Camera mainCamera;
     private NavMeshAgent agent;
 
-
-
     private void Start()
     {
         playerRoot = gameObject.transform.GetChild(0).gameObject; // This will find the player-root gameobject, which means that the only child of this gameobject should be player-root
