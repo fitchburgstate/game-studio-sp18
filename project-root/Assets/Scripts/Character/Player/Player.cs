@@ -12,7 +12,7 @@ namespace Hunter.Character
         [Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
         [Range(0, 20)] public float speed = 5f;
 
-        [Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
+        [Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 2,000.")]
         [Range(0, 2000)] public float rotateChar = 12f;
 
         private float speedRamp;
