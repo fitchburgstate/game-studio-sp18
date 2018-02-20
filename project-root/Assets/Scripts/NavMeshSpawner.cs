@@ -5,17 +5,31 @@ using UnityEngine.AI;
 
 public class NavMeshSpawner : MonoBehaviour
 {
-    public GameObject monsterSpawn;
-    Vector3 point;
-    public float time;
-    public bool done;
+    private Vector3 pointOnNavMesh;
+    public GameObject monsterToSpawn;
+    public float countDown;  // add GameObject.Find("Spawner").GetComponent<NavMeshSpawner>().countDown = 0; on enemy script when destroyed
+    public bool doneSpawning;
     public List<GameObject> monsters = new List<GameObject>();
-    //public int enemyIndex;
-    public int spawned;
+    public int spawned; // add GameObject.Find("Spawner").GetComponent<NavMeshSpawner>().spawned--; on enemy script when destroyed
     public int amountToSpawn;
     public int reSpawnTime;
-
     public float range = 10f;
+
+    public void Update()
+    {
+        countDown += Time.deltaTime;
+
+        if (doneSpawning == false)
+        {
+            Invoke("Spawn", 0.1f);
+        }
+        else
+        {
+            
+            Invoke("Spawn", reSpawnTime);
+        }
+    }
+
 
     bool RandomPoint(Vector3 center, float range, out Vector3 result)
     {
@@ -39,47 +53,34 @@ public class NavMeshSpawner : MonoBehaviour
     }
 
 
-     void Spawn()
+    public void Spawn()
     {
         
-        Vector3 point;
+        
         foreach (GameObject go in monsters)
-            if (RandomPoint(transform.position, range, out point ) && amountToSpawn > spawned)
+            if (RandomPoint(transform.position, range, out pointOnNavMesh ) && amountToSpawn > spawned)
         {
                 spawned++;
-                Instantiate(go, point, Quaternion.identity);
+                Instantiate(go, pointOnNavMesh, Quaternion.identity);
                 
                 if (spawned == amountToSpawn)
             {
-                done = true;
+                doneSpawning = true;
                     
                 }
             else
                 {
-                    done = false;
+                    doneSpawning = false;
                 }
            
            
         }
         
     }
-    public void Update()
-    {
-        time += Time.deltaTime;
-
-        if (done == false)
-        {
-            Invoke("Spawn", 0.1f);
-        }
-       if (done == true && time >= reSpawnTime)
-        {
-
-            Invoke("Spawn", 0.1f);
-        }
-    }
+   
     public void MakeWolf()
     {
-        Instantiate(monsterSpawn, point, Quaternion.identity);
+        Instantiate(monsterToSpawn, pointOnNavMesh, Quaternion.identity);
     }
 
 }
