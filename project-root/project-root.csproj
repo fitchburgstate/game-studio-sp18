@@ -335,7 +335,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Test.cs" />
+    <Compile Include="Assets\Scripts\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\Character\Character.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\Minion\Minion.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\Minion\Wolf\Wolf.cs" />
+    <Compile Include="Assets\Scripts\Character\Player\Controls.cs" />
+    <Compile Include="Assets\Scripts\Character\Player\DeviceManager.cs" />
+    <Compile Include="Assets\Scripts\Character\Player\Player.cs" />
+    <Compile Include="Assets\Scripts\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\InControl\Readme\CHANGELOG.txt" />
