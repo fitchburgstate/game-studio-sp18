@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class NavMeshSpawner : MonoBehaviour
 {
+    public GameObject monsterSpawn;
+    Vector3 point;
     public float time;
     public bool done;
     public List<GameObject> monsters = new List<GameObject>();
@@ -75,5 +77,9 @@ public class NavMeshSpawner : MonoBehaviour
             Invoke("Spawn", 0.1f);
         }
     }
-    
+    public void MakeWolf()
+    {
+        Instantiate(monsterSpawn, point, Quaternion.identity);
+    }
+
 }
