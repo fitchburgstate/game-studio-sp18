@@ -5,47 +5,58 @@ using UnityEngine.AI;
 
 public class NavMeshSpawner : MonoBehaviour
 {
-    private Vector3 pointOnNavMesh;
+
+
+
     public GameObject monsterToSpawn;
-    public float countDown;  // add GameObject.Find("Spawner").GetComponent<NavMeshSpawner>().countDown = 0; on enemy script when destroyed
-    public bool doneSpawning;
     public List<GameObject> monsters = new List<GameObject>();
-    public int spawned; // add GameObject.Find("Spawner").GetComponent<NavMeshSpawner>().spawned--; on enemy script when destroyed
-    public int amountToSpawn;
-    public int reSpawnTime;
-    public float range = 10f;
+    [Range(0, 10)] public int amountToSpawn;
+    public int respawnTime;
+    [Range(0, 20)] public float range = 10f;
+    private Vector3 pointOnNavMesh;
+    private bool doneSpawning = true;
+    private List<GameObject> spawnedMonsters = new List<GameObject>();
+    private int spawned;
+
 
     public void Update()
     {
-        countDown += Time.deltaTime;
+        if (spawnedMonsters.Count == 0 && doneSpawning == true)
+        {
+            spawned = 0;
+            StartCoroutine("Respawn");
+        }
+
+        for (var i = spawnedMonsters.Count - 1; i > -1; i--)
+        {
+            if (spawnedMonsters[i] == null)
+                spawnedMonsters.RemoveAt(i);
+        }
 
         if (doneSpawning == false)
         {
-            Invoke("Spawn", 0.1f);
+            StartCoroutine("Spawn");
         }
-        else
-        {
-            
-            Invoke("Spawn", reSpawnTime);
-        }
+
+
     }
 
 
     bool RandomPoint(Vector3 center, float range, out Vector3 result)
     {
-        
+
         for (int i = 0; i < 10; i++)
         {
-            
-            Vector3 randomPoint = center + Random.insideUnitSphere * range;
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomPoint, out hit, 1 , NavMesh.AllAreas))
+
+            var randomPoint = center + Random.insideUnitSphere * range;
+            var hit = new NavMeshHit();
+            if (NavMesh.SamplePosition(randomPoint, out hit, 1, NavMesh.AllAreas))
             {
-               
+
                 result = hit.position;
-                
+
                 return true;
-               
+
             }
         }
         result = Vector3.zero;
@@ -53,31 +64,33 @@ public class NavMeshSpawner : MonoBehaviour
     }
 
 
-    public void Spawn()
+    IEnumerator Spawn()
     {
-        
-        
-        foreach (GameObject go in monsters)
-            if (RandomPoint(transform.position, range, out pointOnNavMesh ) && amountToSpawn > spawned)
+        foreach (var enemy in monsters)
         {
-                spawned++;
-                Instantiate(go, pointOnNavMesh, Quaternion.identity);
-                
-                if (spawned == amountToSpawn)
+            if (RandomPoint(transform.position, range, out pointOnNavMesh) && amountToSpawn > spawned)
             {
-                doneSpawning = true;
-                    
-                }
-            else
+                spawnedMonsters.Add(Instantiate(enemy, pointOnNavMesh, Quaternion.identity));
+                spawned++;
+                if (spawned == amountToSpawn)
                 {
-                    doneSpawning = false;
+                    doneSpawning = true;
                 }
-           
-           
+            }
         }
-        
+
+        yield return null;
     }
-   
+    IEnumerator Respawn()
+    {
+
+        yield return new WaitForSeconds(respawnTime);
+
+        doneSpawning = false;
+
+
+    }
+
     public void MakeWolf()
     {
         Instantiate(monsterToSpawn, pointOnNavMesh, Quaternion.identity);
