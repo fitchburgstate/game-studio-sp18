@@ -14,7 +14,7 @@ public class NavMeshSpawner : MonoBehaviour
     public int respawnTime;
     [Range(0, 20)] public float range = 10f;
     private Vector3 pointOnNavMesh;
-    private bool doneSpawning = true;
+    private bool doneSpawning = false;
     private List<GameObject> spawnedMonsters = new List<GameObject>();
     private int spawned;
 
