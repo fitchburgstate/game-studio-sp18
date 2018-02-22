@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 802615084}
   - component: {fileID: 802615083}
   - component: {fileID: 802615082}
+  - component: {fileID: 802615086}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -197,6 +198,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &802615086
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 802615081}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 0}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings: []
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &1358763657
 GameObject:
   m_ObjectHideFlags: 0
