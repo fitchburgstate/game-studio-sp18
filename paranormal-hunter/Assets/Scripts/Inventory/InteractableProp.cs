@@ -32,6 +32,7 @@ namespace Interactable
                 Instantiate(interactableObject[i], transform.position, transform.rotation);
                 yield return null;
             }
+
             interactableObject.Clear();
         }
 
@@ -44,6 +45,5 @@ namespace Interactable
         {
             Interact();
         }
-
     }
 }
