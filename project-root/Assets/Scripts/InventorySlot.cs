@@ -6,15 +6,19 @@ using UnityEngine.EventSystems;
 namespace Interactable
 {
     public class InventorySlot : DraggableItem
-    {
-        
+    { 
         [HideInInspector]
         public Item item;
-
+        /// <summary>
+        ///  transform of the inventory
+        /// </summary>
+        [HideInInspector]
         public Transform inventoryParent;
-        public Transform currentTransform;
-        public bool inModSlot = false;
-
+       
+        /// <summary>
+        /// if item it in Moddifier slot or not
+        /// </summary>
+        private bool inModSlot = false;
         private RectTransform rectTransform;
         private Image icon;
 
@@ -26,20 +30,20 @@ namespace Interactable
 
         public new void Start()
         {
-            rectTransform.localPosition = new Vector3(0, 0, 0);
+            rectTransform.localPosition = new Vector3(0, 0, 0); //it will set it transform to infront of its parents becuase its a child of it
             canvasGroup = GetComponent<CanvasGroup>();
             inventorySlot = GetComponent<InventorySlot>();
-            inventoryParent = transform.parent.parent;
-            typeOfItem = inventorySlot.item.typeOfItem;
+            inventoryParent = transform.parent.parent; // sets inventory parent to inventory
+            typeOfItem = inventorySlot.item.typeOfItem;  // sets type of item
         }
 
-        public void AddItem(Item newitem)
+        public void AddItem(Item newitem) // adds item information to inventory slot and item
         {
             item = newitem;
             icon.sprite = newitem.icon;
         }
 
-        public override void OnEndDrag(PointerEventData eventData)
+        public override void OnEndDrag(PointerEventData eventData) // removes or adds item from inventory if it is added to mod slot or brought back to inventory 
         {
             base.OnEndDrag(eventData);
 
@@ -53,8 +57,7 @@ namespace Interactable
             {
                 inModSlot = false;
                 Inventory.instance.AddItem(item);
-            }
-            
+            } 
         }
     }
 }

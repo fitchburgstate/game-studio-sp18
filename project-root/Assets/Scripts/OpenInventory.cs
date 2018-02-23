@@ -4,20 +4,22 @@ namespace Intereractable
 {
     public class OpenInventory : MonoBehaviour
     {
-        public GameObject inventory;
+        public GameObject inventory; // opens and closes the inventory used for testing purposes need work
+        private bool openInventory = false; // if the inventroy is open or not
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.I))
+            //TODO change funtion for controller support
+            if (Input.GetKeyDown(KeyCode.I) && openInventory == false)
             {
                 inventory.SetActive(true);
+                openInventory = true;
             }
-
-            if (Input.GetKeyDown(KeyCode.B))
+            else if (Input.GetKeyDown(KeyCode.I) && openInventory == true)
             {
-                inventory.SetActive(false); 
+                inventory.SetActive(false);
+                openInventory = false;
             }
-
         }
     }
 }

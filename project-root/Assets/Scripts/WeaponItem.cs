@@ -9,6 +9,7 @@ namespace Interactable
         public string nameOfWeapon;
         public string weaponDamage;
         public string weaponSpeed;
+        [TextArea]
         public string weaponDescription;
     }
 }

@@ -14,6 +14,27 @@ namespace Interactable
 
         private Animator anim;
 
+        public void Interact()
+        {
+            ShakeObject(); 
+            StartCoroutine(SpawnItems());
+        }
+
+        private void ShakeObject() // plays animation based on string name
+        {
+            anim.SetTrigger(animationName);
+        }
+
+        private IEnumerator SpawnItems() // spawns item in list then clears them  bug where sometimes is would spawn multiple of the same items
+        {
+            for (var i = 0; i < interactableObject.Count; i++)
+            {
+                Instantiate(interactableObject[i], transform.position, transform.rotation);
+                yield return null;
+            }
+            interactableObject.Clear();
+        }
+
         private void Start()
         {
             anim = GetComponent<Animator>();
@@ -22,27 +43,6 @@ namespace Interactable
         private void OnMouseDown()
         {
             Interact();
-        }
-
-        public void Interact()
-        {
-            ShakeObject();
-            StartCoroutine(SpawnItems());
-        }
-
-        private void ShakeObject()
-        {
-            anim.SetTrigger(animationName);
-        }
-
-        private IEnumerator SpawnItems()
-        {
-            for (var i = 0; i < interactableObject.Count; i++)
-            {
-                Instantiate(interactableObject[i], transform.position, transform.rotation);
-                yield return null;
-            }
-            interactableObject.Clear();
         }
 
     }

@@ -24,24 +24,16 @@ namespace Interactable
         private Text speedText;
         private Text descriptionText;
 
-        private void OnEnable()
-        {
-            FindSlots();
-            FillSlots();
-        }
-
-        public void FindSlots()
+        private void FindSlots() // gets all the gameobjects for the weapon display
         {
             imageSlot = GameObject.Find(nameOfImageSlot);
             weaponSlot = GameObject.Find(nameOfWeaponSlot);
             damageSlot = GameObject.Find(weaponDamageSlot);
             speedSlot = GameObject.Find(weaponSpeedSlot);
             descriptionSlot = GameObject.Find(weaponDescriptionSlot);
-
-
         }
 
-        public void FillSlots()
+        private void FillSlots() // Fills the gameobject for the weapon display with information from the weaponItem class
         {
             weaponImage = imageSlot.GetComponent<Image>();
             weaponImage.sprite = weapon.icon;
@@ -53,12 +45,12 @@ namespace Interactable
             speedText.text = weapon.weaponSpeed;
             descriptionText = descriptionSlot.GetComponent<Text>();
             descriptionText.text = weapon.weaponDescription;
-
-
         }
-        
 
-
-
+        private void OnEnable()
+        {
+            FindSlots();
+            FillSlots();
+        }
     }
 }

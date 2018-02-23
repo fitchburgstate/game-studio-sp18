@@ -10,9 +10,9 @@ namespace Interactable
         [Header("Description of item")]
         [TextArea]
         public string itemDescription;
-        [Header("InventoryItem")]
+        [Header("Inventory item sprite")]
         public Sprite icon;
-        [Header("Type of ITem")]
-        public DraggableItem.Slot typeOfItem;
+        [Header("Type of item")]
+        public Slot typeOfItem;
     }
 }
