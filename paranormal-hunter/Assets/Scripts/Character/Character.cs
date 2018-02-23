@@ -12,18 +12,22 @@ namespace Hunter.Character
         /// Name of the Player
         /// </summary>
         public string playerName;
+
         /// <summary>
         /// Health of the Character Object
         /// </summary>
         public int health;
+
         /// <summary>
         /// Current Melee Weapon Equipped on the Character
         /// </summary>
         public Melee melee;
+
         /// <summary>
         /// Current Ranged Weapon Equipped on the Character
         /// </summary>
         public Range range;
+
 
         public Melee CurrentMeleeWeapon
         {

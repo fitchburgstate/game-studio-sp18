@@ -21,10 +21,10 @@ namespace Hunter.Character
         /// <summary>
         /// Sets the element type of the weapon based upon the given options variable
         /// </summary>
-        /// <param name="op">Option for the Element Type</param>
-        public void SetElementType(OPTIONS op)
+        /// <param name="elementTypeOption">Option for the Element Type</param>
+        public void SetElementType(OPTIONS elementTypeOption)
         {
-            switch (op)
+            switch (elementTypeOption)
             {
                 case OPTIONS.Fire:
                     type = new Elements.Fire();

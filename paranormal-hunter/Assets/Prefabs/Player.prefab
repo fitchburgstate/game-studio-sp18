@@ -2702,7 +2702,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1048719594316470}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.2750813, y: 0.4373287, z: 0.06484748}
@@ -2716,7 +2716,7 @@ Animator:
   m_GameObject: {fileID: 1286069134463754}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 699e551450d89cb45a855aeb68db347d, type: 3}
-  m_Controller: {fileID: 9100000, guid: 4afe10f3eae0efd49a4dd5aee81cf276, type: 2}
+  m_Controller: {fileID: 9100000, guid: c1ce23d63637e5442a7319450d6ae7cc, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2735,7 +2735,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 389798393a3ec434bb496be63e67c0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 0}
 --- !u!114 &114071802022366498
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2747,8 +2746,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0258c29db346274c8ca9eaf0312c76f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: Bobert
-  health: 100
+  playerName: Steve
+  health: 125
   melee: {fileID: 114386442162526268}
   range: {fileID: 114701294115314216}
   speed: 5
@@ -2777,6 +2776,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  anim: {fileID: 0}
 --- !u!114 &114386442162526268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2794,7 +2794,7 @@ MonoBehaviour:
   elementType: 1
   critPercent: 25
   isCritical: 0
-  bc: {fileID: 0}
+  weaponBoxCollider: {fileID: 0}
 --- !u!114 &114701294115314216
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2809,12 +2809,12 @@ MonoBehaviour:
   atkSpeed: 1
   recSpeed: 1
   baseDamage: 5
-  elementType: 0
+  elementType: 1
   critPercent: 25
   isCritical: 0
   clipSize: 6
   reloadSpeed: 0
-  range: 6
+  weaponRange: 6
 --- !u!136 &136977552190100016
 CapsuleCollider:
   m_ObjectHideFlags: 1

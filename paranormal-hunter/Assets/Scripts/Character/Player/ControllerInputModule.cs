@@ -67,12 +67,10 @@ public class ControllerInputModule : MonoBehaviour
 
         if (myDeviceManager.Device.RightBumper.WasReleased)
         {
-            Debug.Log("HELLO BITCH");
             player.Attack();
         }
         else if (myDeviceManager.Device.LeftBumper.WasReleased)
         {
-            Debug.Log("BOO BITCH");
             player.SwitchWeapon();
         }
     }

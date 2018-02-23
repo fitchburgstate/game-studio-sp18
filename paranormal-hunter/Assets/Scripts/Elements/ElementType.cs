@@ -26,14 +26,16 @@ namespace Hunter
         /// Weakness of the type
         /// </summary>
         public Type weakness;
+
         /// <summary>
         /// Resistence one of the type, if it has any
         /// </summary>
-        public Type resistence;
+        public Type resistance1;
+
         /// <summary>
         /// Resistence two of the type, if it has any
         /// </summary>
-        public Type resistence2; //2nd Resistance for some element types
+        public Type resistance2;
     }
 }
 

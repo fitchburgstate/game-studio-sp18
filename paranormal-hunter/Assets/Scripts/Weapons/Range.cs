@@ -21,7 +21,7 @@ namespace Hunter.Character
         /// <summary>
         /// Range of the Weapon (affects raycast length)
         /// </summary>
-        public int range;
+        public int weaponRange;
 
         /// <summary>
         /// Hold the weapon's total damage after calulation is complete
@@ -31,12 +31,12 @@ namespace Hunter.Character
         /// <summary>
         /// Holds the distance between the weapon and enemy (used for falloff calculation)
         /// </summary>
-        private float enemyRange;
+        private float distanceBetweenWeaponAndEnemy;
 
         /// <summary>
         /// Holds the fall of ratio to determine damage based on distance travelled
         /// </summary>
-        private float damageFallRatio;
+        private float damageFalloffRatio;
 
         /// <summary>
         /// Variable for holding the amount of shoots fired
@@ -56,11 +56,13 @@ namespace Hunter.Character
         /// </summary>
         public virtual void Shoot()
         {
-            Vector3 fwd = transform.TransformDirection(Vector3.up);
+            var player = UnityEngine.Object.FindObjectOfType<Player>();
             var hit = new RaycastHit();
-            ray.direction = transform.up;
+
             ray.origin = transform.position;
-            if(Physics.Raycast(ray, out hit, range))
+            ray.direction = player.transform.forward;
+
+            if (Physics.Raycast(ray, out hit, weaponRange))
             {
                 var character = hit.collider.GetComponent<Character>();
                 if(character is Enemy)
@@ -68,37 +70,39 @@ namespace Hunter.Character
                     Debug.Log(transform.position);
                     Debug.Log("working");
                     character = character as Enemy;
-                    enemyRange = Vector3.Distance(character.transform.position, transform.position);
-                    damageFallRatio = range / enemyRange;
-                    Attack(character, character.GetComponent<Enemy>().type, character.GetComponent<Enemy>().type.weakness, character.GetComponent<Enemy>().type.resistence, character.GetComponent<Enemy>().type.resistence2, damageFallRatio);
+                    distanceBetweenWeaponAndEnemy = Vector3.Distance(character.transform.position, transform.position);
+                    damageFalloffRatio = weaponRange / distanceBetweenWeaponAndEnemy;
+                    AttackEnemy(character, character.GetComponent<Enemy>().type, character.GetComponent<Enemy>().type.weakness, character.GetComponent<Enemy>().type.resistance1, character.GetComponent<Enemy>().type.resistance2, damageFalloffRatio);
                 }
                 if(character is Player)
                 {
                     character = character as Player;
                     playerRange = Vector3.Distance(character.transform.position, transform.position);
-                    damageFallRatio = range / playerRange;
-                    Attack(character, playerRange);
+                    damageFalloffRatio = weaponRange / playerRange;
+                    AttackPlayer(character, playerRange);
                 }
             }
+
             Ammo();
-            
         }
+
         /// <summary>
         /// Damage function which can take a ratio float value and a bonus double value
         /// </summary>
-        /// <param name="ratio">Ratio for damage fall off</param>
-        /// <param name="bonus">Bonus ratio based on the type of weapon and enemy</param>
+        /// <param name="falloffRatio">Ratio for damage fall off</param>
+        /// <param name="elementDamageBonus">Bonus ratio based on the type of weapon and enemy</param>
         /// <returns></returns>
-        public override int Damage(float ratio, double bonus)
+        public override int Damage(float falloffRatio, double elementDamageBonus)
         {
             //May Need to tweak formula in order to achieve balance
-            if(ratio > 1)
+            if(falloffRatio > 1)
             {
-                ratio = 1;
+                falloffRatio = 1;
             }
-            totalDamage = baseDamage * atkSpeed * ratio * (float)bonus;
+            totalDamage = baseDamage * atkSpeed * falloffRatio * (float)elementDamageBonus;
             return (int)totalDamage;
         }
+
         /// <summary>
         /// Increments clipS variable to determine when the reload happens
         /// </summary>
@@ -112,54 +116,56 @@ namespace Hunter.Character
                 clipS = 0;
             }
         }
+
         /// <summary>
         /// Determines which damage calculation formula is based on the given 
         /// this attack method is used for attacking an enemy
         /// </summary>
         /// <param name="e">Enemy variable</param>
-        /// <param name="et">Enemy type variable</param>
-        /// <param name="weak">Enemy weakness variable</param>
-        /// <param name="res">Enemy 1st resistence variable</param>
-        /// <param name="res2">Enemy 2nd resistence</param>
-        /// <param name="damF">Damage falloff</param>
-        public void Attack(Character c, ElementType et, Type weak, Type res, Type res2, float damF)
+        /// <param name="elementType">Enemy type variable</param>
+        /// <param name="elementWeakness">Enemy weakness variable</param>
+        /// <param name="elementResistance1">Enemy 1st resistence variable</param>
+        /// <param name="elementResistance2">Enemy 2nd resistence</param>
+        /// <param name="damageFalloff">Damage falloff</param>
+        public void AttackEnemy(Character enemyCharacter, ElementType elementType, Type elementWeakness, Type elementResistance1, Type elementResistance2, float damageFalloff)
         {
-            if (weak.Equals(type.GetType()))
+            if (elementWeakness.Equals(type.GetType()))
             {
                 Critical(critPercent);
-                Damaged(c.health, (float)(c.health - Damage(damF, 2)), 2f, c);
+                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 2)), 2f, enemyCharacter);
             }
-            else if (res.Equals(type.GetType()) || res2.Equals(type.GetType()))
+            else if (elementResistance1.Equals(type.GetType()) || elementResistance2.Equals(type.GetType()))
             {
                 Critical(critPercent);
-                Damaged(c.health, (float)(c.health - Damage(damF, 0.5)), 2f, c);
+                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 0.5)), 2f, enemyCharacter);
             }
-            else if ((et.GetType()).Equals(type.GetType()))
+            else if ((elementType.GetType()).Equals(type.GetType()))
             {
                 Critical(critPercent);
-                Damaged(c.health, (float)(c.health - Damage(damF, 0)), 2f, c);
+                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 0)), 2f, enemyCharacter);
             }
             else
             {
                 Critical(critPercent);
-                Damaged(c.health, (float)(c.health - Damage(damF, 1)), 2f, c);
+                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 1)), 2f, enemyCharacter);
                 
             }
         }
+
         /// <summary>
-        /// Determines the damage done to the player when an enemy attack the player
+        /// Determines the damage done to the player when an enemy attacks the player
         /// </summary>
-        /// <param name="c">Character variable</param>
-        /// <param name="damF">Damage falloff</param>
-        public void Attack(Character c, float damF)
+        /// <param name="playerCharacter">Character variable</param>
+        /// <param name="damageFalloff">Damage falloff</param>
+        public void AttackPlayer(Character playerCharacter, float damageFalloff)
         {
             Critical(critPercent);
-            Damaged(c.health, (float)(c.health - Damage(damF, 1)), 2f, c);
+            Damaged(playerCharacter.health, (float)(playerCharacter.health - Damage(damageFalloff, 1)), 2f, playerCharacter);
         }
 
         void OnDrawGizmosSelected()
         {
-            Gizmos.DrawRay(ray.origin, ray.direction * range);
+            Gizmos.DrawRay(ray.origin, ray.direction * weaponRange);
         }
     }
 }

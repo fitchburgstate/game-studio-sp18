@@ -13,34 +13,41 @@ namespace Hunter.Character
         /// Attack Speed of the Weapon
         /// </summary>
         public int atkSpeed;
+
         /// <summary>
         /// Recovery Speed of the Weapon a.k.a how fast before you can attack again
         /// </summary>
         public int recSpeed;
+
         /// <summary>
         /// Base Damage number of the weapon
         /// </summary>
         public int baseDamage;
+
         /// <summary>
         /// Element type of the weapon
         /// </summary>
         public ElementType type;
+
         /// <summary>
         /// Options variable for Unity Inspector Dropdown
         /// </summary>
         public OPTIONS elementType; 
+
         /// <summary>
         /// Critical Percentage Given to the Weapon
         /// </summary>
         public int critPercent;
+
         /// <summary>
         /// Boolean that gets set true when a critical hit happens
         /// </summary>
         public bool isCritical = false;
+
         /// <summary>
         /// Ratio that holds critical percentage for hit calculation
         /// </summary>
-        private float ratio;
+        private float critDamage;
 
         void Update()
         {
@@ -113,8 +120,8 @@ namespace Hunter.Character
             }
             if (isCritical)
             {
-                float damage = start - end;
-                damage = (damage * ratio) + damage;
+                var damage = start - end;
+                damage = (damage * critDamage) + damage;
                 e.health = e.health - (int)damage;
                 isCritical = false;
             }
@@ -139,8 +146,8 @@ namespace Hunter.Character
             }
             if(isCritical)
             {
-                float damage = start - end;
-                damage = (damage * ratio) + damage;
+                var damage = start - end;
+                damage = (damage * critDamage) + damage;
                 c.health = c.health - (int)damage;
                 isCritical = false;
             }
@@ -156,14 +163,14 @@ namespace Hunter.Character
             var buffer = new byte[4];
 
             rng.GetBytes(buffer);
-            var res = BitConverter.ToInt32(buffer, 0);
 
             System.Random r = new System.Random();
             var num = r.Next(1, 100);
             if (num >= (100 - percent))
             {
                 isCritical = true;
-                ratio = (float)num / 20;
+                //ratio = (float)num / 20;
+                critDamage = r.Next(baseDamage + 1, baseDamage * 3);
             }
         }
     }

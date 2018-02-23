@@ -17,8 +17,8 @@ namespace Hunter
             public Blood()
             {
                 weakness = typeof(Disease);
-                resistence = typeof(Silver);
-                resistence2 = typeof(None);
+                resistance1 = typeof(Silver);
+                resistance2 = typeof(None);
             }
         }
 
@@ -33,8 +33,8 @@ namespace Hunter
             public Disease()
             {
                 weakness = typeof(Silver);
-                resistence = typeof(Blood);
-                resistence2 = typeof(None);
+                resistance1 = typeof(Blood);
+                resistance2 = typeof(None);
             }
         }
 
@@ -49,8 +49,8 @@ namespace Hunter
             public Fire()
             {
                 weakness = typeof(Ice);
-                resistence = typeof(None);
-                resistence2 = typeof(None);
+                resistance1 = typeof(None);
+                resistance2 = typeof(None);
             }
         }
 
@@ -65,8 +65,8 @@ namespace Hunter
             public Ice()
             {
                 weakness = typeof(Fire);
-                resistence = typeof(None);
-                resistence2 = typeof(None);
+                resistance1 = typeof(None);
+                resistance2 = typeof(None);
             }
         }
 
@@ -81,8 +81,8 @@ namespace Hunter
             public Lightning()
             {
                 weakness = typeof(Stone);
-                resistence = typeof(Ice);
-                resistence2 = typeof(Mechanical);
+                resistance1 = typeof(Ice);
+                resistance2 = typeof(Mechanical);
             }
         }
 
@@ -97,8 +97,8 @@ namespace Hunter
             public Mechanical()
             {
                 weakness = typeof(Lightning);
-                resistence = typeof(Stone);
-                resistence2 = typeof(None);
+                resistance1 = typeof(Stone);
+                resistance2 = typeof(None);
             }
         }
 
@@ -106,7 +106,7 @@ namespace Hunter
         {
             public None()
             {
-
+                // Empty
             }
         }
 
@@ -121,8 +121,8 @@ namespace Hunter
             public Silver()
             {
                 weakness = typeof(Blood);
-                resistence = typeof(Disease);
-                resistence2 = typeof(None);
+                resistance1 = typeof(Disease);
+                resistance2 = typeof(None);
             }
         }
 
@@ -137,8 +137,8 @@ namespace Hunter
             public Stone()
             {
                 weakness = typeof(Mechanical);
-                resistence = typeof(Fire);
-                resistence2 = typeof(Lightning);
+                resistance1 = typeof(Fire);
+                resistance2 = typeof(Lightning);
             }
         }
     }
