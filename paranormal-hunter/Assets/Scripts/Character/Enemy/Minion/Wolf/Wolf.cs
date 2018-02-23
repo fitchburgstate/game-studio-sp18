@@ -7,7 +7,10 @@ namespace Hunter.Character
 {
     public sealed class Wolf : Minion
     {
-
+        private void Start()
+        {
+            SetElementType(elementType);
+        }
     }
 }
 

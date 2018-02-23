@@ -16,9 +16,17 @@ namespace Hunter.Character
         [Range(0, 2000)] public float rotateChar = 12f;
 
         private float speedRamp;
-
         public AnimationCurve rotateAnimation;
+
+        public Animator anim;
         // ------------------------------------------------ \\ 
+
+        private void Start()
+        {
+            anim = GetComponent<Animator>();
+            range.gameObject.SetActive(false);
+            SetCurrentWeapon(melee);
+        }
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
@@ -42,11 +50,52 @@ namespace Hunter.Character
                 speedRamp = 0;
             }
             controller.Move(moveDirection * Time.deltaTime);
+
+            anim.SetFloat("dirX", moveDirection.x);
+            anim.SetFloat("dirY", moveDirection.z);
         }
 
         public void Dash(CharacterController controller)
         {
             // This feature has not yet been implemented
         }
+
+        public void Attack()
+        {
+            if (CurrentMeleeWeapon)
+            {
+                anim.SetTrigger("melee");
+            }
+            else if (CurrentRangeWeapon)
+            {
+                anim.SetTrigger("ranged");
+            }
+        }
+
+        public void EnableMeleeHitbox()
+        {
+            var mw = CurrentMeleeWeapon;
+            if(mw != null)
+            {
+                mw.EnableHitbox();
+            }
+        }
+
+        public void DisableMeleeHitbox()
+        {
+            var mw = CurrentMeleeWeapon;
+            if (mw != null)
+            {
+                mw.DisableHitbox();
+            }
+        }
+
+        // ----------- Animation Event Methods ----------- \\
+        public void GunFiring()
+        {
+            range.Shoot();
+        }
+
+        // -------------------------------------------------- \\
     }
 }
