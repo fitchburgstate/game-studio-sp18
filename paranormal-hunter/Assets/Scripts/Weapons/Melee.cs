@@ -11,7 +11,7 @@ namespace Hunter.Character
         public BoxCollider weaponBoxCollider;
 
         /// <summary>
-        /// Play Swing Animation of the Weapon
+        /// Play Swing Animation of the Weapon.
         /// </summary>
         public virtual void Swing()
         {
@@ -42,7 +42,7 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Calculates damage base upon weapon base damage and given bonus multiplier and attack speed
+        /// Calculates damage base upon weapon base damage and given bonus multiplier and attack speed.
         /// </summary>
         /// <param name="ratio">Damage Falloff</param>
         /// <param name="elementDamageBonus">Damage Multiplier</param>
@@ -54,7 +54,7 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Determines which damage calculation formula is based on the given enemy type, weakness, and resistence
+        /// Determines which damage calculation formula is based on the given enemy type, weakness, and resistance.
         /// </summary>
         /// <param name="e">Enemy variable</param>
         /// <param name="elementType">Enemy type variable</param>
@@ -87,7 +87,7 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Determines the damage done to the player when an enemy attack the player
+        /// Determines the damage done to the player when an enemy attack the player.
         /// </summary>
         /// <param name="playerCharacter">Character variable</param>
         /// <param name="e">Enemy variable</param>
@@ -98,7 +98,7 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Enables the hitbox of the equipped melee weapon
+        /// Enables the hitbox of the equipped melee weapon.
         /// </summary>
         public void EnableHitbox()
         {
@@ -106,7 +106,7 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Disables the hitbox of the equipped melee weapon
+        /// Disables the hitbox of the equipped melee weapon.
         /// </summary>
         public void DisableHitbox()
         {

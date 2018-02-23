@@ -30,6 +30,8 @@ namespace Hunter.Character
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
+            anim.SetFloat("dirY", Mathf.Abs(moveDirection.magnitude), 0, 1);
+
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
 
@@ -50,9 +52,6 @@ namespace Hunter.Character
                 speedRamp = 0;
             }
             controller.Move(moveDirection * Time.deltaTime);
-
-            anim.SetFloat("dirX", moveDirection.x);
-            anim.SetFloat("dirY", moveDirection.z);
         }
 
         public void Dash(CharacterController controller)

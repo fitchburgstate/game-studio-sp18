@@ -44,8 +44,6 @@ public class ControllerInputModule : MonoBehaviour
             //cameraPos.x = Input.mousePosition.x;
             //cameraPos.y = Input.mousePosition.y;
             ////worldCameraPos = mainCamera.ScreenToWorldPoint(new Vector3(cameraPos.x, cameraPos.y, (playerRoot.transform.position.z + -(mainCamera.transform.position.z))));
-
-
             //finalDirection = worldCameraPos;
         }
         else

@@ -11,6 +11,13 @@ namespace Hunter.Character
         {
             SetElementType(elementType);
         }
+
+        private void Update()
+        {
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 }
-

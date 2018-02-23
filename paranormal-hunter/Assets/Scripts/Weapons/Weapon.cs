@@ -10,42 +10,42 @@ namespace Hunter.Character
     public class Weapon : MonoBehaviour
     {
         /// <summary>
-        /// Attack Speed of the Weapon
+        /// Attack Speed of the Weapon.
         /// </summary>
         public int atkSpeed;
 
         /// <summary>
-        /// Recovery Speed of the Weapon a.k.a how fast before you can attack again
+        /// Recovery Speed of the Weapon a.k.a how fast before you can attack again.
         /// </summary>
         public int recSpeed;
 
         /// <summary>
-        /// Base Damage number of the weapon
+        /// Base Damage number of the weapon.
         /// </summary>
         public int baseDamage;
 
         /// <summary>
-        /// Element type of the weapon
+        /// Element type of the weapon.
         /// </summary>
         public ElementType type;
 
         /// <summary>
-        /// Options variable for Unity Inspector Dropdown
+        /// Options variable for Unity Inspector Dropdown.
         /// </summary>
         public OPTIONS elementType; 
 
         /// <summary>
-        /// Critical Percentage Given to the Weapon
+        /// Critical Percentage Given to the Weapon.
         /// </summary>
         public int critPercent;
 
         /// <summary>
-        /// Boolean that gets set true when a critical hit happens
+        /// Boolean that gets set true when a critical hit happens.
         /// </summary>
         public bool isCritical = false;
 
         /// <summary>
-        /// Ratio that holds critical percentage for hit calculation
+        /// Ratio that holds critical percentage for hit calculation.
         /// </summary>
         private float critDamage;
 
@@ -56,7 +56,7 @@ namespace Hunter.Character
 
         /// <summary>
         /// Damage function which can take a ratio float value and a bonus double value, can be override by
-        /// classes that inherit the Weapon class
+        /// classes that inherit the Weapon class.
         /// </summary>
         /// <param name="ratio">Variable for damage falloff</param>
         /// <param name="bonus">Variable for damage multiplier</param>
@@ -68,7 +68,7 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Sets the element type of the weapon based upon the given options variable
+        /// Sets the element type of the weapon based upon the given options variable.
         /// </summary>
         /// <param name="elementType">Option for the Element Type</param>
         private void SetElementType(OPTIONS elementType)
@@ -129,7 +129,7 @@ namespace Hunter.Character
         
         /// <summary>
         /// Calculates damage to be applied against the player and be lerped if hit is not critical, if hit is critical the 
-        /// damage is applied instantly
+        /// damage is applied instantly.
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
@@ -147,14 +147,15 @@ namespace Hunter.Character
             if(isCritical)
             {
                 var damage = start - end;
-                damage = (damage * critDamage) + damage;
+                damage = damage + critDamage;
+                Debug.Log("Total Damage: " + damage);
                 c.health = c.health - (int)damage;
                 isCritical = false;
             }
         }
 
         /// <summary>
-        /// Calculates whether or not the player crits based on crit percentage that is given to the function
+        /// Calculates whether or not the player crits based on crit percentage that is given to the function.
         /// </summary>
         /// <param name="percent"></param>
         public void Critical(int percent)
@@ -171,6 +172,7 @@ namespace Hunter.Character
                 isCritical = true;
                 //ratio = (float)num / 20;
                 critDamage = r.Next(baseDamage + 1, baseDamage * 3);
+                Debug.Log("Crit Damage Amount: " + critDamage);
             }
         }
     }

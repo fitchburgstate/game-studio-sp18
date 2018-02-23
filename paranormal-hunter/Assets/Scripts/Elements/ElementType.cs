@@ -6,7 +6,7 @@ using System;
 namespace Hunter
 {
     /// <summary>
-    /// Options Enum for the Elements that can be selected
+    /// Options Enum for the Elements that can be selected.
     /// </summary>
     public enum OPTIONS
     {
@@ -23,17 +23,17 @@ namespace Hunter
     public abstract class ElementType
     {
         /// <summary>
-        /// Weakness of the type
+        /// Weakness of the type.
         /// </summary>
         public Type weakness;
 
         /// <summary>
-        /// Resistence one of the type, if it has any
+        /// Resistence one of the type, if it has any.
         /// </summary>
         public Type resistance1;
 
         /// <summary>
-        /// Resistence two of the type, if it has any
+        /// Resistence two of the type, if it has any.
         /// </summary>
         public Type resistance2;
     }

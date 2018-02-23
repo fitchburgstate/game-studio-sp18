@@ -8,12 +8,6 @@ namespace Hunter
     {
         public class Blood : ElementType
         {
-            /// <summary>
-            /// Constructor Method for the Blood Element Type which
-            /// defines the weakness of the type to Disease,
-            /// defines the first resistence of the type to Silver,
-            /// & defines the second resistence of the type to None
-            /// </summary>
             public Blood()
             {
                 weakness = typeof(Disease);
@@ -24,12 +18,6 @@ namespace Hunter
 
         public class Disease : ElementType
         {
-            /// <summary>
-            /// Constructor Method for the Blood Element Type which
-            /// defines the weakness of the type to Silver,
-            /// defines the first resistence of the type to Blood,
-            /// & defines the second resistence of the type to None
-            /// </summary>
             public Disease()
             {
                 weakness = typeof(Silver);
@@ -40,12 +28,6 @@ namespace Hunter
 
         public class Fire : ElementType
         {
-            /// <summary>
-            /// Constructor Method for the Blood Element Type which
-            /// defines the weakness of the type to Ice,
-            /// defines the first resistence of the type to None,
-            /// & defines the second resistence of the type to None
-            /// </summary>
             public Fire()
             {
                 weakness = typeof(Ice);
@@ -56,12 +38,6 @@ namespace Hunter
 
         public class Ice : ElementType
         {
-            /// <summary>
-            /// Constructor Method for the Blood Element Type which
-            /// defines the weakness of the type to Fire,
-            /// defines the first resistence of the type to None,
-            /// & defines the second resistence of the type to None
-            /// </summary>
             public Ice()
             {
                 weakness = typeof(Fire);
@@ -72,12 +48,6 @@ namespace Hunter
 
         public class Lightning : ElementType
         {
-            /// <summary>
-            /// Constructor Method for the Blood Element Type which
-            /// defines the weakness of the type to Stone,
-            /// defines the first resistence of the type to Ice,
-            /// & defines the second resistence of the type to Mechanical
-            /// </summary>
             public Lightning()
             {
                 weakness = typeof(Stone);
@@ -88,12 +58,6 @@ namespace Hunter
 
         public class Mechanical : ElementType
         {
-            /// <summary>
-            /// Constructor Method for the Blood Element Type which
-            /// defines the weakness of the type to Lightning,
-            /// defines the first resistence of the type to Stone,
-            /// & defines the second resistence of the type to None
-            /// </summary>
             public Mechanical()
             {
                 weakness = typeof(Lightning);
@@ -112,12 +76,6 @@ namespace Hunter
 
         public class Silver : ElementType
         {
-            /// <summary>
-            /// Constructor Method for the Blood Element Type which
-            /// defines the weakness of the type to Blood,
-            /// defines the first resistence of the type to Disease,
-            /// & defines the second resistence of the type to None
-            /// </summary>
             public Silver()
             {
                 weakness = typeof(Blood);
@@ -128,12 +86,6 @@ namespace Hunter
 
         public class Stone : ElementType
         {
-            /// <summary>
-            /// Constructor Method for the Blood Element Type which
-            /// defines the weakness of the type to Mechanical,
-            /// defines the first resistence of the type to Fire,
-            /// & defines the second resistence of the type to Lightning
-            /// </summary>
             public Stone()
             {
                 weakness = typeof(Mechanical);
@@ -143,4 +95,3 @@ namespace Hunter
         }
     }
 }
-

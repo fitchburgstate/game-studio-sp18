@@ -9,42 +9,42 @@ namespace Hunter.Character
     public class Range : Weapon
     {
         /// <summary>
-        /// Clip Size of the Weapon
+        /// Clip Size of the Weapon.
         /// </summary>
         public int clipSize;
 
         /// <summary>
-        /// Reload Speed of the Weapon
+        /// Reload Speed of the Weapon.
         /// </summary>
         public int reloadSpeed;
 
         /// <summary>
-        /// Range of the Weapon (affects raycast length)
+        /// Range of the Weapon (affects raycast length).
         /// </summary>
         public int weaponRange;
 
         /// <summary>
-        /// Hold the weapon's total damage after calulation is complete
+        /// Hold the weapon's total damage after calulation is complete.
         /// </summary>
         private float totalDamage;
 
         /// <summary>
-        /// Holds the distance between the weapon and enemy (used for falloff calculation)
+        /// Holds the distance between the weapon and enemy (used for falloff calculation).
         /// </summary>
         private float distanceBetweenWeaponAndEnemy;
 
         /// <summary>
-        /// Holds the fall of ratio to determine damage based on distance travelled
+        /// Holds the fall of ratio to determine damage based on distance travelled.
         /// </summary>
         private float damageFalloffRatio;
 
         /// <summary>
-        /// Variable for holding the amount of shoots fired
+        /// Variable for holding the amount of shoots fired.
         /// </summary>
         private int clipS = 0;
 
         /// <summary>
-        /// Holds the distance between an enemy's "weapon" and the player (used for falloff calculation)
+        /// Holds the distance between an enemy's "weapon" and the player (used for falloff calculation).
         /// </summary>
         private float playerRange;
 
@@ -52,7 +52,7 @@ namespace Hunter.Character
 
         /// <summary>
         /// Performs a raycast to the range of the weapon and then calls the damage calculation method if an enemy is hit,
-        /// also plays the animation for shooting
+        /// also plays the animation for shooting.
         /// </summary>
         public virtual void Shoot()
         {
@@ -67,8 +67,8 @@ namespace Hunter.Character
                 var character = hit.collider.GetComponent<Character>();
                 if(character is Enemy)
                 {
-                    Debug.Log(transform.position);
-                    Debug.Log("working");
+                    //Debug.Log(transform.position);
+                    //Debug.Log("working");
                     character = character as Enemy;
                     distanceBetweenWeaponAndEnemy = Vector3.Distance(character.transform.position, transform.position);
                     damageFalloffRatio = weaponRange / distanceBetweenWeaponAndEnemy;
@@ -87,7 +87,7 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Damage function which can take a ratio float value and a bonus double value
+        /// Damage function which can take a ratio float value and a bonus double value.
         /// </summary>
         /// <param name="falloffRatio">Ratio for damage fall off</param>
         /// <param name="elementDamageBonus">Bonus ratio based on the type of weapon and enemy</param>
@@ -104,7 +104,7 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Increments clipS variable to determine when the reload happens
+        /// Increments clipS variable to determine when the reload happens.
         /// </summary>
         public void Ammo()
         {
@@ -119,7 +119,7 @@ namespace Hunter.Character
 
         /// <summary>
         /// Determines which damage calculation formula is based on the given 
-        /// this attack method is used for attacking an enemy
+        /// this attack method is used for attacking an enemy.
         /// </summary>
         /// <param name="e">Enemy variable</param>
         /// <param name="elementType">Enemy type variable</param>
@@ -153,7 +153,7 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Determines the damage done to the player when an enemy attacks the player
+        /// Determines the damage done to the player when an enemy attacks the player.
         /// </summary>
         /// <param name="playerCharacter">Character variable</param>
         /// <param name="damageFalloff">Damage falloff</param>
