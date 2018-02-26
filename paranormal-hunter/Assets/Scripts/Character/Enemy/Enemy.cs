@@ -9,6 +9,10 @@ namespace Hunter.Character
     {
         public State currentState;
         public State remainState;
+        /// <summary>
+        /// Options variable for Unity Inspector Dropdown
+        /// </summary>
+        public OPTIONS elementType;
 
         public float stateTimeElapsed;
 
@@ -32,9 +36,42 @@ namespace Hunter.Character
             return (stateTimeElapsed >= duration);
         }
 
-        public void OnExitState()
+
+
+
+        /// <summary>
+        /// Sets the element type of the weapon based upon the given options variable
+        /// </summary>
+        /// <param name="elementTypeOption">Option for the Element Type</param>
+        public void SetElementType(OPTIONS elementTypeOption)
         {
-            stateTimeElapsed = 0;
+            switch (elementTypeOption)
+            {
+                case OPTIONS.Fire:
+                    type = new Elements.Fire();
+                    break;
+                case OPTIONS.Ice:
+                    type = new Elements.Ice();
+                    break;
+                case OPTIONS.Disease:
+                    type = new Elements.Disease();
+                    break;
+                case OPTIONS.Silver:
+                    type = new Elements.Silver();
+                    break;
+                case OPTIONS.Blood:
+                    type = new Elements.Blood();
+                    break;
+                case OPTIONS.Lightning:
+                    type = new Elements.Lightning();
+                    break;
+                case OPTIONS.Mechanical:
+                    type = new Elements.Mechanical();
+                    break;
+                case OPTIONS.Stone:
+                    type = new Elements.Stone();
+                    break;
+            }
         }
     }
 }

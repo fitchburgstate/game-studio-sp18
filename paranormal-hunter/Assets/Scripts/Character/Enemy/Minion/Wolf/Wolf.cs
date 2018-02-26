@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 namespace Hunter.Character
 {
+
+        
     public sealed class Wolf : Minion, IMoveable
     {
         // ---------- SET THESE IN THE INSPECTOR ---------- \\
@@ -19,6 +21,11 @@ namespace Hunter.Character
         private float speedRamp;
         public AnimationCurve rotateAnimation;
         // ------------------------------------------------ \\ 
+
+        private void Start()
+        {
+            SetElementType(elementType);
+        }
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject enemyRoot, NavMeshAgent agent)
         {
@@ -48,6 +55,13 @@ namespace Hunter.Character
         public void Dash(CharacterController controller)
         {
             // This feature has not yet been implemented
+        }
+        private void Update()
+        {
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

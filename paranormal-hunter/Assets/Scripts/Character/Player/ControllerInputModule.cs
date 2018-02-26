@@ -3,30 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Hunter;
+using Hunter.Character;
 
 public class ControllerInputModule : MonoBehaviour
 {
-    private Vector2 cameraPos;
-    private Vector3 worldCameraPos;
+    //private Vector2 cameraPos;
+    //private Vector3 worldCameraPos;
     private Vector3 moveDirection = Vector3.zero;
     private Vector3 lookDirection = Vector3.zero;
 
     private GameObject playerRoot;
-    private DeviceManager myDeviceManager;
     private Camera mainCamera;
     private NavMeshAgent agent;
+
+    private DeviceManager myDeviceManager;
+    private Player player;
 
     private void Start()
     {
         playerRoot = gameObject.transform.GetChild(0).gameObject; // This will find the player-root gameobject, which means that the only child of this gameobject should be player-root
 
         mainCamera = GameObject.FindObjectOfType<Camera>();
-        myDeviceManager = mainCamera.GetComponent<DeviceManager>();
         transform.forward = mainCamera.transform.forward;
         agent = GetComponent<NavMeshAgent>();
+
+        myDeviceManager = mainCamera.GetComponent<DeviceManager>();
+        player = GetComponent<Player>();
     }
 
-    public void Update()
+    private void Update()
     {
         var moveCharacter = GetComponent<IMoveable>();
         var characterController = GetComponent<CharacterController>();
@@ -39,8 +44,6 @@ public class ControllerInputModule : MonoBehaviour
             //cameraPos.x = Input.mousePosition.x;
             //cameraPos.y = Input.mousePosition.y;
             ////worldCameraPos = mainCamera.ScreenToWorldPoint(new Vector3(cameraPos.x, cameraPos.y, (playerRoot.transform.position.z + -(mainCamera.transform.position.z))));
-
-
             //finalDirection = worldCameraPos;
         }
         else
@@ -59,5 +62,14 @@ public class ControllerInputModule : MonoBehaviour
             }
         }
         moveCharacter.Move(characterController, moveDirection, finalDirection, playerRoot, agent);
+
+        if (myDeviceManager.Device.RightBumper.WasReleased)
+        {
+            player.Attack();
+        }
+        else if (myDeviceManager.Device.LeftBumper.WasReleased)
+        {
+            player.SwitchWeapon();
+        }
     }
 }
