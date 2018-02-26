@@ -353,7 +353,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\Character\Character.cs" />
     <Compile Include="Assets\Scripts\Character\Enemy\AIInputModule.cs" />
     <Compile Include="Assets\Scripts\Character\Enemy\Enemy.cs" />
@@ -363,10 +362,21 @@
     <Compile Include="Assets\Scripts\Character\Player\Controls.cs" />
     <Compile Include="Assets\Scripts\Character\Player\DeviceManager.cs" />
     <Compile Include="Assets\Scripts\Character\Player\Player.cs" />
-    <Compile Include="Assets\Scripts\Utility.cs" />
+    <Compile Include="Assets\Scripts\Elements\Elements.cs" />
+    <Compile Include="Assets\Scripts\Elements\ElementType.cs" />
+    <Compile Include="Assets\Scripts\Inventory\InteractableObject.cs" />
+    <Compile Include="Assets\Scripts\Inventory\InteractableProp.cs" />
+    <Compile Include="Assets\Scripts\Inventory\Inventory.cs" />
+    <Compile Include="Assets\Scripts\Inventory\Item.cs" />
+    <Compile Include="Assets\Scripts\Inventory\NavPosition.cs" />
+    <Compile Include="Assets\Scripts\Miscellaneous\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\Miscellaneous\NavMeshSpawner.cs" />
+    <Compile Include="Assets\Scripts\Miscellaneous\Utility.cs" />
+    <Compile Include="Assets\Scripts\Weapons\Melee.cs" />
+    <Compile Include="Assets\Scripts\Weapons\Range.cs" />
+    <Compile Include="Assets\Scripts\Weapons\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Plugins\Cinemachine\ReleaseNotes.txt" />
     <None Include="Assets\Plugins\InControl\Readme\CHANGELOG.txt" />
     <None Include="Assets\Plugins\InControl\Readme\README.txt" />
     <None Include="Assets\Plugins\PostProcessing\Shaders\ACES.hlsl" />

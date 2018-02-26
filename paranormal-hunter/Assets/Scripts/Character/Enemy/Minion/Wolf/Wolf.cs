@@ -7,7 +7,17 @@ namespace Hunter.Character
 {
     public sealed class Wolf : Minion
     {
+        private void Start()
+        {
+            SetElementType(elementType);
+        }
 
+        private void Update()
+        {
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 }
-
