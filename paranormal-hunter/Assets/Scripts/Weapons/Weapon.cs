@@ -131,6 +131,7 @@ namespace Hunter.Character
         public void Damaged(float start, float end, float time, Enemy e)
         {
             float t = 0;
+            Debug.Log("test");
             while (t < 1.0 && !isCritical)
             {
                 t += Time.deltaTime / time;
@@ -156,16 +157,22 @@ namespace Hunter.Character
         public void Damaged(float start, float end, float time, Character c)
         {
             float t = 0;
+            var damageAmount = start - end;
             while (t < 1.0 && !isCritical)
             {
                 t += Time.deltaTime / time;
                 c.health = (int)Mathf.Lerp(start, end, t);
                 //Debug.Log(c.health);
             }
+            if(!isCritical)
+            {
+                FloatingTextController.CreateFloatingText(damageAmount.ToString(), c.transform, type);
+            }
             if(isCritical)
             {
                 Debug.Log("Total Damage: " + trueDamageValue);
                 c.health = c.health - (int)trueDamageValue;
+                FloatingTextController.CreateFloatingText(trueDamageValue.ToString(), c.transform, type);
                 isCritical = false;
             }
         }
