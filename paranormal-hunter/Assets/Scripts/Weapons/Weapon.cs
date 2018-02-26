@@ -44,10 +44,29 @@ namespace Hunter.Character
         /// </summary>
         public bool isCritical = false;
 
+        public bool isWeak = false;
+
+        public bool isResistant = false;
+
+        public bool isNonDamage = false;
+
         /// <summary>
         /// Ratio that holds critical percentage for hit calculation.
         /// </summary>
         private float critDamage;
+
+        private int damageHolder;
+        private int lowestCrit;
+        private int lowMidCrit;
+        private int midCrit;
+        private int highMidCrit;
+        private const int HighestCrit = 100;
+        private int bottomDamageMinValue;
+        private int bottomMaxDamageValue;
+        private int bottomMidMaxDamageValue;
+        private int topMidMaxDamageValue;
+        private int topMaxDamageValue;
+        private int trueDamageValue;
 
         void Update()
         {
@@ -120,9 +139,8 @@ namespace Hunter.Character
             }
             if (isCritical)
             {
-                var damage = start - end;
-                damage = (damage * critDamage) + damage;
-                e.health = e.health - (int)damage;
+                Debug.Log("Total Damage: " + trueDamageValue);
+                e.health = e.health - (int)trueDamageValue;
                 isCritical = false;
             }
         }
@@ -146,10 +164,8 @@ namespace Hunter.Character
             }
             if(isCritical)
             {
-                var damage = start - end;
-                damage = damage + critDamage;
-                Debug.Log("Total Damage: " + damage);
-                c.health = c.health - (int)damage;
+                Debug.Log("Total Damage: " + trueDamageValue);
+                c.health = c.health - (int)trueDamageValue;
                 isCritical = false;
             }
         }
@@ -160,19 +176,108 @@ namespace Hunter.Character
         /// <param name="percent"></param>
         public void Critical(int percent)
         {
+            lowestCrit = 100 - percent;
+
             var rng = new RNGCryptoServiceProvider();
             var buffer = new byte[4];
 
             rng.GetBytes(buffer);
+            var res = BitConverter.ToInt32(buffer, 0);
 
-            System.Random r = new System.Random();
-            var num = r.Next(1, 100);
-            if (num >= (100 - percent))
+            var rand = new System.Random(res).Next(1, 100);
+
+            midCrit = (HighestCrit + lowestCrit) / 2;
+            lowMidCrit = (midCrit + lowestCrit) / 2;
+            highMidCrit = (midCrit + HighestCrit) / 2;
+
+            MainDamageSetBeforeCrit();
+
+            //Yellow Colored Crit on World Space Display
+            if (rand >= lowestCrit && rand < lowMidCrit)
             {
                 isCritical = true;
-                //ratio = (float)num / 20;
-                critDamage = r.Next(baseDamage + 1, baseDamage * 3);
-                Debug.Log("Crit Damage Amount: " + critDamage);
+                Debug.Log("Bottom Crit");
+                trueDamageValue = new System.Random().Next(bottomDamageMinValue, bottomMaxDamageValue);
+                Debug.Log(trueDamageValue);
+
+            }
+            //Dark Yellow Colored Crit on World Space Display
+            else if (rand >= lowMidCrit && rand < midCrit)
+            {
+                isCritical = true;
+                Debug.Log("Bottom Mid Crit");
+                trueDamageValue = new System.Random().Next(bottomMaxDamageValue, bottomMidMaxDamageValue);
+                Debug.Log(trueDamageValue);
+
+            }
+            //Dark Orange Colored Crit on World Space Display
+            else if (rand >= midCrit && rand < highMidCrit)
+            {
+                isCritical = true;
+                Debug.Log("High Mid Crit");
+                trueDamageValue = new System.Random().Next(bottomMidMaxDamageValue, topMidMaxDamageValue);
+                Debug.Log(trueDamageValue);
+            }
+            //Red Colored Crit on World Space Display
+            else if (rand >= highMidCrit && rand <= HighestCrit)
+            {
+                isCritical = true;
+                Debug.Log("High Crit");
+                trueDamageValue = new System.Random().Next(topMidMaxDamageValue, topMaxDamageValue);
+                Debug.Log(trueDamageValue);
+            }
+            MainDamageReset();
+        }
+
+        private void SetCriticalRanges(int damage)
+        {
+            bottomDamageMinValue = damage + 1;
+            bottomMaxDamageValue = (int)(damage * 1.6);
+            bottomMidMaxDamageValue = (int)(damage * 2);
+            topMidMaxDamageValue = (int)(damage * 2.4) + 1;
+            topMaxDamageValue = (int)(damage * 3) + 1;
+        }
+
+        //Resets Damage after crit happens for normal damage calculations
+        private void MainDamageReset()
+        {
+            if (isWeak)
+            {
+                baseDamage = baseDamage / 2;
+            }
+            else if (isResistant)
+            {
+                baseDamage = baseDamage * 2;
+            }
+            else if (isNonDamage)
+            {
+                baseDamage = damageHolder;
+            }
+        }
+
+        //Sets Correct Damage Value for crits before critical calculations
+        private void MainDamageSetBeforeCrit()
+        {
+
+            if (isWeak)
+            {
+                baseDamage = baseDamage * 2;
+                SetCriticalRanges(baseDamage);
+            }
+            else if (isResistant)
+            {
+                baseDamage = baseDamage / 2;
+                SetCriticalRanges(baseDamage);
+            }
+            else if (isNonDamage)
+            {
+                damageHolder = baseDamage;
+                baseDamage = 0;
+                SetCriticalRanges(baseDamage);
+            }
+            else
+            {
+                SetCriticalRanges(baseDamage);
             }
         }
     }

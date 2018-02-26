@@ -130,24 +130,29 @@ namespace Hunter.Character
         {
             if (elementWeakness.Equals(type.GetType()))
             {
+                isWeak = true;
                 Critical(critPercent);
                 Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 2)), 2f, enemyCharacter);
+                isWeak = false;
             }
             else if (elementResistance1.Equals(type.GetType()) || elementResistance2.Equals(type.GetType()))
             {
+                isResistant = true;
                 Critical(critPercent);
                 Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 0.5)), 2f, enemyCharacter);
+                isResistant = false;
             }
             else if ((elementType.GetType()).Equals(type.GetType()))
             {
+                isNonDamage = true;
                 Critical(critPercent);
                 Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 0)), 2f, enemyCharacter);
+                isNonDamage = false;
             }
             else
             {
                 Critical(critPercent);
                 Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 1)), 2f, enemyCharacter);
-                
             }
         }
 
@@ -160,11 +165,6 @@ namespace Hunter.Character
         {
             Critical(critPercent);
             Damaged(playerCharacter.health, (float)(playerCharacter.health - Damage(damageFalloff, 1)), 2f, playerCharacter);
-        }
-
-        void OnDrawGizmosSelected()
-        {
-            Gizmos.DrawRay(ray.origin, ray.direction * weaponRange);
         }
     }
 }
