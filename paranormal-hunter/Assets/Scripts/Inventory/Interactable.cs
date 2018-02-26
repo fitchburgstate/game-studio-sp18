@@ -22,7 +22,7 @@ namespace Interactables
         [Header("Inventory item sprite")]
         public Sprite icon;
         [Header("Speed of the object")]
-        public float objectSpeed;
+        public float propSpeed;
         [Header("Speed of the bounce")]
         public float bounceSpeed;
         [Header("Hieght of the bounce")]
@@ -32,12 +32,12 @@ namespace Interactables
         [HideInInspector]
         public bool spawnFromProp = false; // equal true if object is spawned from an interactable prop
 
-        private float objectOffset;
+        private float propOffset;
         [Header("Animation the object plays in curve")]
         [SerializeField]
         private AnimationCurve curve;
         private MeshRenderer mesh;
-        private Collider objectCollider;
+        private Collider propCollider;
         private Vector3 targetPosition;
         private NavPosition navPosition = new NavPosition();
 
@@ -49,22 +49,22 @@ namespace Interactables
             if (added == true)
             {
                 mesh.enabled = false;
-                objectCollider.enabled = false;
+                propCollider.enabled = false;
             }
         }
 
         private void SpawnFromProp() // when object is spawned from an interactable prop
         {
-            objectCollider = GetComponent<Collider>();
+            propCollider = GetComponent<Collider>();
 
-            objectOffset = objectCollider.bounds.extents.y; // get half the height of the object
+            propOffset = propCollider.bounds.extents.y; // get half the height of the object
 
             if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the height of the object on the y axis
             {
-                targetPosition.y += objectOffset;
+                targetPosition.y += propOffset;
             }
 
-            objectCollider.enabled = false; //  disable collider when item spawns
+            propCollider.enabled = false; //  disable collider when item spawns
             StartCoroutine(PlayAnim()); // plays animation curve
         }
 
@@ -93,14 +93,13 @@ namespace Interactables
                 var bounceAmount = curve.Evaluate(bounceTime); // how big is the bounce
                 var bouncePosition = new Vector3(0,0,0);
                 bouncePosition.y = (bounceHeight * bounceAmount); // the bounch changing the y axis of the object
-                var currentPosition = new Vector3(targetPosition.x, bouncePosition.y + objectOffset, targetPosition.z); // the nav mesh position x and z axis and the bounce's y axis
-                transform.position = Vector3.MoveTowards(transform.position, currentPosition, objectSpeed * Time.deltaTime); // moves toawrds that current position
+                var currentPosition = new Vector3(targetPosition.x, bouncePosition.y + propOffset, targetPosition.z); // the nav mesh position x and z axis and the bounce's y axis
+                transform.position = Vector3.MoveTowards(transform.position, currentPosition, propSpeed * Time.deltaTime); // moves toawrds that current position
                 yield return null;
             }
 
-            objectCollider.enabled = true; // enables collider when reaches current position
+            propCollider.enabled = true; // enables collider when reaches current position
         }
-
-        
+      
     }
 }

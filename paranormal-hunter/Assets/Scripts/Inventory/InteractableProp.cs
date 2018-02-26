@@ -16,11 +16,11 @@ namespace Interactables
 
         public void Interact()
         {
-            ShakeObject(); 
+            ShakeProp(); 
             StartCoroutine(SpawnItems());
         }
 
-        private void ShakeObject() // plays animation based on string name
+        private void ShakeProp() // plays animation based on string name
         {
             anim.SetTrigger(animationName);
         }
