@@ -9,11 +9,30 @@ public class ControllerInputModule : MonoBehaviour
 {
     //private Vector2 cameraPos;
     //private Vector3 worldCameraPos;
+    
+    /// <summary>
+    /// Represents which direction the character should move in. Think of it as the input of the left stick.
+    /// </summary>
     private Vector3 moveDirection = Vector3.zero;
+
+    /// <summary>
+    /// Represents which direction the character should look in. Think of it as the input of the right stick.
+    /// </summary>
     private Vector3 lookDirection = Vector3.zero;
 
-    private GameObject playerRoot;
+    /// <summary>
+    /// The model's gameobject. This exists so the model can be turned independently of the parent.
+    /// </summary>
+    private GameObject playerModel;
+
+    /// <summary>
+    /// This is the main camera in the scene.
+    /// </summary>
     private Camera mainCamera;
+
+    /// <summary>
+    /// This is the navmesh agent attached to the parent. The navmesh is used to find walkable area.
+    /// </summary>
     private NavMeshAgent agent;
 
     private DeviceManager myDeviceManager;
@@ -21,7 +40,7 @@ public class ControllerInputModule : MonoBehaviour
 
     private void Start()
     {
-        playerRoot = gameObject.transform.GetChild(0).gameObject; // This will find the player-root gameobject, which means that the only child of this gameobject should be player-root
+        playerModel = gameObject.transform.GetChild(0).gameObject; // This will find the player-root gameobject, which means that the only child of this gameobject should be player-root
 
         mainCamera = GameObject.FindObjectOfType<Camera>();
         transform.forward = mainCamera.transform.forward;
@@ -61,7 +80,7 @@ public class ControllerInputModule : MonoBehaviour
                 finalDirection = lookDirection;
             }
         }
-        moveCharacter.Move(characterController, moveDirection, finalDirection, playerRoot, agent);
+        moveCharacter.Move(characterController, moveDirection, finalDirection, playerModel, agent);
 
         if (myDeviceManager.Device.RightBumper.WasReleased)
         {

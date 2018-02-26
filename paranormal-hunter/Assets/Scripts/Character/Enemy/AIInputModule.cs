@@ -6,15 +6,29 @@ using Hunter;
 
 public class AIInputModule : MonoBehaviour
 {
+    /// <summary>
+    /// Represents which direction the character should move in.
+    /// </summary>
     private Vector3 moveDirection = Vector3.zero;
+
+    /// <summary>
+    /// Represents which direction the character should look in.
+    /// </summary>
     private Vector3 lookDirection = Vector3.zero;
 
-    private GameObject enemyRoot;
+    /// <summary>
+    /// The model's gameobject. This exists so the model can be turned independently of the parent.
+    /// </summary>
+    private GameObject enemyModel;
+
+    /// <summary>
+    /// This is the navmesh agent attached to the parent. The navmesh is used to find walkable area.
+    /// </summary>
     private NavMeshAgent agent;
 
     private void Start()
     {
-        enemyRoot = gameObject.transform.GetChild(0).gameObject;
+        enemyModel = gameObject.transform.GetChild(0).gameObject;
         agent = GetComponent<NavMeshAgent>();
     }
 

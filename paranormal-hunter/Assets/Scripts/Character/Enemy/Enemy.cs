@@ -9,6 +9,12 @@ namespace Hunter.Character
     {
         public State currentState;
         public State remainState;
+
+        /// <summary>
+        /// Element Type of the Enemy
+        /// </summary>
+        public ElementType type;
+
         /// <summary>
         /// Options variable for Unity Inspector Dropdown
         /// </summary>
@@ -26,7 +32,7 @@ namespace Hunter.Character
             if (nextState != remainState)
             {
                 currentState = nextState;
-                OnExitState();
+                // OnExitState();
             }
         }
 
@@ -35,9 +41,6 @@ namespace Hunter.Character
             stateTimeElapsed += Time.deltaTime;
             return (stateTimeElapsed >= duration);
         }
-
-
-
 
         /// <summary>
         /// Sets the element type of the weapon based upon the given options variable

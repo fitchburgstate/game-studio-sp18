@@ -5,11 +5,29 @@ using Hunter;
 
 public class AIDetection : MonoBehaviour
 {
+    /// <summary>
+    /// Determines if a target is too close to the AI. If so, the target should be automatically found.
+    /// </summary>
     public float minDetectionDistance = 3f;
-    public float maxDetectionDistance = 15f;
-    public float fieldOfViewRange = 48f;
-    private float distanceToPlayer;
 
+    /// <summary>
+    /// Determines the maximum distance that the AI can "see" the player. If the player is outside of this range they will be undetectable.
+    /// </summary>
+    public float maxDetectionDistance = 15f;
+
+    /// <summary>
+    /// Determines how wide the "arc" is of the AI's vision. This value represents one "eye" so it will be doubled later.
+    /// </summary>
+    public float fieldOfViewRange = 48f;
+
+    /// <summary>
+    /// The distance between the AI and the target.
+    /// </summary>
+    private float distanceToTarget;
+
+    /// <summary>
+    /// A boolean to determine whether the AI is actively searching for a target.
+    /// </summary>
     private bool isBlind;
 
     private void Start()
@@ -25,6 +43,10 @@ public class AIDetection : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// The AI searches for a gameobject tagged "Player" and returns true when the player has been found.
+    /// </summary>
+    /// <returns></returns>
     public bool DetectPlayer()
     {
         var rayHit = new RaycastHit();
