@@ -1,12 +1,26 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Interactable
+namespace Interactables
 {
-    public class InteractableObject : MonoBehaviour
+    public enum ItemType
     {
-        [Header("Inventory item for this object")]
-        public Item item;
+        WEAPONS,
+        ELEMENTMODS,
+        JOURNALENTRIES
+    }
+
+    public class Interactable : MonoBehaviour
+    {
+        [Header("Type of Item")]
+        public ItemType itemType;
+        [Header("Name of the item")]
+        public string itemName;
+        [Header("Description of item")]
+        [TextArea]
+        public string itemDescription;
+        [Header("Inventory item sprite")]
+        public Sprite icon;
         [Header("Speed of the object")]
         public float objectSpeed;
         [Header("Speed of the bounce")]
@@ -15,6 +29,8 @@ namespace Interactable
         public float bounceHeight;
         [Header("Distance the object can go out")]
         public float maxDistance;
+        [HideInInspector]
+        public bool spawnFromProp = false; // equal true if object is spawned from an interactable prop
 
         private float objectOffset;
         [Header("Animation the object plays in curve")]
@@ -28,21 +44,22 @@ namespace Interactable
         public void AddItemToInventory() // adds this item the the inventroy script item list and disable mesh
         {
             //TODO move inventory into Player
-            var added = Inventory.instance.AddItem(item);
+            var added = Inventory.instance.AddItem(this);
 
             if (added == true)
             {
-                DisableMesh();
+                mesh.enabled = false;
+                objectCollider.enabled = false;
             }
         }
 
-        private void Start()
+        private void SpawnFromProp() // when object is spawned from an interactable prop
         {
-            mesh = GetComponent<MeshRenderer>();
             objectCollider = GetComponent<Collider>();
+
             objectOffset = objectCollider.bounds.extents.y; // get half the height of the object
 
-            if(navPosition.RandomPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the height of the object on the y axis
+            if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the height of the object on the y axis
             {
                 targetPosition.y += objectOffset;
             }
@@ -56,14 +73,13 @@ namespace Interactable
             AddItemToInventory();
         }
 
-        private void DisableMesh()
+        private void Start()
         {
-            mesh.enabled = false;
-        }
-
-        private void EnableCollider()
-        {
-            objectCollider.enabled = true;
+            mesh = GetComponent<MeshRenderer>();  
+            if(spawnFromProp == true)
+            {
+                SpawnFromProp();
+            }
         }
 
         private IEnumerator PlayAnim() // plays animation for object to move to point on navmesh
@@ -80,9 +96,11 @@ namespace Interactable
                 var currentPosition = new Vector3(targetPosition.x, bouncePosition.y + objectOffset, targetPosition.z); // the nav mesh position x and z axis and the bounce's y axis
                 transform.position = Vector3.MoveTowards(transform.position, currentPosition, objectSpeed * Time.deltaTime); // moves toawrds that current position
                 yield return null;
-            }     
-            
-            EnableCollider(); // enables collider when reaches current position
+            }
+
+            objectCollider.enabled = true; // enables collider when reaches current position
         }
+
+        
     }
 }

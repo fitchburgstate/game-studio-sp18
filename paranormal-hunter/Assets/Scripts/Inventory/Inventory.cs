@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Interactable
+namespace Interactables
 {
     public class Inventory : MonoBehaviour
     {
@@ -11,29 +11,38 @@ namespace Interactable
         [HideInInspector]
         public static Inventory instance;
 
-        /// <summary>
-        /// list of items modifiers 
-        /// </summary>
+       // inventory lists for each type of inventroy item
         [HideInInspector]
-        public List<Item> items = new List<Item>();
-        
+        public List<Interactable> weapons = new List<Interactable>();
+        [HideInInspector]
+        public List<Interactable> elementMods = new List<Interactable>();
+        [HideInInspector]
+        public List<Interactable> journalEntries = new List<Interactable>();
+
         /// <summary>
-        /// adds item to list if there is space
+        /// adds object to list based of type of item
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="interactable"></param>
         /// <returns></returns>
-        public bool AddItem(Item item) 
+        public bool AddItem(Interactable interactable) 
         {
-            items.Add(item);
+            interactable.transform.SetParent(transform);
+
+            if (interactable.itemType == ItemType.WEAPONS)
+            {
+                weapons.Add(interactable);
+            }
+            else if (interactable.itemType == ItemType.ELEMENTMODS)
+            {
+                elementMods.Add(interactable);
+            }
+            else if (interactable.itemType == ItemType.JOURNALENTRIES)
+            {
+                journalEntries.Add(interactable);
+            }
             return true;
         }
-
-        public bool RemoveItem(Item item)
-        {
-            items.Remove(item);
-            return true;
-        }
-
+       
         private void Awake()
         {
             if (instance == null)

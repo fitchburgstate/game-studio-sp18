@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Interactable
+namespace Interactables
 {
     [RequireComponent(typeof(Animator))]
     public class InteractableProp : MonoBehaviour
@@ -10,7 +10,7 @@ namespace Interactable
         [Header("Name of Animation")]
         public string animationName;
         [Header("Number of items to spawn and items to spawn")]
-        public List<InteractableObject> interactableObject = new List<InteractableObject>();
+        public List<Interactable> interactable = new List<Interactable>();
 
         private Animator anim;
 
@@ -27,13 +27,14 @@ namespace Interactable
 
         private IEnumerator SpawnItems() // spawns item in list then clears them  bug where sometimes is would spawn multiple of the same items
         {
-            for (var i = 0; i < interactableObject.Count; i++)
+            for (var i = 0; i < interactable.Count; i++)
             {
-                Instantiate(interactableObject[i], transform.position, transform.rotation);
+                Instantiate(interactable[i], transform.position, transform.rotation);
+                interactable[i].spawnFromProp = true;
                 yield return null;
             }
 
-            interactableObject.Clear();
+            interactable.Clear();
         }
 
         private void Start()
