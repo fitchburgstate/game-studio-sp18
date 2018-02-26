@@ -243,6 +243,14 @@ namespace Hunter.Character
             bottomMidMaxDamageValue = (int)(damage * 2);
             topMidMaxDamageValue = (int)(damage * 2.4) + 1;
             topMaxDamageValue = (int)(damage * 3) + 1;
+            if(damage == 0)
+            {
+                bottomDamageMinValue = 0;
+                bottomMaxDamageValue = 0;
+                bottomMidMaxDamageValue = 0;
+                topMidMaxDamageValue = 0;
+                topMaxDamageValue = 0;
+            }
         }
 
         //Resets Damage after crit happens for normal damage calculations
