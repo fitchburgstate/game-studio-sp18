@@ -4,25 +4,76 @@ using UnityEngine;
 
 namespace Interactables
 {
+    public enum PropType
+    {
+        Interactable,
+        Destructable
+    }
+       
     [RequireComponent(typeof(Animator))]
     public class InteractableProp : MonoBehaviour
     {
-        [Header("Name of Animation")]
-        public string animationName;
+        [Header("Will you interact with it or attack it")]
+        [SerializeField]
+        private PropType propType;
         [Header("Number of items to spawn and items to spawn")]
-        public List<Interactable> interactable = new List<Interactable>();
-
+        [SerializeField]
+        private List<Interactable> interactable = new List<Interactable>();
         private Animator anim;
+        [Header("Name of Animation")]
+        [SerializeField]
+        private string animationName;
+        private float destructionForce = 2000;
+        private Vector3 destructionDirection;
+
+        private void Start()
+        {
+            anim = GetComponent<Animator>();
+        }
+
+        public void Attacked()
+        {          
+            if (PropType.Destructable == propType)
+            {
+                // destruction math
+                DestoryProp();
+            }
+        }
 
         public void Interact()
         {
-            ShakeProp(); 
+            if (PropType.Interactable == propType)
+            {
+                ShakeProp();
+                StartCoroutine(SpawnItems());
+            }
+        }
+
+        private void OnMouseDown()
+        {
+            Interact();
+        }
+
+        private void ShakeProp() // plays animation based on string name and spawns item
+        {
+            anim.SetTrigger(animationName);
             StartCoroutine(SpawnItems());
         }
 
-        private void ShakeProp() // plays animation based on string name
+        private void DestoryProp()
         {
-            anim.SetTrigger(animationName);
+            var pieces = GetComponentsInChildren<Rigidbody>();
+
+            for(var i = 0; i < pieces.Length; i++)
+            {
+                pieces[i].isKinematic = false;
+            }
+
+            for (var i = 0; i < pieces.Length; i++)
+            {
+                pieces[i].AddForce(destructionDirection * destructionForce);
+            }
+            
         }
 
         private IEnumerator SpawnItems() // spawns item in list then clears them  bug where sometimes is would spawn multiple of the same items
@@ -30,21 +81,14 @@ namespace Interactables
             for (var i = 0; i < interactable.Count; i++)
             {
                 Instantiate(interactable[i], transform.position, transform.rotation);
-                interactable[i].spawnFromProp = true;
+                if (PropType.Interactable == propType)
+                {
+                    interactable[i].spawnFromProp = true;
+                }
                 yield return null;
             }
 
             interactable.Clear();
-        }
-
-        private void Start()
-        {
-            anim = GetComponent<Animator>();
-        }
-
-        private void OnMouseDown()
-        {
-            Interact();
         }
     }
 }

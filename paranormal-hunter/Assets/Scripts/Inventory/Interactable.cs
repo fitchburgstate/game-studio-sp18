@@ -5,9 +5,9 @@ namespace Interactables
 {
     public enum ItemType
     {
-        WEAPONS,
-        ELEMENTMODS,
-        JOURNALENTRIES
+        Weapons,
+        ElementalMods,
+        JournalEntries
     }
 
     public class Interactable : MonoBehaviour
@@ -16,28 +16,25 @@ namespace Interactables
         public ItemType itemType;
         [Header("Name of the item")]
         public string itemName;
+        [Header("Inventory item sprite")]
+        public Sprite icon;
         [Header("Description of item")]
         [TextArea]
         public string itemDescription;
-        [Header("Inventory item sprite")]
-        public Sprite icon;
-        [Header("Speed of the object")]
-        public float propSpeed;
-        [Header("Speed of the bounce")]
-        public float bounceSpeed;
-        [Header("Hieght of the bounce")]
-        public float bounceHeight;
-        [Header("Distance the object can go out")]
-        public float maxDistance;
         [HideInInspector]
         public bool spawnFromProp = false; // equal true if object is spawned from an interactable prop
-
-        private float propOffset;
-        [Header("Animation the object plays in curve")]
+        
+        public float propSpeed;
+        public float bounceSpeed;
+        public float bounceHeight;
+        public float maxDistance;   
+        
+        [Tooltip("Animation the prop plays")]
         [SerializeField]
         private AnimationCurve curve;
         private MeshRenderer mesh;
         private Collider propCollider;
+        private float propOffset;
         private Vector3 targetPosition;
         private NavPosition navPosition = new NavPosition();
 
@@ -54,9 +51,7 @@ namespace Interactables
         }
 
         private void SpawnFromProp() // when object is spawned from an interactable prop
-        {
-            propCollider = GetComponent<Collider>();
-
+        {         
             propOffset = propCollider.bounds.extents.y; // get half the height of the object
 
             if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the height of the object on the y axis
@@ -75,8 +70,10 @@ namespace Interactables
 
         private void Start()
         {
-            mesh = GetComponent<MeshRenderer>();  
-            if(spawnFromProp == true)
+            mesh = GetComponent<MeshRenderer>();
+            propCollider = GetComponent<Collider>();
+
+            if (spawnFromProp == true)
             {
                 SpawnFromProp();
             }
@@ -99,7 +96,6 @@ namespace Interactables
             }
 
             propCollider.enabled = true; // enables collider when reaches current position
-        }
-      
+        }     
     }
 }

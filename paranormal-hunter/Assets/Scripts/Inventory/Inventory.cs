@@ -28,15 +28,15 @@ namespace Interactables
         {
             interactable.transform.SetParent(transform);
 
-            if (interactable.itemType == ItemType.WEAPONS)
+            if (interactable.itemType == ItemType.Weapons)
             {
                 weapons.Add(interactable);
             }
-            else if (interactable.itemType == ItemType.ELEMENTMODS)
+            else if (interactable.itemType == ItemType.ElementalMods)
             {
                 elementMods.Add(interactable);
             }
-            else if (interactable.itemType == ItemType.JOURNALENTRIES)
+            else if (interactable.itemType == ItemType.JournalEntries)
             {
                 journalEntries.Add(interactable);
             }
