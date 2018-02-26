@@ -10,18 +10,34 @@ namespace Hunter.Character
     {
         // ---------- SET THESE IN THE INSPECTOR ---------- \\
         [Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
-        [Range(0, 20)] public float speed = 5f;
+        [Range(0, 20)]
+        public float speed = 5f;
 
         [Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
-        [Range(0, 2000)] public float rotateChar = 12f;
+        [Range(0, 2000)]
+        public float rotateChar = 12f;
 
         private float speedRamp;
-
         public AnimationCurve rotateAnimation;
+
+        public Animator anim;
         // ------------------------------------------------ \\ 
+
+        private void Start()
+        {
+            anim = GetComponent<Animator>();
+            if (range != null)
+            {
+                range.gameObject.SetActive(false);
+            }
+
+            SetCurrentWeapon(melee);
+        }
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
+            anim.SetFloat("dirY", Mathf.Abs(moveDirection.magnitude), 0, 1);
+
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
 
@@ -48,5 +64,43 @@ namespace Hunter.Character
         {
             // This feature has not yet been implemented
         }
+
+        public void Attack()
+        {
+            if (CurrentMeleeWeapon)
+            {
+                anim.SetTrigger("melee");
+            }
+            else if (CurrentRangeWeapon)
+            {
+                anim.SetTrigger("ranged");
+            }
+        }
+
+        public void EnableMeleeHitbox()
+        {
+            var mw = CurrentMeleeWeapon;
+            if (mw != null)
+            {
+                mw.EnableHitbox();
+            }
+        }
+
+        public void DisableMeleeHitbox()
+        {
+            var mw = CurrentMeleeWeapon;
+            if (mw != null)
+            {
+                mw.DisableHitbox();
+            }
+        }
+
+        // ----------- Animation Event Methods ----------- \\
+        public void GunFiring()
+        {
+            range.Shoot();
+        }
+
+        // -------------------------------------------------- \\
     }
 }
