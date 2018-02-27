@@ -638,6 +638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4969597200687330}
   - component: {fileID: 114275519651456010}
+  - component: {fileID: 114079816252771084}
   - component: {fileID: 95567676443125932}
   - component: {fileID: 54380263697151656}
   - component: {fileID: 65846913055723548}
@@ -1548,7 +1549,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1720921136158936}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.486, z: 0}
   m_LocalScale: {x: 5.3019004, y: 5.3019023, z: 5.3019023}
   m_Children:
   - {fileID: 4405942778615646}
@@ -1625,7 +1626,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1351307205182196}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.35020435, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 12.7, y: 12.700007, z: 12.700007}
   m_Children: []
   m_Father: {fileID: 4969597200687330}
@@ -2353,7 +2354,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1579992428864402}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.48, y: 0, z: 3.58}
+  m_LocalPosition: {x: 7.39, y: 0.614, z: 2.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4222414855480810}
@@ -2441,8 +2442,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.64, y: 2.3119452, z: 2.2296646}
-  m_Center: {x: -0.09, y: 1.2509726, z: -0.06078422}
+  m_Size: {x: 0.759845, y: 2.0186098, z: 2.2296646}
+  m_Center: {x: -0.076609135, y: 0.47181618, z: -0.060784213}
 --- !u!95 &95567676443125932
 Animator:
   serializedVersion: 3
@@ -2460,6 +2461,20 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114079816252771084
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1579992428864402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6d2af9d4cf38643bc38d51b9be3d51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minDetectionDistance: 3
+  maxDetectionDistance: 15
+  fieldOfViewRange: 48
 --- !u!114 &114275519651456010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2475,7 +2490,18 @@ MonoBehaviour:
   health: 75
   melee: {fileID: 0}
   range: {fileID: 0}
+  currentState: {fileID: 0}
+  remainState: {fileID: 0}
   elementType: 0
+  stateTimeElapsed: 0
+  speed: 5
+  rotateEnemy: 12
+  rotateAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!137 &137505957491884906
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

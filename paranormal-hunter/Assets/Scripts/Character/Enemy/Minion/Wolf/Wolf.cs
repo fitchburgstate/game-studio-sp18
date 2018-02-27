@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 namespace Hunter.Character
 {
-
         
     public sealed class Wolf : Minion, IMoveable
     {

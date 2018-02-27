@@ -7,9 +7,6 @@ namespace Hunter.Character
 {
     public abstract class Enemy : Character
     {
-        public State currentState;
-        public State remainState;
-
         /// <summary>
         /// Element Type of the Enemy
         /// </summary>
@@ -19,28 +16,6 @@ namespace Hunter.Character
         /// Options variable for Unity Inspector Dropdown
         /// </summary>
         public OPTIONS elementType;
-
-        public float stateTimeElapsed;
-
-        private void Update()
-        {
-            currentState.UpdateState(this);
-        }
-
-        public void TransitionToState(State nextState)
-        {
-            if (nextState != remainState)
-            {
-                currentState = nextState;
-                // OnExitState();
-            }
-        }
-
-        public bool CheckIfCountdownElapsed(float duration)
-        {
-            stateTimeElapsed += Time.deltaTime;
-            return (stateTimeElapsed >= duration);
-        }
 
         /// <summary>
         /// Sets the element type of the weapon based upon the given options variable
