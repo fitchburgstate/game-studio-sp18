@@ -7,7 +7,15 @@ namespace Interactables
     public enum PropType
     {
         Interactable,
-        Destructable
+        Destructible
+    }
+
+    public enum ElementalType
+    {
+        Silver,
+        Fire,
+        Ice,
+        Lighting
     }
        
     [RequireComponent(typeof(Animator))]
@@ -16,6 +24,10 @@ namespace Interactables
         [Header("Will you interact with it or attack it")]
         [SerializeField]
         private PropType propType;
+        [Header("Type needed to be interacted with")]
+        [SerializeField]
+        private ElementalType elementalType;
+        private ElementalType typeFromWeapon;
         [Header("Number of items to spawn and items to spawn")]
         [SerializeField]
         private List<Interactable> interactable = new List<Interactable>();
@@ -23,8 +35,13 @@ namespace Interactables
         [Header("Name of Animation")]
         [SerializeField]
         private string animationName;
-        private float destructionForce = 2000;
+        private float destructionForce = 200;
         private Vector3 destructionDirection;
+        [SerializeField]
+        private Rigidbody[] pieces;
+        [Header("the broken prop")]
+        [SerializeField]
+        private GameObject brokenProp;
 
         private void Start()
         {
@@ -32,37 +49,54 @@ namespace Interactables
         }
 
         public void Attacked()
-        {          
-            if (PropType.Destructable == propType)
-            {
-                // destruction math
-                DestoryProp();
-            }
-        }
-
-        public void Interact()
         {
-            if (PropType.Interactable == propType)
+            if (typeFromWeapon == elementalType)
             {
-                ShakeProp();
-                StartCoroutine(SpawnItems());
+                if (PropType.Destructible == propType)
+                {
+                    Destruct();
+                }
+                if (PropType.Interactable == propType)
+                {
+                    ShakeProp();
+                }
             }
         }
 
         private void OnMouseDown()
         {
-            Interact();
+            Attacked();
         }
 
         private void ShakeProp() // plays animation based on string name and spawns item
         {
             anim.SetTrigger(animationName);
-            StartCoroutine(SpawnItems());
+            SpawnItems();
+        }
+
+        private void Destruct()
+        {
+            BreakItem();
+            DestoryProp();
+            DisableProp();
+
+        }
+
+        private void BreakItem()
+        {
+            brokenProp = Instantiate(brokenProp, transform.position, transform.rotation);
+        }
+
+        public void DisableProp()
+        {
+            var mesh = GetComponent<MeshRenderer>().enabled = false;
+            var collider = GetComponent<Collider>().enabled = false;
         }
 
         private void DestoryProp()
         {
-            var pieces = GetComponentsInChildren<Rigidbody>();
+
+            pieces = brokenProp.GetComponentsInChildren<Rigidbody>();
 
             for(var i = 0; i < pieces.Length; i++)
             {
@@ -71,24 +105,40 @@ namespace Interactables
 
             for (var i = 0; i < pieces.Length; i++)
             {
-                pieces[i].AddForce(destructionDirection * destructionForce);
+                pieces[i].AddForce(transform.forward * destructionForce);
             }
-            
+
+
+            SpawnItems();
+
+            StartCoroutine(DestroyPieces());
+
         }
 
-        private IEnumerator SpawnItems() // spawns item in list then clears them  bug where sometimes is would spawn multiple of the same items
+        private void SpawnItems() // spawns item in list then clears them  bug where sometimes is would spawn multiple of the same items
         {
             for (var i = 0; i < interactable.Count; i++)
             {
                 Instantiate(interactable[i], transform.position, transform.rotation);
                 if (PropType.Interactable == propType)
                 {
-                    interactable[i].spawnFromProp = true;
+                    interactable[i].spawnedFromProp = true;
                 }
-                yield return null;
             }
 
             interactable.Clear();
+        }
+
+        private IEnumerator DestroyPieces()
+        {
+            yield return new WaitForSeconds(12f);
+
+            for(var i = 0; i < pieces.Length; i++)
+            {
+                Destroy(pieces[i]);
+            }
+
+           // Destroy(gameObject,2f);
         }
     }
 }

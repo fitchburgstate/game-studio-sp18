@@ -3,26 +3,12 @@ using UnityEngine;
 
 namespace Interactables
 {
-    public enum ItemType
-    {
-        Weapons,
-        ElementalMods,
-        JournalEntries
-    }
-
     public class Interactable : MonoBehaviour
     {
-        [Header("Type of Item")]
-        public ItemType itemType;
-        [Header("Name of the item")]
-        public string itemName;
-        [Header("Inventory item sprite")]
-        public Sprite icon;
-        [Header("Description of item")]
-        [TextArea]
-        public string itemDescription;
+        [Header("Iventroy item")]
+        public Item item;
         [HideInInspector]
-        public bool spawnFromProp = false; // equal true if object is spawned from an interactable prop
+        public bool spawnedFromProp = false; // equal true if object is spawned from an interactable prop
         
         public float propSpeed;
         public float bounceSpeed;
@@ -34,7 +20,7 @@ namespace Interactables
         private AnimationCurve curve;
         private MeshRenderer mesh;
         private Collider propCollider;
-        private float propOffset;
+        private float propHeightOffset;
         private Vector3 targetPosition;
         private NavPosition navPosition = new NavPosition();
 
@@ -52,11 +38,11 @@ namespace Interactables
 
         private void SpawnFromProp() // when object is spawned from an interactable prop
         {         
-            propOffset = propCollider.bounds.extents.y; // get half the height of the object
+            propHeightOffset = propCollider.bounds.extents.y; // get half the height of the object
 
             if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the height of the object on the y axis
             {
-                targetPosition.y += propOffset;
+                targetPosition.y += propHeightOffset;
             }
 
             propCollider.enabled = false; //  disable collider when item spawns
@@ -73,10 +59,22 @@ namespace Interactables
             mesh = GetComponent<MeshRenderer>();
             propCollider = GetComponent<Collider>();
 
-            if (spawnFromProp == true)
+            if (spawnedFromProp == true)
             {
                 SpawnFromProp();
             }
+        }
+
+        private bool CheckForWall()
+        {
+            var hit = Physics.Raycast(transform.position, transform.forward, 1);
+            return hit;
+        }
+
+        private void SpawnOnGround()
+        {
+            var groundPosition = new Vector3(transform.position.x, targetPosition.y, targetPosition.z);
+            transform.position = groundPosition;
         }
 
         private IEnumerator PlayAnim() // plays animation for object to move to point on navmesh
@@ -88,9 +86,11 @@ namespace Interactables
             {
                 bounceTime += bounceSpeed * Time.deltaTime;
                 var bounceAmount = curve.Evaluate(bounceTime); // how big is the bounce
-                var bouncePosition = new Vector3(0,0,0);
-                bouncePosition.y = (bounceHeight * bounceAmount); // the bounch changing the y axis of the object
-                var currentPosition = new Vector3(targetPosition.x, bouncePosition.y + propOffset, targetPosition.z); // the nav mesh position x and z axis and the bounce's y axis
+                var bouncePosition = new Vector3(0, 0, 0)
+                {
+                    y = (bounceHeight * bounceAmount) // the bounch changing the y axis of the object
+                };
+                var currentPosition = new Vector3(targetPosition.x, bouncePosition.y + propHeightOffset, targetPosition.z); // the nav mesh position x and z axis and the bounce's y axis
                 transform.position = Vector3.MoveTowards(transform.position, currentPosition, propSpeed * Time.deltaTime); // moves toawrds that current position
                 yield return null;
             }
