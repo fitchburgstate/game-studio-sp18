@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Hunter;
+using Hunter.Character;
 
 namespace Interactables
 {
@@ -10,12 +12,10 @@ namespace Interactables
         Destructible
     }
 
-    public enum ElementalType
+    public enum NeedElementType
     {
-        Silver,
-        Fire,
-        Ice,
-        Lighting
+        ElementRequired,
+        NoneRequired
     }
        
     [RequireComponent(typeof(Animator))]
@@ -26,8 +26,9 @@ namespace Interactables
         private PropType propType;
         [Header("Type needed to be interacted with")]
         [SerializeField]
-        private ElementalType elementalType;
-        private ElementalType typeFromWeapon;
+        private OPTIONS elementalType;
+        [SerializeField]
+        private NeedElementType needElement;
         [Header("Number of items to spawn and items to spawn")]
         [SerializeField]
         private List<Interactable> interactable = new List<Interactable>();
@@ -50,16 +51,13 @@ namespace Interactables
 
         public void Attacked()
         {
-            if (typeFromWeapon == elementalType)
+            if (PropType.Destructible == propType)
             {
-                if (PropType.Destructible == propType)
-                {
-                    Destruct();
-                }
-                if (PropType.Interactable == propType)
-                {
-                    ShakeProp();
-                }
+                Destruct();
+            }
+            if (PropType.Interactable == propType)
+            {
+                ShakeProp();
             }
         }
 
@@ -115,6 +113,14 @@ namespace Interactables
 
         }
 
+        private void CheckWeaponType(OPTIONS weaponElement)
+        {
+            if (weaponElement == elementalType)
+            {
+                Attacked();
+            }
+        }
+
         private void SpawnItems() // spawns item in list then clears them  bug where sometimes is would spawn multiple of the same items
         {
             for (var i = 0; i < interactable.Count; i++)
@@ -139,6 +145,37 @@ namespace Interactables
             }
 
            // Destroy(gameObject,2f);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            OPTIONS typeFromWeapon;
+
+            if (other.gameObject.GetComponent<Melee>() != null)
+            {
+                if (needElement == NeedElementType.ElementRequired)
+                {
+                    typeFromWeapon = other.gameObject.GetComponent<Melee>().elementType;
+
+                    CheckWeaponType(typeFromWeapon);
+                }
+                else if (needElement == NeedElementType.NoneRequired)
+                {
+                    Attacked();
+                }
+            } 
+        }
+
+        private void HitByRay(Ray ray)
+        {
+            
+
+        }
+
+        private void CheckForRay(Ray ray)
+        {
+            var rangedWeapon = ray.origin;
+
         }
     }
 }
