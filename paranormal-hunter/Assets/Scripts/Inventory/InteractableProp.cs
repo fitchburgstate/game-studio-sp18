@@ -36,8 +36,8 @@ namespace Interactables
         [Header("Name of Animation")]
         [SerializeField]
         private string animationName;
-        private float destructionForce = 200;
-        private Vector3 destructionDirection;
+        private float destructionForce = 20;
+        private Vector3 destructionDirection; // based on player
         [SerializeField]
         private Rigidbody[] pieces;
         [Header("the broken prop")]
@@ -104,6 +104,7 @@ namespace Interactables
             for (var i = 0; i < pieces.Length; i++)
             {
                 pieces[i].AddForce(transform.forward * destructionForce);
+                // have object destroy the direct the player facing
             }
 
 
@@ -175,6 +176,7 @@ namespace Interactables
         private void CheckForRay(Ray ray)
         {
             var rangedWeapon = ray.origin;
+            Physics.r
 
         }
     }
