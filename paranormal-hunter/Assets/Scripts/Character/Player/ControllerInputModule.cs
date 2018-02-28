@@ -35,6 +35,16 @@ public class ControllerInputModule : MonoBehaviour
     /// </summary>
     private NavMeshAgent agent;
 
+    /// <summary>
+    /// The character controller that controls the player's movement.
+    /// </summary>
+    private CharacterController characterController;
+
+    /// <summary>
+    /// The final direction that the character will face that's calculated.
+    /// </summary>
+    private Vector3 finalDirection;
+
     private DeviceManager myDeviceManager;
     private Player player;
 
@@ -53,8 +63,8 @@ public class ControllerInputModule : MonoBehaviour
     private void Update()
     {
         var moveCharacter = GetComponent<IMoveable>();
-        var characterController = GetComponent<CharacterController>();
-        var finalDirection = Vector3.zero;
+        characterController = GetComponent<CharacterController>();
+        finalDirection = Vector3.zero;
 
         moveDirection = new Vector3(myDeviceManager.HorizontalInput, 0, myDeviceManager.VerticalInput);
 

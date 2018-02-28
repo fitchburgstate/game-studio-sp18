@@ -35,13 +35,13 @@ public class AIDetection : MonoBehaviour
         isBlind = false;
     }
 
-    private void FixedUpdate()
-    {
-        if (!isBlind)
-        {
-            DetectPlayer();
-        }
-    }
+    //private void FixedUpdate()
+    //{
+    //    if (!isBlind)
+    //    {
+    //        DetectPlayer();
+    //    }
+    //}
 
     /// <summary>
     /// The AI searches for a gameobject tagged "Player" and returns true when the player has been found.
@@ -82,6 +82,9 @@ public class AIDetection : MonoBehaviour
     }
 
     // TODO Fix this jank-ass Gizmo Draw Call
+    /// <summary>
+    /// This function draws lines in the scene view to let us developers know the cone of vision that the clicked mob has.
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;

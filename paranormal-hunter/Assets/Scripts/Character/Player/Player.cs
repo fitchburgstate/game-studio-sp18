@@ -6,9 +6,8 @@ using UnityEngine.AI;
 
 namespace Hunter.Character
 {
-    public sealed class Player : Character, IMoveable
+    public sealed class Player : Character, IMoveable, IAttack
     {
-        // ---------- SET THESE IN THE INSPECTOR ---------- \\
         /// <summary>
         /// Speed at which the character moves.
         /// </summary>
@@ -37,14 +36,13 @@ namespace Hunter.Character
         /// This is the player's animator controller.
         /// </summary>
         public Animator anim;
-        // ------------------------------------------------ \\ 
 
         private void Start()
         {
             anim = GetComponent<Animator>();
-            if (range != null)
+            if (rangeWeapon != null)
             {
-                range.gameObject.SetActive(false);
+                rangeWeapon.gameObject.SetActive(false);
             }
 
             SetCurrentWeapon(melee);
@@ -113,10 +111,10 @@ namespace Hunter.Character
         /// </summary>
         public void EnableMeleeHitbox()
         {
-            var mw = CurrentMeleeWeapon;
-            if (mw != null)
+            var meleeWeapon = CurrentMeleeWeapon;
+            if (meleeWeapon != null)
             {
-                mw.EnableHitbox();
+                meleeWeapon.EnableHitbox();
             }
         }
 
@@ -125,22 +123,19 @@ namespace Hunter.Character
         /// </summary>
         public void DisableMeleeHitbox()
         {
-            var mw = CurrentMeleeWeapon;
-            if (mw != null)
+            var meleeWeapon = CurrentMeleeWeapon;
+            if (meleeWeapon != null)
             {
-                mw.DisableHitbox();
+                meleeWeapon.DisableHitbox();
             }
         }
 
-        // ----------- Animation Event Methods ----------- \\
         /// <summary>
         /// Fires the currently equipped range weapon.
         /// </summary>
         public void GunFiring()
         {
-            range.Shoot();
+            rangeWeapon.Shoot();
         }
-
-        // -------------------------------------------------- \\
     }
 }

@@ -5,10 +5,9 @@ using UnityEngine.AI;
 
 namespace Hunter.Character
 {
-        
-    public sealed class Wolf : Minion, IMoveable
+
+    public sealed class Wolf : Minion, IMoveable, IAttack
     {
-        // ---------- SET THESE IN THE INSPECTOR ---------- \\
         /// <summary>
         /// Speed at which the character moves.
         /// </summary>
@@ -32,11 +31,31 @@ namespace Hunter.Character
         /// This animation curve determines the rate at which the wolf turns.
         /// </summary>
         public AnimationCurve rotateAnimation;
-        // ------------------------------------------------ \\ 
+
+        /// <summary>
+        /// This is the wolf's animator controller.
+        /// </summary>
+        public Animator anim;
 
         private void Start()
         {
             SetElementType(elementType);
+
+            anim = GetComponent<Animator>();
+            if (rangeWeapon != null)
+            {
+                rangeWeapon.gameObject.SetActive(false);
+            }
+
+            SetCurrentWeapon(melee);
+        }
+
+        private void Update()
+        {
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject enemyRoot, NavMeshAgent agent)
@@ -68,12 +87,49 @@ namespace Hunter.Character
         {
             // This feature has not yet been implemented
         }
-        private void Update()
+
+        public void Attack()
         {
-            if (health <= 0)
+            if (CurrentMeleeWeapon)
             {
-                Destroy(gameObject);
+                anim.SetTrigger("melee");
             }
+            else if (CurrentRangeWeapon)
+            {
+                anim.SetTrigger("ranged");
+            }
+        }
+
+        /// <summary>
+        /// Enables the hitbox of the currently equipped melee weapon.
+        /// </summary>
+        public void EnableMeleeHitbox()
+        {
+            var meleeWeapon = CurrentMeleeWeapon;
+            if (meleeWeapon != null)
+            {
+                meleeWeapon.EnableHitbox();
+            }
+        }
+
+        /// <summary>
+        /// Disables the hitbox of the currently equipped melee weapon.
+        /// </summary>
+        public void DisableMeleeHitbox()
+        {
+            var meleeWeapon = CurrentMeleeWeapon;
+            if (meleeWeapon != null)
+            {
+                meleeWeapon.DisableHitbox();
+            }
+        }
+
+        /// <summary>
+        /// Fires the currently equipped range weapon.
+        /// </summary>
+        public void GunFiring()
+        {
+            rangeWeapon.Shoot();
         }
     }
 }

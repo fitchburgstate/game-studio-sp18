@@ -26,7 +26,7 @@ namespace Hunter.Character
         /// <summary>
         /// Current Ranged Weapon Equipped on the Character
         /// </summary>
-        public Range range;
+        public Range rangeWeapon;
 
 
         public Melee CurrentMeleeWeapon
@@ -56,13 +56,13 @@ namespace Hunter.Character
             if (CurrentMeleeWeapon && swap == true)
             {
                 melee.gameObject.SetActive(false);
-                range.gameObject.SetActive(true);
-                SetCurrentWeapon(range);
+                rangeWeapon.gameObject.SetActive(true);
+                SetCurrentWeapon(rangeWeapon);
                 swap = false;
             }
             if (CurrentRangeWeapon && swap == true)
             {
-                range.gameObject.SetActive(false);
+                rangeWeapon.gameObject.SetActive(false);
                 melee.gameObject.SetActive(true);
                 SetCurrentWeapon(melee);
                 swap = false;

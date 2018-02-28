@@ -13,6 +13,17 @@ public interface IMoveable
 
 }
 
+public interface IAttack
+{
+    void Attack();
+
+    void EnableMeleeHitbox();
+
+    void DisableMeleeHitbox();
+
+    void GunFiring();
+}
+
 //public interface IDamageable<T, V>
 //{
 //    void TakeDamage(T healthValue, V amount);

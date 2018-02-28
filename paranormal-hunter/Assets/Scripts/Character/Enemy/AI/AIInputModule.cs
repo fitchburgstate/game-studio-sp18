@@ -26,6 +26,17 @@ public class AIInputModule : MonoBehaviour
     /// </summary>
     private NavMeshAgent agent;
 
+    /// <summary>
+    /// The character controller that controls the character's movement.
+    /// </summary>
+    private CharacterController controller;
+
+    /// <summary>
+    /// The final direction that the character will face that's calculated.
+    /// </summary>
+    private Vector3 finalDirection;
+
+
     private void Start()
     {
         enemyModel = gameObject.transform.GetChild(0).gameObject;
