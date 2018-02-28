@@ -45,6 +45,21 @@ public class ControllerInputModule : MonoBehaviour
             //cameraPos.y = Input.mousePosition.y;
             ////worldCameraPos = mainCamera.ScreenToWorldPoint(new Vector3(cameraPos.x, cameraPos.y, (playerRoot.transform.position.z + -(mainCamera.transform.position.z))));
             //finalDirection = worldCameraPos;
+
+            /*RaycastHit hit;
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if(Physics.Raycast(ray, out hit))
+            {
+                lookDirection = new Vector3(hit.point.x, playerRoot.transform.position.y, hit.point.z);
+                playerRoot.transform.LookAt(new Vector3(hit.point.x, playerRoot.transform.position.y, hit.point.z));
+            }*/
+
+            //var mousePos = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, 0, (playerRoot.transform.position.z + -(mainCamera.transform.position.z))));
+            //var step = player.rotateChar * Time.deltaTime;
+            //var facingVector = Vector3.RotateTowards(playerRoot.transform.forward, mousePos, step, 0f);
+            //playerRoot.transform.rotation = Quaternion.LookRotation(facingVector);
+            //Debug.Log(mousePos);
+            //finalDirection = mousePos;
         }
         else
         {
