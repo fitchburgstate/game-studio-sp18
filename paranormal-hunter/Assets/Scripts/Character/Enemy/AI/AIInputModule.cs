@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Hunter;
+using Hunter.Character;
 
 public class AIInputModule : MonoBehaviour
 {
@@ -113,13 +114,34 @@ public class AIInputModule : MonoBehaviour
     /// The final direction that the character will face that's calculated.
     /// </summary>
     private Vector3 finalDirection;
+    
+    private UrgeScriptable urgeScriptable;
+    private Attack attack;
+    private MoveTo moveTo;
+    private Wander wander;
+    private Retreat retreat;
+    private Idle idle;
 
     private void Start()
     {
         EnemyModel = gameObject.transform.GetChild(0).gameObject;
         Agent = GetComponent<NavMeshAgent>();
     }
-    
+
+    public void SetState()
+    {
+
+    }
+
+    public void FindNextState()
+    {
+        //var attackValue = attack.CalculateAttack();
+        //var moveToValue = moveTo.CalculateMoveTo();
+        //var wanderValue = wander.CalculateWander();
+        //var retreatValue = retreat.CalculateRetreat();
+        //var idleValue = idle.CalculateIdle();
+    }
+
     /// <summary>
     /// This function returns the nearest transform with the correct tag.
     /// </summary>

@@ -32,7 +32,7 @@ namespace Hunter.Character
         /// <param name="hasAttackedValue">The amount that the urge total will go up if the AI has just attacked.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <returns></returns>
-        private float CalculateAttack(float distanceToEnemy, bool hasAttacked, float hasAttackedValue, float currentHealth)
+        public float CalculateAttack(float distanceToEnemy, bool hasAttacked, float hasAttackedValue, float currentHealth)
         {
             var attackUrgeTotal = 0f;
 
@@ -50,7 +50,7 @@ namespace Hunter.Character
             return attackUrgeTotal;
         }
 
-        private void AttackAction(GameObject controller)
+        public void AttackAction(GameObject controller)
         {
             // The action for attacking the target will go here.
         }
@@ -75,7 +75,7 @@ namespace Hunter.Character
         /// <param name="distanceToEnemy">The distance that the AI is from it's target.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <returns></returns>
-        private float CalculateMoveTo(float distanceToEnemy, float currentHealth)
+        public float CalculateMoveTo(float distanceToEnemy, float currentHealth)
         {
             var moveToUrgeTotal = 0f;
 
@@ -88,7 +88,7 @@ namespace Hunter.Character
             return moveToUrgeTotal;
         }
 
-        private void MoveToAction(GameObject controller)
+        public void MoveToAction(GameObject controller)
         {
             var aiComponentModule = controller.GetComponent<AIInputModule>();
             controller.GetComponent<IMoveable>().Move(aiComponentModule.Controller, aiComponentModule.MoveDirection, aiComponentModule.LookDirection, aiComponentModule.EnemyModel, aiComponentModule.Agent);
@@ -113,7 +113,7 @@ namespace Hunter.Character
         /// <param name="canMoveAwayFromTargetValue">The amount that the urge total will go down if the AI is cornered.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <returns></returns>
-        private float CalculateRetreat(bool canMoveAwayFromTarget, float canMoveAwayFromTargetValue, float currentHealth)
+        public float CalculateRetreat(bool canMoveAwayFromTarget, float canMoveAwayFromTargetValue, float currentHealth)
         {
             var retreatUrgeTotal = 0f;
 
@@ -129,7 +129,7 @@ namespace Hunter.Character
             return retreatUrgeTotal;
         }
 
-        private void RetreatAction(GameObject controller)
+        public void RetreatAction(GameObject controller)
         {
             // The action for retreating will go here.
         }
@@ -156,7 +156,7 @@ namespace Hunter.Character
         /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <param name="inCombatValue">The amount that the urge total will go down if the AI is in combat.</param>
         /// <returns></returns>
-        private float CalculateIdle(bool enemyInLOS, float enemyInLOSValue, bool hasJustIdled, float hasJustIdledValue, bool inCombat, float inCombatValue)
+        public float CalculateIdle(bool enemyInLOS, float enemyInLOSValue, bool hasJustIdled, float hasJustIdledValue, bool inCombat, float inCombatValue)
         {
             var idleUrgeTotal = 0f;
 
@@ -180,7 +180,7 @@ namespace Hunter.Character
             return idleUrgeTotal;
         }
 
-        private void IdleAction(GameObject controller)
+        public void IdleAction(GameObject controller)
         {
             // The action for idling will go here.
         }
@@ -207,7 +207,7 @@ namespace Hunter.Character
         /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <param name="inCombatValue">The amount that the urge total will go down if the AI is in combat.</param>
         /// <returns></returns>
-        private float CalculateWander(bool enemyInLOS, float enemyInLOSValue, bool hasJustWandered, float hasJustWanderedValue, bool inCombat, float inCombatValue)
+        public float CalculateWander(bool enemyInLOS, float enemyInLOSValue, bool hasJustWandered, float hasJustWanderedValue, bool inCombat, float inCombatValue)
         {
             var wanderUrgeTotal = 0f;
 
@@ -229,7 +229,7 @@ namespace Hunter.Character
             return wanderUrgeTotal;
         }
 
-        private void WanderAction(GameObject controller)
+        public void WanderAction(GameObject controller)
         {
             // The action for wandering will go here.
         }
