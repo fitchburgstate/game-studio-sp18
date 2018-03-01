@@ -58,29 +58,29 @@ namespace Hunter.Character
             }
         }
 
-        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject enemyRoot, NavMeshAgent agent)
+        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject characterModel, NavMeshAgent agent)
         {
-            //moveDirection = transform.TransformDirection(moveDirection);
-            //moveDirection *= speed;
+            moveDirection = transform.TransformDirection(moveDirection);
+            moveDirection *= speed;
 
-            //agent.destination = enemyRoot.transform.position;
-            //agent.updateRotation = false;
+            agent.destination = characterModel.transform.position;
+            agent.updateRotation = false;
 
-            //if (moveDirection.magnitude != 0 || finalDirection.magnitude != 0)
-            //{
-            //    var targetRotation = new Vector3(enemyRoot.transform.localEulerAngles.x, Mathf.Atan2(finalDirection.x, finalDirection.z) * Mathf.Rad2Deg, enemyRoot.transform.localEulerAngles.z);
+            if (moveDirection.magnitude != 0 || finalDirection.magnitude != 0)
+            {
+                var targetRotation = new Vector3(characterModel.transform.localEulerAngles.x, Mathf.Atan2(finalDirection.x, finalDirection.z) * Mathf.Rad2Deg, characterModel.transform.localEulerAngles.z);
 
-            //    speedRamp = Mathf.Clamp(speedRamp + Time.deltaTime, 0, 1);
-            //    var changeChar = rotateAnimation.Evaluate(speedRamp) * rotateEnemy;
+                speedRamp = Mathf.Clamp(speedRamp + Time.deltaTime, 0, 1);
+                var changeChar = rotateAnimation.Evaluate(speedRamp) * rotateEnemy;
 
-            //    enemyRoot.transform.localRotation = Quaternion.RotateTowards(enemyRoot.transform.localRotation, Quaternion.Euler(targetRotation), changeChar);
-            //}
-            //else
-            //{
-            //    speedRamp = 0;
-            //}
+                characterModel.transform.localRotation = Quaternion.RotateTowards(characterModel.transform.localRotation, Quaternion.Euler(targetRotation), changeChar);
+            }
+            else
+            {
+                speedRamp = 0;
+            }
 
-            //controller.Move(moveDirection * Time.deltaTime);
+            controller.Move(moveDirection * Time.deltaTime);
         }
 
         public void Dash(CharacterController controller)

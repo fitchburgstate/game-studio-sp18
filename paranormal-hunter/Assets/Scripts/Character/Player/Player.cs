@@ -54,26 +54,26 @@ namespace Hunter.Character
         /// <param name="controller">The character controller that will be moved.</param>
         /// <param name="moveDirection">The direction in which the character controller will be moved.</param>
         /// <param name="finalDirection">The direction in which the model will rotate to face. This exists so the character can look independently of movement.</param>
-        /// <param name="playerModel">The model that will be rotated either dependently or independently of the movement.</param>
+        /// <param name="characterModel">The model that will be rotated either dependently or independently of the movement.</param>
         /// <param name="agent">The navmesh agent on the gameobject.</param>
-        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerModel, NavMeshAgent agent)
+        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject characterModel, NavMeshAgent agent)
         {
             anim.SetFloat("dirY", Mathf.Abs(moveDirection.magnitude), 0, 1);
 
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
 
-            agent.destination = playerModel.transform.position;
+            agent.destination = characterModel.transform.position;
             agent.updateRotation = false;
 
             if (moveDirection.magnitude != 0 || finalDirection.magnitude != 0)
             {
-                var targetRotation = new Vector3(playerModel.transform.localEulerAngles.x, Mathf.Atan2(finalDirection.x, finalDirection.z) * Mathf.Rad2Deg, playerModel.transform.localEulerAngles.z);
+                var targetRotation = new Vector3(characterModel.transform.localEulerAngles.x, Mathf.Atan2(finalDirection.x, finalDirection.z) * Mathf.Rad2Deg, characterModel.transform.localEulerAngles.z);
 
                 speedRamp = Mathf.Clamp(speedRamp + Time.deltaTime, 0, 1);
                 var changeChar = rotateAnimation.Evaluate(speedRamp) * rotateChar;
 
-                playerModel.transform.localRotation = Quaternion.RotateTowards(playerModel.transform.localRotation, Quaternion.Euler(targetRotation), changeChar);
+                characterModel.transform.localRotation = Quaternion.RotateTowards(characterModel.transform.localRotation, Quaternion.Euler(targetRotation), changeChar);
             }
             else
             {

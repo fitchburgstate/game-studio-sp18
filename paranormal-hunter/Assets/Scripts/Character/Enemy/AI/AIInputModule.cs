@@ -6,6 +6,84 @@ using Hunter;
 
 public class AIInputModule : MonoBehaviour
 {
+    public Vector3 MoveDirection
+    {
+        get
+        {
+            return moveDirection;
+        }
+
+        set
+        {
+            moveDirection = value;
+        }
+    }
+
+    public Vector3 LookDirection
+    {
+        get
+        {
+            return lookDirection;
+        }
+
+        set
+        {
+            lookDirection = value;
+        }
+    }
+
+    public GameObject EnemyModel
+    {
+        get
+        {
+            return enemyModel;
+        }
+
+        set
+        {
+            enemyModel = value;
+        }
+    }
+
+    public NavMeshAgent Agent
+    {
+        get
+        {
+            return agent;
+        }
+
+        set
+        {
+            agent = value;
+        }
+    }
+
+    public CharacterController Controller
+    {
+        get
+        {
+            return controller;
+        }
+
+        set
+        {
+            controller = value;
+        }
+    }
+
+    public Vector3 FinalDirection
+    {
+        get
+        {
+            return finalDirection;
+        }
+
+        set
+        {
+            finalDirection = value;
+        }
+    }
+
     /// <summary>
     /// Represents which direction the character should move in.
     /// </summary>
@@ -36,17 +114,33 @@ public class AIInputModule : MonoBehaviour
     /// </summary>
     private Vector3 finalDirection;
 
-
     private void Start()
     {
-        enemyModel = gameObject.transform.GetChild(0).gameObject;
-        agent = GetComponent<NavMeshAgent>();
+        EnemyModel = gameObject.transform.GetChild(0).gameObject;
+        Agent = GetComponent<NavMeshAgent>();
     }
-
-    private void Update()
+    
+    /// <summary>
+    /// This function returns the nearest transform with the correct tag.
+    /// </summary>
+    /// <param name="targetString">The name of the tag that is being searched for.</param>
+    /// <returns></returns>
+    public Transform FindNearestTargetWithString(string targetString)
     {
-        var moveEnemy = GetComponent<IMoveable>();
-        var characterController = GetComponent<CharacterController>();
-        var finalDirection = Vector3.zero;
+        var targets = GameObject.FindGameObjectsWithTag(targetString);
+        Transform bestTarget = null;
+        var closestDistanceSqr = Mathf.Infinity;
+        var currentPosition = transform.position;
+        foreach (var potentialTarget in targets)
+        {
+            var directionToTarget = potentialTarget.transform.position - currentPosition;
+            var dSqrToTarget = directionToTarget.sqrMagnitude;
+            if (dSqrToTarget < closestDistanceSqr)
+            {
+                closestDistanceSqr = dSqrToTarget;
+                bestTarget = potentialTarget.transform;
+            }
+        }
+        return bestTarget;
     }
 }
