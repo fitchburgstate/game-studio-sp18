@@ -71,7 +71,7 @@ namespace Hunter
         public InputDevice Device { get; set; }
         public Controls controls;
 
-        private void Awake()
+        private void Start()
         {
             if (InputManager.Devices.Count == 0)
             {
@@ -87,6 +87,8 @@ namespace Hunter
 
         private void Update()
         {
+            Device = InputManager.ActiveDevice;
+
             HorizontalInput = controls.move.X;
             VerticalInput = controls.move.Y;
             RightStickHorizontal = controls.look.X;
@@ -96,11 +98,6 @@ namespace Hunter
             {
                 SetBinding();
             }
-
-
-            //Debug.Log(isController);
-            //InputManager.OnActiveDeviceChanged += Device => Debug.Log("Switched: " + Device.Name);
-            //Debug.Log("Active Device is " + Device.DeviceStyle);
         }
 
         public void SetBinding()
