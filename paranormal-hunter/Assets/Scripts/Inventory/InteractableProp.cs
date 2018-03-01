@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Hunter;
 using Hunter.Character;
+
 
 namespace Interactables
 {
@@ -19,8 +21,10 @@ namespace Interactables
     }
        
     [RequireComponent(typeof(Animator))]
-    public class InteractableProp : MonoBehaviour
+    public class InteractableProp : MonoBehaviour//, IAttack
     {
+
+        public Interactable itemNeeded;
         [Header("Will you interact with it or attack it")]
         [SerializeField]
         private PropType propType;
@@ -28,7 +32,7 @@ namespace Interactables
         [SerializeField]
         private OPTIONS elementalType;
         [SerializeField]
-        private NeedElementType needElement;
+        private NeedElementType needElement; // change to bool
         [Header("Number of items to spawn and items to spawn")]
         [SerializeField]
         private List<Interactable> interactable = new List<Interactable>();
@@ -43,11 +47,29 @@ namespace Interactables
         [Header("the broken prop")]
         [SerializeField]
         private GameObject brokenProp;
+        Weapon weapon;
+        public MonoBehaviour objectScript;
+        public UnityEvent myEvent;
 
-        private void Start()
+       /* public void Attack()
         {
-            anim = GetComponent<Animator>();
+            throw new System.NotImplementedException();
         }
+
+        public void EnableMeleeHitbox()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void DisableMeleeHitbox()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GunFiring()
+        {
+            throw new System.NotImplementedException();
+        }*/
 
         public void Attacked()
         {
@@ -59,6 +81,11 @@ namespace Interactables
             {
                 ShakeProp();
             }
+        }
+
+        private void Start()
+        {
+            anim = GetComponent<Animator>();
         }
 
         private void OnMouseDown()
@@ -136,6 +163,24 @@ namespace Interactables
             interactable.Clear();
         }
 
+        private void DropItemInProp(Interactable interactable)
+        {
+            if (interactable.Equals(itemNeeded))
+            {
+
+            }
+        }
+
+        public void GiveItemToPLayer(GameObject item)
+        {
+            item.transform.SetParent(Inventory.instance.transform);
+        }
+
+        public void StartEvent(ref GameObject eventObject)
+        {
+            myEvent.Invoke();
+        }
+
         private IEnumerator DestroyPieces()
         {
             yield return new WaitForSeconds(12f);
@@ -148,7 +193,9 @@ namespace Interactables
            // Destroy(gameObject,2f);
         }
 
-        private void OnTriggerEnter(Collider other)
+        
+
+        /* private void OnTriggerEnter(Collider other)
         {
             OPTIONS typeFromWeapon;
 
@@ -176,8 +223,8 @@ namespace Interactables
         private void CheckForRay(Ray ray)
         {
             var rangedWeapon = ray.origin;
-            Physics.r
+           // Physics.r
 
-        }
-    }
+        } */
+    } 
 }

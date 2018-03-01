@@ -10,6 +10,8 @@ namespace Interactables
         [HideInInspector]
         public bool spawnedFromProp = false; // equal true if object is spawned from an interactable prop
         
+
+        //do math for this function
         public float propSpeed;
         public float bounceSpeed;
         public float bounceHeight;
