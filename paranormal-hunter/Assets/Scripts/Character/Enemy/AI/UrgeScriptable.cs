@@ -17,13 +17,13 @@ public class UrgeScriptable : ScriptableObject
     /// This value is used to determine the next action that the AI will perform.
     /// </summary>
     [Range(0, 100)]
-    public float hasJustWanderedUrgeValue = 75f;
+    public float hasJustWanderedUrgeValue = 25f;
 
     /// <summary>
     /// This value is used to determine the next action that the AI will perform.
     /// </summary>
     [Range(0, 100)]
-    public float hasJustIdledUrgeValue = 75;
+    public float hasJustIdledUrgeValue = 25;
 
     /// <summary>
     /// This value is used to determine the next action that the AI will perform.
