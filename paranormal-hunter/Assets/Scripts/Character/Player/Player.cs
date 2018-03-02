@@ -22,8 +22,7 @@ namespace Hunter.Character
         public AnimationCurve dashAnimation;
 
         public Animator anim;
-        public float dodgeRate;
-        public float nextDodge;
+        public float dashSpeed;
 
         // ------------------------------------------------ \\ 
 
@@ -65,10 +64,9 @@ namespace Hunter.Character
         }
 
         //DO NOT DELETE Currently Works
-        public IEnumerator TestDash(Vector3 target)
+        /*public IEnumerator TestDash(Vector3 target)
         {
             var startTime = Time.time;
-            var zeroed = false;
             while(Vector3.Distance(transform.position, target) != 0)
             {
                 transform.position = Vector3.Lerp(transform.position, target, (Time.time - startTime) * 2);
@@ -80,24 +78,21 @@ namespace Hunter.Character
             }
 
             yield return new WaitForSeconds(3.0f);
-        }
+        }*/
 
-        /*private IEnumerator TestDash(Vector3 target)
+        private IEnumerator TestDash(Vector3 target)
         {
-            var dashCompleteDistance = 0.0f;
-            var dashTime = 0f;
-            var startTime = Time.time;
-
-            while (Vector3.Distance(transform.position, target) > dashCompleteDistance)
+            var dashComplete = 0.09f;
+            float dashTime = 0;
+            while(Vector3.Distance(transform.position, target) > dashComplete)
             {
-                dashTime = (Time.time - startTime) * 2;
+                Debug.Log(Vector3.Distance(transform.position, target));
+                dashTime += dashSpeed * Time.deltaTime;
                 var dashAmount = dashAnimation.Evaluate(dashTime);
-
                 transform.position = Vector3.Lerp(transform.position, target, dashAmount);
-
                 yield return null;
             }
-        }*/
+        }
 
         public void Dash(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {

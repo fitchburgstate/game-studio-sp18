@@ -82,7 +82,7 @@ public class ControllerInputModule : MonoBehaviour
         {
             player.SwitchWeapon();
         }
-        else if (myDeviceManager.Device.LeftTrigger.WasReleased && Time.time > player.nextDodge)
+        else if (myDeviceManager.Device.LeftTrigger.WasReleased)
         {
             player.Dash(characterController, moveDirection, finalDirection, playerRoot, agent);
         }
