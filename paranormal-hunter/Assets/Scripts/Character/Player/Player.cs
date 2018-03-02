@@ -19,8 +19,12 @@ namespace Hunter.Character
 
         private float speedRamp;
         public AnimationCurve rotateAnimation;
+        public AnimationCurve dashAnimation;
 
         public Animator anim;
+        public float dodgeRate;
+        public float nextDodge;
+
         // ------------------------------------------------ \\ 
 
         private void Start()
@@ -30,7 +34,6 @@ namespace Hunter.Character
             {
                 range.gameObject.SetActive(false);
             }
-
             SetCurrentWeapon(melee);
         }
 
@@ -61,38 +64,95 @@ namespace Hunter.Character
             controller.Move(moveDirection * Time.deltaTime);
         }
 
+        //DO NOT DELETE Currently Works
+        public IEnumerator TestDash(Vector3 target)
+        {
+            var startTime = Time.time;
+            var zeroed = false;
+            while(Vector3.Distance(transform.position, target) != 0)
+            {
+                transform.position = Vector3.Lerp(transform.position, target, (Time.time - startTime) * 2);
+                if(Vector3.Distance(transform.position, target) == 0)
+                {
+                    break;
+                }
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(3.0f);
+        }
+
+        /*private IEnumerator TestDash(Vector3 target)
+        {
+            var dashCompleteDistance = 0.0f;
+            var dashTime = 0f;
+            var startTime = Time.time;
+
+            while (Vector3.Distance(transform.position, target) > dashCompleteDistance)
+            {
+                dashTime = (Time.time - startTime) * 2;
+                var dashAmount = dashAnimation.Evaluate(dashTime);
+
+                transform.position = Vector3.Lerp(transform.position, target, dashAmount);
+
+                yield return null;
+            }
+        }*/
+
         public void Dash(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
             // This feature has not yet been implemented
-            //Debug.Log(finalDirection);
-            //Debug.Log(finalDirection.x);
-
             /*
              * TODO:
              * Perfect Diagnol on Movement causes dashes not to work (may or may not need to fix)
-             * Added a Timer to prevent multiple dashes from happening after
+             * move timed bit to coroutine
              */
-
-            if (moveDirection.x <= .5 && moveDirection.x >= -.5 && moveDirection.z > 0)
+            var start = transform.position;
+            var temp = start;
+            //Debug.Log(startTime);
+            if (finalDirection.x <= .5 && finalDirection.x >= -.5 && finalDirection.z > 0)
             {
                 Debug.Log("Dash Foward");
-                transform.position = new Vector3(transform.position.x + 5, transform.position.y, transform.position.z + 5); //Will need to change with animation when added
+                temp.z = start.z + 5;
+                temp.x = start.x + 5;
+                StartCoroutine(TestDash(temp));
             }
-            else if(moveDirection.x <= .5 && moveDirection.x >= -.5 && moveDirection.z < 0)
+            /*else if(finalDirection.x <= .5 && finalDirection.x >= -.5 && finalDirection.z < 0)
             {
                 Debug.Log("Dash Backward");
                 transform.position = new Vector3(transform.position.x - 5, transform.position.y, transform.position.z - 5);//Will need to change with animation when added
             }
-            else if(moveDirection.z <= .5 && moveDirection.z >= -.5 && moveDirection.x > 0)
+            else if(finalDirection.z <= .5 && finalDirection.z >= -.5 && finalDirection.x > 0)
             {
                 Debug.Log("Dash Right");
                 transform.position = new Vector3(transform.position.x + 5, transform.position.y, transform.position.z - 5);//Will need to change with animation when added
             }
-            else if (moveDirection.z <= .5 && moveDirection.z >= -.5 && moveDirection.x < 0)
+            else if (finalDirection.z <= .5 && finalDirection.z >= -.5 && finalDirection.x < 0)
             {
                 Debug.Log("Dash Left");
                 transform.position = new Vector3(transform.position.x - 5, transform.position.y, transform.position.z + 5);//Will need to change with animation when added
             }
+            else if(finalDirection.x <= .8 && finalDirection.x >=.2 && finalDirection.z > 0)
+            {
+                Debug.Log("Diag Up Right");
+                transform.position = new Vector3(transform.position.x + 5, transform.position.y, transform.position.z);
+            }
+            else if(finalDirection.x <= .8 && finalDirection.x >= .2 && finalDirection.z < 0)
+            {
+                Debug.Log("Diag Down Right");
+                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 5);
+            }
+            else if (finalDirection.z <= .8 && finalDirection.z >= .2 && finalDirection.x > 0)
+            {
+                Debug.Log("Diag Up Left");
+                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z  + 5);
+            }
+            else if (finalDirection.z <= .8 && finalDirection.z >= .2 && finalDirection.x < 0)
+            {
+                Debug.Log("Diag Down Left");
+                transform.position = new Vector3(transform.position.x - 5, transform.position.y, transform.position.z);
+            }*/
+            //nextDodge = Time.time + dodgeRate;
         }
 
         public void Attack()
