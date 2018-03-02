@@ -14,16 +14,17 @@ namespace Interactables
         Destructible
     }
 
-    public enum NeedElementType
+   /* public enum NeedElementType
     {
         ElementRequired,
         NoneRequired
-    }
+    }*/
        
     [RequireComponent(typeof(Animator))]
-    public class InteractableProp : MonoBehaviour//, IAttack
+    public class InteractableProp : MonoBehaviour, IAttack
     {
 
+        public bool elementRequired;
         public Interactable itemNeeded;
         [Header("Will you interact with it or attack it")]
         [SerializeField]
@@ -31,8 +32,8 @@ namespace Interactables
         [Header("Type needed to be interacted with")]
         [SerializeField]
         private OPTIONS elementalType;
-        [SerializeField]
-        private NeedElementType needElement; // change to bool
+       // [SerializeField]
+       // private NeedElementType needElement; // change to bool
         [Header("Number of items to spawn and items to spawn")]
         [SerializeField]
         private List<Interactable> interactable = new List<Interactable>();
@@ -51,9 +52,9 @@ namespace Interactables
         public MonoBehaviour objectScript;
         public UnityEvent myEvent;
 
-       /* public void Attack()
+        public void Attack()
         {
-            throw new System.NotImplementedException();
+            Attacked();
         }
 
         public void EnableMeleeHitbox()
@@ -69,7 +70,7 @@ namespace Interactables
         public void GunFiring()
         {
             throw new System.NotImplementedException();
-        }*/
+        }
 
         public void Attacked()
         {
@@ -85,6 +86,11 @@ namespace Interactables
 
         private void Start()
         {
+
+            if (myEvent == null)
+            {
+                myEvent = new UnityEvent();
+            }
             anim = GetComponent<Animator>();
         }
 
@@ -104,6 +110,7 @@ namespace Interactables
             BreakItem();
             DestoryProp();
             DisableProp();
+           // SpawnItems();
 
         }
 
@@ -112,7 +119,7 @@ namespace Interactables
             brokenProp = Instantiate(brokenProp, transform.position, transform.rotation);
         }
 
-        public void DisableProp()
+        private void DisableProp()
         {
             var mesh = GetComponent<MeshRenderer>().enabled = false;
             var collider = GetComponent<Collider>().enabled = false;
@@ -141,6 +148,21 @@ namespace Interactables
 
         }
 
+        private void NeedElement()
+        { 
+            if (elementRequired == true)
+            {
+               // typeFromWeapon 
+
+                //CheckWeaponType(typeFromWeapon);
+            }
+            else if (elementRequired == false)
+            {
+                Attacked();
+            }
+            
+        }
+
         private void CheckWeaponType(OPTIONS weaponElement)
         {
             if (weaponElement == elementalType)
@@ -157,6 +179,10 @@ namespace Interactables
                 if (PropType.Interactable == propType)
                 {
                     interactable[i].spawnedFromProp = true;
+                } 
+                else if (PropType.Destructible == propType)
+                {
+                    interactable[i].spawnedFromDestruct = true;
                 }
             }
 
@@ -167,7 +193,7 @@ namespace Interactables
         {
             if (interactable.Equals(itemNeeded))
             {
-
+                Attacked();
             }
         }
 
@@ -180,6 +206,12 @@ namespace Interactables
         {
             myEvent.Invoke();
         }
+
+        public void MoveTheObject()
+        {
+
+        }
+        
 
         private IEnumerator DestroyPieces()
         {

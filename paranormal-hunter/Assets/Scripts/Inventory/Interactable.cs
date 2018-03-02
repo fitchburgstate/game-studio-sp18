@@ -9,9 +9,10 @@ namespace Interactables
         public Item item;
         [HideInInspector]
         public bool spawnedFromProp = false; // equal true if object is spawned from an interactable prop
+        public bool spawnedFromDestruct = false;
         
 
-        //do math for this function
+        //TODO Math for the Anim function
         public float propSpeed;
         public float bounceSpeed;
         public float bounceHeight;
@@ -64,6 +65,10 @@ namespace Interactables
             if (spawnedFromProp == true)
             {
                 SpawnFromProp();
+            }
+            else if(spawnedFromDestruct == true)
+            {
+                SpawnOnGround();
             }
         }
 
