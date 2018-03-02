@@ -124,7 +124,6 @@ GameObject:
   - component: {fileID: 227407018}
   - component: {fileID: 227407017}
   - component: {fileID: 227407016}
-  - component: {fileID: 227407015}
   - component: {fileID: 227407014}
   - component: {fileID: 227407020}
   m_Layer: 0
@@ -146,19 +145,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isController: 1
---- !u!114 &227407015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 227407013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d94f455bb7764384eb27148da1bd3b29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1572042561}
-  smoothing: 3
 --- !u!81 &227407016
 AudioListener:
   m_ObjectHideFlags: 0
@@ -216,7 +202,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 227407013}
   m_LocalRotation: {x: 0.23911765, y: 0.3696438, z: -0.09904577, w: 0.89239913}
-  m_LocalPosition: {x: -7.58646, y: 9.097045, z: -7.5864596}
+  m_LocalPosition: {x: -8.389614, y: 8.676595, z: -8.367677}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -332,22 +318,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ad980451443d70438faac0bc6c235a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LookaheadTime: 0
-  m_LookaheadSmoothing: 10
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
-  m_ScreenX: 0.5
-  m_ScreenY: 0.653
-  m_CameraDistance: 13.24
-  m_DeadZoneWidth: 0.1
-  m_DeadZoneHeight: 0.1
+  m_LookaheadTime: 0.8
+  m_LookaheadSmoothing: 30
+  m_XDamping: 12
+  m_YDamping: 12
+  m_ZDamping: 3
+  m_ScreenX: 0.5008562
+  m_ScreenY: 0.554
+  m_CameraDistance: 14
+  m_DeadZoneWidth: 0.017
+  m_DeadZoneHeight: 0.1880441
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
-  m_SoftZoneWidth: 0.8
-  m_SoftZoneHeight: 0.8
+  m_SoftZoneWidth: 0.452
+  m_SoftZoneHeight: 0.423
   m_BiasX: 0
-  m_BiasY: 0
+  m_BiasY: -0.224999
   m_GroupFramingMode: 2
   m_AdjustmentMode: 2
   m_GroupFramingSize: 0.8
@@ -1034,7 +1020,7 @@ GameObject:
   - component: {fileID: 1130223647}
   - component: {fileID: 1130223646}
   m_Layer: 0
-  m_Name: CM vcam1
+  m_Name: CM Isometric Follow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1078,7 +1064,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 10
+  m_Priority: 999
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1572042561}
   m_Lens:
@@ -1095,12 +1081,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1130223645}
   m_LocalRotation: {x: 0.23911765, y: 0.3696438, z: -0.09904577, w: 0.89239913}
-  m_LocalPosition: {x: -7.58646, y: 9.097045, z: -7.5864596}
+  m_LocalPosition: {x: -8.389614, y: 8.676595, z: -8.367677}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 441427131}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 1807211803}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 30, y: 45, z: 0}
 --- !u!1001 &1163824889
 Prefab:
@@ -1522,6 +1508,53 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7dca17faf8fd930419eae2d65643dbad, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1807211802
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1807211803}
+  - component: {fileID: 1807211804}
+  m_Layer: 0
+  m_Name: CM Cameras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1807211803
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1807211802}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1130223648}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1807211804
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1807211802}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1875073776
 GameObject:
   m_ObjectHideFlags: 0
