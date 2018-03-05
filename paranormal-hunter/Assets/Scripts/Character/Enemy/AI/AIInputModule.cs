@@ -147,6 +147,12 @@ public class AIInputModule : MonoBehaviour
 
     private void Start()
     {
+        attack = new Attack(gameObject);
+        idle = new Idle(gameObject);
+        wander = new Wander(gameObject);
+        moveTo = new MoveTo(gameObject);
+        retreat = new Retreat(gameObject);
+
         EnemyModel = gameObject.transform.GetChild(0).gameObject;
         Agent = GetComponent<NavMeshAgent>();
 

@@ -10,7 +10,7 @@ namespace Hunter.Character
     /// </summary>
     public abstract class UtilityBasedAI
     {
-        public abstract void Act(GameObject controller);
+        public abstract void Act();
     }
 
     /// <summary>
@@ -18,7 +18,14 @@ namespace Hunter.Character
     /// </summary>
     public sealed class Attack : UtilityBasedAI
     {
-        public override void Act(GameObject controller)
+        private GameObject controller;
+
+        public Attack(GameObject controller)
+        {
+            this.controller = controller;
+        }
+
+        public override void Act()
         {
             AttackAction(controller);
         }
@@ -61,9 +68,14 @@ namespace Hunter.Character
     /// </summary>
     public class MoveTo : UtilityBasedAI
     {
-        private AIInputModule aiInputModule;
+        private GameObject controller;
 
-        public override void Act(GameObject controller)
+        public MoveTo(GameObject controller)
+        {
+            this.controller = controller;
+        }
+
+        public override void Act()
         {
             MoveToAction(controller);
         }
@@ -99,7 +111,14 @@ namespace Hunter.Character
     /// </summary>
     public class Retreat : UtilityBasedAI
     {
-        public override void Act(GameObject controller)
+        private GameObject controller;
+
+        public Retreat(GameObject controller)
+        {
+            this.controller = controller;
+        }
+
+        public override void Act()
         {
             RetreatAction(controller);
         }
@@ -138,7 +157,14 @@ namespace Hunter.Character
     /// </summary>
     public class Idle : UtilityBasedAI
     {
-        public override void Act(GameObject controller)
+        private GameObject controller;
+
+        public Idle(GameObject controller)
+        {
+            this.controller = controller;
+        }
+
+        public override void Act()
         {
             IdleAction(controller);
         }
@@ -188,7 +214,14 @@ namespace Hunter.Character
     /// </summary>
     public class Wander : UtilityBasedAI
     {
-        public override void Act(GameObject controller)
+        private GameObject controller;
+
+        public Wander(GameObject controller)
+        {
+            this.controller = controller;
+        }
+
+        public override void Act()
         {
             WanderAction(controller);
         }
