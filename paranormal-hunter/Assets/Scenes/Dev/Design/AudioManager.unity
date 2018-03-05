@@ -137,7 +137,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 316771182}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.85550386, y: 2.3064017, z: 4.309868}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -162,6 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Footstep: 102
+  PlayerHit: 104
 --- !u!1001 &352205837
 Prefab:
   m_ObjectHideFlags: 0
@@ -169,6 +170,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _eventList.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4648832767578386, guid: 1a1172238f59399459e34d9848caae3a, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -201,97 +207,46 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
         type: 2}
-      propertyPath: _audioClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 765ea45bdf9b50341babe20cee9da5fb, type: 3}
-    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
-        type: 2}
-      propertyPath: _loop
-      value: 1
+      propertyPath: _eventList.Array.data[2]
+      value: Player Hit
       objectReference: {fileID: 0}
-    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
         type: 2}
-      propertyPath: _fadeInTime
-      value: 1
+      propertyPath: _eventList.Array.data[3]
+      value: Start Background Music
       objectReference: {fileID: 0}
-    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
         type: 2}
-      propertyPath: _overrideFadeProperties
-      value: 1
+      propertyPath: _eventList.Array.data[4]
+      value: Start House Ambience
       objectReference: {fileID: 0}
-    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
+    - target: {fileID: 114361218070292080, guid: 1a1172238f59399459e34d9848caae3a,
         type: 2}
-      propertyPath: _fadeOutTime
-      value: 1
+      propertyPath: _volume
+      value: 0.5011872
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1a1172238f59399459e34d9848caae3a, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &687823711 stripped
+--- !u!1 &1254459994 stripped
 GameObject:
-  m_PrefabParentObject: {fileID: 1466013126632548, guid: 1a1172238f59399459e34d9848caae3a,
+  m_PrefabParentObject: {fileID: 1464239494676792, guid: 1a1172238f59399459e34d9848caae3a,
     type: 2}
   m_PrefabInternal: {fileID: 352205837}
---- !u!114 &687823712
+--- !u!114 &1254459997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 687823711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 2066047398, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  switchPresetData:
-    _sourcePreset: 
-    _targetPreset: 
-  globalParameterData:
-    _name: 
-    _value: 0
-  globalSwitchParameterData:
-    _name: 
-    _switch: 
-  transitionToSnapshotData:
-    _snapshot: 
-    _timeToReach: 0
-  _eventName: Start Ambience
-  _eventAction: 0
-  _eventTriggerOnEnter: 0
-  _triggerEnterTag: 
-  _trigger: 0
-  _eventValue: 
-  _eventParameter: 1
-  _eventScheduleParameter: 0
-  _eventParameterName: 
-  _delay: 1
-  _probability: 100
-  _eventTriggerType: 0
-  _ignoreGameObject: 0
-  _overrideParentGameObject: 0
-  _addToQueue: 0
-  _min: 0
-  _max: 1
-  _dspType: 0
-  _timeToTarget: 0
-  _curve: 0.5
-  _parentGameObject: {fileID: 687823711}
-  _useEventID: 0
-  _postCountMax: 0
---- !u!114 &687823713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 687823711}
+  m_GameObject: {fileID: 1254459994}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1137554331, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _eventName: Start Ambience
+  _eventName: Player Hit
   _eventID: 0
   _overrideEventTriggerAction: 0
   _overrideParameters:
