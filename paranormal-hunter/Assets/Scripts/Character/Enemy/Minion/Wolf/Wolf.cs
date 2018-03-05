@@ -93,16 +93,6 @@ namespace Hunter.Character
             // This feature has not yet been implemented
         }
 
-        public void Wander(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
-        {
-
-        }
-
-        public void Retreat(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
-        {
-
-        }
-
         public void Idle(CharacterController controller)
         {
 

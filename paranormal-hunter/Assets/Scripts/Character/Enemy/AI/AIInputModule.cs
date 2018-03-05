@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Hunter;
 using Hunter.Character;
+using System.Linq;
 
 public class AIInputModule : MonoBehaviour
 {
@@ -133,16 +134,14 @@ public class AIInputModule : MonoBehaviour
     /// </summary>
     private Transform target;
 
-    public bool hasAttacked = false;
+    public bool hasJustAttacked = false;
     public bool enemyInLOS = false;
     public bool hasJustIdled = false;
     public bool inCombat = false;
     public bool hasJustWandered = false;
     public bool canMoveAwayFromTarget = false;
 
-    private UtilityBasedAI nextState;
-    private UtilityBasedAI currentState;
-
+    private Character character;
     private Attack attack;
     private Idle idle;
     private Wander wander;
@@ -152,31 +151,81 @@ public class AIInputModule : MonoBehaviour
 
     private void Start()
     {
+        #region Actions
         attack = new Attack(gameObject);
         idle = new Idle(gameObject);
         wander = new Wander(gameObject);
         moveTo = new MoveTo(gameObject);
         retreat = new Retreat(gameObject);
+        #endregion
+
         urgeScriptable = new UrgeScriptable();
 
         EnemyModel = gameObject.transform.GetChild(0).gameObject;
         Agent = GetComponent<NavMeshAgent>();
-
-        FindNearestTargetWithString("Player");
+        target = FindNearestTargetWithString("Player");
     }
 
-    public void FindNextState()
+    private void FixedUpdate()
     {
-        var attackValue = attack.CalculateAttack(DistanceToTarget(), hasAttacked, urgeScriptable.hasAttackedUrgeValue, GetComponent<Character>().health);
+        var currentState = FindNextState();
+        currentState.Act();
+
+        if (currentState is Attack)
+        {
+            hasJustAttacked = true;
+            hasJustIdled = false;
+            hasJustWandered = false;
+            inCombat = true;
+        }
+        else if (currentState is Idle)
+        {
+            hasJustAttacked = false;
+            hasJustIdled = true;
+            hasJustWandered = false;
+            inCombat = false;
+        }
+        else if (currentState is MoveTo)
+        {
+            hasJustAttacked = false;
+            hasJustIdled = false;
+            hasJustWandered = false;
+            inCombat = true;
+        }
+        else if (currentState is Retreat)
+        {
+            inCombat = true;
+            hasJustAttacked = false;
+            hasJustIdled = false;
+            hasJustWandered = false;
+        }
+        else if (currentState is Wander)
+        {
+            inCombat = false;
+            hasJustAttacked = false;
+            hasJustIdled = false;
+            hasJustWandered = true;
+        }
+    }
+
+    public UtilityBasedAI FindNextState()
+    {
+        var attackValue = attack.CalculateAttack(DistanceToTarget(), hasJustAttacked, urgeScriptable.hasAttackedUrgeValue, character.health);
         var idleValue = idle.CalculateIdle(enemyInLOS, urgeScriptable.enemyInLOSUrgeValue, hasJustIdled, urgeScriptable.hasJustIdledUrgeValue, inCombat, urgeScriptable.inCombatValue);
         var wanderValue = wander.CalculateWander(enemyInLOS, urgeScriptable.enemyInLOSUrgeValue, hasJustWandered, urgeScriptable.hasJustWanderedUrgeValue, inCombat, urgeScriptable.inCombatValue);
-        var moveToValue = moveTo.CalculateMoveTo(DistanceToTarget(), GetComponent<Character>().health);
-        var retreatValue = retreat.CalculateRetreat(canMoveAwayFromTarget, urgeScriptable.canMoveAwayFromTargetValue, GetComponent<Character>().health);
-    }
+        var moveToValue = moveTo.CalculateMoveTo(DistanceToTarget(), character.health);
+        var retreatValue = retreat.CalculateRetreat(canMoveAwayFromTarget, urgeScriptable.canMoveAwayFromTargetValue, character.health);
 
-    public void GetCurrentState()
-    {
+        var largestValue = new SortedDictionary<float, UtilityBasedAI>
+        {
+            { attackValue, attack },
+            { idleValue, idle },
+            { wanderValue, wander },
+            { moveToValue, moveTo },
+            { retreatValue, retreat }
+        };
 
+        return largestValue.Values.Max();
     }
 
     private float DistanceToTarget()

@@ -638,6 +638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4969597200687330}
   - component: {fileID: 114275519651456010}
+  - component: {fileID: 114975958411865788}
   - component: {fileID: 114079816252771084}
   - component: {fileID: 95567676443125932}
   - component: {fileID: 54380263697151656}
@@ -2353,7 +2354,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1579992428864402}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.04852803, z: -0, w: 0.99882185}
   m_LocalPosition: {x: 7.39, y: 0.614, z: 2.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2361,7 +2362,7 @@ Transform:
   - {fileID: 4271727652451944}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -5.563, z: 0}
 --- !u!4 &4986517480935408
 Transform:
   m_ObjectHideFlags: 1
@@ -2489,11 +2490,8 @@ MonoBehaviour:
   playerName: Wolf
   health: 75
   melee: {fileID: 0}
-  range: {fileID: 0}
-  currentState: {fileID: 0}
-  remainState: {fileID: 0}
+  rangeWeapon: {fileID: 0}
   elementType: 0
-  stateTimeElapsed: 0
   speed: 5
   rotateEnemy: 12
   rotateAnimation:
@@ -2502,6 +2500,24 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  anim: {fileID: 0}
+--- !u!114 &114975958411865788
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1579992428864402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54082744c3473f047aaaad4aa8c57dd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasAttacked: 0
+  enemyInLOS: 0
+  hasJustIdled: 0
+  inCombat: 0
+  hasJustWandered: 0
+  canMoveAwayFromTarget: 0
 --- !u!137 &137505957491884906
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

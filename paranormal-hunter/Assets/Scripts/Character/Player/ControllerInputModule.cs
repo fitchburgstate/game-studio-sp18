@@ -50,7 +50,7 @@ public class ControllerInputModule : MonoBehaviour
 
     private void Start()
     {
-        playerModel = gameObject.transform.GetChild(0).gameObject; // This will find the player-root gameobject, which means that the only child of this gameobject should be player-root
+        playerModel = gameObject.transform.GetChild(0).gameObject;
 
         mainCamera = GameObject.FindObjectOfType<Camera>();
         transform.forward = mainCamera.transform.forward;

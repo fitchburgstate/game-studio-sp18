@@ -34,17 +34,17 @@ namespace Hunter.Character
         /// This function will calculate the urge to attack.
         /// </summary>
         /// <param name="distanceToEnemy">The distance that the AI is from it's target.</param>
-        /// <param name="hasAttacked">Has the AI just finished an attack?</param>
+        /// <param name="hasJustAttacked">Has the AI just finished an attack?</param>
         /// <param name="hasAttackedValue">The amount that the urge total will go up if the AI has just attacked.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <returns></returns>
-        public float CalculateAttack(float distanceToEnemy, bool hasAttacked, float hasAttackedValue, float currentHealth)
+        public float CalculateAttack(float distanceToEnemy, bool hasJustAttacked, float hasAttackedValue, float currentHealth)
         {
             var attackUrgeTotal = 0f;
 
             attackUrgeTotal -= Mathf.Clamp(distanceToEnemy, 0, 100);
 
-            if (hasAttacked)
+            if (hasJustAttacked)
             {
                 attackUrgeTotal += hasAttackedValue;
             }
@@ -60,6 +60,7 @@ namespace Hunter.Character
         {
             var aiComponentModule = controller.GetComponent<AIInputModule>();
             aiComponentModule.GetComponent<IAttack>().Attack();
+            aiComponentModule.hasJustAttacked = true;
         }
     }
 
