@@ -135,6 +135,9 @@ public class AIInputModule : MonoBehaviour
 
     private bool hasAttacked = false;
 
+    private UtilityBasedAI nextState;
+    private UtilityBasedAI currentState;
+
     private Attack attack;
     private Idle idle;
     private Wander wander;
@@ -152,7 +155,7 @@ public class AIInputModule : MonoBehaviour
 
     public void FindNextState()
     {
-        attack.CalculateAttack(DistanceToTarget(), hasAttacked, urgeScriptable.hasAttackedUrgeValue, GetComponent<IHealth>().GetHealth());
+        var attackValue = attack.CalculateAttack(DistanceToTarget(), hasAttacked, urgeScriptable.hasAttackedUrgeValue, GetComponent<Character>().health);
         //idle.CalculateIdle();
         //wander.CalculateWander();
         //moveTo.CalculateMoveTo();

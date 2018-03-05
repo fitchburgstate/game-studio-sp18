@@ -6,7 +6,7 @@ using UnityEngine.AI;
 namespace Hunter.Character
 {
 
-    public sealed class Wolf : Minion, IMoveable, IAttack, IHealth
+    public sealed class Wolf : Minion, IMoveable, IAttack
     {
         /// <summary>
         /// Speed at which the character moves.
@@ -106,11 +106,6 @@ namespace Hunter.Character
         public void Idle(CharacterController controller)
         {
 
-        }
-
-        public float GetHealth()
-        {
-            return health;
         }
 
         public void Attack()

@@ -8,7 +8,7 @@ namespace Hunter.Character
     /// <summary>
     /// This class determines what action should be taken next based on an "urge".
     /// </summary>
-    public abstract class UtilityBasedAI : Character
+    public abstract class UtilityBasedAI
     {
         public abstract void Act(GameObject controller);
     }
@@ -130,7 +130,6 @@ namespace Hunter.Character
         public void RetreatAction(GameObject controller)
         {
             var aiComponentModule = controller.GetComponent<AIInputModule>();
-            aiComponentModule.GetComponent<IMoveable>().Retreat(aiComponentModule.Controller, aiComponentModule.MoveDirection, aiComponentModule.LookDirection, aiComponentModule.EnemyModel, aiComponentModule.Agent, aiComponentModule.Target);
         }
     }
 
