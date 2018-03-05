@@ -55,7 +55,7 @@ namespace Hunter.Character
         /// </summary>
         public virtual void Shoot()
         {
-            var player = UnityEngine.Object.FindObjectOfType<Player>();
+            var player = FindObjectOfType<Player>();
             var hit = new RaycastHit();
 
             ray.origin = transform.position;
@@ -64,7 +64,7 @@ namespace Hunter.Character
             if (Physics.Raycast(ray, out hit, weaponRange))
             {
                 var character = hit.collider.GetComponent<Character>();
-                if(character is Enemy)
+                if (character is Enemy)
                 {
                     //Debug.Log(transform.position);
                     //Debug.Log("working");
@@ -73,7 +73,7 @@ namespace Hunter.Character
                     damageFalloffRatio = weaponRange / distanceBetweenWeaponAndEnemy;
                     AttackEnemy(character, character.GetComponent<Enemy>().type, character.GetComponent<Enemy>().type.weakness, character.GetComponent<Enemy>().type.resistance1, character.GetComponent<Enemy>().type.resistance2, damageFalloffRatio);
                 }
-                if(character is Player)
+                if (character is Player)
                 {
                     character = character as Player;
                     playerRange = Vector3.Distance(character.transform.position, transform.position);
@@ -94,7 +94,7 @@ namespace Hunter.Character
         public override int Damage(float falloffRatio, double elementDamageBonus)
         {
             //May Need to tweak formula in order to achieve balance
-            if(falloffRatio > 1)
+            if (falloffRatio > 1)
             {
                 falloffRatio = 1;
             }
@@ -108,7 +108,7 @@ namespace Hunter.Character
         public void Ammo()
         {
             clipS++;
-            if(clipS == clipSize)
+            if (clipS == clipSize)
             {
                 //reload animation
                 //anim.Play(clip2.name);
@@ -132,27 +132,25 @@ namespace Hunter.Character
             {
                 isWeak = true;
                 Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 2)), 2f, enemyCharacter);
-                isWeak = false;
+                Damaged(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 2)), 2f, enemyCharacter);
             }
             else if (elementResistance1.Equals(type.GetType()) || elementResistance2.Equals(type.GetType()))
             {
                 isResistant = true;
                 Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 0.5)), 2f, enemyCharacter);
-                isResistant = false;
+                Damaged(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 0.5)), 2f, enemyCharacter);
             }
             else if ((elementType.GetType()).Equals(type.GetType()))
             {
                 isNonDamage = true;
                 Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 0)), 2f, enemyCharacter);
-                isNonDamage = false;
+                Damaged(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 0)), 2f, enemyCharacter);
             }
             else
             {
                 Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(damageFalloff, 1)), 2f, enemyCharacter);
+                Damaged(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 1)), 2f, enemyCharacter);
+
             }
         }
 

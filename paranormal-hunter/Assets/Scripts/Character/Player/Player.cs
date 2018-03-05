@@ -33,6 +33,7 @@ namespace Hunter.Character
             {
                 range.gameObject.SetActive(false);
             }
+
             SetCurrentWeapon(melee);
         }
 
