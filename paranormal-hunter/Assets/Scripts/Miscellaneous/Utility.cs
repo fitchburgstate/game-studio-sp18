@@ -13,6 +13,12 @@ public interface IMoveable
 
     void Dash(CharacterController controller);
 
+    void Retreat(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target);
+
+    void Wander(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target);
+
+    void Idle(CharacterController controller);
+
 }
 
 public interface IAttack
@@ -26,19 +32,15 @@ public interface IAttack
     void GunFiring();
 }
 
-//public interface IDamageable<T, V>
-//{
-//    void TakeDamage(T healthValue, V amount);
+public interface IBoss
+{
+    void Swing();
 
-//    void DealDamage(T targetHealthValue, V amount);
-//}
+    void Howl();
+}
 
-//public interface IHealth<T>
-//{
-//    void SetMaxHealth(T amount);
+public interface IHealth
+{
+    float GetHealth();
+}
 
-//    void SetStartingHealth(T amount);
-
-//    void SetCurrentHealth(T amount);
-
-//}

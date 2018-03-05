@@ -6,7 +6,7 @@ using UnityEngine.AI;
 namespace Hunter.Character
 {
 
-    public sealed class Wolf : Minion, IMoveable, IAttack
+    public sealed class Wolf : Minion, IMoveable, IAttack, IHealth
     {
         /// <summary>
         /// Speed at which the character moves.
@@ -88,10 +88,29 @@ namespace Hunter.Character
             controller.Move(moveDirection * Time.deltaTime);
         }
 
-
         public void Dash(CharacterController controller)
         {
             // This feature has not yet been implemented
+        }
+
+        public void Wander(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
+        {
+
+        }
+
+        public void Retreat(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
+        {
+
+        }
+
+        public void Idle(CharacterController controller)
+        {
+
+        }
+
+        public float GetHealth()
+        {
+            return health;
         }
 
         public void Attack()
@@ -105,6 +124,7 @@ namespace Hunter.Character
                 anim.SetTrigger("ranged");
             }
         }
+
 
         /// <summary>
         /// Enables the hitbox of the currently equipped melee weapon.
@@ -137,7 +157,5 @@ namespace Hunter.Character
         {
             rangeWeapon.Shoot();
         }
-
-
     }
 }

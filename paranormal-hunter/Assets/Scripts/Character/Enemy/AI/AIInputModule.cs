@@ -85,6 +85,19 @@ public class AIInputModule : MonoBehaviour
         }
     }
 
+    public Transform Target
+    {
+        get
+        {
+            return target;
+        }
+
+        set
+        {
+            target = value;
+        }
+    }
+
     /// <summary>
     /// Represents which direction the character should move in.
     /// </summary>
@@ -115,34 +128,42 @@ public class AIInputModule : MonoBehaviour
     /// </summary>
     private Vector3 finalDirection;
 
+    /// <summary>
+    /// The target that the AI has acquired.
+    /// </summary>
+    private Transform target;
+
+    private bool hasAttacked = false;
+
     private Attack attack;
     private Idle idle;
     private Wander wander;
     private MoveTo moveTo;
     private Retreat retreat;
+    private UrgeScriptable urgeScriptable;
 
     private void Start()
     {
         EnemyModel = gameObject.transform.GetChild(0).gameObject;
         Agent = GetComponent<NavMeshAgent>();
+
+        FindNearestTargetWithString("Player");
     }
 
-    private void Update()
+    public void FindNextState()
     {
-        var moveCharacter = GetComponent<IMoveable>();
-        var findTarget = FindNearestTargetWithString("Player");
-
-        //moveCharacter.Move();
+        attack.CalculateAttack(DistanceToTarget(), hasAttacked, urgeScriptable.hasAttackedUrgeValue, GetComponent<IHealth>().GetHealth());
+        //idle.CalculateIdle();
+        //wander.CalculateWander();
+        //moveTo.CalculateMoveTo();
+        //retreat.CalculateRetreat();
     }
 
-    private void GetCurrentState()
+    private float DistanceToTarget()
     {
+        var distance = Vector3.Distance(target.position, gameObject.transform.position);
 
-    }
-
-    private void NextState()
-    {
-
+        return distance;
     }
 
     /// <summary>

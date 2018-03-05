@@ -8,7 +8,7 @@ namespace Hunter.Character
     /// <summary>
     /// This class determines what action should be taken next based on an "urge".
     /// </summary>
-    public abstract class UtilityBasedAI : ScriptableObject
+    public abstract class UtilityBasedAI : Character
     {
         public abstract void Act(GameObject controller);
     }
@@ -16,7 +16,6 @@ namespace Hunter.Character
     /// <summary>
     /// This class controls when and how the AI will attack another character.
     /// </summary>
-    [CreateAssetMenu(fileName = "Attack", menuName = "Utility Based AI/Actions/Attack", order = 1)]
     public sealed class Attack : UtilityBasedAI
     {
         public override void Act(GameObject controller)
@@ -52,14 +51,14 @@ namespace Hunter.Character
 
         public void AttackAction(GameObject controller)
         {
-            // The action for attacking the target will go here.
+            var aiComponentModule = controller.GetComponent<AIInputModule>();
+            aiComponentModule.GetComponent<IAttack>().Attack();
         }
     }
 
     /// <summary>
     /// This class controls when and how the AI will move towards another character.
     /// </summary>
-    [CreateAssetMenu(fileName = "MoveTo", menuName = "Utility Based AI/Actions/MoveTo", order = 1)]
     public class MoveTo : UtilityBasedAI
     {
         private AIInputModule aiInputModule;
@@ -98,7 +97,6 @@ namespace Hunter.Character
     /// <summary>
     /// This class controls when and how the AI will retreat away from another character.
     /// </summary>
-    [CreateAssetMenu(fileName = "Retreat", menuName = "Utility Based AI/Actions/Retreat", order = 1)]
     public class Retreat : UtilityBasedAI
     {
         public override void Act(GameObject controller)
@@ -131,14 +129,14 @@ namespace Hunter.Character
 
         public void RetreatAction(GameObject controller)
         {
-            // The action for retreating will go here.
+            var aiComponentModule = controller.GetComponent<AIInputModule>();
+            aiComponentModule.GetComponent<IMoveable>().Retreat(aiComponentModule.Controller, aiComponentModule.MoveDirection, aiComponentModule.LookDirection, aiComponentModule.EnemyModel, aiComponentModule.Agent, aiComponentModule.Target);
         }
     }
 
     /// <summary>
     /// This class controls when and how the AI will idle.
     /// </summary>
-    [CreateAssetMenu(fileName = "Idle", menuName = "Utility Based AI/Actions/Idle", order = 1)]
     public class Idle : UtilityBasedAI
     {
         public override void Act(GameObject controller)
@@ -189,7 +187,6 @@ namespace Hunter.Character
     /// <summary>
     /// This class controls when and how the AI will wander around.
     /// </summary>
-    [CreateAssetMenu(fileName = "Wander", menuName = "Utility Based AI/Actions/Wander", order = 1)]
     public class Wander : UtilityBasedAI
     {
         public override void Act(GameObject controller)

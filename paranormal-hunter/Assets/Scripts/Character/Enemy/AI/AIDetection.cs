@@ -26,24 +26,6 @@ public class AIDetection : MonoBehaviour
     private float distanceToTarget;
 
     /// <summary>
-    /// A boolean to determine whether the AI is actively searching for a target.
-    /// </summary>
-    private bool isBlind;
-
-    private void Start()
-    {
-        isBlind = false;
-    }
-
-    //private void FixedUpdate()
-    //{
-    //    if (!isBlind)
-    //    {
-    //        DetectPlayer();
-    //    }
-    //}
-
-    /// <summary>
     /// The AI searches for a gameobject tagged "Player" and returns true when the player has been found.
     /// </summary>
     /// <returns></returns>
@@ -52,15 +34,6 @@ public class AIDetection : MonoBehaviour
         var rayHit = new RaycastHit();
         var playerObject = GameObject.FindGameObjectWithTag("Player");
         var rayDirection = playerObject.transform.position - transform.position;
-
-        //if (Physics.Raycast(transform.position, rayDirection, out rayHit))
-        //{
-        //    if ((rayHit.transform.tag == "Player") && (distanceToPlayer <= minDetectionDistance))
-        //    {
-        //        Debug.Log("The player has been hit!");
-        //        return true;
-        //    }
-        //}
 
         if (Vector3.Angle(rayDirection, transform.forward) <= fieldOfViewRange * 0.5f)
         {
