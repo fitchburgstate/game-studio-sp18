@@ -133,7 +133,12 @@ public class AIInputModule : MonoBehaviour
     /// </summary>
     private Transform target;
 
-    private bool hasAttacked = false;
+    public bool hasAttacked = false;
+    public bool enemyInLOS = false;
+    public bool hasJustIdled = false;
+    public bool inCombat = false;
+    public bool hasJustWandered = false;
+    public bool canMoveAwayFromTarget = false;
 
     private UtilityBasedAI nextState;
     private UtilityBasedAI currentState;
@@ -152,6 +157,7 @@ public class AIInputModule : MonoBehaviour
         wander = new Wander(gameObject);
         moveTo = new MoveTo(gameObject);
         retreat = new Retreat(gameObject);
+        urgeScriptable = new UrgeScriptable();
 
         EnemyModel = gameObject.transform.GetChild(0).gameObject;
         Agent = GetComponent<NavMeshAgent>();
@@ -162,10 +168,15 @@ public class AIInputModule : MonoBehaviour
     public void FindNextState()
     {
         var attackValue = attack.CalculateAttack(DistanceToTarget(), hasAttacked, urgeScriptable.hasAttackedUrgeValue, GetComponent<Character>().health);
-        //idle.CalculateIdle();
-        //wander.CalculateWander();
-        //moveTo.CalculateMoveTo();
-        //retreat.CalculateRetreat();
+        var idleValue = idle.CalculateIdle(enemyInLOS, urgeScriptable.enemyInLOSUrgeValue, hasJustIdled, urgeScriptable.hasJustIdledUrgeValue, inCombat, urgeScriptable.inCombatValue);
+        var wanderValue = wander.CalculateWander(enemyInLOS, urgeScriptable.enemyInLOSUrgeValue, hasJustWandered, urgeScriptable.hasJustWanderedUrgeValue, inCombat, urgeScriptable.inCombatValue);
+        var moveToValue = moveTo.CalculateMoveTo(DistanceToTarget(), GetComponent<Character>().health);
+        var retreatValue = retreat.CalculateRetreat(canMoveAwayFromTarget, urgeScriptable.canMoveAwayFromTargetValue, GetComponent<Character>().health);
+    }
+
+    public void GetCurrentState()
+    {
+
     }
 
     private float DistanceToTarget()
