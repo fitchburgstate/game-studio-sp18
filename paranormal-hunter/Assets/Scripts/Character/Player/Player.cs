@@ -94,6 +94,22 @@ namespace Hunter.Character
             }
         }
 
+        private Vector3 OnNavMesh(Vector3 target)
+        {
+            var hit = new NavMeshHit();
+            if(!(NavMesh.FindClosestEdge(target, out hit, NavMesh.AllAreas)))
+            {
+                Debug.Log("off");
+                target = transform.position;
+                return target;
+            }
+            else
+            {
+                Debug.Log("on");
+                return target;
+            }
+        }
+
         public void Dash(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
             // This feature has not yet been implemented
@@ -103,50 +119,90 @@ namespace Hunter.Character
              * move timed bit to coroutine
              */
             var start = transform.position;
+            var fwd = transform.forward;
             var temp = start;
             //Debug.Log(startTime);
+            Debug.Log(finalDirection);
             if (finalDirection.x <= .5 && finalDirection.x >= -.5 && finalDirection.z > 0)
             {
                 Debug.Log("Dash Foward");
                 temp.z = start.z + 5;
                 temp.x = start.x + 5;
+
+                temp = OnNavMesh(temp);
+
                 StartCoroutine(TestDash(temp));
             }
-            /*else if(finalDirection.x <= .5 && finalDirection.x >= -.5 && finalDirection.z < 0)
+            else if(finalDirection.x <= .5 && finalDirection.x >= -.5 && finalDirection.z < 0)
             {
                 Debug.Log("Dash Backward");
-                transform.position = new Vector3(transform.position.x - 5, transform.position.y, transform.position.z - 5);//Will need to change with animation when added
+                temp.z = start.z - 5;
+                temp.x = start.x - 5;
+
+                temp = OnNavMesh(temp);
+
+                StartCoroutine(TestDash(temp));
             }
             else if(finalDirection.z <= .5 && finalDirection.z >= -.5 && finalDirection.x > 0)
             {
                 Debug.Log("Dash Right");
-                transform.position = new Vector3(transform.position.x + 5, transform.position.y, transform.position.z - 5);//Will need to change with animation when added
+                temp.z = start.z - 5;
+                temp.x = start.x + 5;
+
+                temp = OnNavMesh(temp);
+
+                StartCoroutine(TestDash(temp));
             }
             else if (finalDirection.z <= .5 && finalDirection.z >= -.5 && finalDirection.x < 0)
             {
                 Debug.Log("Dash Left");
-                transform.position = new Vector3(transform.position.x - 5, transform.position.y, transform.position.z + 5);//Will need to change with animation when added
+                temp.z = start.z + 5;
+                temp.x = start.x - 5;
+
+                temp = OnNavMesh(temp);
+
+                StartCoroutine(TestDash(temp));
             }
             else if(finalDirection.x <= .8 && finalDirection.x >=.2 && finalDirection.z > 0)
             {
                 Debug.Log("Diag Up Right");
-                transform.position = new Vector3(transform.position.x + 5, transform.position.y, transform.position.z);
+                temp.z = start.z;
+                temp.x = start.x + 5;
+
+                temp = OnNavMesh(temp);
+
+                StartCoroutine(TestDash(temp));
             }
             else if(finalDirection.x <= .8 && finalDirection.x >= .2 && finalDirection.z < 0)
             {
                 Debug.Log("Diag Down Right");
-                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 5);
+                temp.z = start.z - 5;
+                temp.x = start.x;
+
+                temp = OnNavMesh(temp);
+
+                StartCoroutine(TestDash(temp));
             }
-            else if (finalDirection.z <= .8 && finalDirection.z >= .2 && finalDirection.x > 0)
+            else if (finalDirection.x <= .2 && finalDirection.x >= -.8 && finalDirection.z > 0)
             {
                 Debug.Log("Diag Up Left");
-                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z  + 5);
+                temp.z = start.z + 5;
+                temp.x = start.x;
+
+                temp = OnNavMesh(temp);
+
+                StartCoroutine(TestDash(temp));
             }
-            else if (finalDirection.z <= .8 && finalDirection.z >= .2 && finalDirection.x < 0)
+            else if (finalDirection.x >= -.8 && finalDirection.x <= -.2 && finalDirection.z < 0)
             {
                 Debug.Log("Diag Down Left");
-                transform.position = new Vector3(transform.position.x - 5, transform.position.y, transform.position.z);
-            }*/
+                temp.z = start.z;
+                temp.x = start.x - 5;
+
+                temp = OnNavMesh(temp);
+
+                StartCoroutine(TestDash(temp));
+            }
             //nextDodge = Time.time + dodgeRate;
         }
 

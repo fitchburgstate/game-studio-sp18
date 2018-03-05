@@ -52,9 +52,9 @@ public class ControllerInputModule : MonoBehaviour
             //}
             //else
             //{
-            //    var rayVect = ray.GetPoint(test);
-            //    lookDirection = new Vector3(rayVect.x, playerRoot.transform.position.y, rayVect.z);
-            //    playerRoot.transform.LookAt(new Vector3(rayVect.x, playerRoot.transform.position.y, rayVect.z));
+            //    var rayvect = ray.getpoint(test);
+            //    lookdirection = new vector3(rayvect.x, playerroot.transform.position.y, rayvect.z);
+            //    playerroot.transform.lookat(new vector3(rayvect.x, playerroot.transform.position.y, rayvect.z));
             //}
         }
         else
