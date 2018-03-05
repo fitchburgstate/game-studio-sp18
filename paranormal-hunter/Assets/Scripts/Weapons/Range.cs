@@ -130,23 +130,23 @@ namespace Hunter.Character
         {
             if (elementWeakness.Equals(type.GetType()))
             {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 2)), 2f, enemyCharacter);
+                ShouldAttackBeCritical(critPercent);
+                DamageCharacter(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 2)), 2f, enemyCharacter);
             }
             else if (elementResistance1.Equals(type.GetType()) || elementResistance2.Equals(type.GetType()))
             {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 0.5)), 2f, enemyCharacter);
+                ShouldAttackBeCritical(critPercent);
+                DamageCharacter(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 0.5)), 2f, enemyCharacter);
             }
             else if ((elementType.GetType()).Equals(type.GetType()))
             {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 0)), 2f, enemyCharacter);
+                ShouldAttackBeCritical(critPercent);
+                DamageCharacter(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 0)), 2f, enemyCharacter);
             }
             else
             {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 1)), 2f, enemyCharacter);
+                ShouldAttackBeCritical(critPercent);
+                DamageCharacter(enemyCharacter.health, (enemyCharacter.health - Damage(damageFalloff, 1)), 2f, enemyCharacter);
 
             }
         }
@@ -158,8 +158,8 @@ namespace Hunter.Character
         /// <param name="damageFalloff">Damage falloff</param>
         public void AttackPlayer(Character playerCharacter, float damageFalloff)
         {
-            Critical(critPercent);
-            Damaged(playerCharacter.health, (playerCharacter.health - Damage(damageFalloff, 1)), 2f, playerCharacter);
+            ShouldAttackBeCritical(critPercent);
+            DamageCharacter(playerCharacter.health, (playerCharacter.health - Damage(damageFalloff, 1)), 2f, playerCharacter);
         }
 
         void OnDrawGizmosSelected()

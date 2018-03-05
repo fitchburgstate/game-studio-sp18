@@ -6,7 +6,7 @@ using InControl;
 
 namespace Hunter.Character
 {
-    public abstract class Character : MonoBehaviour
+    public abstract class Character : MonoBehaviour, IDamageable
     {
         /// <summary>
         /// Name of the Player
@@ -71,7 +71,29 @@ namespace Hunter.Character
 
         public void SetCurrentWeapon(Weapon weapon)
         {
-            currentWeapon = weapon;
+            if (weapon != null)
+            {
+                currentWeapon = weapon;
+            }
+        }
+
+        public void DealDamage (int damage, int timeOfDamage)
+        {
+            //float t = 0;
+            //while (t < 1.0 && !isCritical)
+            //{
+            //    t += Time.deltaTime / time;
+            //    c.health = (int)Mathf.Lerp(start, end, t);
+            //    //Debug.Log(c.health);
+            //}
+            //if (isCritical)
+            //{
+            //    var damage = start - end;
+            //    damage = damage + critDamage;
+            //    Debug.Log("Total Damage: " + damage);
+            //    c.health = c.health - (int)damage;
+            //    isCritical = false;
+            //}
         }
     }
 }

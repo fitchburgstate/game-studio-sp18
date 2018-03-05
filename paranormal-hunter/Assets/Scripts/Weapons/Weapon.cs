@@ -102,64 +102,45 @@ namespace Hunter.Character
             }
         }
 
-        /// <summary>
-        /// Calculates damage to be applied against an enemy and be lerped if hit is not critical, if the hit is critical the 
-        /// damage is applied instantly.
-        /// </summary>
-        /// <param name="start">Starting Health value</param>
-        /// <param name="end">Ending Health value</param>
-        /// <param name="time">Time to lerp variables</param>
-        public void Damaged(float start, float end, float time, Enemy e)
-        {
-            float t = 0;
-            while (t < 1.0 && !isCritical)
-            {
-                t += Time.deltaTime / time;
-                e.health = (int)Mathf.Lerp(start, end, t);
-                //Debug.Log(e.health);
-            }
-            if (isCritical)
-            {
-                var damage = start - end;
-                damage = (damage * critDamage) + damage;
-                e.health = e.health - (int)damage;
-                isCritical = false;
-            }
-        }
+        ///// <summary>
+        ///// Calculates damage to be applied against the player and be lerped if hit is not critical, if hit is critical the 
+        ///// damage is applied instantly.
+        ///// </summary>
+        ///// <param name="start"></param>
+        ///// <param name="end"></param>
+        ///// <param name="time"></param>
+        ///// <param name="c"></param>
+        //public void DamageCharacter (float start, float end, float time, Character c)
+        //{
+        //    float t = 0;
+        //    while (t < 1.0 && !isCritical)
+        //    {
+        //        t += Time.deltaTime / time;
+        //        c.health = (int)Mathf.Lerp(start, end, t);
+        //        //Debug.Log(c.health);
+        //    }
+        //    if (isCritical)
+        //    {
+        //        var damage = start - end;
+        //        damage = damage + critDamage;
+        //        Debug.Log("Total Damage: " + damage);
+        //        c.health = c.health - (int)damage;
+        //        isCritical = false;
+        //    }
+        //}
 
-        /// <summary>
-        /// Calculates damage to be applied against the player and be lerped if hit is not critical, if hit is critical the 
-        /// damage is applied instantly.
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="time"></param>
-        /// <param name="c"></param>
-        public void Damaged(float start, float end, float time, Character c)
+        protected virtual int CalculateDamage ()
         {
-            float t = 0;
-            while (t < 1.0 && !isCritical)
-            {
-                t += Time.deltaTime / time;
-                c.health = (int)Mathf.Lerp(start, end, t);
-                //Debug.Log(c.health);
-            }
-            if (isCritical)
-            {
-                var damage = start - end;
-                damage = damage + critDamage;
-                Debug.Log("Total Damage: " + damage);
-                c.health = c.health - (int)damage;
-                isCritical = false;
-            }
+            return 0;
         }
 
         /// <summary>
         /// Calculates whether or not the player crits based on crit percentage that is given to the function.
         /// </summary>
         /// <param name="percent"></param>
-        public void Critical(int percent)
+        protected bool ShouldAttackBeCritical(int percent)
         {
+            if(percent == 100) { return true; }
             var rng = new RNGCryptoServiceProvider();
             var buffer = new byte[4];
 
@@ -167,13 +148,14 @@ namespace Hunter.Character
 
             System.Random r = new System.Random();
             var num = r.Next(1, 100);
-            if (num >= (100 - percent))
-            {
-                isCritical = true;
-                //ratio = (float)num / 20;
-                critDamage = r.Next(baseDamage + 1, baseDamage * 3);
-                Debug.Log("Crit Damage Amount: " + critDamage);
-            }
+            return (num >= (100 - percent));
+            //if (num >= (100 - percent))
+            //{
+            //    isCritical = true;
+            //    //ratio = (float)num / 20;
+            //    critDamage = r.Next(baseDamage + 1, baseDamage * 3);
+            //    Debug.Log("Crit Damage Amount: " + critDamage);
+            //}
         }
     }
 }

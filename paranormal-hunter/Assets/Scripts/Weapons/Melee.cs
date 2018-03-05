@@ -27,18 +27,22 @@ namespace Hunter.Character
         void OnTriggerEnter(Collider target)
         {
             //Debug.Log("HI!");
-            var playerCharacter = target.GetComponent<Character>();
-
-            if (playerCharacter is Enemy)
+            var damageableObject = target.GetComponent<IDamageable>();
+            if(damageableObject != null)
             {
-                playerCharacter = playerCharacter as Enemy;
-                Attack(playerCharacter, playerCharacter.GetComponent<Enemy>().type, playerCharacter.GetComponent<Enemy>().type.weakness, playerCharacter.GetComponent<Enemy>().type.resistance1, playerCharacter.GetComponent<Enemy>().type.resistance2);
+                int totalDamage = 
+                damageableObject.DealDamage
             }
-            if (playerCharacter is Player)
-            {
-                playerCharacter = playerCharacter as Player;
-                Attack(playerCharacter);
-            }
+            //if (playerCharacter is Enemy)
+            //{
+            //    playerCharacter = playerCharacter as Enemy;
+            //    Attack(playerCharacter, playerCharacter.GetComponent<Enemy>().type, playerCharacter.GetComponent<Enemy>().type.weakness, playerCharacter.GetComponent<Enemy>().type.resistance1, playerCharacter.GetComponent<Enemy>().type.resistance2);
+            //}
+            //if (playerCharacter is Player)
+            //{
+            //    playerCharacter = playerCharacter as Player;
+            //    Attack(playerCharacter);
+            //}
         }
 
         /// <summary>
@@ -66,23 +70,23 @@ namespace Hunter.Character
         {
             if (elementWeakness.Equals(type.GetType()))
             {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 2)), 2f, enemyCharacter);
+                ShouldAttackBeCritical(critPercent);
+                DamageCharacter(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 2)), 2f, enemyCharacter);
             }
             else if (elementResistance1.Equals(type.GetType()) || elementResistance2.Equals(type.GetType()))
             {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 0.5)), 2f, enemyCharacter);
+                ShouldAttackBeCritical(critPercent);
+                DamageCharacter(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 0.5)), 2f, enemyCharacter);
             }
             else if ((elementType.GetType()).Equals(type.GetType()))
             {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 0)), 2f, enemyCharacter);
+                ShouldAttackBeCritical(critPercent);
+                DamageCharacter(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 0)), 2f, enemyCharacter);
             }
             else
             {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 1)), 2f, enemyCharacter);
+                ShouldAttackBeCritical(critPercent);
+                DamageCharacter(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 1)), 2f, enemyCharacter);
             }
         }
 
@@ -93,8 +97,8 @@ namespace Hunter.Character
         /// <param name="e">Enemy variable</param>
         public void Attack(Character playerCharacter)
         {
-            Critical(critPercent);
-            Damaged(playerCharacter.health, (float)(playerCharacter.health - Damage(1, 1)), 2f, playerCharacter);
+            ShouldAttackBeCritical(critPercent);
+            DamageCharacter(playerCharacter.health, (float)(playerCharacter.health - Damage(1, 1)), 2f, playerCharacter);
         }
 
         /// <summary>

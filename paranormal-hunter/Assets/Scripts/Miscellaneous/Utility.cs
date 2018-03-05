@@ -13,12 +13,10 @@ public interface IMoveable
 
 }
 
-//public interface IDamageable<T, V>
-//{
-//    void TakeDamage(T healthValue, V amount);
-
-//    void DealDamage(T targetHealthValue, V amount);
-//}
+public interface IDamageable
+{
+    void DealDamage (int damage);
+}
 
 //public interface IHealth<T>
 //{
