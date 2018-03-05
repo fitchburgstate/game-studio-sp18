@@ -161,6 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af6e2c417b9da014e9e8f004b0ec7a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Footstep: 102
 --- !u!1001 &352205837
 Prefab:
   m_ObjectHideFlags: 0
@@ -200,31 +201,115 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114972781067302028, guid: 1a1172238f59399459e34d9848caae3a,
+    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
         type: 2}
-      propertyPath: m_Enabled
+      propertyPath: _audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 765ea45bdf9b50341babe20cee9da5fb, type: 3}
+    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _loop
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114553280694395748, guid: 1a1172238f59399459e34d9848caae3a,
+    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
         type: 2}
-      propertyPath: _overrideParentVolume
+      propertyPath: _fadeInTime
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114553280694395748, guid: 1a1172238f59399459e34d9848caae3a,
+    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
         type: 2}
-      propertyPath: _overrideBypassProperties
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553280694395748, guid: 1a1172238f59399459e34d9848caae3a,
-        type: 2}
-      propertyPath: _override3DProperties
+      propertyPath: _overrideFadeProperties
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114553280694395748, guid: 1a1172238f59399459e34d9848caae3a,
+    - target: {fileID: 114838107412053064, guid: 1a1172238f59399459e34d9848caae3a,
         type: 2}
-      propertyPath: _panLevel
-      value: 0
+      propertyPath: _fadeOutTime
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1a1172238f59399459e34d9848caae3a, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &687823711 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1466013126632548, guid: 1a1172238f59399459e34d9848caae3a,
+    type: 2}
+  m_PrefabInternal: {fileID: 352205837}
+--- !u!114 &687823712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 687823711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 2066047398, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  switchPresetData:
+    _sourcePreset: 
+    _targetPreset: 
+  globalParameterData:
+    _name: 
+    _value: 0
+  globalSwitchParameterData:
+    _name: 
+    _switch: 
+  transitionToSnapshotData:
+    _snapshot: 
+    _timeToReach: 0
+  _eventName: Start Ambience
+  _eventAction: 0
+  _eventTriggerOnEnter: 0
+  _triggerEnterTag: 
+  _trigger: 0
+  _eventValue: 
+  _eventParameter: 1
+  _eventScheduleParameter: 0
+  _eventParameterName: 
+  _delay: 1
+  _probability: 100
+  _eventTriggerType: 0
+  _ignoreGameObject: 0
+  _overrideParentGameObject: 0
+  _addToQueue: 0
+  _min: 0
+  _max: 1
+  _dspType: 0
+  _timeToTarget: 0
+  _curve: 0.5
+  _parentGameObject: {fileID: 687823711}
+  _useEventID: 0
+  _postCountMax: 0
+--- !u!114 &687823713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 687823711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1137554331, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventName: Start Ambience
+  _eventID: 0
+  _overrideEventTriggerAction: 0
+  _overrideParameters:
+    _overrideIncomingEventAction: 0
+    _incomingEventAction: 0
+    _overrideEventAction: 0
+    _type: 0
+    _floatParameter: 1
+    _stringParameter: 
+    _switchPresetData:
+      _sourcePreset: 
+      _targetPreset: 
+    _dspParameterData:
+      _dspType: 0
+      _parameter: 
+      _value: 0
+      _time: 0
+      _curve: 0.5
+    _transitionToSnapshotData:
+      _snapshot: 
+      _timeToReach: 0

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioTestingInput : MonoBehaviour {
-	
+	public KeyCode Footstep = KeyCode.F;
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.F)){
+		if(Input.GetKeyDown(Footstep)){
 			PlayFootsteps();
 		}
 	}
