@@ -655,7 +655,6 @@ GameObject:
   - component: {fileID: 4969597200687330}
   - component: {fileID: 114275519651456010}
   - component: {fileID: 95567676443125932}
-  - component: {fileID: 65846913055723548}
   m_Layer: 0
   m_Name: Wolf
   m_TagString: Untagged
@@ -2457,18 +2456,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.16871211, y: 0.43348947, z: 0.33870012}
   m_Center: {x: 0.3818413, y: 0.19123639, z: -2.6065845}
---- !u!65 &65846913055723548
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1579992428864402}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &95567676443125932
 Animator:
   serializedVersion: 3
@@ -2477,7 +2464,7 @@ Animator:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1579992428864402}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 61d2f7db2c27e7e42984de171ee64421, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 5949734c7e7060f4ab23d5ceddc05dce, type: 3}
   m_Controller: {fileID: 9100000, guid: dc0c3aa098e9b174a822570abc379c3e, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
