@@ -122,6 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 316771183}
   - component: {fileID: 316771184}
+  - component: {fileID: 316771185}
   m_Layer: 0
   m_Name: TestListener
   m_TagString: Untagged
@@ -149,6 +150,17 @@ AudioListener:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 316771182}
   m_Enabled: 1
+--- !u!114 &316771185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 316771182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af6e2c417b9da014e9e8f004b0ec7a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &352205837
 Prefab:
   m_ObjectHideFlags: 0
@@ -187,6 +199,31 @@ Prefab:
     - target: {fileID: 4648832767578386, guid: 1a1172238f59399459e34d9848caae3a, type: 2}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114972781067302028, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553280694395748, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _overrideParentVolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553280694395748, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _overrideBypassProperties
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553280694395748, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _override3DProperties
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553280694395748, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _panLevel
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1a1172238f59399459e34d9848caae3a, type: 2}
