@@ -23,9 +23,8 @@ GameObject:
   - component: {fileID: 23550654084269402}
   - component: {fileID: 95233713933650244}
   - component: {fileID: 65635265219554100}
-  - component: {fileID: 54906646202911204}
   - component: {fileID: 114481430028509354}
-  - component: {fileID: 114810102772125382}
+  - component: {fileID: 114804509388786946}
   m_Layer: 0
   m_Name: Box
   m_TagString: Untagged
@@ -39,13 +38,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1795164323532640}
-  m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: -0.122120805, y: 0.09200001, z: -0.1514595}
-  m_LocalScale: {x: 6.106046, y: 6.106042, z: 6.106042}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.4, y: 0.5, z: 0}
+  m_LocalScale: {x: 30, y: 30, z: 30}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90.00001, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23550654084269402
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -87,21 +86,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1795164323532640}
   m_Mesh: {fileID: 4300000, guid: bc7cd362fc5bc4b4fa79d655b910dc1f, type: 3}
---- !u!54 &54906646202911204
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1795164323532640}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &65635265219554100
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -142,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114810102772125382
+--- !u!114 &114804509388786946
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -153,10 +137,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca628d3fede53c745a6224cf1b6a0010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemNeeded: {fileID: 0}
   propType: 1
   elementalType: 0
-  needElement: 0
+  needElement: 1
   interactable: []
   animationName: 
   pieces: []
   brokenProp: {fileID: 1550215814697662, guid: 8332532168159864fa7796dd1839c1d7, type: 2}
+  objectScript: {fileID: 0}
+  myEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null

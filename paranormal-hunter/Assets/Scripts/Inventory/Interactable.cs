@@ -9,21 +9,21 @@ namespace Interactables
         public Item item;
         [HideInInspector]
         public bool spawnedFromProp = false; // equal true if object is spawned from an interactable prop
-        public bool spawnedFromDestruct = false;
+        public bool spawnedFromDestruct = false; // equals true if object spawned from a destructible prop
         
 
-        //TODO Math for the Anim function
-        public float propSpeed;
-        public float bounceSpeed;
-        public float bounceHeight;
-        public float maxDistance;   
+        //Math variables for the Anim function
+        public float propSpeed = 2;
+        public float bounceSpeed = 1;
+        public float bounceHeight = 3;
+        public float maxDistance = 10;   
         
         [Tooltip("Animation the prop plays")]
         [SerializeField]
         private AnimationCurve curve;
         private MeshRenderer mesh;
         private Collider propCollider;
-        private float propHeightOffset;
+        private float propHeightOffset; // half the height of the object
         private Vector3 targetPosition;
         private NavPosition navPosition = new NavPosition();
 
@@ -39,9 +39,14 @@ namespace Interactables
             }
         }
 
+        private void OnMouseDown()
+        {
+            AddItemToInventory();
+        }
+
         private void SpawnFromProp() // when object is spawned from an interactable prop
         {         
-            propHeightOffset = propCollider.bounds.extents.y; // get half the height of the object
+            propHeightOffset = propCollider.bounds.extents.y; // get half the height of the object so it doesnt go in the ground
 
             if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the height of the object on the y axis
             {
@@ -52,9 +57,12 @@ namespace Interactables
             StartCoroutine(PlayAnim()); // plays animation curve
         }
 
-        private void OnMouseDown()
+        private void SpawnOnGround()
         {
-            AddItemToInventory();
+            // spawn the interactable on the ground below
+            var groundPosition = new Vector3(transform.position.x, targetPosition.y, targetPosition.z);
+            transform.position = groundPosition;
+            // change to give it small radius
         }
 
         private void Start()
@@ -70,18 +78,6 @@ namespace Interactables
             {
                 SpawnOnGround();
             }
-        }
-
-        private bool CheckForWall()
-        {
-            var hit = Physics.Raycast(transform.position, transform.forward, 1);
-            return hit;
-        }
-
-        private void SpawnOnGround()
-        {
-            var groundPosition = new Vector3(transform.position.x, targetPosition.y, targetPosition.z);
-            transform.position = groundPosition;
         }
 
         private IEnumerator PlayAnim() // plays animation for object to move to point on navmesh

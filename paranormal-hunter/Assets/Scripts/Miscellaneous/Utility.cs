@@ -24,12 +24,10 @@ public interface IAttack
     void GunFiring();
 }
 
-//public interface IDamageable<T, V>
-//{
-//    void TakeDamage(T healthValue, V amount);
-
-//    void DealDamage(T targetHealthValue, V amount);
-//}
+public interface IDamageable
+{
+    void TakeDamage(int damage);
+}
 
 //public interface IHealth<T>
 //{

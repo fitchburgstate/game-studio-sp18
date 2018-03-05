@@ -14,65 +14,79 @@ namespace Interactables
         Destructible
     }
 
-   /* public enum NeedElementType
-    {
-        ElementRequired,
-        NoneRequired
-    }*/
-       
     [RequireComponent(typeof(Animator))]
-    public class InteractableProp : MonoBehaviour, IAttack
+    public class InteractableProp : MonoBehaviour, IDamageable
     {
+        public Player player;
 
-        public bool elementRequired;
-        public Interactable itemNeeded;
-        [Header("Will you interact with it or attack it")]
+        [Header("The items that will spawn from the prop")]
+        [SerializeField]
+        private List<Interactable> interactable = new List<Interactable>(); // list of iteractables to spawn
+        [Header("Destructable prop or Prop that Shakes")]
         [SerializeField]
         private PropType propType;
-        [Header("Type needed to be interacted with")]
+        [Header("Does it need a mod element to be triggered")]
+        [SerializeField]
+        private bool elementRequired;  
+        [Header("Type of element it needs to be triggered")]
         [SerializeField]
         private OPTIONS elementalType;
-       // [SerializeField]
-       // private NeedElementType needElement; // change to bool
-        [Header("Number of items to spawn and items to spawn")]
+        [Header("Item needed it prop needs item to activate")]
         [SerializeField]
-        private List<Interactable> interactable = new List<Interactable>();
+        private Interactable itemNeeded;
         private Animator anim;
-        [Header("Name of Animation")]
+        [Header("Name of Trigger Animation")]
         [SerializeField]
         private string animationName;
-        private float destructionForce = 20;
-        private Vector3 destructionDirection; // based on player
+        [Header("How much force is use to destroy the object")]
         [SerializeField]
-        private Rigidbody[] pieces;
-        [Header("the broken prop")]
+        private float destructionForce = 50;
+        private Vector3 destructionDirection; // based on player
+        private Rigidbody[] pieces; // the ridgidbodies of the broken pieces of the destructible prop
+        [Header("broken prefab if its destructible")]
         [SerializeField]
         private GameObject brokenProp;
-        Weapon weapon;
-        public MonoBehaviour objectScript;
-        public UnityEvent myEvent;
+        [Header("object and function is this prop activates another")]
+        [SerializeField]
+        private UnityEvent propEvent;
+        private OPTIONS typeFromWeapon; // type attribute of weapon player is holding
 
-        public void Attack()
+
+        public void TakeDamage(int damage)
+        {
+            Interact();
+        }
+
+        public void Interact()
+        {
+            NeedElement();
+        }
+
+        public void StartEvent()
+        {
+            propEvent.Invoke();
+        }
+
+        private void OnMouseDown()
         {
             Attacked();
         }
 
-        public void EnableMeleeHitbox()
+        private void Start()
         {
-            throw new System.NotImplementedException();
+            if (propEvent == null)
+            {
+                propEvent = new UnityEvent();
+            }
+
+            anim = GetComponent<Animator>();
+            player = FindObjectOfType<Player>();
         }
 
-        public void DisableMeleeHitbox()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void GunFiring()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Attacked()
+        /// <summary>
+        /// cheks if prop is interactable or destructible the calls the appropriate function
+        /// </summary>
+        private void Attacked()
         {
             if (PropType.Destructible == propType)
             {
@@ -84,50 +98,48 @@ namespace Interactables
             }
         }
 
-        private void Start()
-        {
-
-            if (myEvent == null)
-            {
-                myEvent = new UnityEvent();
-            }
-            anim = GetComponent<Animator>();
-        }
-
-        private void OnMouseDown()
-        {
-            Attacked();
-        }
-
-        private void ShakeProp() // plays animation based on string name and spawns item
+        /// <summary>
+        /// plays animation based on string name and spawns item
+        /// </summary>
+        private void ShakeProp()  
         {
             anim.SetTrigger(animationName);
             SpawnItems();
         }
 
+        /// <summary>
+        /// Destroys prop
+        /// </summary>
         private void Destruct()
         {
             BreakItem();
             DestoryProp();
             DisableProp();
-           // SpawnItems();
-
         }
 
+        /// <summary>
+        /// spawns the destroyed version of the interactable
+        /// </summary>
         private void BreakItem()
         {
             brokenProp = Instantiate(brokenProp, transform.position, transform.rotation);
         }
 
+        /// <summary>
+        /// diasable the propComponent mesh and collider
+        /// </summary>
         private void DisableProp()
         {
             var mesh = GetComponent<MeshRenderer>().enabled = false;
             var collider = GetComponent<Collider>().enabled = false;
         }
 
+        /// <summary>
+        /// makes destroyed pieces non kinematic and add force to them
+        /// </summary>
         private void DestoryProp()
         {
-
+            destructionDirection = player.transform.position;
             pieces = brokenProp.GetComponentsInChildren<Rigidbody>();
 
             for(var i = 0; i < pieces.Length; i++)
@@ -137,41 +149,35 @@ namespace Interactables
 
             for (var i = 0; i < pieces.Length; i++)
             {
-                pieces[i].AddForce(transform.forward * destructionForce);
+                pieces[i].AddForce(destructionDirection * destructionForce);
+                //might change to general explosion
                 // have object destroy the direct the player facing
             }
 
-
             SpawnItems();
-
             StartCoroutine(DestroyPieces());
-
         }
 
-        private void NeedElement()
-        { 
-            if (elementRequired == true)
-            {
-               // typeFromWeapon 
-
-                //CheckWeaponType(typeFromWeapon);
-            }
-            else if (elementRequired == false)
-            {
-                Attacked();
-            }
-            
-        }
-
-        private void CheckWeaponType(OPTIONS weaponElement)
+        /// <summary>
+        /// destroyed prop pieces after a certian amount of time
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator DestroyPieces()
         {
-            if (weaponElement == elementalType)
+            yield return new WaitForSeconds(4f);
+
+            for (var i = 0; i < pieces.Length; i++)
             {
-                Attacked();
+                Destroy(pieces[i]);
             }
+
+            Destroy(gameObject,2f);
         }
 
-        private void SpawnItems() // spawns item in list then clears them  bug where sometimes is would spawn multiple of the same items
+        /// <summary>
+        /// spawns item in list then clears them  bug where sometimes is would spawn multiple of the same items
+        /// </summary>
+        private void SpawnItems() 
         {
             for (var i = 0; i < interactable.Count; i++)
             {
@@ -179,7 +185,7 @@ namespace Interactables
                 if (PropType.Interactable == propType)
                 {
                     interactable[i].spawnedFromProp = true;
-                } 
+                }
                 else if (PropType.Destructible == propType)
                 {
                     interactable[i].spawnedFromDestruct = true;
@@ -189,74 +195,61 @@ namespace Interactables
             interactable.Clear();
         }
 
-        private void DropItemInProp(Interactable interactable)
+        /// <summary>
+        /// checks if element is need or not and gets element from current weapon
+        /// </summary>
+        private void NeedElement()
         {
-            if (interactable.Equals(itemNeeded))
+            if (elementRequired == true)
+            {
+                if (player.CurrentMeleeWeapon != null)
+                { 
+                    typeFromWeapon = player.CurrentMeleeWeapon.elementType;
+                }
+                if (player.CurrentRangeWeapon != null)
+                {
+                    typeFromWeapon = player.CurrentRangeWeapon.elementType;
+                }
+               
+                CheckWeaponType(typeFromWeapon);
+            }
+            else if (elementRequired == false)
+            {
+                Attacked();
+            }          
+        }
+
+        /// <summary>
+        /// checks if weapon element is the same as the one the prop needs
+        /// </summary>
+        /// <param name="weaponElement"></param>
+        private void CheckWeaponType(OPTIONS weaponElement)
+        {
+            if (weaponElement == elementalType)
             {
                 Attacked();
             }
         }
 
-        public void GiveItemToPLayer(GameObject item)
+        /// <summary>
+        /// called if prop need and item and checks if it the right item
+        /// </summary>
+        /// <param name="item"></param>
+        private void DropItemInProp(Interactable item)
+        {
+            if (item.Equals(itemNeeded))
+            {
+                //delete item from iventory
+            }
+        }
+
+        /// <summary>
+        /// called if prop gives player and item
+        /// </summary>
+        /// <param name="item"></param>
+        private void GiveItemToPlayer(Interactable item)
         {
             item.transform.SetParent(Inventory.instance.transform);
         }
-
-        public void StartEvent(ref GameObject eventObject)
-        {
-            myEvent.Invoke();
-        }
-
-        public void MoveTheObject()
-        {
-
-        }
-        
-
-        private IEnumerator DestroyPieces()
-        {
-            yield return new WaitForSeconds(12f);
-
-            for(var i = 0; i < pieces.Length; i++)
-            {
-                Destroy(pieces[i]);
-            }
-
-           // Destroy(gameObject,2f);
-        }
-
-        
-
-        /* private void OnTriggerEnter(Collider other)
-        {
-            OPTIONS typeFromWeapon;
-
-            if (other.gameObject.GetComponent<Melee>() != null)
-            {
-                if (needElement == NeedElementType.ElementRequired)
-                {
-                    typeFromWeapon = other.gameObject.GetComponent<Melee>().elementType;
-
-                    CheckWeaponType(typeFromWeapon);
-                }
-                else if (needElement == NeedElementType.NoneRequired)
-                {
-                    Attacked();
-                }
-            } 
-        }
-
-        private void HitByRay(Ray ray)
-        {
-            
-
-        }
-
-        private void CheckForRay(Ray ray)
-        {
-            var rangedWeapon = ray.origin;
-           // Physics.r
-
-        } */
     } 
 }
