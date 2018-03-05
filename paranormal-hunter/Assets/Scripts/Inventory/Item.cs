@@ -11,8 +11,6 @@ namespace Interactable
         [TextArea]
         public string itemDescription;
         [Header("Inventory item sprite")]
-        public Sprite icon;
-        [Header("Type of item")]
-        public Slot typeOfItem;
+        public Sprite icon; 
     }
 }

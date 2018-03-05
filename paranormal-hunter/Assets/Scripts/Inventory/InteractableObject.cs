@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Interactable
 {
-    [RequireComponent(typeof(Item))]
     public class InteractableObject : MonoBehaviour
     {
         [Header("Inventory item for this object")]
@@ -21,7 +20,6 @@ namespace Interactable
         [Header("Animation the object plays in curve")]
         [SerializeField]
         private AnimationCurve curve;
-        [SerializeField]
         private MeshRenderer mesh;
         private Collider objectCollider;
         private Vector3 targetPosition;

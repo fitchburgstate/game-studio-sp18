@@ -32,7 +32,7 @@ namespace Hunter.Character
         /// <summary>
         /// Options variable for Unity Inspector Dropdown.
         /// </summary>
-        public OPTIONS elementType; 
+        public OPTIONS elementType;
 
         /// <summary>
         /// Critical Percentage Given to the Weapon.
@@ -126,7 +126,7 @@ namespace Hunter.Character
                 isCritical = false;
             }
         }
-        
+
         /// <summary>
         /// Calculates damage to be applied against the player and be lerped if hit is not critical, if hit is critical the 
         /// damage is applied instantly.
@@ -144,7 +144,7 @@ namespace Hunter.Character
                 c.health = (int)Mathf.Lerp(start, end, t);
                 //Debug.Log(c.health);
             }
-            if(isCritical)
+            if (isCritical)
             {
                 var damage = start - end;
                 damage = damage + critDamage;

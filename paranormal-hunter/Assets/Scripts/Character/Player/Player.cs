@@ -10,10 +10,12 @@ namespace Hunter.Character
     {
         // ---------- SET THESE IN THE INSPECTOR ---------- \\
         [Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
-        [Range(0, 20)] public float speed = 5f;
+        [Range(0, 20)]
+        public float speed = 5f;
 
         [Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
-        [Range(0, 2000)] public float rotateChar = 12f;
+        [Range(0, 2000)]
+        public float rotateChar = 12f;
 
         private float speedRamp;
         public AnimationCurve rotateAnimation;
@@ -24,7 +26,11 @@ namespace Hunter.Character
         private void Start()
         {
             anim = GetComponent<Animator>();
-            range.gameObject.SetActive(false);
+            if (range != null)
+            {
+                range.gameObject.SetActive(false);
+            }
+
             SetCurrentWeapon(melee);
         }
 
@@ -74,7 +80,7 @@ namespace Hunter.Character
         public void EnableMeleeHitbox()
         {
             var mw = CurrentMeleeWeapon;
-            if(mw != null)
+            if (mw != null)
             {
                 mw.EnableHitbox();
             }
