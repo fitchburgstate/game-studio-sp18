@@ -82,6 +82,11 @@ namespace Hunter.Character
             controller.Move(moveDirection * Time.deltaTime);
         }
 
+        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
+        {
+
+        }
+
         /// <summary>
         /// Moves the character controller a short distance rapidly in the desired direction.
         /// </summary>

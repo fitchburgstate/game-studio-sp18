@@ -4,23 +4,51 @@ using UnityEngine;
 using Hunter;
 using Hunter.Character;
 
-[CreateAssetMenu(fileName = "States", menuName = "Utility Based AI/States", order = 1)]
-public class State : ScriptableObject
+public class State
 {
-    public UtilityBasedAI[] utilityBasedAI;
+    public UtilityBasedAI[] utilityBasedAIs;
+    public Transition[] transitions;
+
+    public void UpdateState(GameObject controller)
+    {
+        DoActions(controller);
+        CheckTransitions(controller);
+    }
+
+    private void DoActions(GameObject controller)
+    {
+        for (var i = 0; i < utilityBasedAIs.Length; i++)
+        {
+            utilityBasedAIs[i].Act(controller);
+        }
+    }
+
+    private void CheckTransitions(GameObject controller)
+    {
+        for (var i = 0; i < transitions.Length; i++)
+        {
+            var decisionSucceeded = transitions[i].decision.Decide(controller);
+
+            if (decisionSucceeded)
+            {
+                // controller.TransitionToState(transitions[i].trueState);
+            }
+            else
+            {
+                // controller.TransitionToState(transitions[i].falseState);
+            }
+        }
+    }
 }
 
-public class CurrentState : State
+public abstract class Decision : ScriptableObject
 {
-
+    public abstract bool Decide(GameObject controller);
 }
 
-public class NextState : State
+public class Transition
 {
-    
-}
-
-public class FindState : State
-{
-
+    public Decision decision;
+    public State trueState;
+    public State falseState;
 }

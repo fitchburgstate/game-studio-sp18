@@ -114,13 +114,12 @@ public class AIInputModule : MonoBehaviour
     /// The final direction that the character will face that's calculated.
     /// </summary>
     private Vector3 finalDirection;
-    
-    private UrgeScriptable urgeScriptable;
+
     private Attack attack;
-    private MoveTo moveTo;
-    private Wander wander;
-    private Retreat retreat;
     private Idle idle;
+    private Wander wander;
+    private MoveTo moveTo;
+    private Retreat retreat;
 
     private void Start()
     {
@@ -128,18 +127,22 @@ public class AIInputModule : MonoBehaviour
         Agent = GetComponent<NavMeshAgent>();
     }
 
-    public void SetState()
+    private void Update()
+    {
+        var moveCharacter = GetComponent<IMoveable>();
+        var findTarget = FindNearestTargetWithString("Player");
+
+        //moveCharacter.Move();
+    }
+
+    private void GetCurrentState()
     {
 
     }
 
-    public void FindNextState()
+    private void NextState()
     {
-        //var attackValue = attack.CalculateAttack();
-        //var moveToValue = moveTo.CalculateMoveTo();
-        //var wanderValue = wander.CalculateWander();
-        //var retreatValue = retreat.CalculateRetreat();
-        //var idleValue = idle.CalculateIdle();
+
     }
 
     /// <summary>

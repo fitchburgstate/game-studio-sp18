@@ -9,6 +9,8 @@ public interface IMoveable
 {
     void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent);
 
+    void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target);
+
     void Dash(CharacterController controller);
 
 }

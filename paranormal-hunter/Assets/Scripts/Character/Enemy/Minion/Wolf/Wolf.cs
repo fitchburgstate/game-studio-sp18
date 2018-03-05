@@ -60,6 +60,11 @@ namespace Hunter.Character
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject characterModel, NavMeshAgent agent)
         {
+
+        }
+
+        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
+        {
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
 
@@ -82,6 +87,7 @@ namespace Hunter.Character
 
             controller.Move(moveDirection * Time.deltaTime);
         }
+
 
         public void Dash(CharacterController controller)
         {
@@ -131,5 +137,7 @@ namespace Hunter.Character
         {
             rangeWeapon.Shoot();
         }
+
+
     }
 }
