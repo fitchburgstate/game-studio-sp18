@@ -63,30 +63,12 @@ namespace Hunter.Character
             controller.Move(moveDirection * Time.deltaTime);
         }
 
-        //DO NOT DELETE Currently Works
-        /*public IEnumerator TestDash(Vector3 target)
-        {
-            var startTime = Time.time;
-            while(Vector3.Distance(transform.position, target) != 0)
-            {
-                transform.position = Vector3.Lerp(transform.position, target, (Time.time - startTime) * 2);
-                if(Vector3.Distance(transform.position, target) == 0)
-                {
-                    break;
-                }
-                yield return null;
-            }
-
-            yield return new WaitForSeconds(3.0f);
-        }*/
-
         private IEnumerator TestDash(Vector3 target)
         {
             var dashComplete = 0.09f;
             float dashTime = 0;
             while(Vector3.Distance(transform.position, target) > dashComplete)
             {
-                Debug.Log(Vector3.Distance(transform.position, target));
                 dashTime += dashSpeed * Time.deltaTime;
                 var dashAmount = dashAnimation.Evaluate(dashTime);
                 transform.position = Vector3.Lerp(transform.position, target, dashAmount);
@@ -94,19 +76,22 @@ namespace Hunter.Character
             }
         }
 
+
+
         private Vector3 OnNavMesh(Vector3 target)
         {
             var hit = new NavMeshHit();
-            if(!(NavMesh.FindClosestEdge(target, out hit, NavMesh.AllAreas)))
+            if((NavMesh.FindClosestEdge(target, out hit, NavMesh.AllAreas)))
             {
-                Debug.Log("off");
-                target = transform.position;
+                Debug.Log(hit.distance);
+                Debug.Log("on");
                 return target;
             }
             else
             {
-                Debug.Log("on");
-                return target;
+                Debug.Log("off");
+                
+                return transform.position;
             }
         }
 
@@ -119,17 +104,16 @@ namespace Hunter.Character
              * move timed bit to coroutine
              */
             var start = transform.position;
-            var fwd = transform.forward;
             var temp = start;
             //Debug.Log(startTime);
-            Debug.Log(finalDirection);
+
             if (finalDirection.x <= .5 && finalDirection.x >= -.5 && finalDirection.z > 0)
             {
                 Debug.Log("Dash Foward");
-                temp.z = start.z + 5;
-                temp.x = start.x + 5;
+                //temp.z = start.z + 5;
+                //temp.x = start.x + 5;
 
-                temp = OnNavMesh(temp);
+                temp = OnNavMesh(transform.position);
 
                 StartCoroutine(TestDash(temp));
             }
