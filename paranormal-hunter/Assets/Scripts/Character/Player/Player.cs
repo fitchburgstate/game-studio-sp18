@@ -87,12 +87,17 @@ namespace Hunter.Character
                 Debug.Log("off");
                 Debug.Log(target);
                 target = hit.position;
+                //compare y values for target and current postion
                 target = new Vector3(target.x, target.y + 1, target.z);
                 return target;
             }
             else
             {
                 Debug.Log("on");
+                Debug.Log("Transform: " + transform.position);
+                Debug.Log("Target: " + target);
+                Debug.Log("Hit: " + hit.position);
+                target = new Vector3(target.x, hit.position.y + 1, target.z);
                 return target;
             }
             
@@ -127,19 +132,18 @@ namespace Hunter.Character
             var ray = new Ray(transform.position, fwd);
 
 
-            if(Physics.Raycast(ray, out hit, 5))
+            if(Physics.Raycast(ray, out hit, 7))
             {
                 target = hit.point;
                 Debug.Log("Blocked");
             }
             else
             {
-                target = ray.GetPoint(5);
-                Debug.Log(target);
+                target = ray.GetPoint(7);
                 Debug.Log("No Block");
             }
 
-            Debug.DrawRay(transform.position, fwd * 5, Color.red);
+            Debug.DrawRay(transform.position, fwd * 7, Color.red);
 
             target = OnNavMesh(target);
 
