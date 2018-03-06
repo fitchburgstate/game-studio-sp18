@@ -13,18 +13,18 @@ namespace Interactables
 
        // inventory lists for each type of inventroy item
         [HideInInspector]
-        public List<Interactable> weapons = new List<Interactable>();
+        public List<InteractableInventoryItem> weapons = new List<InteractableInventoryItem>();
         [HideInInspector]
-        public List<Interactable> elementMods = new List<Interactable>();
+        public List<InteractableInventoryItem> elementMods = new List<InteractableInventoryItem>();
         [HideInInspector]
-        public List<Interactable> journalEntries = new List<Interactable>();
+        public List<InteractableInventoryItem> journalEntries = new List<InteractableInventoryItem>();
 
         /// <summary>
         /// adds object to list based of type of item
         /// </summary>
         /// <param name="interactable"></param>
         /// <returns></returns>
-        public bool AddItem(Interactable interactable) 
+        public bool AddItem(InteractableInventoryItem interactable) 
         {
             interactable.transform.SetParent(transform);
 

@@ -45,6 +45,14 @@ namespace Hunter.Character
             }
         }
 
+        public Weapon CurrentWeapon
+        {
+            get
+            {
+                return currentWeapon;
+            }
+        }
+
         private Weapon currentWeapon;
 
         private bool swap = false;

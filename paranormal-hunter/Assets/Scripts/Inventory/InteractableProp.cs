@@ -18,12 +18,12 @@ namespace Interactables
     public class InteractableProp : MonoBehaviour, IDamageable
     {
         [HideInInspector]
-        public Interactable itemGiven; // the object the player gave
+        public InteractableInventoryItem itemGiven; // the object the player gave
 
         private Player player;
         [Header("The items that will spawn from the prop")]
         [SerializeField]
-        private List<Interactable> interactable = new List<Interactable>(); // list of iteractables to spawn
+        private List<InteractableInventoryItem> interactable = new List<InteractableInventoryItem>(); // list of iteractables to spawn
         [Header("Destructable prop or Prop that Shakes")]
         [SerializeField]
         private PropType propType;
@@ -36,21 +36,21 @@ namespace Interactables
         [Header("Does it spawn a item when interacted with")]
         [SerializeField]
         private bool spawnItem;
-        [Header("Does the player have to drop a item in")]
-        [SerializeField]
-        private bool dropItemIn;
+        //[Header("Does the player have to drop a item in")]
+        //[SerializeField]
+        //private bool dropItemIn;
         [Header("Does this prop give a player a item")]
         [SerializeField]
         private bool givePlayerItem;
         [Header("Does this prop activate another")]
         [SerializeField]
         private bool activateAnotherProp;
-        [Header("Item needed it prop needs item to activate")]
-        [SerializeField]
-        private Interactable itemNeeded;
+        //[Header("Item needed it prop needs item to activate")]
+        //[SerializeField]
+        //private InteractableInventoryItem itemNeeded;
         [Header("Item to give player if it gives item")]
         [SerializeField]
-        private Interactable itemToGive;
+        private InteractableInventoryItem itemToGive;
         private Animator anim;
         [Header("Name of Trigger Animation")]
         [SerializeField]
@@ -93,10 +93,10 @@ namespace Interactables
         /// </summary>
         private void ChooseInteraction()
         {
-            if (dropItemIn == true)
-            {
-                DropItemInProp(itemGiven);
-            }
+            //if (dropItemIn == true)
+            //{
+            //    DropItemInProp(itemGiven);
+            //}
             if (givePlayerItem == true)
             {
                 GiveItemToPlayer(itemToGive);
@@ -131,7 +131,7 @@ namespace Interactables
             {
                 Destruct();
             }
-            if (PropType.Interactable == propType)
+            else if (PropType.Interactable == propType)
             {
                 ShakeProp();
             }
@@ -171,6 +171,7 @@ namespace Interactables
         {
             var mesh = GetComponent<MeshRenderer>().enabled = false;
             var collider = GetComponent<Collider>().enabled = false;
+            // disadbles because object is still doing calculations in corutine but the option shouldnt be seen or interacted on, is disabled in corutine
         }
 
         /// <summary>
@@ -178,7 +179,7 @@ namespace Interactables
         /// </summary>
         private void DestoryProp()
         {
-            destructionDirection = player.transform.position;
+            destructionDirection = -player.transform.position;
             pieces = brokenProp.GetComponentsInChildren<Rigidbody>();
 
             for(var i = 0; i < pieces.Length; i++)
@@ -210,7 +211,7 @@ namespace Interactables
                 Destroy(pieces[i]);
             }
 
-            Destroy(gameObject,2f);
+            gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -220,14 +221,14 @@ namespace Interactables
         {
             for (var i = 0; i < interactable.Count; i++)
             {
-                Instantiate(interactable[i], transform.position, transform.rotation);
+                var go = Instantiate(interactable[i], transform.position, transform.rotation);
                 if (PropType.Interactable == propType)
                 {
-                    interactable[i].spawnedFromProp = true;
+                    go.SpawnFromProp();
                 }
                 else if (PropType.Destructible == propType)
                 {
-                    interactable[i].spawnedFromDestruct = true;
+                    go.SpawnOnGround();
                 }
             }
 
@@ -239,22 +240,14 @@ namespace Interactables
         /// </summary>
         private void NeedElement()
         {
-            if (elementRequired == true)
+            if (player.CurrentWeapon != null)
             {
-                if (player.CurrentMeleeWeapon != null)
-                { 
-                    typeFromWeapon = player.CurrentMeleeWeapon.elementType;
-                }
-                if (player.CurrentRangeWeapon != null)
+                typeFromWeapon = player.CurrentWeapon.elementType;
+
+                if (CheckWeaponType(typeFromWeapon) || elementRequired == false)
                 {
-                    typeFromWeapon = player.CurrentRangeWeapon.elementType;
-                }
-               
-                CheckWeaponType(typeFromWeapon);
-            }
-            else if (elementRequired == false)
-            {
-                Attacked();
+                    Attacked();
+                }                          
             }          
         }
 
@@ -262,32 +255,33 @@ namespace Interactables
         /// checks if weapon element is the same as the one the prop needs
         /// </summary>
         /// <param name="weaponElement"></param>
-        private void CheckWeaponType(OPTIONS weaponElement)
+        private bool CheckWeaponType(OPTIONS weaponElement)
         {
             if (weaponElement == elementalType)
             {
-                Attacked();
+                return true;
             }
+            return false;
         }
 
         /// <summary>
         /// called if prop need and item and checks if it the right item
         /// </summary>
         /// <param name="item"></param>
-        private void DropItemInProp(Interactable item)
-        {
-            if (item.Equals(itemNeeded))
-            {
-                //delete item from iventory
-                //does something
-            }
-        }
+        //private void DropItemInProp(InteractableInventoryItem item)
+        //{
+        //    if (item.Equals(itemNeeded))
+        //    {
+        //        //delete item from iventory
+        //        //does something
+        //    }
+        //}
 
         /// <summary>
         /// called if prop gives player and item
         /// </summary>
         /// <param name="item"></param>
-        private void GiveItemToPlayer(Interactable item)
+        private void GiveItemToPlayer(InteractableInventoryItem item)
         {
             item.transform.SetParent(Inventory.instance.transform);
             Inventory.instance.AddItem(item);

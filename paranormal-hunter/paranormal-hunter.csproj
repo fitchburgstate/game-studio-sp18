@@ -12,12 +12,15 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -370,7 +373,7 @@
     <Compile Include="Assets\Scripts\Character\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Elements\Elements.cs" />
     <Compile Include="Assets\Scripts\Elements\ElementType.cs" />
-    <Compile Include="Assets\Scripts\Inventory\Interactable.cs" />
+    <Compile Include="Assets\Scripts\Inventory\InteractableInventoryItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\InteractableProp.cs" />
     <Compile Include="Assets\Scripts\Inventory\Inventory.cs" />
     <Compile Include="Assets\Scripts\Inventory\Item.cs" />
@@ -383,6 +386,7 @@
     <Compile Include="Assets\Scripts\Weapons\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Plugins\Cinemachine\ReleaseNotes.txt" />
     <None Include="Assets\Plugins\InControl\Readme\CHANGELOG.txt" />
     <None Include="Assets\Plugins\InControl\Readme\README.txt" />
     <None Include="Assets\Plugins\PostProcessing\Shaders\ACES.hlsl" />
