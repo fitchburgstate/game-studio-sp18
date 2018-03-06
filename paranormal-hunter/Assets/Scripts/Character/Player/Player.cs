@@ -68,6 +68,7 @@ namespace Hunter.Character
         {
             var dashComplete = 0.09f;
             float dashTime = 0;
+            anim.SetTrigger("DodgeRoll");
             while(Vector3.Distance(transform.position, target) > dashComplete)
             {
                 dashTime += dashSpeed * Time.deltaTime;
@@ -79,7 +80,7 @@ namespace Hunter.Character
 
 
 
-        private Vector3 OnNavMesh(Vector3 target)
+        private Vector3 OnNavMesh(Vector3 target, GameObject playerRoot)
         {
             var hit = new NavMeshHit();
             if(NavMesh.Raycast(transform.position, target, out hit, NavMesh.AllAreas))
@@ -97,7 +98,8 @@ namespace Hunter.Character
                 Debug.Log("Transform: " + transform.position);
                 Debug.Log("Target: " + target);
                 Debug.Log("Hit: " + hit.position);
-                target = new Vector3(target.x, hit.position.y + 1, target.z);
+                Debug.DrawLine(transform.position, hit.position, Color.blue, 5);
+                target = new Vector3(target.x, hit.position.y + (playerRoot.transform.localPosition.y * -1), target.z);
                 return target;
             }
             
@@ -124,6 +126,7 @@ namespace Hunter.Character
              * Perfect Diagnol on Movement causes dashes not to work (may or may not need to fix)
              * move timed bit to coroutine
              */
+            
             var start = transform.position;
             var temp = start;
             var fwd = playerRoot.transform.forward;
@@ -132,20 +135,20 @@ namespace Hunter.Character
             var ray = new Ray(transform.position, fwd);
 
 
-            if(Physics.Raycast(ray, out hit, 7))
+            if(Physics.Raycast(ray, out hit, 5))
             {
                 target = hit.point;
                 Debug.Log("Blocked");
             }
             else
             {
-                target = ray.GetPoint(7);
+                target = ray.GetPoint(5);
                 Debug.Log("No Block");
             }
 
-            Debug.DrawRay(transform.position, fwd * 7, Color.red);
+            Debug.DrawRay(transform.position, fwd * 5, Color.red);
 
-            target = OnNavMesh(target);
+            target = OnNavMesh(target, playerRoot);
 
             StartCoroutine(TestDash(target));
 
