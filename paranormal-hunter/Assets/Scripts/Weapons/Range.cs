@@ -166,5 +166,14 @@ namespace Hunter.Character
         {
             Gizmos.DrawRay(ray.origin, ray.direction * weaponRange);
         }
+
+        // ----------- Sound Event Methods ----------- \\
+        // Luger Shot
+        void PlayLugerShot(){
+            // Currently 1 shot pitch modulated, will fix later to be random container
+            Fabric.EventManager.Instance.PostEvent("Player Luger Shot", gameObject);
+        }
+        // -------------------------------------------------- \\
+
     }
 }
