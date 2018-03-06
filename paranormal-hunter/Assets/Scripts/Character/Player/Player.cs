@@ -82,9 +82,24 @@ namespace Hunter.Character
         private Vector3 OnNavMesh(Vector3 target)
         {
             var hit = new NavMeshHit();
-            if((NavMesh.FindClosestEdge(target, out hit, NavMesh.AllAreas)))
+            if(NavMesh.Raycast(transform.position, target, out hit, NavMesh.AllAreas))
             {
-                Debug.Log(hit.distance);
+                Debug.Log("off");
+                Debug.Log(target);
+                target = hit.position;
+                target = new Vector3(target.x, target.y + 1, target.z);
+                return target;
+            }
+            else
+            {
+                Debug.Log("on");
+                return target;
+            }
+            
+            /*if((NavMesh.FindClosestEdge(target, out hit, NavMesh.AllAreas)))
+            {
+                target = hit.position;
+                Debug.Log(target);
                 Debug.Log("on");
                 return target;
             }
@@ -93,7 +108,7 @@ namespace Hunter.Character
                 Debug.Log("off");
                 
                 return transform.position;
-            }
+            }*/
         }
 
         public void Dash(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
@@ -106,88 +121,31 @@ namespace Hunter.Character
              */
             var start = transform.position;
             var temp = start;
+            var fwd = playerRoot.transform.forward;
+            var target = new Vector3();
+            var hit = new RaycastHit();
+            var ray = new Ray(transform.position, fwd);
+
+
+            if(Physics.Raycast(ray, out hit, 5))
+            {
+                target = hit.point;
+                Debug.Log("Blocked");
+            }
+            else
+            {
+                target = ray.GetPoint(5);
+                Debug.Log(target);
+                Debug.Log("No Block");
+            }
+
+            Debug.DrawRay(transform.position, fwd * 5, Color.red);
+
+            target = OnNavMesh(target);
+
+            StartCoroutine(TestDash(target));
+
             //Debug.Log(startTime);
-
-            if (finalDirection.x <= .5 && finalDirection.x >= -.5 && finalDirection.z > 0)
-            {
-                Debug.Log("Dash Foward");
-                //temp.z = start.z + 5;
-                //temp.x = start.x + 5;
-
-                temp = OnNavMesh(transform.position);
-
-                StartCoroutine(TestDash(temp));
-            }
-            else if(finalDirection.x <= .5 && finalDirection.x >= -.5 && finalDirection.z < 0)
-            {
-                Debug.Log("Dash Backward");
-                temp.z = start.z - 5;
-                temp.x = start.x - 5;
-
-                temp = OnNavMesh(temp);
-
-                StartCoroutine(TestDash(temp));
-            }
-            else if(finalDirection.z <= .5 && finalDirection.z >= -.5 && finalDirection.x > 0)
-            {
-                Debug.Log("Dash Right");
-                temp.z = start.z - 5;
-                temp.x = start.x + 5;
-
-                temp = OnNavMesh(temp);
-
-                StartCoroutine(TestDash(temp));
-            }
-            else if (finalDirection.z <= .5 && finalDirection.z >= -.5 && finalDirection.x < 0)
-            {
-                Debug.Log("Dash Left");
-                temp.z = start.z + 5;
-                temp.x = start.x - 5;
-
-                temp = OnNavMesh(temp);
-
-                StartCoroutine(TestDash(temp));
-            }
-            else if(finalDirection.x <= .8 && finalDirection.x >=.2 && finalDirection.z > 0)
-            {
-                Debug.Log("Diag Up Right");
-                temp.z = start.z;
-                temp.x = start.x + 5;
-
-                temp = OnNavMesh(temp);
-
-                StartCoroutine(TestDash(temp));
-            }
-            else if(finalDirection.x <= .8 && finalDirection.x >= .2 && finalDirection.z < 0)
-            {
-                Debug.Log("Diag Down Right");
-                temp.z = start.z - 5;
-                temp.x = start.x;
-
-                temp = OnNavMesh(temp);
-
-                StartCoroutine(TestDash(temp));
-            }
-            else if (finalDirection.x <= .2 && finalDirection.x >= -.8 && finalDirection.z > 0)
-            {
-                Debug.Log("Diag Up Left");
-                temp.z = start.z + 5;
-                temp.x = start.x;
-
-                temp = OnNavMesh(temp);
-
-                StartCoroutine(TestDash(temp));
-            }
-            else if (finalDirection.x >= -.8 && finalDirection.x <= -.2 && finalDirection.z < 0)
-            {
-                Debug.Log("Diag Down Left");
-                temp.z = start.z;
-                temp.x = start.x - 5;
-
-                temp = OnNavMesh(temp);
-
-                StartCoroutine(TestDash(temp));
-            }
             //nextDodge = Time.time + dodgeRate;
         }
 
