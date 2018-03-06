@@ -17,8 +17,10 @@ namespace Interactables
     [RequireComponent(typeof(Animator))]
     public class InteractableProp : MonoBehaviour, IDamageable
     {
-        public Player player;
+        [HideInInspector]
+        public Interactable itemGiven; // the object the player gave
 
+        private Player player;
         [Header("The items that will spawn from the prop")]
         [SerializeField]
         private List<Interactable> interactable = new List<Interactable>(); // list of iteractables to spawn
@@ -27,13 +29,28 @@ namespace Interactables
         private PropType propType;
         [Header("Does it need a mod element to be triggered")]
         [SerializeField]
-        private bool elementRequired;  
+        private bool elementRequired;
         [Header("Type of element it needs to be triggered")]
         [SerializeField]
-        private OPTIONS elementalType;
+        private OPTIONS elementalType; 
+        [Header("Does it spawn a item when interacted with")]
+        [SerializeField]
+        private bool spawnItem;
+        [Header("Does the player have to drop a item in")]
+        [SerializeField]
+        private bool dropItemIn;
+        [Header("Does this prop give a player a item")]
+        [SerializeField]
+        private bool givePlayerItem;
+        [Header("Does this prop activate another")]
+        [SerializeField]
+        private bool activateAnotherProp;
         [Header("Item needed it prop needs item to activate")]
         [SerializeField]
         private Interactable itemNeeded;
+        [Header("Item to give player if it gives item")]
+        [SerializeField]
+        private Interactable itemToGive;
         private Animator anim;
         [Header("Name of Trigger Animation")]
         [SerializeField]
@@ -50,8 +67,7 @@ namespace Interactables
         [SerializeField]
         private UnityEvent propEvent;
         private OPTIONS typeFromWeapon; // type attribute of weapon player is holding
-
-
+        
         public void TakeDamage(int damage)
         {
             Interact();
@@ -70,6 +86,29 @@ namespace Interactables
         private void OnMouseDown()
         {
             Attacked();
+        }
+
+        /// <summary>
+        /// which interaction(s) will the prop use
+        /// </summary>
+        private void ChooseInteraction()
+        {
+            if (dropItemIn == true)
+            {
+                DropItemInProp(itemGiven);
+            }
+            if (givePlayerItem == true)
+            {
+                GiveItemToPlayer(itemToGive);
+            }
+            if(spawnItem == true)
+            {
+                SpawnItems();
+            }
+            if (activateAnotherProp == true)
+            {
+                StartEvent();
+            }
         }
 
         private void Start()
@@ -104,7 +143,7 @@ namespace Interactables
         private void ShakeProp()  
         {
             anim.SetTrigger(animationName);
-            SpawnItems();
+            ChooseInteraction();
         }
 
         /// <summary>
@@ -154,7 +193,7 @@ namespace Interactables
                 // have object destroy the direct the player facing
             }
 
-            SpawnItems();
+            ChooseInteraction();
             StartCoroutine(DestroyPieces());
         }
 
@@ -240,6 +279,7 @@ namespace Interactables
             if (item.Equals(itemNeeded))
             {
                 //delete item from iventory
+                //does something
             }
         }
 
@@ -250,6 +290,7 @@ namespace Interactables
         private void GiveItemToPlayer(Interactable item)
         {
             item.transform.SetParent(Inventory.instance.transform);
+            Inventory.instance.AddItem(item);
         }
     } 
 }
