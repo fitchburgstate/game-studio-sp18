@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioTestingInput : MonoBehaviour {
+	
 	[Header("Test Inputs")]
 	public KeyCode Footstep = KeyCode.F;
 	public KeyCode PlayerHit = KeyCode.H;
-	// Update is called once per frame
+	
 	void Update () {
 		if(Input.GetKeyDown(Footstep)){
 			PlayFootsteps();
@@ -15,14 +16,17 @@ public class AudioTestingInput : MonoBehaviour {
 			PlayPlayerHit();
 		}
 	}
+	
+	/* All Player SFX should be posted with a reference to the player object,
+		So that Fabric can track their 3D position and instances.
+		If this isn't possible, just remove the ", gameObject" */
+	
 	// Player footsteps
-	/* In the future will create overrides within character controller
-		for differing stuff. Also do enemies need steps? */
 	void PlayFootsteps(){
-		Fabric.EventManager.Instance.PostEvent("Footstep");
+		Fabric.EventManager.Instance.PostEvent("Footstep", gameObject);
 	}
 	// For when the player gets hit
 	void PlayPlayerHit(){
-		Fabric.EventManager.Instance.PostEvent("Player Hit");
+		Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
 	}
 }
