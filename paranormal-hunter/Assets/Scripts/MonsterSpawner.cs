@@ -20,9 +20,9 @@ public class MonsterSpawner : MonoBehaviour
 
     private Vector3 pointOnNavMesh;
     private bool doneSpawning = false;
-    private List<GameObject> spawnedMonsters = new List<GameObject>();
+    public List<GameObject> spawnedMonsters = new List<GameObject>();
     private int spawned;
-    private GameObject room;
+    public GameObject room;
 
     public void Update()
     {
@@ -30,7 +30,6 @@ public class MonsterSpawner : MonoBehaviour
         {
             spawned = 0;
             StartCoroutine("Respawn");
-            StartCoroutine("TurnLightsOn");
         }
 
         for (var i = spawnedMonsters.Count - 1; i > -1; i--)
@@ -44,7 +43,10 @@ public class MonsterSpawner : MonoBehaviour
             StartCoroutine("Spawn");
         }
 
-
+        if (spawnedMonsters.Count == 0)
+        {
+            room.SetActive(true);
+        }
     }
     
     bool RandomPoint(Vector3 center, float range, out Vector3 result)
@@ -102,10 +104,5 @@ public class MonsterSpawner : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, range);
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(transform.position, 0.5f);
-    }
-    IEnumerable TurnLightsOn()
-    {
-        room.SetActive(true);
-        yield return true;
     }
 }
