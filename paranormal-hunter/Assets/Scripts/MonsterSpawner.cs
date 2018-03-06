@@ -6,7 +6,7 @@ using UnityEngine.AI;
 [System.Serializable]
 public class MonsterSpawner : MonoBehaviour
 {
-    public GameObject room;
+    
     [Tooltip("A list of monster prefabs")]
     public List<GameObject> monsters = new List<GameObject>();
     [Tooltip("How many monsters you want to spawn")]
@@ -22,7 +22,8 @@ public class MonsterSpawner : MonoBehaviour
     private bool doneSpawning = false;
     private List<GameObject> spawnedMonsters = new List<GameObject>();
     private int spawned;
-    
+    private GameObject room;
+
     public void Update()
     {
         if (spawnedMonsters.Count == 0 && doneSpawning == true)
@@ -104,7 +105,7 @@ public class MonsterSpawner : MonoBehaviour
     }
     IEnumerable TurnLightsOn()
     {
-        
+        room.SetActive(true);
         yield return true;
     }
 }

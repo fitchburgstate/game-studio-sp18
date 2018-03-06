@@ -61,6 +61,7 @@ public class MonsterSpawnerWindow : EditorWindow
 
         if (GUI.Button(new Rect(310, 80, 400, 20), "Spawn Monsters"))
         {
+            //uses function in monsterspawner script to spawn a monster on all monster spawners
             foreach (var monsterSpawn in monsterSpawners)
             {
                 monsterSpawn.MakeWolf();
@@ -73,7 +74,6 @@ public class MonsterSpawnerWindow : EditorWindow
             reorderlist.DoList(listRect);
             monsterSO.ApplyModifiedProperties();
         }
-
     }
 
     void OnInspectorUpdate()
@@ -81,6 +81,3 @@ public class MonsterSpawnerWindow : EditorWindow
         Repaint();
     }
 }
-
-
-
