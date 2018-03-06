@@ -19,5 +19,12 @@ namespace Hunter.Character
                 Destroy(gameObject);
             }
         }
+        
+        // ----------- Sound Event Methods ----------- \\
+        void PlayWolfAttack(){
+		    Fabric.EventManager.Instance.PostEvent("Wolf Attack", gameObject);
+	    }
+        // -------------------------------------------------- \\
+
     }
 }

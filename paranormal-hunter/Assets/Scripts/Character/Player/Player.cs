@@ -102,5 +102,16 @@ namespace Hunter.Character
         }
 
         // -------------------------------------------------- \\
+
+        // ----------- Sound Event Methods ----------- \\
+        // Player footsteps
+        void PlayFootsteps(){
+            Fabric.EventManager.Instance.PostEvent("Footstep", gameObject);
+        }
+        // For when the player gets hit
+        void PlayPlayerHit(){
+            Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
+        }
+        // -------------------------------------------------- \\
     }
 }

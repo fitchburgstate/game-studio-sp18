@@ -112,5 +112,11 @@ namespace Hunter.Character
         {
             weaponBoxCollider.enabled = false;
         }
+        
+        // ----------- Sound Event Methods ----------- \\
+        void PlayPlayerSwordSwing(){
+		    Fabric.EventManager.Instance.PostEvent("Player Sword Swing", gameObject);
+	    }
+        // -------------------------------------------------- \\
     }
 }
