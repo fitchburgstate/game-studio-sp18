@@ -33,16 +33,16 @@ namespace Hunter.Character
         /// <summary>
         /// This function will calculate the urge to attack.
         /// </summary>
-        /// <param name="distanceToEnemy">The distance that the AI is from it's target.</param>
+        /// <param name="distanceToTarget">The distance that the AI is from it's target.</param>
         /// <param name="hasJustAttacked">Has the AI just finished an attack?</param>
         /// <param name="hasAttackedValue">The amount that the urge total will go up if the AI has just attacked.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <returns></returns>
-        public float CalculateAttack(float distanceToEnemy, bool hasJustAttacked, float hasAttackedValue, float currentHealth)
+        public float CalculateAttack(float distanceToTarget, bool hasJustAttacked, float hasAttackedValue, float currentHealth)
         {
             var attackUrgeTotal = 0f;
 
-            attackUrgeTotal -= Mathf.Clamp(distanceToEnemy, 0, 100);
+            attackUrgeTotal -= Mathf.Clamp(distanceToTarget, 0, 100);
 
             if (hasJustAttacked)
             {
@@ -60,7 +60,6 @@ namespace Hunter.Character
         {
             var aiComponentModule = controller.GetComponent<AIInputModule>();
             aiComponentModule.GetComponent<IAttack>().Attack();
-            aiComponentModule.hasJustAttacked = true;
         }
     }
 
@@ -84,14 +83,14 @@ namespace Hunter.Character
         /// <summary>
         /// This function will calculate the urge to move a target.
         /// </summary>
-        /// <param name="distanceToEnemy">The distance that the AI is from it's target.</param>
+        /// <param name="distanceToTarget">The distance that the AI is from it's target.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <returns></returns>
-        public float CalculateMoveTo(float distanceToEnemy, float currentHealth)
+        public float CalculateMoveTo(float distanceToTarget, float currentHealth)
         {
             var moveToUrgeTotal = 0f;
 
-            moveToUrgeTotal += Mathf.Clamp(distanceToEnemy, 0, 100);
+            moveToUrgeTotal += Mathf.Clamp(distanceToTarget, 0, 100);
 
             moveToUrgeTotal += Mathf.Clamp(currentHealth, 0, 100);
 
@@ -103,7 +102,7 @@ namespace Hunter.Character
         public void MoveToAction(GameObject controller)
         {
             var aiComponentModule = controller.GetComponent<AIInputModule>();
-            controller.GetComponent<IMoveable>().Move(aiComponentModule.Controller, aiComponentModule.MoveDirection, aiComponentModule.LookDirection, aiComponentModule.EnemyModel, aiComponentModule.Agent);
+            controller.GetComponent<IMoveable>().Move(aiComponentModule.Controller, aiComponentModule.MoveDirection, aiComponentModule.LookDirection, aiComponentModule.EnemyModel, aiComponentModule.Agent, aiComponentModule.Target);
         }
     }
 
@@ -173,20 +172,20 @@ namespace Hunter.Character
         /// <summary>
         /// This function will calculate the urge to idle when not in combat.
         /// </summary>
-        /// <param name="enemyInLOS">Is there a target in Line of Sight?</param>
-        /// <param name="enemyInLOSValue">The amount that the urge total will go up if there is no enemy in line of sight.</param>
+        /// <param name="targetInLOS">Is there a target in Line of Sight?</param>
+        /// <param name="targetInLOSValue">The amount that the urge total will go up if there is no enemy in line of sight.</param>
         /// <param name="hasJustIdled">Has the AI just idled as the last action?</param>
         /// <param name="hasJustIdledValue">The amount that the urge total will go down if the AI has just idled.</param>
         /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <param name="inCombatValue">The amount that the urge total will go down if the AI is in combat.</param>
         /// <returns></returns>
-        public float CalculateIdle(bool enemyInLOS, float enemyInLOSValue, bool hasJustIdled, float hasJustIdledValue, bool inCombat, float inCombatValue)
+        public float CalculateIdle(bool targetInLOS, float targetInLOSValue, bool hasJustIdled, float hasJustIdledValue, bool inCombat, float inCombatValue)
         {
             var idleUrgeTotal = 0f;
 
-            if (!enemyInLOS)
+            if (!targetInLOS)
             {
-                idleUrgeTotal += enemyInLOSValue;
+                idleUrgeTotal += targetInLOSValue;
             }
 
             if (hasJustIdled)
@@ -230,20 +229,20 @@ namespace Hunter.Character
         /// <summary>
         /// This function will calculate the urge to wander around when not in combat.
         /// </summary>
-        /// <param name="enemyInLOS">Is there a target in Line of Sight?</param>
-        /// <param name="enemyInLOSValue">The amount that the urge total will go up if there is no enemy in line of sight.</param>
+        /// <param name="targetInLOS">Is there a target in Line of Sight?</param>
+        /// <param name="targetInLOSValue">The amount that the urge total will go up if there is no enemy in line of sight.</param>
         /// <param name="hasJustWandered">Has the AI just wandered as the last action?</param>
         /// <param name="hasJustWanderedValue">The amount that the urge total will go down if the AI has just wandered.</param>
         /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <param name="inCombatValue">The amount that the urge total will go down if the AI is in combat.</param>
         /// <returns></returns>
-        public float CalculateWander(bool enemyInLOS, float enemyInLOSValue, bool hasJustWandered, float hasJustWanderedValue, bool inCombat, float inCombatValue)
+        public float CalculateWander(bool targetInLOS, float targetInLOSValue, bool hasJustWandered, float hasJustWanderedValue, bool inCombat, float inCombatValue)
         {
             var wanderUrgeTotal = 0f;
 
-            if (!enemyInLOS)
+            if (!targetInLOS)
             {
-                wanderUrgeTotal += enemyInLOSValue;
+                wanderUrgeTotal += targetInLOSValue;
             }
 
             if (hasJustWandered)

@@ -65,27 +65,8 @@ namespace Hunter.Character
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
         {
-            moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= speed;
-
-            agent.destination = characterModel.transform.position;
-            agent.updateRotation = false;
-
-            if (moveDirection.magnitude != 0 || finalDirection.magnitude != 0)
-            {
-                var targetRotation = new Vector3(characterModel.transform.localEulerAngles.x, Mathf.Atan2(finalDirection.x, finalDirection.z) * Mathf.Rad2Deg, characterModel.transform.localEulerAngles.z);
-
-                speedRamp = Mathf.Clamp(speedRamp + Time.deltaTime, 0, 1);
-                var changeChar = rotateAnimation.Evaluate(speedRamp) * rotateEnemy;
-
-                characterModel.transform.localRotation = Quaternion.RotateTowards(characterModel.transform.localRotation, Quaternion.Euler(targetRotation), changeChar);
-            }
-            else
-            {
-                speedRamp = 0;
-            }
-
-            controller.Move(moveDirection * Time.deltaTime);
+            var finalTarget = new Vector3(target.transform.position.x, characterModel.transform.localPosition.y, target.transform.position.z);
+                agent.destination = finalTarget;
         }
 
         public void Dash(CharacterController controller)

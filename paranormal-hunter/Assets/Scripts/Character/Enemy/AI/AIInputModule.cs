@@ -134,12 +134,12 @@ public class AIInputModule : MonoBehaviour
     /// </summary>
     private Transform target;
 
-    public bool hasJustAttacked = false;
+    private bool hasJustAttacked = false;
     public bool enemyInLOS = false;
-    public bool hasJustIdled = false;
-    public bool inCombat = false;
-    public bool hasJustWandered = false;
-    public bool canMoveAwayFromTarget = false;
+    private bool hasJustIdled = false;
+    private bool inCombat = false;
+    private bool hasJustWandered = false;
+    private bool canMoveAwayFromTarget = false;
 
     private Character character;
     private Attack attack;
@@ -151,24 +151,27 @@ public class AIInputModule : MonoBehaviour
 
     private void Start()
     {
-        #region Actions
         attack = new Attack(gameObject);
         idle = new Idle(gameObject);
         wander = new Wander(gameObject);
         moveTo = new MoveTo(gameObject);
         retreat = new Retreat(gameObject);
-        #endregion
 
         urgeScriptable = new UrgeScriptable();
+        character = GetComponent<Character>();
 
         EnemyModel = gameObject.transform.GetChild(0).gameObject;
         Agent = GetComponent<NavMeshAgent>();
+
         target = FindNearestTargetWithString("Player");
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         var currentState = FindNextState();
+
+        Debug.Log("Current State: " + currentState);
+
         currentState.Act();
 
         if (currentState is Attack)
@@ -206,26 +209,36 @@ public class AIInputModule : MonoBehaviour
             hasJustIdled = false;
             hasJustWandered = true;
         }
+
     }
 
     public UtilityBasedAI FindNextState()
     {
         var attackValue = attack.CalculateAttack(DistanceToTarget(), hasJustAttacked, urgeScriptable.hasAttackedUrgeValue, character.health);
-        var idleValue = idle.CalculateIdle(enemyInLOS, urgeScriptable.enemyInLOSUrgeValue, hasJustIdled, urgeScriptable.hasJustIdledUrgeValue, inCombat, urgeScriptable.inCombatValue);
-        var wanderValue = wander.CalculateWander(enemyInLOS, urgeScriptable.enemyInLOSUrgeValue, hasJustWandered, urgeScriptable.hasJustWanderedUrgeValue, inCombat, urgeScriptable.inCombatValue);
+        var idleValue = idle.CalculateIdle(enemyInLOS, urgeScriptable.targetInLOSUrgeValue, hasJustIdled, urgeScriptable.hasJustIdledUrgeValue, inCombat, urgeScriptable.inCombatValue);
+        var wanderValue = wander.CalculateWander(enemyInLOS, urgeScriptable.targetInLOSUrgeValue, hasJustWandered, urgeScriptable.hasJustWanderedUrgeValue, inCombat, urgeScriptable.inCombatValue);
         var moveToValue = moveTo.CalculateMoveTo(DistanceToTarget(), character.health);
         var retreatValue = retreat.CalculateRetreat(canMoveAwayFromTarget, urgeScriptable.canMoveAwayFromTargetValue, character.health);
 
-        var largestValue = new SortedDictionary<float, UtilityBasedAI>
+        //Debug.Log("Attack Value: " + attackValue);
+        //Debug.Log("Idle Value: " + idleValue);
+        //Debug.Log("Wander Value: " + wanderValue);
+        //Debug.Log("MoveTo Value: " + moveToValue);
+        //Debug.Log("Retreat Value: " + retreatValue);
+
+        var largestValue = new Dictionary<UtilityBasedAI, float>
         {
-            { attackValue, attack },
-            { idleValue, idle },
-            { wanderValue, wander },
-            { moveToValue, moveTo },
-            { retreatValue, retreat }
+            { attack, attackValue },
+            { idle, idleValue },
+            { wander, wanderValue },
+            { moveTo, moveToValue },
+            { retreat, retreatValue }
         };
 
-        return largestValue.Values.Max();
+        var sortedDict = from entry in largestValue orderby entry.Value ascending select entry;
+        var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
+
+        return max;
     }
 
     private float DistanceToTarget()
