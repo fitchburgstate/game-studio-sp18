@@ -21,7 +21,7 @@ public class MonsterSpawnerWindow : EditorWindow
     }
 
     void OnEnable()
-    {     
+    {
         monsterSpawners = new List<MonsterSpawner>(FindObjectsOfType<MonsterSpawner>());
         spawner = FindObjectOfType<MonsterSpawner>();
 
@@ -31,7 +31,7 @@ public class MonsterSpawnerWindow : EditorWindow
             reorderlist = new ReorderableList(monsterSO, monsterSO.FindProperty("monsters"), true, true, true, true);
             reorderlist.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "Monster");
             reorderlist.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-               EditorGUI.PropertyField(rect, reorderlist.serializedProperty.GetArrayElementAtIndex(index));
+            EditorGUI.PropertyField(rect, reorderlist.serializedProperty.GetArrayElementAtIndex(index));
         }
     }
 
@@ -44,7 +44,6 @@ public class MonsterSpawnerWindow : EditorWindow
 
     void OnGUI()
     {
-        EditorGUI.HelpBox(new Rect (310, 100, 400, 50), "When you want the list of monsters to effect all the spawners click 'apply' at the top of the inpector of the monster spawner its effecting to apply it to the prefab", MessageType.Info);
         spawner.amountToSpawn = EditorGUI.IntField(new Rect(newRect), "Amount To Spawn", spawner.amountToSpawn);
         spawner.range = EditorGUI.FloatField(new Rect(310, 20, 200, 20), "Range", spawner.range);
         spawner.respawnTime = EditorGUI.IntField(new Rect(310, 40, 200, 20), "Respawn Time", spawner.respawnTime);
@@ -52,10 +51,10 @@ public class MonsterSpawnerWindow : EditorWindow
 
         foreach (var monsterSpawn in monsterSpawners)
         {
+            monsterSpawn.monsters = spawner.monsters;
             monsterSpawn.amountToSpawn = spawner.amountToSpawn;
             monsterSpawn.range = spawner.range;
             monsterSpawn.respawnTime = spawner.respawnTime;
-            monsterSpawn.monsterToSpawn = spawner.monsterToSpawn;
             EditorUtility.SetDirty(monsterSpawn);
         }
 
