@@ -20,8 +20,9 @@ public class MonsterSpawner : MonoBehaviour
 
     private Vector3 pointOnNavMesh;
     private bool doneSpawning = false;
-    public List<GameObject> spawnedMonsters = new List<GameObject>();
+    private List<GameObject> spawnedMonsters = new List<GameObject>();
     private int spawned;
+    [Tooltip("Room full of lights the monster spawner is assigned to")]
     public GameObject room;
 
     public void Update()

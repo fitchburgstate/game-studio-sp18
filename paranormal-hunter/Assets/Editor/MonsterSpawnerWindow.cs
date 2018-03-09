@@ -51,6 +51,7 @@ public class MonsterSpawnerWindow : EditorWindow
 
         foreach (var monsterSpawn in monsterSpawners)
         {
+            monsterSpawn.monsterToSpawn = spawner.monsterToSpawn;
             monsterSpawn.monsters = spawner.monsters;
             monsterSpawn.amountToSpawn = spawner.amountToSpawn;
             monsterSpawn.range = spawner.range;
