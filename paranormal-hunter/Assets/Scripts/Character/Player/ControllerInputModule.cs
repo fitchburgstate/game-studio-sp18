@@ -60,6 +60,7 @@ public class ControllerInputModule : MonoBehaviour
         else
         {
             lookDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
+            player.LookDirection = lookDirection;
 
             // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
             if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)

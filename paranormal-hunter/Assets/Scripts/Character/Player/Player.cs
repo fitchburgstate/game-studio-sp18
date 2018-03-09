@@ -23,6 +23,12 @@ namespace Hunter.Character
 
         public Animator anim;
         public float dashSpeed;
+        public float dashLength;
+        public float dashCoolDown;
+        private bool canDash = true;
+        private Vector3 dashTarget;
+        private Vector3 lookDirection;
+        private Vector3 lastLeft;
 
         // ------------------------------------------------ \\ 
 
@@ -39,7 +45,73 @@ namespace Hunter.Character
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
-            anim.SetFloat("dirY", Mathf.Abs(moveDirection.magnitude), 0, 1);
+            var leftInputAxis = moveDirection;
+            Debug.Log(LookDirection);
+
+            var angle = SignedAngle(new Vector3(leftInputAxis.x, 0, leftInputAxis.y), playerRoot.transform.forward);
+
+            if(angle < 0)
+            {
+                angle *= -1;
+            }
+            else
+            {
+                angle = 360 - angle;
+            }
+
+            angle += Camera.main.transform.eulerAngles.y;
+
+            var angleRadian = Mathf.Deg2Rad * angle;
+
+            if(leftInputAxis.x != 0 || leftInputAxis.y !=0)
+            {
+                 leftInputAxis = new Vector2(-1*Mathf.Sin(angleRadian), Mathf.Cos(angleRadian));
+            }
+
+            var xVelocity = 0f;
+            var yVelocity = 0f;
+            var smoothTime = 0.05f;
+
+            leftInputAxis = new Vector2(Mathf.SmoothDamp(lastLeft.x, leftInputAxis.x, ref xVelocity, smoothTime), Mathf.SmoothDamp(lastLeft.y, leftInputAxis.y, ref yVelocity, smoothTime));
+
+            if(moveDirection.z > 0)
+            {
+                anim.SetFloat("dirX", leftInputAxis.y);
+                anim.SetFloat("dirY", Mathf.Abs(leftInputAxis.x));
+            }
+
+            //anim.SetFloat("dirX", leftInputAxis.y);
+            //anim.SetFloat("dirY", leftInputAxis.x);
+
+            lastLeft = leftInputAxis;
+
+            /*var h = Input.GetAxisRaw("Horizontal");
+            var v = Input.GetAxisRaw("Vertical");
+
+            Debug.Log(playerRoot.transform.forward);
+
+            var dir = Mathf.Atan2(h, v) / (Mathf.PI / 2.0f);
+            anim.SetFloat("dirX", dir);
+            if(playerRoot.transform.forward.z > 0)
+            {
+                anim.SetFloat("dirY", h * h + v + v);
+            }
+            else if (playerRoot.transform.forward.z < 0)
+            {
+                anim.SetFloat("dirY", h * h + -(v + v));
+            }*/
+
+
+            if (moveDirection == Vector3.zero)
+            {
+                anim.SetBool("Moving", false);
+            }
+            else
+            {
+                anim.SetBool("Moving", true);
+            }
+
+            
 
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
@@ -47,86 +119,44 @@ namespace Hunter.Character
             agent.destination = playerRoot.transform.position;
             agent.updateRotation = false;
 
-                if (moveDirection.magnitude != 0 || finalDirection.magnitude != 0)
-                {
-                    var targetRotation = new Vector3(playerRoot.transform.localEulerAngles.x, Mathf.Atan2(finalDirection.x, finalDirection.z) * Mathf.Rad2Deg, playerRoot.transform.localEulerAngles.z);
+            if (moveDirection.magnitude != 0 || finalDirection.magnitude != 0)
+            {
+                var targetRotation = new Vector3(playerRoot.transform.localEulerAngles.x, Mathf.Atan2(finalDirection.x, finalDirection.z) * Mathf.Rad2Deg, playerRoot.transform.localEulerAngles.z);
 
-                    speedRamp = Mathf.Clamp(speedRamp + Time.deltaTime, 0, 1);
-                    var changeChar = rotateAnimation.Evaluate(speedRamp) * rotateChar;
+                speedRamp = Mathf.Clamp(speedRamp + Time.deltaTime, 0, 1);
+                var changeChar = rotateAnimation.Evaluate(speedRamp) * rotateChar;
 
-                    playerRoot.transform.localRotation = Quaternion.RotateTowards(playerRoot.transform.localRotation, Quaternion.Euler(targetRotation), changeChar);
-                }
-                else
-                {
-                    speedRamp = 0;
-                }
+                playerRoot.transform.localRotation = Quaternion.RotateTowards(playerRoot.transform.localRotation, Quaternion.Euler(targetRotation), changeChar);
+            }
+            else
+            {
+                speedRamp = 0;
+            }
 
             controller.Move(moveDirection * Time.deltaTime);
         }
 
-        private IEnumerator TestDash(Vector3 target)
+        private float SignedAngle(Vector3 a, Vector3 b)
         {
-            var dashComplete = 0.09f;
-            float dashTime = 0;
-            anim.SetTrigger("DodgeRoll");
-            while(Vector3.Distance(transform.position, target) > dashComplete)
-            {
-                dashTime += dashSpeed * Time.deltaTime;
-                var dashAmount = dashAnimation.Evaluate(dashTime);
-                transform.position = Vector3.Lerp(transform.position, target, dashAmount);
-                yield return null;
-            }
+            return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
         }
 
-
-
-        private Vector3 OnNavMesh(Vector3 target, GameObject playerRoot)
-        {
-            var hit = new NavMeshHit();
-            if(NavMesh.Raycast(transform.position, target, out hit, NavMesh.AllAreas))
-            {
-                Debug.Log("off");
-                Debug.Log(target);
-                target = hit.position;
-                //compare y values for target and current postion
-                target = new Vector3(target.x, target.y + 1, target.z);
-                return target;
-            }
-            else
-            {
-                Debug.Log("on");
-                Debug.Log("Transform: " + transform.position);
-                Debug.Log("Target: " + target);
-                Debug.Log("Hit: " + hit.position);
-                Debug.DrawLine(transform.position, hit.position, Color.blue, 5);
-                target = new Vector3(target.x, hit.position.y + (playerRoot.transform.localPosition.y * -1), target.z);
-                return target;
-            }
-            
-            /*if((NavMesh.FindClosestEdge(target, out hit, NavMesh.AllAreas)))
-            {
-                target = hit.position;
-                Debug.Log(target);
-                Debug.Log("on");
-                return target;
-            }
-            else
-            {
-                Debug.Log("off");
-                
-                return transform.position;
-            }*/
-        }
-
+        /// <summary>
+        /// Dashes the Player in the direction they are facing
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="moveDirection"></param>
+        /// <param name="finalDirection"></param>
+        /// <param name="playerRoot"></param>
+        /// <param name="agent"></param>
         public void Dash(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
-            // This feature has not yet been implemented
-            /*
-             * TODO:
-             * Perfect Diagnol on Movement causes dashes not to work (may or may not need to fix)
-             * move timed bit to coroutine
-             */
-            
+            if (!canDash)
+            {
+                return;
+            }
+            canDash = false;
+
             var start = transform.position;
             var temp = start;
             var fwd = playerRoot.transform.forward;
@@ -134,23 +164,21 @@ namespace Hunter.Character
             var hit = new RaycastHit();
             var ray = new Ray(transform.position, fwd);
 
-
-            if(Physics.Raycast(ray, out hit, 5))
+            //Raycast to determine target point for dodge destination
+            if(Physics.Raycast(ray, out hit, dashLength))
             {
                 target = hit.point;
-                Debug.Log("Blocked");
             }
             else
             {
-                target = ray.GetPoint(5);
-                Debug.Log("No Block");
+                target = ray.GetPoint(dashLength);
             }
 
-            Debug.DrawRay(transform.position, fwd * 5, Color.red);
-
             target = OnNavMesh(target, playerRoot);
+            dashTarget = target;
+            anim.SetTrigger("DodgeRoll");
 
-            StartCoroutine(TestDash(target));
+            //StartCoroutine(PlayerDash(target));
 
             //Debug.Log(startTime);
             //nextDodge = Time.time + dodgeRate;
@@ -193,5 +221,67 @@ namespace Hunter.Character
         }
 
         // -------------------------------------------------- \\
+
+
+        /// <summary>
+        /// Determines if the point the player wants to dash to is on the navmesh
+        /// if not the target point is changed to the point they can dash to
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="playerRoot"></param>
+        /// <returns></returns>
+        private Vector3 OnNavMesh(Vector3 target, GameObject playerRoot)
+        {
+            var hit = new NavMeshHit();
+            if (NavMesh.Raycast(transform.position, target, out hit, NavMesh.AllAreas))
+            {
+                target = hit.position;
+                target = new Vector3(target.x, target.y + 1, target.z);
+                return target;
+            }
+            else
+            {
+                Debug.DrawLine(transform.position, hit.position, Color.blue, dashLength);
+                target = new Vector3(target.x, hit.position.y + (playerRoot.transform.localPosition.y * -1), target.z);
+                return target;
+            }
+        }
+
+        public void StartDash()
+        {
+            StartCoroutine(PlayerDash());
+        }
+
+        /// <summary>
+        /// Lerps the Player from their current postion to the dodge target
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        private IEnumerator PlayerDash()
+        {
+            var dashComplete = 0.09f;
+            float dashTime = 0;
+            while (Vector3.Distance(transform.position, dashTarget) > dashComplete)
+            {
+                dashTime += dashSpeed * Time.deltaTime;
+                var dashAmount = dashAnimation.Evaluate(dashTime);
+                transform.position = Vector3.Lerp(transform.position, dashTarget, dashAmount);
+                yield return null;
+            }
+            yield return new WaitForSeconds(dashCoolDown);
+            canDash = true;
+        }
+
+        public Vector3 LookDirection
+        {
+            get
+            {
+                return lookDirection;
+            }
+            set
+            {
+                lookDirection = value;
+            }
+        }
     }
 }
