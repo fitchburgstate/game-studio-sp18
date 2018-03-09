@@ -9,7 +9,7 @@ namespace Hunter.Character
     {
         private void Start()
         {
-            SetElementType(elementType);
+            SetElementType(inspectorElementType);
         }
 
         private void Update()

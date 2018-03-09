@@ -15,7 +15,7 @@ public interface IMoveable
 
 public interface IDamageable
 {
-    void DealDamage (int damage);
+    void DealDamage (int damage, bool isCritical);
 }
 
 //public interface IHealth<T>

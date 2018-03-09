@@ -6,6 +6,7 @@ using InControl;
 
 namespace Hunter.Character
 {
+
     public abstract class Character : MonoBehaviour, IDamageable
     {
         /// <summary>
@@ -21,12 +22,19 @@ namespace Hunter.Character
         /// <summary>
         /// Current Melee Weapon Equipped on the Character
         /// </summary>
-        public Melee melee;
+        [SerializeField]
+        private Melee melee;
 
         /// <summary>
         /// Current Ranged Weapon Equipped on the Character
         /// </summary>
-        public Range range;
+        [SerializeField]
+        private Range range;
+
+        private Weapon currentWeapon;
+
+        private Transform rotationTransform;
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
 
 
         public Melee CurrentMeleeWeapon
@@ -45,27 +53,42 @@ namespace Hunter.Character
             }
         }
 
-        private Weapon currentWeapon;
+        public Transform RotationTransform
+        {
+            get
+            {
+                if(rotationTransform == null)
+                {
+                    foreach(Transform child in transform)
+                    {
+                        if(child.tag == ROTATION_TRANSFORM_TAG) { rotationTransform = child; }
+                    }
+                    //Fallback for if the tag isn't set
+                    if(rotationTransform == null) {
+                        Debug.LogWarning("GameObject: " + gameObject.name + " has no rotational transform set. Check the tag of the first childed GameObject underneath this GameObject.", gameObject);
+                        rotationTransform = transform.GetChild(0);
+                    }
+                }
+                return rotationTransform;
+            }
 
-        private bool swap = false;
+        }
+
 
 
         public void SwitchWeapon()
         {
-            swap = true;
-            if (CurrentMeleeWeapon && swap == true)
+            if (CurrentMeleeWeapon)
             {
                 melee.gameObject.SetActive(false);
                 range.gameObject.SetActive(true);
                 SetCurrentWeapon(range);
-                swap = false;
             }
-            if (CurrentRangeWeapon && swap == true)
+            else if (CurrentRangeWeapon)
             {
                 range.gameObject.SetActive(false);
                 melee.gameObject.SetActive(true);
                 SetCurrentWeapon(melee);
-                swap = false;
             }
         }
 
@@ -74,11 +97,13 @@ namespace Hunter.Character
             if (weapon != null)
             {
                 currentWeapon = weapon;
+                currentWeapon.characterHoldingWeapon = this;
             }
         }
 
-        public void DealDamage (int damage, int timeOfDamage)
+        public void DealDamage (int damage, bool isCritical)
         {
+
             //float t = 0;
             //while (t < 1.0 && !isCritical)
             //{
@@ -94,6 +119,26 @@ namespace Hunter.Character
             //    c.health = c.health - (int)damage;
             //    isCritical = false;
             //}
+        }
+
+        private IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        {
+            float t = 0;
+            while (t < 1.0 && !isCritical)
+            {
+                t += Time.deltaTime / time;
+                health = (int)Mathf.Lerp(start, end, t);
+                //Debug.Log(c.health);
+            }
+            if (isCritical)
+            {
+                damage = start - end;
+                damage = damage + critDamage;
+                Debug.Log("Total Damage: " + damage);
+                health = health - (int)damage;
+                isCritical = false;
+            }
+            yield return null;
         }
     }
 }
