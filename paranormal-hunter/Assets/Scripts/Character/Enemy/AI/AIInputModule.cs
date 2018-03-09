@@ -135,19 +135,20 @@ public class AIInputModule : MonoBehaviour
     private Transform target;
 
     private bool hasJustAttacked = false;
-    public bool enemyInLOS = false;
+    private bool enemyInLOS = false;
     private bool hasJustIdled = false;
     private bool inCombat = false;
     private bool hasJustWandered = false;
     private bool canMoveAwayFromTarget = false;
 
     private Character character;
+    private AIDetection aiDetection;
     private Attack attack;
     private Idle idle;
     private Wander wander;
     private MoveTo moveTo;
     private Retreat retreat;
-    private UrgeScriptable urgeScriptable;
+    private UrgeWeights urgeWeights;
 
     private void Start()
     {
@@ -157,8 +158,9 @@ public class AIInputModule : MonoBehaviour
         moveTo = new MoveTo(gameObject);
         retreat = new Retreat(gameObject);
 
-        urgeScriptable = new UrgeScriptable();
+        urgeWeights = new UrgeWeights();
         character = GetComponent<Character>();
+        aiDetection = GetComponent<AIDetection>();
 
         EnemyModel = gameObject.transform.GetChild(0).gameObject;
         Agent = GetComponent<NavMeshAgent>();
@@ -168,12 +170,27 @@ public class AIInputModule : MonoBehaviour
 
     private void Update()
     {
-        var currentState = FindNextState();
+        enemyInLOS = aiDetection.DetectPlayer();
+        var distanceToTarget = DistanceToTarget();
+
+        if (enemyInLOS)
+        {
+            inCombat = true;
+        }
+        else if ((distanceToTarget > aiDetection.maxDetectionDistance) && (!enemyInLOS))
+        {
+            inCombat = false;
+        } 
+
+        var currentState = FindNextState(distanceToTarget);
 
         Debug.Log("Current State: " + currentState);
+        Debug.Log("inCombat: " + inCombat);
+        Debug.Log("enemyInLOS: " + enemyInLOS);
 
         currentState.Act();
 
+        #region State Switchers
         if (currentState is Attack)
         {
             hasJustAttacked = true;
@@ -209,22 +226,28 @@ public class AIInputModule : MonoBehaviour
             hasJustIdled = false;
             hasJustWandered = true;
         }
-
+        #endregion
     }
 
-    public UtilityBasedAI FindNextState()
+    /// <summary>
+    /// This function performs various operations to determine what action has the highest urge value and then returns it.
+    /// </summary>
+    /// <returns></returns>
+    public UtilityBasedAI FindNextState(float distanceToTarget)
     {
-        var attackValue = attack.CalculateAttack(DistanceToTarget(), hasJustAttacked, urgeScriptable.hasAttackedUrgeValue, character.health);
-        var idleValue = idle.CalculateIdle(enemyInLOS, urgeScriptable.targetInLOSUrgeValue, hasJustIdled, urgeScriptable.hasJustIdledUrgeValue, inCombat, urgeScriptable.inCombatValue);
-        var wanderValue = wander.CalculateWander(enemyInLOS, urgeScriptable.targetInLOSUrgeValue, hasJustWandered, urgeScriptable.hasJustWanderedUrgeValue, inCombat, urgeScriptable.inCombatValue);
-        var moveToValue = moveTo.CalculateMoveTo(DistanceToTarget(), character.health);
-        var retreatValue = retreat.CalculateRetreat(canMoveAwayFromTarget, urgeScriptable.canMoveAwayFromTargetValue, character.health);
+        var attackValue = attack.CalculateAttack(distanceToTarget, character.health, inCombat);
+        var idleValue = idle.CalculateIdle(enemyInLOS, urgeWeights.targetInLOSUrgeValue, hasJustIdled, urgeWeights.hasJustIdledUrgeValue, inCombat);
+        var wanderValue = wander.CalculateWander(enemyInLOS, urgeWeights.targetInLOSUrgeValue, hasJustWandered, urgeWeights.hasJustWanderedUrgeValue, inCombat);
+        var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, character.health, inCombat);
+        var retreatValue = retreat.CalculateRetreat(canMoveAwayFromTarget, urgeWeights.canMoveAwayFromTargetValue, character.health, inCombat);
 
+        #region Debug Logs
         //Debug.Log("Attack Value: " + attackValue);
-        //Debug.Log("Idle Value: " + idleValue);
-        //Debug.Log("Wander Value: " + wanderValue);
+        ////Debug.Log("Idle Value: " + idleValue);
+        ////Debug.Log("Wander Value: " + wanderValue);
         //Debug.Log("MoveTo Value: " + moveToValue);
-        //Debug.Log("Retreat Value: " + retreatValue);
+        ////Debug.Log("Retreat Value: " + retreatValue);
+        #endregion
 
         var largestValue = new Dictionary<UtilityBasedAI, float>
         {
@@ -235,7 +258,7 @@ public class AIInputModule : MonoBehaviour
             { retreat, retreatValue }
         };
 
-        var sortedDict = from entry in largestValue orderby entry.Value ascending select entry;
+        //var sortedDict = from entry in largestValue orderby entry.Value ascending select entry;
         var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 
         return max;

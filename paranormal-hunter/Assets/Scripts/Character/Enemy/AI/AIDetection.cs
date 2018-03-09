@@ -25,13 +25,6 @@ public class AIDetection : MonoBehaviour
     /// </summary>
     private float distanceToTarget;
 
-    AIInputModule aiInputModule;
-
-    private void Start()
-    {
-        aiInputModule = GetComponent<AIInputModule>();
-    }
-
     /// <summary>
     /// The AI searches for a gameobject tagged "Player" and returns true when the player has been found.
     /// </summary>
@@ -49,18 +42,14 @@ public class AIDetection : MonoBehaviour
                 if (rayHit.transform.tag == "Player") // Returns true if the raycast has hit the player
                 {
                     Debug.Log("The player has been found!");
-                    aiInputModule.enemyInLOS = true;
                     return true;
                 }
-                else // Returns false if the raycast has hit anything (or nothing) but the player
+                else // Returns false if the raycast has hit anything (or nothing) BUT the player
                 {
-                    aiInputModule.enemyInLOS = false;
                     return false;
                 }
             }
         }
-
-        aiInputModule.enemyInLOS = false;
         return false;
     }
 

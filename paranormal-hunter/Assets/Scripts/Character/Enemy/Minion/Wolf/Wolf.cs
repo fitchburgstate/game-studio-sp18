@@ -9,30 +9,6 @@ namespace Hunter.Character
     public sealed class Wolf : Minion, IMoveable, IAttack
     {
         /// <summary>
-        /// Speed at which the character moves.
-        /// </summary>
-        [Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
-        [Range(0, 20)]
-        public float speed = 5f;
-
-        /// <summary>
-        /// The speed at which the character turns.
-        /// </summary>
-        [Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 2,000.")]
-        [Range(0, 2000)]
-        public float rotateEnemy = 12f;
-
-        /// <summary>
-        /// The speed at which the animation curve plays.
-        /// </summary>
-        private float speedRamp;
-
-        /// <summary>
-        /// This animation curve determines the rate at which the wolf turns.
-        /// </summary>
-        public AnimationCurve rotateAnimation;
-
-        /// <summary>
         /// This is the wolf's animator controller.
         /// </summary>
         public Animator anim;
@@ -60,23 +36,23 @@ namespace Hunter.Character
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject characterModel, NavMeshAgent agent)
         {
-
+            // This function is not being used.
         }
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
         {
             var finalTarget = new Vector3(target.transform.position.x, characterModel.transform.localPosition.y, target.transform.position.z);
-                agent.destination = finalTarget;
+            agent.destination = finalTarget;
         }
 
         public void Dash(CharacterController controller)
         {
-            // This feature has not yet been implemented
+            // This feature has not yet been implemented.
         }
 
         public void Idle(CharacterController controller)
         {
-
+            // This feature has not yet been implemented.
         }
 
         public void Attack()

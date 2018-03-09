@@ -38,20 +38,17 @@ namespace Hunter.Character
         /// <param name="hasAttackedValue">The amount that the urge total will go up if the AI has just attacked.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <returns></returns>
-        public float CalculateAttack(float distanceToTarget, bool hasJustAttacked, float hasAttackedValue, float currentHealth)
+        public float CalculateAttack(float distanceToTarget, float currentHealth, bool inCombat)
         {
             var attackUrgeTotal = 0f;
 
-            attackUrgeTotal -= Mathf.Clamp(distanceToTarget, 0, 100);
-
-            if (hasJustAttacked)
+            if (inCombat)
             {
-                attackUrgeTotal += hasAttackedValue;
+                attackUrgeTotal -= Mathf.Clamp(distanceToTarget, 0f, 100f);
+                attackUrgeTotal += Mathf.Clamp(currentHealth, 0f, 100f);
             }
 
-            attackUrgeTotal += Mathf.Clamp(currentHealth, 0, 100);
-
-            Mathf.Clamp(attackUrgeTotal, 0, 100);
+            Mathf.Clamp(attackUrgeTotal, 0f, 100f);
 
             return attackUrgeTotal;
         }
@@ -86,15 +83,17 @@ namespace Hunter.Character
         /// <param name="distanceToTarget">The distance that the AI is from it's target.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <returns></returns>
-        public float CalculateMoveTo(float distanceToTarget, float currentHealth)
+        public float CalculateMoveTo(float distanceToTarget, float currentHealth, bool inCombat)
         {
             var moveToUrgeTotal = 0f;
 
-            moveToUrgeTotal += Mathf.Clamp(distanceToTarget, 0, 100);
+            if (inCombat)
+            {
+                moveToUrgeTotal += Mathf.Clamp(distanceToTarget, 0f, 100f);
+                moveToUrgeTotal += Mathf.Clamp(currentHealth, 0f, 100f);
+            }
 
-            moveToUrgeTotal += Mathf.Clamp(currentHealth, 0, 100);
-
-            Mathf.Clamp(moveToUrgeTotal, 0, 100);
+            Mathf.Clamp(moveToUrgeTotal, 0f, 100f);
 
             return moveToUrgeTotal;
         }
@@ -130,25 +129,28 @@ namespace Hunter.Character
         /// <param name="canMoveAwayFromTargetValue">The amount that the urge total will go down if the AI is cornered.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <returns></returns>
-        public float CalculateRetreat(bool canMoveAwayFromTarget, float canMoveAwayFromTargetValue, float currentHealth)
+        public float CalculateRetreat(bool canMoveAwayFromTarget, float canMoveAwayFromTargetValue, float currentHealth, bool inCombat)
         {
             var retreatUrgeTotal = 0f;
 
-            if (!canMoveAwayFromTarget)
+            if (inCombat)
             {
-                retreatUrgeTotal -= canMoveAwayFromTargetValue;
+                retreatUrgeTotal -= Mathf.Clamp(currentHealth, 0f, 100f);
+
+                if (!canMoveAwayFromTarget)
+                {
+                    retreatUrgeTotal -= canMoveAwayFromTargetValue;
+                }
             }
 
-            retreatUrgeTotal -= Mathf.Clamp(currentHealth, 0, 100);
-
-            Mathf.Clamp(retreatUrgeTotal, 0, 100);
+            Mathf.Clamp(retreatUrgeTotal, 0f, 100f);
 
             return retreatUrgeTotal;
         }
 
         public void RetreatAction(GameObject controller)
         {
-            var aiComponentModule = controller.GetComponent<AIInputModule>();
+            //var aiComponentModule = controller.GetComponent<AIInputModule>();
         }
     }
 
@@ -179,26 +181,24 @@ namespace Hunter.Character
         /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <param name="inCombatValue">The amount that the urge total will go down if the AI is in combat.</param>
         /// <returns></returns>
-        public float CalculateIdle(bool targetInLOS, float targetInLOSValue, bool hasJustIdled, float hasJustIdledValue, bool inCombat, float inCombatValue)
+        public float CalculateIdle(bool targetInLOS, float targetInLOSValue, bool hasJustIdled, float hasJustIdledValue, bool inCombat)
         {
             var idleUrgeTotal = 0f;
 
-            if (!targetInLOS)
+            if (!inCombat)
             {
-                idleUrgeTotal += targetInLOSValue;
+                if (!targetInLOS)
+                {
+                    idleUrgeTotal += targetInLOSValue;
+                }
+
+                if (hasJustIdled)
+                {
+                    idleUrgeTotal -= hasJustIdledValue;
+                }
             }
 
-            if (hasJustIdled)
-            {
-                idleUrgeTotal -= hasJustIdledValue;
-            }
-
-            if (inCombat)
-            {
-                idleUrgeTotal -= inCombatValue;
-            }
-
-            Mathf.Clamp(idleUrgeTotal, 0, 100);
+            Mathf.Clamp(idleUrgeTotal, 0f, 100f);
 
             return idleUrgeTotal;
         }
@@ -236,24 +236,24 @@ namespace Hunter.Character
         /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <param name="inCombatValue">The amount that the urge total will go down if the AI is in combat.</param>
         /// <returns></returns>
-        public float CalculateWander(bool targetInLOS, float targetInLOSValue, bool hasJustWandered, float hasJustWanderedValue, bool inCombat, float inCombatValue)
+        public float CalculateWander(bool targetInLOS, float targetInLOSValue, bool hasJustWandered, float hasJustWanderedValue, bool inCombat)
         {
             var wanderUrgeTotal = 0f;
 
-            if (!targetInLOS)
+            if (!inCombat)
             {
-                wanderUrgeTotal += targetInLOSValue;
+                if (!targetInLOS)
+                {
+                    wanderUrgeTotal += targetInLOSValue;
+                }
+
+                if (hasJustWandered)
+                {
+                    wanderUrgeTotal -= hasJustWanderedValue;
+                }
             }
 
-            if (hasJustWandered)
-            {
-                wanderUrgeTotal -= hasJustWanderedValue;
-            }
-
-            if (inCombat)
-            {
-                wanderUrgeTotal -= inCombatValue;
-            }
+            Mathf.Clamp(wanderUrgeTotal, 0f, 100f);
 
             return wanderUrgeTotal;
         }
