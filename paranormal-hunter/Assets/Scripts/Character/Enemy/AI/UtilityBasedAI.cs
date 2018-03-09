@@ -34,17 +34,16 @@ namespace Hunter.Character
         /// This function will calculate the urge to attack.
         /// </summary>
         /// <param name="distanceToTarget">The distance that the AI is from it's target.</param>
-        /// <param name="hasJustAttacked">Has the AI just finished an attack?</param>
-        /// <param name="hasAttackedValue">The amount that the urge total will go up if the AI has just attacked.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
+        /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <returns></returns>
-        public float CalculateAttack(float distanceToTarget, float currentHealth, bool inCombat)
+        public float CalculateAttack(float distanceToTarget, float currentHealth, float attackRange, bool inCombat)
         {
             var attackUrgeTotal = 0f;
 
             if (inCombat)
             {
-                attackUrgeTotal -= Mathf.Clamp(distanceToTarget, 0f, 100f);
+                attackUrgeTotal -= Mathf.Clamp(distanceToTarget, attackRange, 100f);
                 attackUrgeTotal += Mathf.Clamp(currentHealth, 0f, 100f);
             }
 
@@ -82,6 +81,7 @@ namespace Hunter.Character
         /// </summary>
         /// <param name="distanceToTarget">The distance that the AI is from it's target.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
+        /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <returns></returns>
         public float CalculateMoveTo(float distanceToTarget, float currentHealth, bool inCombat)
         {
@@ -89,7 +89,7 @@ namespace Hunter.Character
 
             if (inCombat)
             {
-                moveToUrgeTotal += Mathf.Clamp(distanceToTarget, 0f, 100f);
+                moveToUrgeTotal += Mathf.Clamp(distanceToTarget, 0f, 80f);
                 moveToUrgeTotal += Mathf.Clamp(currentHealth, 0f, 100f);
             }
 
@@ -128,6 +128,7 @@ namespace Hunter.Character
         /// <param name="canMoveAwayFromTarget">Is the AI able to move further away from a target, i.e. is it cornered or not?</param>
         /// <param name="canMoveAwayFromTargetValue">The amount that the urge total will go down if the AI is cornered.</param>
         /// <param name="currentHealth">The current health of the AI.</param>
+        /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <returns></returns>
         public float CalculateRetreat(bool canMoveAwayFromTarget, float canMoveAwayFromTargetValue, float currentHealth, bool inCombat)
         {
@@ -135,8 +136,6 @@ namespace Hunter.Character
 
             if (inCombat)
             {
-                retreatUrgeTotal -= Mathf.Clamp(currentHealth, 0f, 100f);
-
                 if (!canMoveAwayFromTarget)
                 {
                     retreatUrgeTotal -= canMoveAwayFromTargetValue;
@@ -174,24 +173,16 @@ namespace Hunter.Character
         /// <summary>
         /// This function will calculate the urge to idle when not in combat.
         /// </summary>
-        /// <param name="targetInLOS">Is there a target in Line of Sight?</param>
-        /// <param name="targetInLOSValue">The amount that the urge total will go up if there is no enemy in line of sight.</param>
         /// <param name="hasJustIdled">Has the AI just idled as the last action?</param>
         /// <param name="hasJustIdledValue">The amount that the urge total will go down if the AI has just idled.</param>
         /// <param name="inCombat">Is the AI in combat with a target?</param>
-        /// <param name="inCombatValue">The amount that the urge total will go down if the AI is in combat.</param>
         /// <returns></returns>
-        public float CalculateIdle(bool targetInLOS, float targetInLOSValue, bool hasJustIdled, float hasJustIdledValue, bool inCombat)
+        public float CalculateIdle(bool hasJustIdled, float hasJustIdledValue, bool inCombat)
         {
             var idleUrgeTotal = 0f;
 
             if (!inCombat)
             {
-                if (!targetInLOS)
-                {
-                    idleUrgeTotal += targetInLOSValue;
-                }
-
                 if (hasJustIdled)
                 {
                     idleUrgeTotal -= hasJustIdledValue;
@@ -229,24 +220,16 @@ namespace Hunter.Character
         /// <summary>
         /// This function will calculate the urge to wander around when not in combat.
         /// </summary>
-        /// <param name="targetInLOS">Is there a target in Line of Sight?</param>
-        /// <param name="targetInLOSValue">The amount that the urge total will go up if there is no enemy in line of sight.</param>
         /// <param name="hasJustWandered">Has the AI just wandered as the last action?</param>
         /// <param name="hasJustWanderedValue">The amount that the urge total will go down if the AI has just wandered.</param>
         /// <param name="inCombat">Is the AI in combat with a target?</param>
-        /// <param name="inCombatValue">The amount that the urge total will go down if the AI is in combat.</param>
         /// <returns></returns>
-        public float CalculateWander(bool targetInLOS, float targetInLOSValue, bool hasJustWandered, float hasJustWanderedValue, bool inCombat)
+        public float CalculateWander(bool hasJustWandered, float hasJustWanderedValue, bool inCombat)
         {
             var wanderUrgeTotal = 0f;
 
             if (!inCombat)
             {
-                if (!targetInLOS)
-                {
-                    wanderUrgeTotal += targetInLOSValue;
-                }
-
                 if (hasJustWandered)
                 {
                     wanderUrgeTotal -= hasJustWanderedValue;

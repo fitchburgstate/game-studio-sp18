@@ -44,7 +44,6 @@ namespace Hunter.Character
             {
                 rangeWeapon.gameObject.SetActive(false);
             }
-
             SetCurrentWeapon(melee);
         }
 

@@ -41,7 +41,7 @@ public class AIDetection : MonoBehaviour
             {
                 if (rayHit.transform.tag == "Player") // Returns true if the raycast has hit the player
                 {
-                    Debug.Log("The player has been found!");
+                    //Debug.Log("The player has been found!");
                     return true;
                 }
                 else // Returns false if the raycast has hit anything (or nothing) BUT the player

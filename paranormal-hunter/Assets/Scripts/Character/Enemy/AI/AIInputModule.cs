@@ -185,8 +185,8 @@ public class AIInputModule : MonoBehaviour
         var currentState = FindNextState(distanceToTarget);
 
         Debug.Log("Current State: " + currentState);
-        Debug.Log("inCombat: " + inCombat);
-        Debug.Log("enemyInLOS: " + enemyInLOS);
+        //Debug.Log("inCombat: " + inCombat);
+        //Debug.Log("enemyInLOS: " + enemyInLOS);
 
         currentState.Act();
 
@@ -235,18 +235,18 @@ public class AIInputModule : MonoBehaviour
     /// <returns></returns>
     public UtilityBasedAI FindNextState(float distanceToTarget)
     {
-        var attackValue = attack.CalculateAttack(distanceToTarget, character.health, inCombat);
-        var idleValue = idle.CalculateIdle(enemyInLOS, urgeWeights.targetInLOSUrgeValue, hasJustIdled, urgeWeights.hasJustIdledUrgeValue, inCombat);
-        var wanderValue = wander.CalculateWander(enemyInLOS, urgeWeights.targetInLOSUrgeValue, hasJustWandered, urgeWeights.hasJustWanderedUrgeValue, inCombat);
+        var attackValue = attack.CalculateAttack(distanceToTarget, character.health, urgeWeights.attackRangeMin, inCombat);
+        var idleValue = idle.CalculateIdle(hasJustIdled, urgeWeights.hasJustIdledUrgeValue, inCombat);
+        var wanderValue = wander.CalculateWander(hasJustWandered, urgeWeights.hasJustWanderedUrgeValue, inCombat);
         var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, character.health, inCombat);
         var retreatValue = retreat.CalculateRetreat(canMoveAwayFromTarget, urgeWeights.canMoveAwayFromTargetValue, character.health, inCombat);
 
         #region Debug Logs
-        //Debug.Log("Attack Value: " + attackValue);
-        ////Debug.Log("Idle Value: " + idleValue);
-        ////Debug.Log("Wander Value: " + wanderValue);
-        //Debug.Log("MoveTo Value: " + moveToValue);
-        ////Debug.Log("Retreat Value: " + retreatValue);
+        Debug.Log("Attack Value: " + attackValue);
+        //Debug.Log("Idle Value: " + idleValue);
+        //Debug.Log("Wander Value: " + wanderValue);
+        Debug.Log("MoveTo Value: " + moveToValue);
+        //Debug.Log("Retreat Value: " + retreatValue);
         #endregion
 
         var largestValue = new Dictionary<UtilityBasedAI, float>

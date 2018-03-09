@@ -2041,7 +2041,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1058027423640836}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.46, y: 0, z: -1.32}
+  m_LocalPosition: {x: 8.46, y: 0.614, z: -1.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4740431458187484}
@@ -2153,7 +2153,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1039878269283062}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4780738478092410}
@@ -2511,26 +2511,6 @@ MonoBehaviour:
   melee: {fileID: 0}
   rangeWeapon: {fileID: 0}
   elementType: 0
-  speed: 5
-  rotateEnemy: 12
-  rotateAnimation:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
   anim: {fileID: 95316165089855040}
 --- !u!114 &114337567584915600
 MonoBehaviour:
@@ -2543,7 +2523,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54082744c3473f047aaaad4aa8c57dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyInLOS: 0
 --- !u!114 &114603232685659978
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2557,7 +2536,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDetectionDistance: 3
   maxDetectionDistance: 15
-  fieldOfViewRange: 48
+  fieldOfViewRange: 100
 --- !u!137 &137347239377838640
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -2654,7 +2633,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.1, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!195 &195066093601638588
 NavMeshAgent:
   m_ObjectHideFlags: 1
@@ -2664,15 +2643,15 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.77
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 15
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 360
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2.02
-  m_BaseOffset: -0.12
+  m_BaseOffset: 0.5
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
