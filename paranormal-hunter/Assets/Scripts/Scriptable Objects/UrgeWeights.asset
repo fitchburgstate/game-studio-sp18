@@ -8,9 +8,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: Urge Values
-  m_EditorClassIdentifier: Assembly-CSharp::UrgeValues
+  m_Script: {fileID: 11500000, guid: 2581184678d7bc84a8828e127757f050, type: 3}
+  m_Name: UrgeWeights
+  m_EditorClassIdentifier: 
   canMoveAwayFromTargetValue: 100
   hasJustWanderedUrgeValue: 25
   hasJustIdledUrgeValue: 25
@@ -21,5 +21,5 @@ MonoBehaviour:
   distanceToTargetMax: 100
   currentHealthMin: 0
   currentHealthMax: 100
-  attackRangeMin: 0
-  attackRangeMax: 10
+  attackRangeMin: 2
+  attackRangeMax: 100

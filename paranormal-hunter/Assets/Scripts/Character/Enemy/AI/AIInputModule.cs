@@ -134,7 +134,6 @@ public class AIInputModule : MonoBehaviour
     /// </summary>
     private Transform target;
 
-    private bool hasJustAttacked = false;
     private bool enemyInLOS = false;
     private bool hasJustIdled = false;
     private bool inCombat = false;
@@ -143,12 +142,14 @@ public class AIInputModule : MonoBehaviour
 
     private Character character;
     private AIDetection aiDetection;
+
     private Attack attack;
     private Idle idle;
     private Wander wander;
     private MoveTo moveTo;
     private Retreat retreat;
-    private UrgeWeights urgeWeights;
+
+    public UrgeWeights urgeWeights;
 
     private void Start()
     {
@@ -185,29 +186,24 @@ public class AIInputModule : MonoBehaviour
         var currentState = FindNextState(distanceToTarget);
 
         Debug.Log("Current State: " + currentState);
-        //Debug.Log("inCombat: " + inCombat);
-        //Debug.Log("enemyInLOS: " + enemyInLOS);
 
         currentState.Act();
 
         #region State Switchers
         if (currentState is Attack)
         {
-            hasJustAttacked = true;
             hasJustIdled = false;
             hasJustWandered = false;
             inCombat = true;
         }
         else if (currentState is Idle)
         {
-            hasJustAttacked = false;
             hasJustIdled = true;
             hasJustWandered = false;
             inCombat = false;
         }
         else if (currentState is MoveTo)
         {
-            hasJustAttacked = false;
             hasJustIdled = false;
             hasJustWandered = false;
             inCombat = true;
@@ -215,14 +211,12 @@ public class AIInputModule : MonoBehaviour
         else if (currentState is Retreat)
         {
             inCombat = true;
-            hasJustAttacked = false;
             hasJustIdled = false;
             hasJustWandered = false;
         }
         else if (currentState is Wander)
         {
             inCombat = false;
-            hasJustAttacked = false;
             hasJustIdled = false;
             hasJustWandered = true;
         }
@@ -235,17 +229,17 @@ public class AIInputModule : MonoBehaviour
     /// <returns></returns>
     public UtilityBasedAI FindNextState(float distanceToTarget)
     {
-        var attackValue = attack.CalculateAttack(distanceToTarget, character.health, urgeWeights.attackRangeMin, inCombat);
+        var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, inCombat);
         var idleValue = idle.CalculateIdle(hasJustIdled, urgeWeights.hasJustIdledUrgeValue, inCombat);
         var wanderValue = wander.CalculateWander(hasJustWandered, urgeWeights.hasJustWanderedUrgeValue, inCombat);
-        var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, character.health, inCombat);
+        var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat);
         var retreatValue = retreat.CalculateRetreat(canMoveAwayFromTarget, urgeWeights.canMoveAwayFromTargetValue, character.health, inCombat);
 
         #region Debug Logs
-        Debug.Log("Attack Value: " + attackValue);
+        //Debug.Log("Attack Value: " + attackValue);
         //Debug.Log("Idle Value: " + idleValue);
         //Debug.Log("Wander Value: " + wanderValue);
-        Debug.Log("MoveTo Value: " + moveToValue);
+        //Debug.Log("MoveTo Value: " + moveToValue);
         //Debug.Log("Retreat Value: " + retreatValue);
         #endregion
 
@@ -257,8 +251,6 @@ public class AIInputModule : MonoBehaviour
             { moveTo, moveToValue },
             { retreat, retreatValue }
         };
-
-        //var sortedDict = from entry in largestValue orderby entry.Value ascending select entry;
         var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 
         return max;

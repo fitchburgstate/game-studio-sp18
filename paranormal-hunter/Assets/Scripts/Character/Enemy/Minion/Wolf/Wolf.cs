@@ -41,6 +41,8 @@ namespace Hunter.Character
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
         {
+            //anim.SetFloat("dirY", Mathf.Abs(moveDirection.magnitude), 0, 1);
+
             var finalTarget = new Vector3(target.transform.position.x, characterModel.transform.localPosition.y, target.transform.position.z);
             agent.destination = finalTarget;
         }

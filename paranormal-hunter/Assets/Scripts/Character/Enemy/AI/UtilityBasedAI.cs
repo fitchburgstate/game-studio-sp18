@@ -33,18 +33,16 @@ namespace Hunter.Character
         /// <summary>
         /// This function will calculate the urge to attack.
         /// </summary>
-        /// <param name="distanceToTarget">The distance that the AI is from it's target.</param>
-        /// <param name="currentHealth">The current health of the AI.</param>
-        /// <param name="inCombat">Is the AI in combat with a target?</param>
+        /// <param name="attackRange">The range that the target must be before it can attack.</param>
+        /// <param name="inCombat">Boolean to determine if the AI is currently in combat.</param>
         /// <returns></returns>
-        public float CalculateAttack(float distanceToTarget, float currentHealth, float attackRange, bool inCombat)
+        public float CalculateAttack(float attackRange, bool inCombat)
         {
             var attackUrgeTotal = 0f;
 
             if (inCombat)
             {
-                attackUrgeTotal -= Mathf.Clamp(distanceToTarget, attackRange, 100f);
-                attackUrgeTotal += Mathf.Clamp(currentHealth, 0f, 100f);
+                attackUrgeTotal = attackRange;
             }
 
             Mathf.Clamp(attackUrgeTotal, 0f, 100f);
@@ -54,8 +52,8 @@ namespace Hunter.Character
 
         public void AttackAction(GameObject controller)
         {
-            var aiComponentModule = controller.GetComponent<AIInputModule>();
-            aiComponentModule.GetComponent<IAttack>().Attack();
+            //var aiComponentModule = controller.GetComponent<AIInputModule>();
+            //aiComponentModule.GetComponent<IAttack>().Attack();
         }
     }
 
@@ -79,18 +77,18 @@ namespace Hunter.Character
         /// <summary>
         /// This function will calculate the urge to move a target.
         /// </summary>
-        /// <param name="distanceToTarget">The distance that the AI is from it's target.</param>
-        /// <param name="currentHealth">The current health of the AI.</param>
-        /// <param name="inCombat">Is the AI in combat with a target?</param>
+        /// <param name="distanceToTarget">The distance the AI is from the target.</param>
+        /// <param name="distanceToTargetMin">The minimum distance the AI can be from the target.</param>
+        /// <param name="distanceToTargetMax">The maximum distance the AI can be from the target.</param>
+        /// <param name="inCombat">Boolean to determine if the AI is currently in combat.</param>
         /// <returns></returns>
-        public float CalculateMoveTo(float distanceToTarget, float currentHealth, bool inCombat)
+        public float CalculateMoveTo(float distanceToTarget, float distanceToTargetMin, float distanceToTargetMax, bool inCombat)
         {
             var moveToUrgeTotal = 0f;
 
             if (inCombat)
             {
-                moveToUrgeTotal += Mathf.Clamp(distanceToTarget, 0f, 80f);
-                moveToUrgeTotal += Mathf.Clamp(currentHealth, 0f, 100f);
+                moveToUrgeTotal += Mathf.Clamp(distanceToTarget, distanceToTargetMin, distanceToTargetMax);
             }
 
             Mathf.Clamp(moveToUrgeTotal, 0f, 100f);

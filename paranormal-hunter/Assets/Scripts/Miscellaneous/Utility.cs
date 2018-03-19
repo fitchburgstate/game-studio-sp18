@@ -14,7 +14,6 @@ public interface IMoveable
     void Dash(CharacterController controller);
 
     void Idle(CharacterController controller);
-
 }
 
 public interface IAttack
