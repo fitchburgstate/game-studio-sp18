@@ -45,62 +45,10 @@ namespace Hunter.Character
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
-            var leftInputAxis = moveDirection;
-            Debug.Log(LookDirection);
-
-            var angle = SignedAngle(new Vector3(leftInputAxis.x, 0, leftInputAxis.y), playerRoot.transform.forward);
-
-            if(angle < 0)
-            {
-                angle *= -1;
-            }
-            else
-            {
-                angle = 360 - angle;
-            }
-
-            angle += Camera.main.transform.eulerAngles.y;
-
-            var angleRadian = Mathf.Deg2Rad * angle;
-
-            if(leftInputAxis.x != 0 || leftInputAxis.y !=0)
-            {
-                 leftInputAxis = new Vector2(-1*Mathf.Sin(angleRadian), Mathf.Cos(angleRadian));
-            }
-
-            var xVelocity = 0f;
-            var yVelocity = 0f;
-            var smoothTime = 0.05f;
-
-            leftInputAxis = new Vector2(Mathf.SmoothDamp(lastLeft.x, leftInputAxis.x, ref xVelocity, smoothTime), Mathf.SmoothDamp(lastLeft.y, leftInputAxis.y, ref yVelocity, smoothTime));
-
-            if(moveDirection.z > 0)
-            {
-                anim.SetFloat("dirX", leftInputAxis.y);
-                anim.SetFloat("dirY", Mathf.Abs(leftInputAxis.x));
-            }
-
-            //anim.SetFloat("dirX", leftInputAxis.y);
-            //anim.SetFloat("dirY", leftInputAxis.x);
-
-            lastLeft = leftInputAxis;
-
-            /*var h = Input.GetAxisRaw("Horizontal");
-            var v = Input.GetAxisRaw("Vertical");
-
-            Debug.Log(playerRoot.transform.forward);
-
-            var dir = Mathf.Atan2(h, v) / (Mathf.PI / 2.0f);
-            anim.SetFloat("dirX", dir);
-            if(playerRoot.transform.forward.z > 0)
-            {
-                anim.SetFloat("dirY", h * h + v + v);
-            }
-            else if (playerRoot.transform.forward.z < 0)
-            {
-                anim.SetFloat("dirY", h * h + -(v + v));
-            }*/
-
+            anim.SetFloat("dirX", moveDirection.x);
+            anim.SetFloat("dirY", moveDirection.z);
+            anim.SetFloat("lookX", LookDirection.x);
+            anim.SetFloat("lookY", LookDirection.z);
 
             if (moveDirection == Vector3.zero)
             {
