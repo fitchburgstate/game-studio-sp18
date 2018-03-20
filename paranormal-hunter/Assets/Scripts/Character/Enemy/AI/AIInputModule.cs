@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Hunter;
 using Hunter.Character;
 using System.Linq;
+using Interactable;
 
 public class AIInputModule : MonoBehaviour
 {
@@ -99,6 +99,19 @@ public class AIInputModule : MonoBehaviour
         }
     }
 
+    public Vector3 PointTarget
+    {
+        get
+        {
+            return pointTarget;
+        }
+
+        set
+        {
+            pointTarget = value;
+        }
+    }
+
     /// <summary>
     /// Represents which direction the character should move in.
     /// </summary>
@@ -134,25 +147,38 @@ public class AIInputModule : MonoBehaviour
     /// </summary>
     private Transform target;
 
+    /// <summary>
+    /// The target point that the AI has acquired.
+    /// </summary>
+    private Vector3 pointTarget;
+
+    /// <summary>
+    /// The max distance that the wolf will move to during a Wander action.
+    /// </summary>
+    [Tooltip("The max distance that the wolf will move to during a Wander action.")]
+    [Range(0f, 25f)]
+    public float maxDistance = 5f;
+
     private bool enemyInLOS = false;
-    private bool hasJustIdled = false;
     private bool inCombat = false;
-    private bool hasJustWandered = false;
-    private bool canMoveAwayFromTarget = false;
 
-    private Character character;
-    private AIDetection aiDetection;
-
+    #region Classes
     private Attack attack;
     private Idle idle;
     private Wander wander;
     private MoveTo moveTo;
     private Retreat retreat;
+    private NavPosition navPosition;
+    private Character character;
+    private AIDetection aiDetection;
+    #endregion
 
     public UrgeWeights urgeWeights;
 
+
     private void Start()
     {
+        #region Classes
         attack = new Attack(gameObject);
         idle = new Idle(gameObject);
         wander = new Wander(gameObject);
@@ -160,19 +186,24 @@ public class AIInputModule : MonoBehaviour
         retreat = new Retreat(gameObject);
 
         urgeWeights = new UrgeWeights();
+        navPosition = new NavPosition();
         character = GetComponent<Character>();
         aiDetection = GetComponent<AIDetection>();
+        #endregion
 
         EnemyModel = gameObject.transform.GetChild(0).gameObject;
         Agent = GetComponent<NavMeshAgent>();
 
         target = FindNearestTargetWithString("Player");
+        pointTarget = FindPointOnNavmesh();
     }
 
     private void Update()
     {
         enemyInLOS = aiDetection.DetectPlayer();
+
         var distanceToTarget = DistanceToTarget();
+        var distanceToPoint = DistanceToPoint();
 
         if (enemyInLOS)
         {
@@ -183,7 +214,7 @@ public class AIInputModule : MonoBehaviour
             inCombat = false;
         }
 
-        var currentState = FindNextState(distanceToTarget);
+        var currentState = FindNextState(distanceToTarget, distanceToPoint);
 
         Debug.Log("Current State: " + currentState);
 
@@ -192,33 +223,23 @@ public class AIInputModule : MonoBehaviour
         #region State Switchers
         if (currentState is Attack)
         {
-            hasJustIdled = false;
-            hasJustWandered = false;
             inCombat = true;
-        }
-        else if (currentState is Idle)
-        {
-            hasJustIdled = true;
-            hasJustWandered = false;
-            inCombat = false;
         }
         else if (currentState is MoveTo)
         {
-            hasJustIdled = false;
-            hasJustWandered = false;
             inCombat = true;
         }
         else if (currentState is Retreat)
         {
             inCombat = true;
-            hasJustIdled = false;
-            hasJustWandered = false;
+        }
+        else if (currentState is Idle)
+        {
+            inCombat = false;
         }
         else if (currentState is Wander)
         {
             inCombat = false;
-            hasJustIdled = false;
-            hasJustWandered = true;
         }
         #endregion
     }
@@ -227,13 +248,13 @@ public class AIInputModule : MonoBehaviour
     /// This function performs various operations to determine what action has the highest urge value and then returns it.
     /// </summary>
     /// <returns></returns>
-    public UtilityBasedAI FindNextState(float distanceToTarget)
+    public UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
     {
-        var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, inCombat);
-        var idleValue = idle.CalculateIdle(hasJustIdled, urgeWeights.hasJustIdledUrgeValue, inCombat);
-        var wanderValue = wander.CalculateWander(hasJustWandered, urgeWeights.hasJustWanderedUrgeValue, inCombat);
+        var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, inCombat);
+        var idleValue = idle.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
+        var wanderValue = wander.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
         var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat);
-        var retreatValue = retreat.CalculateRetreat(canMoveAwayFromTarget, urgeWeights.canMoveAwayFromTargetValue, character.health, inCombat);
+        var retreatValue = retreat.CalculateRetreat(character.health, inCombat);
 
         #region Debug Logs
         //Debug.Log("Attack Value: " + attackValue);
@@ -263,6 +284,13 @@ public class AIInputModule : MonoBehaviour
         return distance;
     }
 
+    private float DistanceToPoint()
+    {
+        var distance = Vector3.Distance(pointTarget, gameObject.transform.position);
+
+        return distance;
+    }
+
     /// <summary>
     /// This function returns the nearest transform with the correct tag.
     /// </summary>
@@ -285,5 +313,17 @@ public class AIInputModule : MonoBehaviour
             }
         }
         return bestTarget;
+    }
+
+    public Vector3 FindPointOnNavmesh()
+    {
+        var targetPosition = new Vector3();
+
+        if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition))
+        {
+            pointTarget = targetPosition;
+        }
+
+        return pointTarget;
     }
 }

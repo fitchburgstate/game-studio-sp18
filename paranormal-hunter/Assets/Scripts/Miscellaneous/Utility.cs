@@ -18,7 +18,7 @@ public interface IUtilityBasedAI
 {
     void Idle(CharacterController controller, NavMeshAgent agent);
 
-    void Wander(CharacterController controller, NavMeshAgent agent);
+    void Wander(CharacterController controller, Vector3 finalTarget, NavMeshAgent agent);
 }
 
 public interface IAttack

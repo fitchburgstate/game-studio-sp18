@@ -2041,7 +2041,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1058027423640836}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.46, y: 0.614, z: -1.32}
+  m_LocalPosition: {x: 25.38, y: 0.614, z: -10.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4740431458187484}
@@ -2512,6 +2512,8 @@ MonoBehaviour:
   rangeWeapon: {fileID: 0}
   elementType: 0
   anim: {fileID: 95316165089855040}
+  walkSpeed: 2
+  runSpeed: 5
 --- !u!114 &114337567584915600
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2523,7 +2525,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54082744c3473f047aaaad4aa8c57dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  urgeWeights: {fileID: 11400000, guid: 656ac10bfe0832e418d1b7f4ac4430e8, type: 2}
+  maxDistance: 10
+  urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
 --- !u!114 &114603232685659978
 MonoBehaviour:
   m_ObjectHideFlags: 1

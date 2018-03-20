@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Interactable;
 
 namespace Hunter.Character
 {
@@ -13,14 +12,6 @@ namespace Hunter.Character
         /// This is the wolf's animator controller.
         /// </summary>
         public Animator anim;
-
-        /// <summary>
-        /// The max distance that the wolf will move to during a Wander action.
-        /// </summary>
-        public float maxDistance = 10f;
-
-        private Vector3 targetPosition;
-        private NavPosition navPosition = new NavPosition();
 
         private void Start()
         {
@@ -53,6 +44,7 @@ namespace Hunter.Character
             //anim.SetFloat("dirY", Mathf.Abs(moveDirection.magnitude), 0, 1);
 
             var finalTarget = new Vector3(target.transform.position.x, characterModel.transform.localPosition.y, target.transform.position.z);
+            agent.speed = runSpeed;
             agent.destination = finalTarget;
         }
 
@@ -66,16 +58,10 @@ namespace Hunter.Character
             // This feature has not yet been implemented.
         }
 
-        public void Wander(CharacterController controller, NavMeshAgent agent)
+        public void Wander(CharacterController controller, Vector3 target, NavMeshAgent agent)
         {
-            var finalTarget = new Vector3();
-
-            if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition))
-            {
-                finalTarget = targetPosition;
-            }
-
-            agent.destination = finalTarget;
+            agent.speed = walkSpeed;
+            agent.destination = target;
         }
 
         public void Attack()

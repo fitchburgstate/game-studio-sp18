@@ -36,17 +36,19 @@ namespace Hunter.Character
         /// <param name="attackRange">The range that the target must be before it can attack.</param>
         /// <param name="inCombat">Boolean to determine if the AI is currently in combat.</param>
         /// <returns></returns>
-        public float CalculateAttack(float attackRange, bool inCombat)
+        public float CalculateAttack(float attackRange, float distanceToTarget, bool inCombat)
         {
             var attackUrgeTotal = 0f;
 
             if (inCombat)
             {
-                attackUrgeTotal = attackRange;
+                if (distanceToTarget < attackRange)
+                {
+                    attackUrgeTotal += 100f;
+                }
             }
 
             Mathf.Clamp(attackUrgeTotal, 0f, 100f);
-
             return attackUrgeTotal;
         }
 
@@ -92,7 +94,6 @@ namespace Hunter.Character
             }
 
             Mathf.Clamp(moveToUrgeTotal, 0f, 100f);
-
             return moveToUrgeTotal;
         }
 
@@ -128,20 +129,16 @@ namespace Hunter.Character
         /// <param name="currentHealth">The current health of the AI.</param>
         /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <returns></returns>
-        public float CalculateRetreat(bool canMoveAwayFromTarget, float canMoveAwayFromTargetValue, float currentHealth, bool inCombat)
+        public float CalculateRetreat(float currentHealth, bool inCombat)
         {
             var retreatUrgeTotal = 0f;
 
             if (inCombat)
             {
-                if (!canMoveAwayFromTarget)
-                {
-                    retreatUrgeTotal -= canMoveAwayFromTargetValue;
-                }
+
             }
 
             Mathf.Clamp(retreatUrgeTotal, 0f, 100f);
-
             return retreatUrgeTotal;
         }
 
@@ -175,30 +172,26 @@ namespace Hunter.Character
         /// <param name="hasJustIdledValue">The amount that the urge total will go down if the AI has just idled.</param>
         /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <returns></returns>
-        public float CalculateIdle(bool hasJustIdled, float hasJustIdledValue, bool inCombat)
+        public float CalculateIdle(float distanceToPoint, float distanceToPointMax, bool inCombat)
         {
             var idleUrgeTotal = 0f;
 
             if (!inCombat)
             {
-                if (hasJustIdled)
+                if (distanceToPoint < distanceToPointMax)
                 {
-                    idleUrgeTotal -= hasJustIdledValue;
-                }
-                else if (!hasJustIdled)
-                {
-                    idleUrgeTotal += hasJustIdledValue;
+                    idleUrgeTotal += 100f;
                 }
             }
 
             Mathf.Clamp(idleUrgeTotal, 0f, 100f);
-
             return idleUrgeTotal;
         }
 
         public void IdleAction(GameObject controller)
         {
-            // The action for idling will go here.
+            var aiInputModule = controller.GetComponent<AIInputModule>();
+            aiInputModule.PointTarget = aiInputModule.FindPointOnNavmesh();
         }
     }
 
@@ -226,30 +219,26 @@ namespace Hunter.Character
         /// <param name="hasJustWanderedValue">The amount that the urge total will go down if the AI has just wandered.</param>
         /// <param name="inCombat">Is the AI in combat with a target?</param>
         /// <returns></returns>
-        public float CalculateWander(bool hasJustWandered, float hasJustWanderedValue, bool inCombat)
+        public float CalculateWander(float distanceToPoint, float distanceToPointMax, bool inCombat)
         {
             var wanderUrgeTotal = 0f;
 
             if (!inCombat)
             {
-                if (hasJustWandered)
+                if (distanceToPoint > distanceToPointMax)
                 {
-                    wanderUrgeTotal -= hasJustWanderedValue;
-                }
-                else if (!hasJustWandered)
-                {
-                    wanderUrgeTotal += hasJustWanderedValue;
+                    wanderUrgeTotal += 100f;
                 }
             }
 
             Mathf.Clamp(wanderUrgeTotal, 0f, 100f);
-
             return wanderUrgeTotal;
         }
 
         public void WanderAction(GameObject controller)
         {
-            // The action for wandering will go here.
+            var aiInputModule = controller.GetComponent<AIInputModule>();
+            controller.GetComponent<IUtilityBasedAI>().Wander(aiInputModule.Controller, aiInputModule.PointTarget, aiInputModule.Agent);
         }
     }
 }
