@@ -181,7 +181,7 @@ public class AIInputModule : MonoBehaviour
         else if ((distanceToTarget > aiDetection.maxDetectionDistance) && (!enemyInLOS))
         {
             inCombat = false;
-        } 
+        }
 
         var currentState = FindNextState(distanceToTarget);
 

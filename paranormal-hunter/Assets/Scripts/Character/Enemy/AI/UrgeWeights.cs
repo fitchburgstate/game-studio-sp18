@@ -9,9 +9,9 @@ public class UrgeWeights : ScriptableObject
 {
     public float canMoveAwayFromTargetValue = 100f;
 
-    public float hasJustWanderedUrgeValue = 25f;
+    public float hasJustWanderedUrgeValue = 75f;
 
-    public float hasJustIdledUrgeValue = 25;
+    public float hasJustIdledUrgeValue = 75f;
 
     public float noNewPositionUrgeValue = 100f;
 

@@ -45,7 +45,7 @@ public class NavMeshSpawner : MonoBehaviour
     
     bool RandomPoint(Vector3 center, float range, out Vector3 result)
     {
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
         {
             var randomPoint = center + Random.insideUnitSphere * range;
             var hit = new NavMeshHit();

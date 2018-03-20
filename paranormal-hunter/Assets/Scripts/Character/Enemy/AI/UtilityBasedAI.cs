@@ -60,7 +60,7 @@ namespace Hunter.Character
     /// <summary>
     /// This class controls when and how the AI will move towards another character.
     /// </summary>
-    public class MoveTo : UtilityBasedAI
+    public sealed class MoveTo : UtilityBasedAI
     {
         private GameObject controller;
 
@@ -106,7 +106,7 @@ namespace Hunter.Character
     /// <summary>
     /// This class controls when and how the AI will retreat away from another character.
     /// </summary>
-    public class Retreat : UtilityBasedAI
+    public sealed class Retreat : UtilityBasedAI
     {
         private GameObject controller;
 
@@ -154,7 +154,7 @@ namespace Hunter.Character
     /// <summary>
     /// This class controls when and how the AI will idle.
     /// </summary>
-    public class Idle : UtilityBasedAI
+    public sealed class Idle : UtilityBasedAI
     {
         private GameObject controller;
 
@@ -185,6 +185,10 @@ namespace Hunter.Character
                 {
                     idleUrgeTotal -= hasJustIdledValue;
                 }
+                else if (!hasJustIdled)
+                {
+                    idleUrgeTotal += hasJustIdledValue;
+                }
             }
 
             Mathf.Clamp(idleUrgeTotal, 0f, 100f);
@@ -201,7 +205,7 @@ namespace Hunter.Character
     /// <summary>
     /// This class controls when and how the AI will wander around.
     /// </summary>
-    public class Wander : UtilityBasedAI
+    public sealed class Wander : UtilityBasedAI
     {
         private GameObject controller;
 
@@ -231,6 +235,10 @@ namespace Hunter.Character
                 if (hasJustWandered)
                 {
                     wanderUrgeTotal -= hasJustWanderedValue;
+                }
+                else if (!hasJustWandered)
+                {
+                    wanderUrgeTotal += hasJustWanderedValue;
                 }
             }
 

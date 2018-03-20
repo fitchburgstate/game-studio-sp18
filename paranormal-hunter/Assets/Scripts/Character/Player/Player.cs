@@ -95,21 +95,6 @@ namespace Hunter.Character
             // This feature has not yet been implemented
         }
 
-        public void Wander(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
-        {
-            // This should stay empty for the player.
-        }
-
-        public void Retreat(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
-        {
-            // This should stay empty for the player.
-        }
-
-        public void Idle(CharacterController controller)
-        {
-            // This should stay empty for the player.
-        }
-
         /// <summary>
         /// Triggers the attack function on the animator controller.
         /// </summary>

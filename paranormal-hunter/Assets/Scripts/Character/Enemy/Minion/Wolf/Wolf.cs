@@ -2,16 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Interactable;
 
 namespace Hunter.Character
 {
 
-    public sealed class Wolf : Minion, IMoveable, IAttack
+    public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
         /// <summary>
         /// This is the wolf's animator controller.
         /// </summary>
         public Animator anim;
+
+        /// <summary>
+        /// The max distance that the wolf will move to during a Wander action.
+        /// </summary>
+        public float maxDistance = 10f;
+
+        private Vector3 targetPosition;
+        private NavPosition navPosition = new NavPosition();
 
         private void Start()
         {
@@ -52,9 +61,21 @@ namespace Hunter.Character
             // This feature has not yet been implemented.
         }
 
-        public void Idle(CharacterController controller)
+        public void Idle(CharacterController controller, NavMeshAgent agent)
         {
             // This feature has not yet been implemented.
+        }
+
+        public void Wander(CharacterController controller, NavMeshAgent agent)
+        {
+            var finalTarget = new Vector3();
+
+            if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition))
+            {
+                finalTarget = targetPosition;
+            }
+
+            agent.destination = finalTarget;
         }
 
         public void Attack()
@@ -68,7 +89,6 @@ namespace Hunter.Character
                 anim.SetTrigger("ranged");
             }
         }
-
 
         /// <summary>
         /// Enables the hitbox of the currently equipped melee weapon.
