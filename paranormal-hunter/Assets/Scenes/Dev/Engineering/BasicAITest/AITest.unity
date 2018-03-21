@@ -1406,52 +1406,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e60ae9f5d1eff0c4a93c61859d8f34b4, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &984409036
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 984409037}
-  - component: {fileID: 984409038}
-  m_Layer: 0
-  m_Name: Advanced Monster Spawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &984409037
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 984409036}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.475414, y: 0.64, z: -1.1080613}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &984409038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 984409036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7824d8c35e7e98e4a91a4804e87cca90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  monster: {fileID: 1058027423640836, guid: bba87073381c3c64686656ba12d3e6ee, type: 2}
-  monsterHealth: 0
-  monsterName: Wolf
-  monsterWalkSpeed: 0
-  monsterRunSpeed: 0
-  monsterDamage: 0
 --- !u!1 &1221134629
 GameObject:
   m_ObjectHideFlags: 0
@@ -1788,6 +1742,59 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1557973274}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1566275609
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4388625751922936, guid: 28a233f1a68ab7344b76480fefce891f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 26.475414
+      objectReference: {fileID: 0}
+    - target: {fileID: 4388625751922936, guid: 28a233f1a68ab7344b76480fefce891f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 4388625751922936, guid: 28a233f1a68ab7344b76480fefce891f, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -1.1080613
+      objectReference: {fileID: 0}
+    - target: {fileID: 4388625751922936, guid: 28a233f1a68ab7344b76480fefce891f, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4388625751922936, guid: 28a233f1a68ab7344b76480fefce891f, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4388625751922936, guid: 28a233f1a68ab7344b76480fefce891f, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4388625751922936, guid: 28a233f1a68ab7344b76480fefce891f, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4388625751922936, guid: 28a233f1a68ab7344b76480fefce891f, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114043344272880066, guid: 28a233f1a68ab7344b76480fefce891f,
+        type: 2}
+      propertyPath: monster
+      value: 
+      objectReference: {fileID: 1058027423640836, guid: bba87073381c3c64686656ba12d3e6ee,
+        type: 2}
+    - target: {fileID: 114043344272880066, guid: 28a233f1a68ab7344b76480fefce891f,
+        type: 2}
+      propertyPath: monsterName
+      value: Wolf
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 28a233f1a68ab7344b76480fefce891f, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &1868980916
 Prefab:
   m_ObjectHideFlags: 0

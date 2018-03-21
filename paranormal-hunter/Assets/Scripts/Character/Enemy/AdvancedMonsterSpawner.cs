@@ -5,16 +5,21 @@ using Hunter.Character;
 
 public class AdvancedMonsterSpawner : MonoBehaviour
 {
+    //[SerializeField]
     public GameObject monster;
-
-    public float monsterHealth;
-
+    
     public string monsterName;
 
+    [Range(1, 200)]
+    public float monsterHealth;
+    
+    [Range(1, 20)]
     public float monsterWalkSpeed;
-
+    
+    [Range(1, 20)]
     public float monsterRunSpeed;
-
+    
+    [Range(1, 200)]
     public float monsterDamage;
 
     public void OnDrawGizmos()

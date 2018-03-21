@@ -30,30 +30,43 @@ public class AdvancedSpawnerEditor : Editor
     {
         serializedObject.Update();
 
+        EditorGUILayout.BeginVertical("Box");
         EditorGUILayout.PropertyField(m_Monster, new GUIContent("Monster to Spawn"));
+        EditorGUILayout.EndVertical();
 
         EditorGUILayout.Space();
 
+        EditorGUILayout.LabelField("Generic Variables", EditorStyles.boldLabel);
+        EditorGUILayout.BeginVertical("Box");
         EditorGUILayout.PropertyField(m_MonsterName);
         EditorGUILayout.PropertyField(m_MonsterHealth);
         EditorGUILayout.PropertyField(m_MonsterWalkSpeed);
         EditorGUILayout.PropertyField(m_MonsterRunSpeed);
         EditorGUILayout.PropertyField(m_MonsterDamage);
+        EditorGUILayout.EndVertical();
 
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("Update Information"))
-        {
-            var monsterGO = m_Monster.objectReferenceValue as Enemy;
-            m_MonsterName.stringValue = m_Monster.objectReferenceValue.name;
-            m_MonsterHealth.floatValue = monsterGO.health;
-            m_MonsterWalkSpeed.floatValue = monsterGO.walkSpeed;
-            m_MonsterRunSpeed.floatValue = monsterGO.runSpeed;
-        }
+        EditorGUILayout.LabelField(m_MonsterName.stringValue + " Specific Variables", EditorStyles.boldLabel);
+        EditorGUILayout.BeginVertical("Box");
+        EditorGUILayout.PropertyField(m_MonsterWalkSpeed);
+        EditorGUILayout.PropertyField(m_MonsterRunSpeed);
+        EditorGUILayout.EndVertical();
+
+        EditorGUILayout.Space();
 
         if (GUILayout.Button("Create"))
         {
             InstantiateCharacter();
+        }
+
+        if (GUILayout.Button("Reset Variables"))
+        {
+            //var monster_GO = m_Monster.serializedObject.targetObject as GameObject;
+            m_MonsterName.stringValue = m_Monster.objectReferenceValue.name;
+            //m_MonsterHealth.floatValue = monster_GO.GetComponent<Enemy>().health;
+            //m_MonsterWalkSpeed.floatValue = monsterGO.walkSpeed;
+            //m_MonsterRunSpeed.floatValue = monsterGO.runSpeed;
         }
 
         serializedObject.ApplyModifiedProperties();
