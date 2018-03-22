@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Hunter.Character;
+using System;
 
+[Serializable]
 public class AdvancedMonsterSpawner : MonoBehaviour
 {
-    //[SerializeField]
+    public Character characterToSpawn;
+
     public GameObject monster;
     
     public string monsterName;

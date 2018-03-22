@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 using Hunter.Character;
 
 [CustomEditor(typeof(AdvancedMonsterSpawner))]
@@ -14,11 +15,14 @@ public class AdvancedSpawnerEditor : Editor
     SerializedProperty m_MonsterWalkSpeed;
     SerializedProperty m_MonsterRunSpeed;
     SerializedProperty m_MonsterDamage;
+    SerializedObject m_Monster_SO;
+
+    Character oldCharacter;
 
     // Setting up the serialized properties
     private void OnEnable()
     {
-        m_Monster = serializedObject.FindProperty("monster");
+        m_Monster = serializedObject.FindProperty("characterToSpawn");
         m_MonsterHealth = serializedObject.FindProperty("monsterHealth");
         m_MonsterName = serializedObject.FindProperty("monsterName");
         m_MonsterWalkSpeed = serializedObject.FindProperty("monsterWalkSpeed");
@@ -30,8 +34,15 @@ public class AdvancedSpawnerEditor : Editor
     {
         serializedObject.Update();
 
+        var characterToSpawn = m_Monster.objectReferenceValue as Character;
+
+        if (oldCharacter != characterToSpawn)
+        {
+            UpdateInspectorInformation(characterToSpawn);
+        }
+
         EditorGUILayout.BeginVertical("Box");
-        EditorGUILayout.PropertyField(m_Monster, new GUIContent("Monster to Spawn"));
+        EditorGUILayout.PropertyField(m_Monster, new GUIContent("Character to Spawn"));
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.Space();
@@ -40,18 +51,19 @@ public class AdvancedSpawnerEditor : Editor
         EditorGUILayout.BeginVertical("Box");
         EditorGUILayout.PropertyField(m_MonsterName);
         EditorGUILayout.PropertyField(m_MonsterHealth);
-        EditorGUILayout.PropertyField(m_MonsterWalkSpeed);
-        EditorGUILayout.PropertyField(m_MonsterRunSpeed);
-        EditorGUILayout.PropertyField(m_MonsterDamage);
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.Space();
 
-        EditorGUILayout.LabelField(m_MonsterName.stringValue + " Specific Variables", EditorStyles.boldLabel);
-        EditorGUILayout.BeginVertical("Box");
-        EditorGUILayout.PropertyField(m_MonsterWalkSpeed);
-        EditorGUILayout.PropertyField(m_MonsterRunSpeed);
-        EditorGUILayout.EndVertical();
+        if (characterToSpawn is Wolf)
+        {
+            EditorGUILayout.LabelField(m_MonsterName.stringValue + " Specific Variables", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical("Box");
+            EditorGUILayout.PropertyField(m_MonsterWalkSpeed);
+            EditorGUILayout.PropertyField(m_MonsterRunSpeed);
+            EditorGUILayout.PropertyField(m_MonsterDamage);
+            EditorGUILayout.EndVertical();
+        }
 
         EditorGUILayout.Space();
 
@@ -60,20 +72,40 @@ public class AdvancedSpawnerEditor : Editor
             InstantiateCharacter();
         }
 
-        if (GUILayout.Button("Reset Variables"))
+        if (GUILayout.Button("Reset Information"))
         {
-            //var monster_GO = m_Monster.serializedObject.targetObject as GameObject;
-            m_MonsterName.stringValue = m_Monster.objectReferenceValue.name;
-            //m_MonsterHealth.floatValue = monster_GO.GetComponent<Enemy>().health;
-            //m_MonsterWalkSpeed.floatValue = monsterGO.walkSpeed;
-            //m_MonsterRunSpeed.floatValue = monsterGO.runSpeed;
+            UpdateInspectorInformation(characterToSpawn);
         }
 
         serializedObject.ApplyModifiedProperties();
+
+        oldCharacter = characterToSpawn;
     }
 
     private void InstantiateCharacter()
     {
 
     }
+
+    private void UpdateInspectorInformation(Character characterToSpawn)
+    {
+        if (characterToSpawn != null)
+        {
+            m_MonsterHealth.floatValue = characterToSpawn.health;
+            m_MonsterName.stringValue = characterToSpawn.name;
+            if (characterToSpawn is Wolf)
+            {
+                m_MonsterWalkSpeed.floatValue = characterToSpawn.GetComponent<Enemy>().walkSpeed;
+                m_MonsterRunSpeed.floatValue = characterToSpawn.GetComponent<Enemy>().runSpeed;
+            }
+        }
+    }
 }
+
+
+//            //Property Drawer here
+//            foreach (var name in characterToSpawn.SerialzedPropertyNamesList)
+//            {
+//                var relProp = m_Monster.FindPropertyRelative(name);
+//                EditorGUILayout.PropertyField(relProp);
+//            }

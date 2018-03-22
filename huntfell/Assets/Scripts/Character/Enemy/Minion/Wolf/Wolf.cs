@@ -2,29 +2,56 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEditor;
 
 namespace Hunter.Character
 {
 
-    public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
+    public sealed class Wolf : Minion, IMoveable, IUtilityBasedAI
     {
+//#if UNITY_EDITOR
+//        //public class WolfDrawer : PropertyDrawer
+//        //{
+//        //    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+//        //    {
+//        //        EditorGUILayout.Space();
+//        //        EditorGUILayout.LabelField(property.FindPropertyRelative("playerName") + " Specific Variables", EditorStyles.boldLabel);
+//        //        EditorGUILayout.BeginVertical("Box");
+//        //        EditorGUILayout.PropertyField(property.FindPropertyRelative("walkSpeed"));
+//        //        EditorGUILayout.PropertyField(property.FindPropertyRelative("runSpeed"));
+//        //        EditorGUILayout.PropertyField(property.FindPropertyRelative("biteValue"));
+//        //        EditorGUILayout.EndVertical();
+//        //    }
+//        //}
+
+//        //public override PropertyDrawer CustomInspectorPropertyDrawer
+//        //{
+//        //    get
+//        //    {
+//        //        return new WolfDrawer();
+//        //    }
+
+//        //}
+//        public override List<string> SerialzedPropertyNamesList
+//        {
+//            get
+//            {
+//                return new List<string>
+//                {
+//                    "displayName",
+//                    "walkSpeed",
+//                    "runSpeed",
+//                    "biteValue"
+//                };
+//            }
+//        }
+//#endif
         /// <summary>
         /// This is the wolf's animator controller.
         /// </summary>
         public Animator anim;
 
-        private void Start()
-        {
-            SetElementType(elementType);
-
-            anim = GetComponent<Animator>();
-            if (rangeWeapon != null)
-            {
-                rangeWeapon.gameObject.SetActive(false);
-            }
-
-            SetCurrentWeapon(melee);
-        }
+        public float biteValue = 5f;
 
         private void Update()
         {
@@ -62,50 +89,6 @@ namespace Hunter.Character
         {
             agent.speed = walkSpeed;
             agent.destination = target;
-        }
-
-        public void Attack()
-        {
-            if (CurrentMeleeWeapon)
-            {
-                anim.SetTrigger("melee");
-            }
-            else if (CurrentRangeWeapon)
-            {
-                anim.SetTrigger("ranged");
-            }
-        }
-
-        /// <summary>
-        /// Enables the hitbox of the currently equipped melee weapon.
-        /// </summary>
-        public void EnableMeleeHitbox()
-        {
-            var meleeWeapon = CurrentMeleeWeapon;
-            if (meleeWeapon != null)
-            {
-                meleeWeapon.EnableHitbox();
-            }
-        }
-
-        /// <summary>
-        /// Disables the hitbox of the currently equipped melee weapon.
-        /// </summary>
-        public void DisableMeleeHitbox()
-        {
-            var meleeWeapon = CurrentMeleeWeapon;
-            if (meleeWeapon != null)
-            {
-                meleeWeapon.DisableHitbox();
-            }
-        }
-
-        /// <summary>
-        /// Fires the currently equipped range weapon.
-        /// </summary>
-        public void GunFiring()
-        {
-            rangeWeapon.Shoot();
         }
     }
 }

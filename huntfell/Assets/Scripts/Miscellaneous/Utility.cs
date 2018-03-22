@@ -21,6 +21,11 @@ public interface IUtilityBasedAI
     void Wander(CharacterController controller, Vector3 finalTarget, NavMeshAgent agent);
 }
 
+public interface IDamageable
+{
+    void DealDamage(int damage, bool isCritical);
+}
+
 public interface IAttack
 {
     void Attack();
@@ -30,4 +35,12 @@ public interface IAttack
     void DisableMeleeHitbox();
 
     void GunFiring();
+}
+
+public static class Utility
+{
+    public static T Cast<T>(object o)
+    {
+        return (T)o;
+    }
 }
