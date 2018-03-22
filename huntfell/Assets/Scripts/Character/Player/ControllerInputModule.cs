@@ -75,15 +75,21 @@ public class ControllerInputModule : MonoBehaviour
         }
         moveCharacter.Move(characterController, moveDirection, finalDirection, playerRoot, agent);
 
-        if (myDeviceManager.Device.RightBumper.WasReleased)
+        var device = myDeviceManager.Device;
+        if (device == null) {
+            Debug.LogWarning("No devices are attatched to the Device Manager.");
+            return;
+        }
+
+        if (device.RightBumper.WasReleased)
         {
             player.Attack();
         }
-        else if (myDeviceManager.Device.LeftBumper.WasReleased)
+        else if (device.LeftBumper.WasReleased)
         {
             player.SwitchWeapon();
         }
-        else if (myDeviceManager.Device.LeftTrigger.WasReleased)
+        else if (device.LeftTrigger.WasReleased)
         {
             player.Dash(characterController, moveDirection, finalDirection, playerRoot, agent);
         }

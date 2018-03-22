@@ -50,14 +50,14 @@ namespace Hunter.Character
             anim.SetFloat("lookX", LookDirection.x);
             anim.SetFloat("lookY", LookDirection.z);
 
-            if (moveDirection == Vector3.zero)
-            {
-                anim.SetBool("Moving", false);
-            }
-            else
-            {
-                anim.SetBool("Moving", true);
-            }
+            //if (moveDirection == Vector3.zero)
+            //{
+            //    anim.SetBool("Moving", false);
+            //}
+            //else
+            //{
+            //    anim.SetBool("Moving", true);
+            //}
 
             
 

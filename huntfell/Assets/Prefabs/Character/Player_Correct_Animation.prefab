@@ -1189,7 +1189,7 @@ GameObject:
   - component: {fileID: 195707474617528698}
   - component: {fileID: 95765597404000086}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player_Correct_Animation
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2307,7 +2307,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1986916449815684}
-  m_LocalRotation: {x: 0.6959318, y: 0.12521869, z: -0.6959306, w: 0.12521891}
+  m_LocalRotation: {x: 0.69593185, y: 0.1252187, z: -0.69593066, w: 0.12521893}
   m_LocalPosition: {x: -0.17393202, y: 0.09497322, z: 0.00091370393}
   m_LocalScale: {x: 12.708646, y: 12.70865, z: 12.708647}
   m_Children: []
@@ -2960,7 +2960,16 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  dashAnimation:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   anim: {fileID: 0}
+  dashSpeed: 0
+  dashLength: 0
+  dashCoolDown: 0
 --- !u!136 &136787786300364450
 CapsuleCollider:
   m_ObjectHideFlags: 1
