@@ -59,12 +59,12 @@ namespace Hunter.Character
                 var damageableObject = target.GetComponent<IDamageable>();
                 if (damageableObject == null) { return; }
 
-                Enemy enemy = target.GetComponent<Enemy>();
+                var enemy = target.GetComponent<Enemy>();
                 Element enemyElementType = null;
                 if (enemy != null) { enemyElementType = enemy.elementType; }
 
-                bool isCritical = ShouldAttackBeCritical(critPercent);
-                int totalDamage = CalculateDamage(elementType, enemyElementType, isCritical);
+                var isCritical = ShouldAttackBeCritical(critPercent);
+                var totalDamage = CalculateDamage(elementType, enemyElementType, isCritical);
                 damageableObject.DealDamage(totalDamage, isCritical);
             }
 
@@ -101,6 +101,7 @@ namespace Hunter.Character
         protected override int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var normalDamage = base.CalculateDamage(weaponElement, enemyElementType, isCritical);
+            return normalDamage;
         }
 
         /// <summary>

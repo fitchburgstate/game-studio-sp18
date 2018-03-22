@@ -98,7 +98,7 @@ namespace Hunter.Character
         // ----------- Animation Event Methods ----------- \\
         public void GunFiring()
         {
-            range.Shoot();
+            range.ShootRangedWeapon();
         }
 
         // -------------------------------------------------- \\

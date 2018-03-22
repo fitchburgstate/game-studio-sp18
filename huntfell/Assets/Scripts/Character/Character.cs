@@ -23,15 +23,15 @@ namespace Hunter.Character
         /// Current Melee Weapon Equipped on the Character
         /// </summary>
         [SerializeField]
-        private Melee melee;
+        protected Melee melee;
 
         /// <summary>
         /// Current Ranged Weapon Equipped on the Character
         /// </summary>
         [SerializeField]
-        private Range range;
+        protected Range range;
 
-        private Weapon currentWeapon;
+        protected Weapon currentWeapon;
 
         private Transform rotationTransform;
         public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
@@ -123,21 +123,22 @@ namespace Hunter.Character
 
         private IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            float t = 0;
-            while (t < 1.0 && !isCritical)
-            {
-                t += Time.deltaTime / time;
-                health = (int)Mathf.Lerp(start, end, t);
-                //Debug.Log(c.health);
-            }
-            if (isCritical)
-            {
-                damage = start - end;
-                damage = damage + critDamage;
-                Debug.Log("Total Damage: " + damage);
-                health = health - (int)damage;
-                isCritical = false;
-            }
+            //float t = 0;
+            //while (t < 1.0 && !isCritical)
+            //{
+            //    t += Time.deltaTime / time;
+            //    health = (int)Mathf.Lerp(start, end, t);
+            //    //Debug.Log(c.health);
+            //}
+            //if (isCritical)
+            //{
+            //    damage = start - end;
+            //    damage = damage + critDamage;
+            //    Debug.Log("Total Damage: " + damage);
+            //    health = health - (int)damage;
+            //    isCritical = false;
+            //}
+            health -= damage;
             yield return null;
         }
     }
