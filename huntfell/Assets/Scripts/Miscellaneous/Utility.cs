@@ -37,10 +37,10 @@ public interface IAttack
     void GunFiring();
 }
 
-public static class Utility
-{
-    public static T Cast<T>(object o)
-    {
-        return (T)o;
-    }
-}
+//public static class Utility
+//{
+//    public static T Cast<T>(object o)
+//    {
+//        return (T)o;
+//    }
+//}

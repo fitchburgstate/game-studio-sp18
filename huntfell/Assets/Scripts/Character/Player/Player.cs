@@ -8,7 +8,6 @@ namespace Hunter.Character
 {
     public sealed class Player : Character, IMoveable
     {
-        // ---------- SET THESE IN THE INSPECTOR ---------- \\
         [Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
         [Range(0, 20)]
         public float speed = 5f;
@@ -19,9 +18,6 @@ namespace Hunter.Character
 
         private float speedRamp;
         public AnimationCurve rotateAnimation;
-
-        public Animator anim;
-        // ------------------------------------------------ \\ 
 
         private void Start()
         {

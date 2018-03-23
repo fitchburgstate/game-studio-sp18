@@ -15,9 +15,9 @@ public class AdvancedSpawnerEditor : Editor
     SerializedProperty m_MonsterWalkSpeed;
     SerializedProperty m_MonsterRunSpeed;
     SerializedProperty m_MonsterDamage;
-    SerializedObject m_Monster_SO;
+    SerializedObject so_Monster;
 
-    Character oldCharacter;
+    private Character oldCharacter;
 
     // Setting up the serialized properties
     private void OnEnable()
@@ -28,6 +28,7 @@ public class AdvancedSpawnerEditor : Editor
         m_MonsterWalkSpeed = serializedObject.FindProperty("monsterWalkSpeed");
         m_MonsterRunSpeed = serializedObject.FindProperty("monsterRunSpeed");
         m_MonsterDamage = serializedObject.FindProperty("monsterDamage");
+        so_Monster = new SerializedObject(m_Monster.objectReferenceValue);
     }
 
     public override void OnInspectorGUI()
@@ -55,21 +56,33 @@ public class AdvancedSpawnerEditor : Editor
 
         EditorGUILayout.Space();
 
-        if (characterToSpawn is Wolf)
+        var newCTS = so_Monster.GetIterator();
+        EditorGUILayout.BeginVertical();
+        while (newCTS.NextVisible(true))
         {
-            EditorGUILayout.LabelField(m_MonsterName.stringValue + " Specific Variables", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical("Box");
-            EditorGUILayout.PropertyField(m_MonsterWalkSpeed);
-            EditorGUILayout.PropertyField(m_MonsterRunSpeed);
-            EditorGUILayout.PropertyField(m_MonsterDamage);
-            EditorGUILayout.EndVertical();
+            EditorGUILayout.PropertyField(newCTS);
         }
+        EditorGUILayout.EndVertical();
+
+        #region Hard-Coded Wolf
+        //if (characterToSpawn is Wolf)
+        //{
+        //    EditorGUILayout.LabelField(m_MonsterName.stringValue + " Specific Variables", EditorStyles.boldLabel);
+        //    EditorGUILayout.BeginVertical("Box");
+        //    EditorGUILayout.PropertyField(m_MonsterWalkSpeed);
+        //    EditorGUILayout.PropertyField(m_MonsterRunSpeed);
+        //    EditorGUILayout.PropertyField(m_MonsterDamage);
+        //    EditorGUILayout.EndVertical();
+        //}
+        #endregion
+
+        oldCharacter = characterToSpawn;
 
         EditorGUILayout.Space();
 
         if (GUILayout.Button("Create"))
         {
-            InstantiateCharacter();
+            InstantiateCharacter(characterToSpawn);
         }
 
         if (GUILayout.Button("Reset Information"))
@@ -78,13 +91,14 @@ public class AdvancedSpawnerEditor : Editor
         }
 
         serializedObject.ApplyModifiedProperties();
-
-        oldCharacter = characterToSpawn;
     }
 
-    private void InstantiateCharacter()
+    private void InstantiateCharacter(Character characterToSpawn)
     {
-
+        if (characterToSpawn != null)
+        {
+            Instantiate(characterToSpawn.gameObject);
+        }
     }
 
     private void UpdateInspectorInformation(Character characterToSpawn)
@@ -95,17 +109,9 @@ public class AdvancedSpawnerEditor : Editor
             m_MonsterName.stringValue = characterToSpawn.name;
             if (characterToSpawn is Wolf)
             {
-                m_MonsterWalkSpeed.floatValue = characterToSpawn.GetComponent<Enemy>().walkSpeed;
-                m_MonsterRunSpeed.floatValue = characterToSpawn.GetComponent<Enemy>().runSpeed;
+                m_MonsterWalkSpeed.floatValue = characterToSpawn.GetComponent<Wolf>().walkSpeed;
+                m_MonsterRunSpeed.floatValue = characterToSpawn.GetComponent<Wolf>().runSpeed;
             }
         }
     }
 }
-
-
-//            //Property Drawer here
-//            foreach (var name in characterToSpawn.SerialzedPropertyNamesList)
-//            {
-//                var relProp = m_Monster.FindPropertyRelative(name);
-//                EditorGUILayout.PropertyField(relProp);
-//            }

@@ -8,8 +8,6 @@ using System;
 public class AdvancedMonsterSpawner : MonoBehaviour
 {
     public Character characterToSpawn;
-
-    public GameObject monster;
     
     public string monsterName;
 
