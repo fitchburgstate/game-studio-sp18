@@ -41,14 +41,26 @@ public class ControllerInputModule : MonoBehaviour
 
         if (!myDeviceManager.isController)
         {
-            //cameraPos.x = Input.mousePosition.x;
-            //cameraPos.y = Input.mousePosition.y;
-            ////worldCameraPos = mainCamera.ScreenToWorldPoint(new Vector3(cameraPos.x, cameraPos.y, (playerRoot.transform.position.z + -(mainCamera.transform.position.z))));
-            //finalDirection = worldCameraPos;
+            //Working DONT DELETE
+            //RaycastHit hit;
+            //Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            //var test = 32f;
+            //if (Physics.Raycast(ray, out hit, test))
+            //{
+            //    lookDirection = new Vector3(hit.point.x, playerRoot.transform.position.y, hit.point.z);
+            //    playerRoot.transform.LookAt(new Vector3(hit.point.x, playerRoot.transform.position.y, hit.point.z));
+            //}
+            //else
+            //{
+            //    var rayvect = ray.getpoint(test);
+            //    lookdirection = new vector3(rayvect.x, playerroot.transform.position.y, rayvect.z);
+            //    playerroot.transform.lookat(new vector3(rayvect.x, playerroot.transform.position.y, rayvect.z));
+            //}
         }
         else
         {
             lookDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
+            player.LookDirection = lookDirection;
 
             // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
             if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
@@ -63,13 +75,23 @@ public class ControllerInputModule : MonoBehaviour
         }
         moveCharacter.Move(characterController, moveDirection, finalDirection, playerRoot, agent);
 
-        if (myDeviceManager.Device.RightBumper.WasReleased)
+        var device = myDeviceManager.Device;
+        if (device == null) {
+            Debug.LogWarning("No devices are attatched to the Device Manager.");
+            return;
+        }
+
+        if (device.RightBumper.WasReleased)
         {
             player.Attack();
         }
-        else if (myDeviceManager.Device.LeftBumper.WasReleased)
+        else if (device.LeftBumper.WasReleased)
         {
             player.SwitchWeapon();
+        }
+        else if (device.LeftTrigger.WasReleased)
+        {
+            player.Dash(characterController, moveDirection, finalDirection, playerRoot, agent);
         }
     }
 }

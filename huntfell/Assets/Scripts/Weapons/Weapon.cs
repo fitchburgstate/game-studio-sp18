@@ -114,6 +114,7 @@ namespace Hunter.Character
             var buffer = new byte[4];
 
             rng.GetBytes(buffer);
+            var res = BitConverter.ToInt32(buffer, 0);
 
             System.Random r = new System.Random();
             var num = r.Next(1, 100);

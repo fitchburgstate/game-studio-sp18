@@ -9,7 +9,7 @@ public interface IMoveable
 {
     void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject playerRoot, NavMeshAgent agent);
 
-    void Dash(CharacterController controller);
+    void Dash(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent);
 
 }
 
