@@ -10,49 +10,34 @@ namespace Hunter.Character
     public abstract class Character : MonoBehaviour, IDamageable
     {
         /// <summary>
-        /// Name of the Player
+        /// Name of the Player, to be set in the inspector
         /// </summary>
-        public string playerName;
+        public readonly string PlayerName;
 
         /// <summary>
-        /// Health of the Character Object
+        /// How much health the character has
         /// </summary>
-        public int health;
-
-        /// <summary>
-        /// Current Melee Weapon Equipped on the Character
-        /// </summary>
-        [SerializeField]
-        private Melee melee;
-
-        /// <summary>
-        /// Current Ranged Weapon Equipped on the Character
-        /// </summary>
-        [SerializeField]
-        private Range range;
+        private int health;
+        public int CurrentHealth
+        {
+            get
+            {
+                return health;
+            }
+        }
 
         private Weapon currentWeapon;
+        public Weapon CurrentWeapon
+        {
+            get
+            {
+                return currentWeapon;
+            }
+        }
 
-        private Transform rotationTransform;
+        //Variables for handeling character rotation
         public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
-
-
-        public Melee CurrentMeleeWeapon
-        {
-            get
-            {
-                return currentWeapon as Melee;
-            }
-        }
-
-        public Range CurrentRangeWeapon
-        {
-            get
-            {
-                return currentWeapon as Range;
-            }
-        }
-
+        private Transform rotationTransform;
         public Transform RotationTransform
         {
             get
@@ -74,24 +59,6 @@ namespace Hunter.Character
 
         }
 
-
-
-        public void SwitchWeapon()
-        {
-            if (CurrentMeleeWeapon)
-            {
-                melee.gameObject.SetActive(false);
-                range.gameObject.SetActive(true);
-                SetCurrentWeapon(range);
-            }
-            else if (CurrentRangeWeapon)
-            {
-                range.gameObject.SetActive(false);
-                melee.gameObject.SetActive(true);
-                SetCurrentWeapon(melee);
-            }
-        }
-
         public void SetCurrentWeapon(Weapon weapon)
         {
             if (weapon != null)
@@ -103,41 +70,29 @@ namespace Hunter.Character
 
         public void DealDamage (int damage, bool isCritical)
         {
-
-            //float t = 0;
-            //while (t < 1.0 && !isCritical)
-            //{
-            //    t += Time.deltaTime / time;
-            //    c.health = (int)Mathf.Lerp(start, end, t);
-            //    //Debug.Log(c.health);
-            //}
-            //if (isCritical)
-            //{
-            //    var damage = start - end;
-            //    damage = damage + critDamage;
-            //    Debug.Log("Total Damage: " + damage);
-            //    c.health = c.health - (int)damage;
-            //    isCritical = false;
-            //}
+            //This is also where we'll do the damage number pop up
+            StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
         private IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            float t = 0;
-            while (t < 1.0 && !isCritical)
-            {
-                t += Time.deltaTime / time;
-                health = (int)Mathf.Lerp(start, end, t);
-                //Debug.Log(c.health);
-            }
-            if (isCritical)
-            {
-                damage = start - end;
-                damage = damage + critDamage;
-                Debug.Log("Total Damage: " + damage);
-                health = health - (int)damage;
-                isCritical = false;
-            }
+            //TODO: Refactor this so the health subtration lerp works
+            //float t = 0;
+            //while (t < 1.0 && !isCritical)
+            //{
+            //    t += Time.deltaTime / time;
+            //    health = (int)Mathf.Lerp(start, end, t);
+            //    //Debug.Log(c.health);
+            //}
+            //if (isCritical)
+            //{
+            //    damage = start - end;
+            //    damage = damage + critDamage;
+            //    Debug.Log("Total Damage: " + damage);
+            //    health = health - (int)damage;
+            //    isCritical = false;
+            //}
+            health -= damage;
             yield return null;
         }
     }

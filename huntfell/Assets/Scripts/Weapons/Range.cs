@@ -47,7 +47,7 @@ namespace Hunter.Character
         /// Performs a raycast to the range of the weapon and then calls the damage calculation method if an enemy is hit,
         /// also plays the animation for shooting.
         /// </summary>
-        public virtual void ShootRangedWeapon()
+        public override void StartAttackFromAnimationEvent ()
         {
             var ray = new Ray();
             var hit = new RaycastHit();
@@ -95,18 +95,19 @@ namespace Hunter.Character
             //    }
             //}
 
-            Ammo();
+            CheckAmmo();
         }
 
         protected override int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var normalDamage = base.CalculateDamage(weaponElement, enemyElementType, isCritical);
+            return normalDamage;
         }
 
         /// <summary>
         /// Increments clipS variable to determine when the reload happens.
         /// </summary>
-        public void Ammo()
+        public void CheckAmmo()
         {
             clipS++;
             if (clipS == clipSize)

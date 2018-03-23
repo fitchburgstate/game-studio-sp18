@@ -4,10 +4,11 @@ using Hunter.Elements;
 
 namespace Hunter.Character
 {
+    [RequireComponent(typeof(BoxCollider))]
     public class Melee : Weapon
     {
-        public float windUpSpeed;
-        public float hitBoxFrames;
+        //public float windUpSpeed;
+        public float hitBoxFrames = 5;
         private Collider meleeHitBox;
 
         protected new void Start ()
@@ -20,11 +21,13 @@ namespace Hunter.Character
         private void OnTriggerEnter (Collider target)
         {
             var damageableObject = target.GetComponent<IDamageable>();
-            if (damageableObject == null)
+            //We do not want to apply damage to any object that doesnt extend IDamageable, as well as whoever is holding the weapon
+            if (damageableObject == null || target.gameObject == characterHoldingWeapon.gameObject)
             {
                 return;
             }
 
+            //Checking to see if the target is an Enemy because of elemental weaknesses
             Enemy enemy = target.GetComponent<Enemy>();
             Element enemyElementType = null;
             if (enemy != null) { enemyElementType = enemy.elementType; }
@@ -37,8 +40,9 @@ namespace Hunter.Character
         /// <summary>
         /// Animation Event for Melee Weapon
         /// </summary>
-        public void SwingMeleeWeapon ()
+        public override void StartAttackFromAnimationEvent ()
         {
+            Debug.Log("Swinging Melee Weapon.");
             StartCoroutine(OpenAndCloseHitBox());
         }
 

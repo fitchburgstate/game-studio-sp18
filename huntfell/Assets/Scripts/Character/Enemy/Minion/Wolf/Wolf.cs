@@ -14,7 +14,7 @@ namespace Hunter.Character
 
         private void Update()
         {
-            if (health <= 0)
+            if (CurrentHealth <= 0)
             {
                 Destroy(gameObject);
             }
