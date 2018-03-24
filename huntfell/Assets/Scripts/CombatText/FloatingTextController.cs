@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Hunter.Elements;
 
 namespace Hunter.Character
 {
@@ -23,7 +24,7 @@ namespace Hunter.Character
             }
         }
 
-        public static void CreateFloatingText(string text, Transform location, ElementType type)
+        public static void CreateFloatingText(string text, Transform location, Element type)
         {
             var popupInstance = Instantiate(popUpText);
             var worldPos = Camera.main.WorldToScreenPoint(location.position);

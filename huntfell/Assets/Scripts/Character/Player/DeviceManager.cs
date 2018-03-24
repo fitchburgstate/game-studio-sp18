@@ -71,7 +71,7 @@ namespace Hunter
         public InputDevice Device { get; set; }
         public Controls controls;
 
-        private void Start()
+        private void Awake()
         {
             if (InputManager.Devices.Count == 0)
             {
@@ -83,6 +83,7 @@ namespace Hunter
                 controls = Controls.ControllerBindings();
                 isController = true;
             }
+            Device = InputManager.ActiveDevice;
         }
 
         private void Update()

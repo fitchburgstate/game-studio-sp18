@@ -12,31 +12,22 @@ public class ControllerInputModule : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private Vector3 lookDirection = Vector3.zero;
 
-    private GameObject playerRoot;
-    private Camera mainCamera;
-    private NavMeshAgent agent;
-
     private DeviceManager myDeviceManager;
     private Player player;
+    private IMoveable moveCharacter;
 
     private void Start()
     {
-        playerRoot = gameObject.transform.GetChild(0).gameObject; // This will find the player-root gameobject, which means that the only child of this gameobject should be player-root
-
-        mainCamera = GameObject.FindObjectOfType<Camera>();
+        var mainCamera = Camera.main;
         transform.forward = mainCamera.transform.forward;
-        agent = GetComponent<NavMeshAgent>();
-
         myDeviceManager = mainCamera.GetComponent<DeviceManager>();
+
         player = GetComponent<Player>();
+        moveCharacter = GetComponent<IMoveable>();
     }
 
     private void Update()
     {
-        var moveCharacter = GetComponent<IMoveable>();
-        var characterController = GetComponent<CharacterController>();
-        var finalDirection = Vector3.zero;
-
         moveDirection = new Vector3(myDeviceManager.HorizontalInput, 0, myDeviceManager.VerticalInput);
 
         if (!myDeviceManager.isController)
@@ -60,20 +51,15 @@ public class ControllerInputModule : MonoBehaviour
         else
         {
             lookDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
-            player.LookDirection = lookDirection;
 
             // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
             if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
             {
-                finalDirection = moveDirection;
+                lookDirection = moveDirection;
             }
-            // If the right stick is being used, override the character body's rotation to align with the right stick
-            else if (lookDirection != Vector3.zero)
-            {
-                finalDirection = lookDirection;
-            }
+
         }
-        moveCharacter.Move(characterController, moveDirection, finalDirection, playerRoot, agent);
+        moveCharacter.Move(moveDirection, lookDirection);
 
         var device = myDeviceManager.Device;
         if (device == null) {
@@ -89,9 +75,9 @@ public class ControllerInputModule : MonoBehaviour
         {
             player.SwitchWeapon();
         }
-        else if (device.LeftTrigger.WasReleased)
+        else if (device.Action1.WasPressed)
         {
-            player.Dash(characterController, moveDirection, finalDirection, playerRoot, agent);
+            player.Dash();
         }
     }
 }

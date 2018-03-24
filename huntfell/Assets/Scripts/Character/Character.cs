@@ -12,12 +12,20 @@ namespace Hunter.Character
         /// <summary>
         /// Name of the Player, to be set in the inspector
         /// </summary>
-        public readonly string PlayerName;
+        [SerializeField]
+        private string displayName = "Nameless Being";
+        public string DisplayName {
+            get
+            {
+                return displayName;
+            }
+        }
 
         /// <summary>
         /// How much health the character has
         /// </summary>
-        private int health;
+        [SerializeField]
+        private int health = 100;
         public int CurrentHealth
         {
             get
@@ -26,7 +34,7 @@ namespace Hunter.Character
             }
         }
 
-        private Weapon currentWeapon;
+        private Weapon currentWeapon = null;
         public Weapon CurrentWeapon
         {
             get
@@ -64,6 +72,7 @@ namespace Hunter.Character
             if (weapon != null)
             {
                 currentWeapon = weapon;
+                //TODO: This isnt holding a reference when its time to do the combat checks
                 currentWeapon.characterHoldingWeapon = this;
             }
         }

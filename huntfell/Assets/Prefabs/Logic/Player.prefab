@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 4450883400791144}
   m_Layer: 0
   m_Name: Character_Player_Animations
-  m_TagString: Untagged
+  m_TagString: Rotation Transform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1061,6 +1061,9 @@ GameObject:
   - component: {fileID: 4493103329985990}
   - component: {fileID: 33426488514176344}
   - component: {fileID: 23700999648109200}
+  - component: {fileID: 114318164496334876}
+  - component: {fileID: 65258076043413682}
+  - component: {fileID: 114691158058109074}
   m_Layer: 0
   m_Name: CrescentSword
   m_TagString: Untagged
@@ -1624,7 +1627,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1122552038320562}
-  m_LocalRotation: {x: 0.69593185, y: 0.1252187, z: -0.69593066, w: 0.12521893}
+  m_LocalRotation: {x: 0.6959318, y: 0.12521869, z: -0.6959306, w: 0.12521891}
   m_LocalPosition: {x: -0.17393202, y: 0.09497322, z: 0.00091370393}
   m_LocalScale: {x: 12.708646, y: 12.70865, z: 12.708647}
   m_Children: []
@@ -1679,13 +1682,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1910111875673954}
-  m_LocalRotation: {x: 0.7154555, y: -0.011020098, z: 0.69847965, w: 0.011327989}
-  m_LocalPosition: {x: 0.8881857, y: 0.61933225, z: 0.087704845}
-  m_LocalScale: {x: 0.008403416, y: 0.008403417, z: 0.008403412}
+  m_LocalRotation: {x: 0.057515822, y: -0.8214847, z: 0.0656366, w: 0.5635129}
+  m_LocalPosition: {x: -0.243, y: 0.028, z: 0.471}
+  m_LocalScale: {x: 0.38885462, y: 0.3888538, z: 0.38885358}
   m_Children: []
   m_Father: {fileID: 4142240907230142}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 9.943001, y: -111.20601, z: -1.194}
 --- !u!4 &4497916170595502
 Transform:
   m_ObjectHideFlags: 1
@@ -2047,7 +2050,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1335445718732256}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: 0}
+  m_LocalPosition: {x: 0, y: 1.104, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4450883400791144}
@@ -2674,6 +2677,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1250651080100572}
   m_Mesh: {fileID: 4300004, guid: d61aabd0730a9934b95d2a7f31fa6c7f, type: 3}
+--- !u!65 &65258076043413682
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1910111875673954}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.100724, y: 0.56405944, z: 1.1108167}
+  m_Center: {x: 0.568994, y: -0.028255703, z: -0.000000018378852}
 --- !u!95 &95583070636748734
 Animator:
   serializedVersion: 3
@@ -2686,7 +2701,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: fbcf3eb415d31084291c8cfdb1fd3535, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -2702,13 +2717,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0258c29db346274c8ca9eaf0312c76f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: Steve
-  health: 125
-  melee: {fileID: 0}
-  range: {fileID: 0}
-  speed: 5
-  rotateChar: 500
-  rotateAnimation:
+  displayName: Nameless Being
+  health: 200
+  meleeWeapon: {fileID: 114691158058109074}
+  rangedWeapon: {fileID: 0}
+  moveSpeed: 5
+  rotationMaxSpeed: 12
+  rotationSpeedCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
@@ -2716,12 +2731,6 @@ MonoBehaviour:
       value: 0
       inSlope: 2
       outSlope: 2
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.3773312
-      value: 0.8570051
-      inSlope: 1.1408329
-      outSlope: 1.1408329
       tangentMode: 0
     - serializedVersion: 2
       time: 1
@@ -2732,7 +2741,88 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  anim: {fileID: 95583070636748734}
+  dashMaxDistance: 3
+  dashCoolDown: 1
+  dashMaxSpeed: 3
+  dashSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  dashMaxHeight: 2
+  dashHeightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5022335
+      value: 0.9965848
+      inSlope: -0.049210727
+      outSlope: -0.049210727
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1.0041809
+      value: 0.017007504
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!114 &114318164496334876
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1910111875673954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSpeed: 1
+  recoverySpeed: 0.5
+  baseDamage: 10
+  inspectorElementType: 0
+  critPercent: 10
+  characterHoldingWeapon: {fileID: 0}
+  hitBoxFrames: 5
+--- !u!114 &114691158058109074
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1910111875673954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSpeed: 1
+  recoverySpeed: 0.5
+  baseDamage: 10
+  inspectorElementType: 0
+  critPercent: 10
+  characterHoldingWeapon: {fileID: 0}
+  hitBoxFrames: 30
 --- !u!114 &114982141023939920
 MonoBehaviour:
   m_ObjectHideFlags: 1
