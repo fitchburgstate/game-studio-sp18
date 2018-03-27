@@ -2,32 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Hunter.Character;
 
-public class UrgeWeights : ScriptableObject
+namespace Hunter.AI
 {
-    public float distanceToTarget = 0f;
-
-    public float currentHealth = 0f;
-
-    public float distanceToTargetMin = 0f;
-
-    public float distanceToTargetMax = 100f;
-
-    public float distanceToPointMax = 2f;
-
-    public float attackRangeMin = 2f;
-
-    [MenuItem("Assets/Create/Urge Weights")]
-    public static void CreateUrgeWeights()
+    public class UrgeWeights : ScriptableObject
     {
-        var asset = CreateInstance<UrgeWeights>();
+        public float distanceToTarget = 0f;
 
-        AssetDatabase.CreateAsset(asset, "Assets/UrgeWeights.asset");
-        AssetDatabase.SaveAssets();
+        public float currentHealth = 0f;
 
-        EditorUtility.FocusProjectWindow();
+        public float distanceToTargetMin = 0f;
 
-        Selection.activeObject = asset;
+        public float distanceToTargetMax = 100f;
+
+        public float distanceToPointMax = 2f;
+
+        public float attackRangeMin = 2f;
+
+        [MenuItem("Assets/Create/Urge Weights")]
+        public static void CreateUrgeWeights()
+        {
+            var asset = CreateInstance<UrgeWeights>();
+
+            AssetDatabase.CreateAsset(asset, "Assets/UrgeWeights.asset");
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
     }
 }

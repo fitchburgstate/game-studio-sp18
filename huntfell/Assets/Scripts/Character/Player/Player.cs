@@ -30,6 +30,14 @@ namespace Hunter.Character
             SetCurrentWeapon(melee);
         }
 
+        private void Update()
+        {
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
         {
             anim.SetFloat("dirY", Mathf.Abs(moveDirection.magnitude), 0, 1);

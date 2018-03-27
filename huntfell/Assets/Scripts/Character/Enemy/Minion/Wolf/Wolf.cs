@@ -2,26 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEditor;
 
 namespace Hunter.Character
 {
     public sealed class Wolf : Minion, IMoveable, IUtilityBasedAI
     {
-        /// <summary>
-        /// This is the speed at which the wolf walks.
-        /// </summary>
-        [Range(1, 10)]
-        [Tooltip("The walking speed of the wolf when it is not in combat.")]
-        public float walkSpeed = 2f;
-
-        /// <summary>
-        /// This is the speed at which the wolf runs.
-        /// </summary>
-        [Range(1, 10)]
-        [Tooltip("The running speed of the wolf when it is in combat.")]
-        public float runSpeed = 5f;
-
         private void Update()
         {
             if (health <= 0)

@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-namespace Hunter.Character
+namespace Hunter.AI
 {
     /// <summary>
     /// This class determines what action should be taken next based on an "urge".

@@ -2,269 +2,273 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Hunter.Character;
 using System.Linq;
 using Interactable;
+using Hunter.Character;
 
-public class AIInputModule : MonoBehaviour
+namespace Hunter.AI
 {
-    public Vector3 MoveDirection
+    public class AIInputModule : MonoBehaviour
     {
-        get
+        public Vector3 MoveDirection
         {
-            return moveDirection;
+            get
+            {
+                return moveDirection;
+            }
+
+            set
+            {
+                moveDirection = value;
+            }
         }
 
-        set
+        public Vector3 LookDirection
         {
-            moveDirection = value;
-        }
-    }
+            get
+            {
+                return lookDirection;
+            }
 
-    public Vector3 LookDirection
-    {
-        get
-        {
-            return lookDirection;
-        }
-
-        set
-        {
-            lookDirection = value;
-        }
-    }
-
-    public GameObject EnemyModel
-    {
-        get
-        {
-            return enemyModel;
+            set
+            {
+                lookDirection = value;
+            }
         }
 
-        set
+        public GameObject EnemyModel
         {
-            enemyModel = value;
-        }
-    }
+            get
+            {
+                return enemyModel;
+            }
 
-    public NavMeshAgent Agent
-    {
-        get
-        {
-            return agent;
-        }
-
-        set
-        {
-            agent = value;
-        }
-    }
-
-    public CharacterController Controller
-    {
-        get
-        {
-            return controller;
+            set
+            {
+                enemyModel = value;
+            }
         }
 
-        set
+        public NavMeshAgent Agent
         {
-            controller = value;
-        }
-    }
+            get
+            {
+                return agent;
+            }
 
-    public Vector3 FinalDirection
-    {
-        get
-        {
-            return finalDirection;
-        }
-
-        set
-        {
-            finalDirection = value;
-        }
-    }
-
-    public Transform Target
-    {
-        get
-        {
-            return target;
+            set
+            {
+                agent = value;
+            }
         }
 
-        set
+        public CharacterController Controller
         {
-            target = value;
-        }
-    }
+            get
+            {
+                return controller;
+            }
 
-    public Vector3 PointTarget
-    {
-        get
+            set
+            {
+                controller = value;
+            }
+        }
+
+        public Vector3 FinalDirection
         {
-            return pointTarget;
+            get
+            {
+                return finalDirection;
+            }
+
+            set
+            {
+                finalDirection = value;
+            }
         }
 
-        set
+        public Transform Target
         {
-            pointTarget = value;
+            get
+            {
+                return target;
+            }
+
+            set
+            {
+                target = value;
+            }
         }
-    }
 
-    /// <summary>
-    /// Represents which direction the character should move in.
-    /// </summary>
-    private Vector3 moveDirection = Vector3.zero;
+        public Vector3 PointTarget
+        {
+            get
+            {
+                return pointTarget;
+            }
 
-    /// <summary>
-    /// Represents which direction the character should look in.
-    /// </summary>
-    private Vector3 lookDirection = Vector3.zero;
+            set
+            {
+                pointTarget = value;
+            }
+        }
 
-    /// <summary>
-    /// The model's gameobject. This exists so the model can be turned independently of the parent.
-    /// </summary>
-    private GameObject enemyModel;
+        /// <summary>
+        /// Represents which direction the character should move in.
+        /// </summary>
+        private Vector3 moveDirection = Vector3.zero;
 
-    /// <summary>
-    /// This is the navmesh agent attached to the parent. The navmesh is used to find walkable area.
-    /// </summary>
-    private NavMeshAgent agent;
+        /// <summary>
+        /// Represents which direction the character should look in.
+        /// </summary>
+        private Vector3 lookDirection = Vector3.zero;
 
-    /// <summary>
-    /// The character controller that controls the character's movement.
-    /// </summary>
-    private CharacterController controller;
+        /// <summary>
+        /// The model's gameobject. This exists so the model can be turned independently of the parent.
+        /// </summary>
+        private GameObject enemyModel;
 
-    /// <summary>
-    /// The final direction that the character will face that's calculated.
-    /// </summary>
-    private Vector3 finalDirection;
+        /// <summary>
+        /// This is the navmesh agent attached to the parent. The navmesh is used to find walkable area.
+        /// </summary>
+        private NavMeshAgent agent;
 
-    /// <summary>
-    /// The target that the AI has acquired.
-    /// </summary>
-    private Transform target;
+        /// <summary>
+        /// The character controller that controls the character's movement.
+        /// </summary>
+        private CharacterController controller;
 
-    /// <summary>
-    /// The target point that the AI has acquired.
-    /// </summary>
-    private Vector3 pointTarget;
+        /// <summary>
+        /// The final direction that the character will face that's calculated.
+        /// </summary>
+        private Vector3 finalDirection;
 
-    /// <summary>
-    /// The max distance that the wolf will move to during a Wander action.
-    /// </summary>
-    [Tooltip("The max distance that the wolf will move to during a Wander action.")]
-    [Range(0f, 25f)]
-    public float maxDistance = 5f;
+        /// <summary>
+        /// The target that the AI has acquired.
+        /// </summary>
+        private Transform target;
 
-    private bool enemyInLOS = false;
-    private bool inCombat = false;
+        /// <summary>
+        /// The target point that the AI has acquired.
+        /// </summary>
+        private Vector3 pointTarget;
 
-    #region Classes
-    private Attack attack;
-    private Idle idle;
-    private Wander wander;
-    private MoveTo moveTo;
-    private Retreat retreat;
-    private NavPosition navPosition;
-    private Character character;
-    private AIDetection aiDetection;
-    #endregion
+        /// <summary>
+        /// The max distance that the wolf will move to during a Wander action.
+        /// </summary>
+        [Tooltip("The max distance that the wolf will move to during a Wander action.")]
+        [Range(0f, 25f)]
+        public float maxDistance = 5f;
 
-    public UrgeWeights urgeWeights;
+        private bool enemyInLOS = false;
+        private bool inCombat = false;
 
-
-    private void Start()
-    {
         #region Classes
-        attack = new Attack(gameObject);
-        idle = new Idle(gameObject);
-        wander = new Wander(gameObject);
-        moveTo = new MoveTo(gameObject);
-        retreat = new Retreat(gameObject);
-
-        urgeWeights = new UrgeWeights();
-        navPosition = new NavPosition();
-        character = GetComponent<Character>();
-        aiDetection = GetComponent<AIDetection>();
+        private Attack attack;
+        private Idle idle;
+        private Wander wander;
+        private MoveTo moveTo;
+        private Retreat retreat;
+        private NavPosition navPosition;
+        private Character.Character character;
+        private AIDetection aiDetection;
         #endregion
 
-        EnemyModel = gameObject.transform.GetChild(0).gameObject;
-        Agent = GetComponent<NavMeshAgent>();
+        public UrgeWeights urgeWeights;
 
-        target = FindNearestTargetWithString("Player");
-        pointTarget = FindPointOnNavmesh();
-    }
 
-    private void Update()
-    {
-        enemyInLOS = aiDetection.DetectPlayer();
-
-        var distanceToTarget = DistanceToTarget();
-        var distanceToPoint = DistanceToPoint();
-
-        if (enemyInLOS)
+        private void Start()
         {
-            inCombat = true;
+            #region Classes
+            attack = new Attack(gameObject);
+            idle = new Idle(gameObject);
+            wander = new Wander(gameObject);
+            moveTo = new MoveTo(gameObject);
+            retreat = new Retreat(gameObject);
+
+            urgeWeights = new UrgeWeights();
+            navPosition = new NavPosition();
+            character = GetComponent<Character.Character>();
+            aiDetection = GetComponent<AIDetection>();
+            #endregion
+
+            EnemyModel = gameObject.transform.GetChild(0).gameObject;
+            Agent = GetComponent<NavMeshAgent>();
+
+            target = FindNearestTargetWithString("Player");
+            pointTarget = FindPointOnNavmesh();
         }
-        else if ((distanceToTarget > aiDetection.maxDetectionDistance) && (!enemyInLOS))
+
+        private void Update()
         {
-            inCombat = false;
+            var distanceToTarget = DistanceToTarget();
+            var distanceToPoint = DistanceToPoint();
+
+            if (aiDetection != null)
+            {
+                enemyInLOS = aiDetection.DetectPlayer();
+                if (enemyInLOS)
+                {
+                    inCombat = true;
+                }
+                else if ((distanceToTarget > aiDetection.maxDetectionDistance) && (!enemyInLOS))
+                {
+                    inCombat = false;
+                }
+            }
+
+            var currentState = FindNextState(distanceToTarget, distanceToPoint);
+
+            Debug.Log("Current State: " + currentState);
+
+            currentState.Act();
+
+            #region State Switchers
+            if (currentState is Attack)
+            {
+                inCombat = true;
+            }
+            else if (currentState is MoveTo)
+            {
+                inCombat = true;
+            }
+            else if (currentState is Retreat)
+            {
+                inCombat = true;
+            }
+            else if (currentState is Idle)
+            {
+                inCombat = false;
+            }
+            else if (currentState is Wander)
+            {
+                inCombat = false;
+            }
+            #endregion
         }
 
-        var currentState = FindNextState(distanceToTarget, distanceToPoint);
-
-        Debug.Log("Current State: " + currentState);
-
-        currentState.Act();
-
-        #region State Switchers
-        if (currentState is Attack)
+        /// <summary>
+        /// This function performs various operations to determine what action has the highest urge value and then returns it.
+        /// </summary>
+        /// <returns></returns>
+        public UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
         {
-            inCombat = true;
-        }
-        else if (currentState is MoveTo)
-        {
-            inCombat = true;
-        }
-        else if (currentState is Retreat)
-        {
-            inCombat = true;
-        }
-        else if (currentState is Idle)
-        {
-            inCombat = false;
-        }
-        else if (currentState is Wander)
-        {
-            inCombat = false;
-        }
-        #endregion
-    }
+            var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, inCombat);
+            var idleValue = idle.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
+            var wanderValue = wander.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
+            var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat);
+            var retreatValue = retreat.CalculateRetreat(character.health, inCombat);
 
-    /// <summary>
-    /// This function performs various operations to determine what action has the highest urge value and then returns it.
-    /// </summary>
-    /// <returns></returns>
-    public UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
-    {
-        var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, inCombat);
-        var idleValue = idle.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
-        var wanderValue = wander.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
-        var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat);
-        var retreatValue = retreat.CalculateRetreat(character.health, inCombat);
+            #region Debug Logs
+            //Debug.Log("Attack Value: " + attackValue);
+            //Debug.Log("Idle Value: " + idleValue);
+            //Debug.Log("Wander Value: " + wanderValue);
+            //Debug.Log("MoveTo Value: " + moveToValue);
+            //Debug.Log("Retreat Value: " + retreatValue);
+            #endregion
 
-        #region Debug Logs
-        //Debug.Log("Attack Value: " + attackValue);
-        //Debug.Log("Idle Value: " + idleValue);
-        //Debug.Log("Wander Value: " + wanderValue);
-        //Debug.Log("MoveTo Value: " + moveToValue);
-        //Debug.Log("Retreat Value: " + retreatValue);
-        #endregion
-
-        var largestValue = new Dictionary<UtilityBasedAI, float>
+            var largestValue = new Dictionary<UtilityBasedAI, float>
         {
             { attack, attackValue },
             { idle, idleValue },
@@ -272,58 +276,60 @@ public class AIInputModule : MonoBehaviour
             { moveTo, moveToValue },
             { retreat, retreatValue }
         };
-        var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
+            var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 
-        return max;
-    }
+            return max;
+        }
 
-    private float DistanceToTarget()
-    {
-        var distance = Vector3.Distance(target.position, gameObject.transform.position);
-
-        return distance;
-    }
-
-    private float DistanceToPoint()
-    {
-        var distance = Vector3.Distance(pointTarget, gameObject.transform.position);
-
-        return distance;
-    }
-
-    /// <summary>
-    /// This function returns the nearest transform with the correct tag.
-    /// </summary>
-    /// <param name="targetString">The name of the tag that is being searched for.</param>
-    /// <returns></returns>
-    public Transform FindNearestTargetWithString(string targetString)
-    {
-        var targets = GameObject.FindGameObjectsWithTag(targetString);
-        Transform bestTarget = null;
-        var closestDistanceSqr = Mathf.Infinity;
-        var currentPosition = transform.position;
-        foreach (var potentialTarget in targets)
+        private float DistanceToTarget()
         {
-            var directionToTarget = potentialTarget.transform.position - currentPosition;
-            var dSqrToTarget = directionToTarget.sqrMagnitude;
-            if (dSqrToTarget < closestDistanceSqr)
+            var distance = Vector3.Distance(target.position, gameObject.transform.position);
+
+            return distance;
+        }
+
+        private float DistanceToPoint()
+        {
+            var distance = Vector3.Distance(pointTarget, gameObject.transform.position);
+
+            return distance;
+        }
+
+        /// <summary>
+        /// This function returns the nearest transform with the correct tag.
+        /// </summary>
+        /// <param name="targetString">The name of the tag that is being searched for.</param>
+        /// <returns></returns>
+        public Transform FindNearestTargetWithString(string targetString)
+        {
+            var targets = GameObject.FindGameObjectsWithTag(targetString);
+            Transform bestTarget = null;
+            var closestDistanceSqr = Mathf.Infinity;
+            var currentPosition = transform.position;
+            foreach (var potentialTarget in targets)
             {
-                closestDistanceSqr = dSqrToTarget;
-                bestTarget = potentialTarget.transform;
+                var directionToTarget = potentialTarget.transform.position - currentPosition;
+                var dSqrToTarget = directionToTarget.sqrMagnitude;
+                if (dSqrToTarget < closestDistanceSqr)
+                {
+                    closestDistanceSqr = dSqrToTarget;
+                    bestTarget = potentialTarget.transform;
+                }
             }
+            return bestTarget;
         }
-        return bestTarget;
-    }
 
-    public Vector3 FindPointOnNavmesh()
-    {
-        var targetPosition = new Vector3();
-
-        if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition))
+        public Vector3 FindPointOnNavmesh()
         {
-            pointTarget = targetPosition;
-        }
+            var targetPosition = new Vector3();
 
-        return pointTarget;
+            if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition))
+            {
+                pointTarget = targetPosition;
+            }
+
+            return pointTarget;
+        }
     }
 }
+
