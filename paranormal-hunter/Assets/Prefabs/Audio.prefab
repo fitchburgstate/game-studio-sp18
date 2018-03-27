@@ -453,7 +453,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4109610142982942}
   - component: {fileID: 114713050766459446}
-  - component: {fileID: 114075376875558626}
+  - component: {fileID: 114905521664425066}
   m_Layer: 0
   m_Name: PH_MX_Explore01_Loop
   m_TagString: Untagged
@@ -1194,7 +1194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4705007929138150}
   - component: {fileID: 114707199622004952}
-  - component: {fileID: 114906218539524416}
+  - component: {fileID: 114761071846601964}
   m_Layer: 0
   m_Name: Explore01 - Phrases [Random]
   m_TagString: Untagged
@@ -3406,39 +3406,6 @@ MonoBehaviour:
   _eventEditor:
     _eventNames: []
     _eventList: []
---- !u!114 &114075376875558626
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1301472489515400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1137554331, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _eventName: Start Background Music
-  _eventID: 0
-  _overrideEventTriggerAction: 0
-  _overrideParameters:
-    _overrideIncomingEventAction: 0
-    _incomingEventAction: 0
-    _overrideEventAction: 0
-    _type: 0
-    _floatParameter: 1
-    _stringParameter: 
-    _switchPresetData:
-      _sourcePreset: 
-      _targetPreset: 
-    _dspParameterData:
-      _dspType: 0
-      _parameter: 
-      _value: 0
-      _time: 0
-      _curve: 0.5
-    _transitionToSnapshotData:
-      _snapshot: 
-      _timeToReach: 0
 --- !u!114 &114108138650491330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5581,10 +5548,10 @@ MonoBehaviour:
   _rolloffMode: 0
   _customCurvesType: 0
   _customCurvesName: 
-  _overrideFadeProperties: 0
-  _fadeInTime: 0
+  _overrideFadeProperties: 1
+  _fadeInTime: 1
   _fadeInCurve: 0.5
-  _fadeOutTime: 0
+  _fadeOutTime: 5
   _fadeOutCurve: 0.5
   _reverbZoneMix: 1
   _overrideBypassProperties: 0
@@ -9374,10 +9341,10 @@ MonoBehaviour:
   _rolloffMode: 0
   _customCurvesType: 0
   _customCurvesName: 
-  _overrideFadeProperties: 0
+  _overrideFadeProperties: 1
   _fadeInTime: 0
   _fadeInCurve: 0.5
-  _fadeOutTime: 0
+  _fadeOutTime: 2
   _fadeOutCurve: 0.5
   _reverbZoneMix: 1
   _overrideBypassProperties: 0
@@ -9430,7 +9397,7 @@ MonoBehaviour:
   _audioClipAssetPath: 0
   _delay: 0
   _delayInBeats: 0
-  _loop: 0
+  _loop: 1
   _ignoreNativeLoop: 0
   _randomizeStart: 0
   _randomizeStartPercentage: 100
@@ -9450,7 +9417,11 @@ MonoBehaviour:
   _randomizeMinPosition: 0
   _randomizeMaxPosition: 10
   _syncWithMusicTime: 0
-  _markers: []
+  _markers:
+  - name: Marker 1
+    offsetSamples: 0
+    offsetTime: 0
+    type: 1
   _syncRegionsWithTempo: 0
   _audioClipTempo: 120
   _regions: []
@@ -10905,15 +10876,16 @@ MonoBehaviour:
       _data: []
   _eventList:
   - _UnSet_
+  - Combat to Expo Music
+  - Expo to Combat Music
   - Footstep
+  - Player Draw Luger
   - Player Hit
   - Player Luger Shot
   - Player Sword Swing
   - Start Background Music
   - Start House Ambience
   - Wolf Attack
-  - Player Draw Luger
-  - Expo to Combat Music
   _eventEditor:
     _eventNames:
     - Player Draw Luger
@@ -11068,7 +11040,308 @@ MonoBehaviour:
           _delayTimer: 0
           _eventCategory: 
           _priority: 0
-        _component: {fileID: 0}
+        _component: {fileID: 114644195520441934}
+        _ignoreEventAction: 0
+        _parameterData:
+          _value: 0
+          _parameter: 0
+          _index: -1
+        _dspParameter:
+          _dspType: 0
+          _parameter: 
+          _value: 0
+          _time: 0
+          _curve: 0.5
+        _switchPresetData:
+          _sourcePreset: 
+          _targetPreset: 
+        _globalParameterData:
+          _name: 
+          _value: 0
+        _globalSwitchParameterData:
+          _name: 
+          _switch: 
+        _transitionToSnapshotData:
+          _snapshot: 
+          _timeToReach: 0
+        _eventValue: 
+        _eventParameter: 1
+        _eventScheduleParameter: 0
+        _eventParameterName: 
+        _dspType: 0
+        _timeToTarget: 0
+        _curve: 0.5
+        _min: 0
+        _max: 1
+      - _event:
+          _eventName: 
+          _eventID: 0
+          EventAction: 9
+          parentGameObject: {fileID: 0}
+          _delay: 0
+          _delayTimer: 0
+          _eventCategory: 
+          _priority: 0
+        _component: {fileID: 114207230461566422}
+        _ignoreEventAction: 0
+        _parameterData:
+          _value: 0
+          _parameter: 0
+          _index: -1
+        _dspParameter:
+          _dspType: 0
+          _parameter: 
+          _value: 0
+          _time: 0
+          _curve: 0.5
+        _switchPresetData:
+          _sourcePreset: 
+          _targetPreset: 
+        _globalParameterData:
+          _name: 
+          _value: 0
+        _globalSwitchParameterData:
+          _name: 
+          _switch: 
+        _transitionToSnapshotData:
+          _snapshot: 
+          _timeToReach: 0
+        _eventValue: 
+        _eventParameter: 1
+        _eventScheduleParameter: 0
+        _eventParameterName: 
+        _dspType: 0
+        _timeToTarget: 0
+        _curve: 0.5
+        _min: 0
+        _max: 1
+      - _event:
+          _eventName: 
+          _eventID: 0
+          EventAction: 21
+          parentGameObject: {fileID: 0}
+          _delay: 0
+          _delayTimer: 0
+          _eventCategory: 
+          _priority: 0
+        _component: {fileID: 114707199622004952}
+        _ignoreEventAction: 0
+        _parameterData:
+          _value: 0
+          _parameter: 0
+          _index: -1
+        _dspParameter:
+          _dspType: 0
+          _parameter: 
+          _value: 0
+          _time: 0
+          _curve: 0.5
+        _switchPresetData:
+          _sourcePreset: 
+          _targetPreset: 
+        _globalParameterData:
+          _name: 
+          _value: 0
+        _globalSwitchParameterData:
+          _name: 
+          _switch: 
+        _transitionToSnapshotData:
+          _snapshot: 
+          _timeToReach: 0
+        _eventValue: 
+        _eventParameter: 1
+        _eventScheduleParameter: 0
+        _eventParameterName: 
+        _dspType: 0
+        _timeToTarget: 0
+        _curve: 0.5
+        _min: 0
+        _max: 1
+      - _event:
+          _eventName: 
+          _eventID: 0
+          EventAction: 0
+          parentGameObject: {fileID: 0}
+          _delay: 0
+          _delayTimer: 0
+          _eventCategory: 
+          _priority: 0
+        _component: {fileID: 114600958751327858}
+        _ignoreEventAction: 0
+        _parameterData:
+          _value: 0
+          _parameter: 0
+          _index: -1
+        _dspParameter:
+          _dspType: 0
+          _parameter: 
+          _value: 0
+          _time: 0
+          _curve: 0.5
+        _switchPresetData:
+          _sourcePreset: 
+          _targetPreset: 
+        _globalParameterData:
+          _name: 
+          _value: 0
+        _globalSwitchParameterData:
+          _name: 
+          _switch: 
+        _transitionToSnapshotData:
+          _snapshot: 
+          _timeToReach: 0
+        _eventValue: 
+        _eventParameter: 1
+        _eventScheduleParameter: 0
+        _eventParameterName: 
+        _dspType: 0
+        _timeToTarget: 0
+        _curve: 0.5
+        _min: 0
+        _max: 1
+    - _delay: 0
+      _probability: 100
+      _postCountMax: 0
+      _addToQueue: 0
+      _eventName: Combat to Expo Music
+      _ignoreIncomingGameObject: 0
+      _eventList:
+      - _event:
+          _eventName: 
+          _eventID: 0
+          EventAction: 0
+          parentGameObject: {fileID: 0}
+          _delay: 0
+          _delayTimer: 0
+          _eventCategory: 
+          _priority: 0
+        _component: {fileID: 114157298314105170}
+        _ignoreEventAction: 0
+        _parameterData:
+          _value: 0
+          _parameter: 0
+          _index: -1
+        _dspParameter:
+          _dspType: 0
+          _parameter: 
+          _value: 0
+          _time: 0
+          _curve: 0.5
+        _switchPresetData:
+          _sourcePreset: 
+          _targetPreset: 
+        _globalParameterData:
+          _name: 
+          _value: 0
+        _globalSwitchParameterData:
+          _name: 
+          _switch: 
+        _transitionToSnapshotData:
+          _snapshot: 
+          _timeToReach: 0
+        _eventValue: 
+        _eventParameter: 1
+        _eventScheduleParameter: 0
+        _eventParameterName: 
+        _dspType: 0
+        _timeToTarget: 0
+        _curve: 0.5
+        _min: 0
+        _max: 1
+      - _event:
+          _eventName: 
+          _eventID: 0
+          EventAction: 9
+          parentGameObject: {fileID: 0}
+          _delay: 0
+          _delayTimer: 0
+          _eventCategory: 
+          _priority: 0
+        _component: {fileID: 114600958751327858}
+        _ignoreEventAction: 0
+        _parameterData:
+          _value: 0
+          _parameter: 0
+          _index: -1
+        _dspParameter:
+          _dspType: 0
+          _parameter: 
+          _value: 0
+          _time: 0
+          _curve: 0.5
+        _switchPresetData:
+          _sourcePreset: 
+          _targetPreset: 
+        _globalParameterData:
+          _name: 
+          _value: 0
+        _globalSwitchParameterData:
+          _name: 
+          _switch: 
+        _transitionToSnapshotData:
+          _snapshot: 
+          _timeToReach: 0
+        _eventValue: 
+        _eventParameter: 1
+        _eventScheduleParameter: 0
+        _eventParameterName: 
+        _dspType: 0
+        _timeToTarget: 0
+        _curve: 0.5
+        _min: 0
+        _max: 1
+      - _event:
+          _eventName: 
+          _eventID: 0
+          EventAction: 8
+          parentGameObject: {fileID: 0}
+          _delay: 0
+          _delayTimer: 0
+          _eventCategory: 
+          _priority: 0
+        _component: {fileID: 114713050766459446}
+        _ignoreEventAction: 0
+        _parameterData:
+          _value: 0
+          _parameter: 0
+          _index: -1
+        _dspParameter:
+          _dspType: 0
+          _parameter: 
+          _value: 0
+          _time: 0
+          _curve: 0.5
+        _switchPresetData:
+          _sourcePreset: 
+          _targetPreset: 
+        _globalParameterData:
+          _name: 
+          _value: 0
+        _globalSwitchParameterData:
+          _name: 
+          _switch: 
+        _transitionToSnapshotData:
+          _snapshot: 
+          _timeToReach: 0
+        _eventValue: 
+        _eventParameter: 1
+        _eventScheduleParameter: 0
+        _eventParameterName: 
+        _dspType: 0
+        _timeToTarget: 0
+        _curve: 0.5
+        _min: 0
+        _max: 1
+      - _event:
+          _eventName: 
+          _eventID: 0
+          EventAction: 0
+          parentGameObject: {fileID: 0}
+          _delay: 0
+          _delayTimer: 0
+          _eventCategory: 
+          _priority: 0
+        _component: {fileID: 114707199622004952}
         _ignoreEventAction: 0
         _parameterData:
           _value: 0
@@ -11278,6 +11551,39 @@ MonoBehaviour:
   _syncRegionsWithTempo: 0
   _audioClipTempo: 120
   _regions: []
+--- !u!114 &114761071846601964
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1755829847214444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1137554331, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventName: Start Background Music
+  _eventID: 0
+  _overrideEventTriggerAction: 0
+  _overrideParameters:
+    _overrideIncomingEventAction: 0
+    _incomingEventAction: 0
+    _overrideEventAction: 0
+    _type: 0
+    _floatParameter: 1
+    _stringParameter: 
+    _switchPresetData:
+      _sourcePreset: 
+      _targetPreset: 
+    _dspParameterData:
+      _dspType: 0
+      _parameter: 
+      _value: 0
+      _time: 0
+      _curve: 0.5
+    _transitionToSnapshotData:
+      _snapshot: 
+      _timeToReach: 0
 --- !u!114 &114815436521408826
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12284,12 +12590,12 @@ MonoBehaviour:
     _transitionToSnapshotData:
       _snapshot: 
       _timeToReach: 0
---- !u!114 &114906218539524416
+--- !u!114 &114905521664425066
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1755829847214444}
+  m_GameObject: {fileID: 1301472489515400}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1137554331, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
