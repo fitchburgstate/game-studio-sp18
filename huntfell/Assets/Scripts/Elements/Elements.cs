@@ -7,6 +7,7 @@ namespace Hunter.Elements
     /// </summary>
     public enum ElementOptions
     {
+        None,
         Fire,
         Ice,
         Lightning,
@@ -16,7 +17,15 @@ namespace Hunter.Elements
 
     public abstract class Element
     {
-        public Type weakness = null;
+        protected Type weakness;
+
+        public Type Weakness
+        {
+            get
+            {
+                return weakness;
+            }
+        }
     }
 
     public class Fire : Element

@@ -7,69 +7,58 @@ using UnityEditor;
 
 namespace Hunter.Character
 {
+
     public abstract class Character : MonoBehaviour, IDamageable
     {
         /// <summary>
-        /// Name of the Player
-        /// </summary>
-        public string playerName;
-        
-        /// <summary>
-        /// Health of the Character Object
-        /// </summary>
-        public int health;
-
-        /// <summary>
-        /// Current Melee Weapon Equipped on the Character
+        /// Name of the Player, to be set in the inspector
         /// </summary>
         [SerializeField]
-        protected Melee melee;
+        private string displayName = "Nameless Being";
+        public string DisplayName {
+            get
+            {
+                return displayName;
+            }
+        }
 
         /// <summary>
-        /// Current Ranged Weapon Equipped on the Character
+        /// How much health the character has
         /// </summary>
         [SerializeField]
-        protected Range range;
+        private int health = 100;
+        public int CurrentHealth
+        {
+            get
+            {
+                return health;
+            }
+        }
 
-        /// <summary>
-        /// This is the character's animator controller.
-        /// </summary>
-        public Animator anim;
+        private Weapon currentWeapon = null;
+        public Weapon CurrentWeapon
+        {
+            get
+            {
+                return currentWeapon;
+            }
+        }
 
-        protected Weapon currentWeapon;
-
-        private Transform rotationTransform;
+        //Variables for handeling character rotation
         public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
-
-        public Melee CurrentMeleeWeapon
-        {
-            get
-            {
-                return currentWeapon as Melee;
-            }
-        }
-
-        public Range CurrentRangeWeapon
-        {
-            get
-            {
-                return currentWeapon as Range;
-            }
-        }
-
+        private Transform rotationTransform;
         public Transform RotationTransform
         {
             get
             {
-                if (rotationTransform == null)
+                if(rotationTransform == null)
                 {
-                    foreach (Transform child in transform)
+                    foreach(Transform child in transform)
                     {
-                        if (child.tag == ROTATION_TRANSFORM_TAG) { rotationTransform = child; }
+                        if(child.tag == ROTATION_TRANSFORM_TAG) { rotationTransform = child; }
                     }
                     //Fallback for if the tag isn't set
-                    if (rotationTransform == null)
-                    {
+                    if(rotationTransform == null) {
                         Debug.LogWarning("GameObject: " + gameObject.name + " has no rotational transform set. Check the tag of the first childed GameObject underneath this GameObject.", gameObject);
                         rotationTransform = transform.GetChild(0);
                     }
@@ -79,38 +68,40 @@ namespace Hunter.Character
 
         }
 
-        public void SwitchWeapon()
-        {
-            if (CurrentMeleeWeapon)
-            {
-                melee.gameObject.SetActive(false);
-                range.gameObject.SetActive(true);
-                SetCurrentWeapon(range);
-            }
-            else if (CurrentRangeWeapon)
-            {
-                range.gameObject.SetActive(false);
-                melee.gameObject.SetActive(true);
-                SetCurrentWeapon(melee);
-            }
-        }
-
         public void SetCurrentWeapon(Weapon weapon)
         {
             if (weapon != null)
             {
                 currentWeapon = weapon;
+                //TODO: This isnt holding a reference when its time to do the combat checks
                 currentWeapon.characterHoldingWeapon = this;
             }
         }
 
-        public void DealDamage(int damage, bool isCritical)
+        public void DealDamage (int damage, bool isCritical)
         {
-
+            //This is also where we'll do the damage number pop up
+            StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
-        private IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
+        private IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
+            //TODO: Refactor this so the health subtration lerp works
+            //float t = 0;
+            //while (t < 1.0 && !isCritical)
+            //{
+            //    t += Time.deltaTime / time;
+            //    health = (int)Mathf.Lerp(start, end, t);
+            //    //Debug.Log(c.health);
+            //}
+            //if (isCritical)
+            //{
+            //    damage = start - end;
+            //    damage = damage + critDamage;
+            //    Debug.Log("Total Damage: " + damage);
+            //    health = health - (int)damage;
+            //    isCritical = false;
+            //}
             health -= damage;
             yield return null;
         }

@@ -7,11 +7,9 @@ using UnityEngine.AI;
 
 public interface IMoveable
 {
-    void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent);
+    void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection);
 
-    void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target);
-
-    void Dash(CharacterController controller);
+    void Dash();
 }
 
 public interface IUtilityBasedAI
@@ -37,10 +35,3 @@ public interface IAttack
     void GunFiring();
 }
 
-//public static class Utility
-//{
-//    public static T Cast<T>(object o)
-//    {
-//        return (T)o;
-//    }
-//}
