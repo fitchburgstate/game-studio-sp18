@@ -105,7 +105,7 @@ public class AdvancedSpawnerEditor : Editor
     {
         if (characterToSpawn != null)
         {
-            m_MonsterHealth.floatValue = characterToSpawn.health;
+            m_MonsterHealth.floatValue = characterToSpawn.CurrentHealth;
             m_MonsterName.stringValue = characterToSpawn.name;
             if (characterToSpawn is Wolf)
             {

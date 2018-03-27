@@ -19,5 +19,16 @@ namespace Hunter.Character
         [Range(1, 10)]
         [Tooltip("The running speed of the wolf when it is in combat.")]
         public float runSpeed = 5f;
+
+
+        //Take this out of update and do the logic in the CurrentHealth Property
+        private void Update ()
+        {
+            if (CurrentHealth <= 0)
+            {
+                //Call death function later on
+                Destroy(gameObject);
+            }
+        }
     }
 }

@@ -13,7 +13,11 @@ namespace Hunter.AI
         {
             if (other.tag == "Player")
             {
-                other.GetComponent<Character.Character>().health -= damageAmount;
+                var damageable = other.GetComponent<IDamageable>();
+                if(damageable != null)
+                {
+                    damageable.DealDamage(damageAmount, false);
+                }
             }
         }
     }

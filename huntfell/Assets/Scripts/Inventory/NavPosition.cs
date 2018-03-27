@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-namespace Interactables
+namespace Hunter.Interactable
 {
     public class NavPosition 
     {

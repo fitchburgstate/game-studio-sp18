@@ -9,14 +9,16 @@ public interface IMoveable
 {
     void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection);
 
+    void Move (Transform navMeshTarget);
+
     void Dash();
 }
 
 public interface IUtilityBasedAI
 {
-    void Idle(CharacterController controller, NavMeshAgent agent);
+    void Idle();
 
-    void Wander(CharacterController controller, Vector3 finalTarget, NavMeshAgent agent);
+    void Wander(Vector3 finalTarget);
 }
 
 public interface IDamageable

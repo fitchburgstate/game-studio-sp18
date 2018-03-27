@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using InControl;
 using UnityEditor;
+using UnityEngine.AI;
 
 namespace Hunter.Character
 {
@@ -15,7 +16,8 @@ namespace Hunter.Character
         /// </summary>
         [SerializeField]
         private string displayName = "Nameless Being";
-        public string DisplayName {
+        public string DisplayName
+        {
             get
             {
                 return displayName;
@@ -51,14 +53,15 @@ namespace Hunter.Character
         {
             get
             {
-                if(rotationTransform == null)
+                if (rotationTransform == null)
                 {
-                    foreach(Transform child in transform)
+                    foreach (Transform child in transform)
                     {
-                        if(child.tag == ROTATION_TRANSFORM_TAG) { rotationTransform = child; }
+                        if (child.tag == ROTATION_TRANSFORM_TAG) { rotationTransform = child; }
                     }
                     //Fallback for if the tag isn't set
-                    if(rotationTransform == null) {
+                    if (rotationTransform == null)
+                    {
                         Debug.LogWarning("GameObject: " + gameObject.name + " has no rotational transform set. Check the tag of the first childed GameObject underneath this GameObject.", gameObject);
                         rotationTransform = transform.GetChild(0);
                     }
@@ -68,7 +71,21 @@ namespace Hunter.Character
 
         }
 
-        public void SetCurrentWeapon(Weapon weapon)
+        public Transform eyeLine;
+
+        protected CharacterController characterController;
+        protected NavMeshAgent agent;
+        protected Animator anim;
+
+
+        protected virtual void Start ()
+        {
+            anim = GetComponent<Animator>();
+            agent = GetComponent<NavMeshAgent>();
+            characterController = GetComponent<CharacterController>();
+        }
+
+        public void SetCurrentWeapon (Weapon weapon)
         {
             if (weapon != null)
             {

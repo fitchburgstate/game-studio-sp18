@@ -35,11 +35,7 @@ namespace Hunter.Character
         public AnimationCurve dashSpeedCurve;
         public float dashMaxHeight = 2;
         public AnimationCurve dashHeightCurve;
-        public Transform eyeline;
 
-        private Animator anim;
-        private CharacterController characterController;
-        private NavMeshAgent agent;
 
         private bool canMove = true;
         private float speedRamp;
@@ -48,11 +44,9 @@ namespace Hunter.Character
 
 
         #region Unity Messages
-        private void Start()
+        protected override void Start()
         {
-            anim = GetComponent<Animator>();
-            agent = GetComponent<NavMeshAgent>();
-            characterController = GetComponent<CharacterController>();
+            base.Start();
 
             if (rangedWeapon != null)
             {
@@ -101,6 +95,11 @@ namespace Hunter.Character
 
             characterController.Move(moveDirection * Time.deltaTime);
         }
+
+        public void Move(Transform fuckyou)
+        {
+            //fuck you
+        }
         #endregion
 
         #region Player Dash
@@ -142,7 +141,7 @@ namespace Hunter.Character
         {
             //No moving during the dash movement
             canMove = false;
-            var startPosition = eyeline.position;
+            var startPosition = eyeLine.position;
             Debug.Log(startPosition);
             var characterForward = RotationTransform.forward;
             var dashDirectionTarget = new Vector3();

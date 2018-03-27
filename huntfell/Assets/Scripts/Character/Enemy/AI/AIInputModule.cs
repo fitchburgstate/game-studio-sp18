@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
-using Interactable;
+using Hunter.Interactable;
 using Hunter.Character;
 
 namespace Hunter.AI
@@ -258,7 +258,7 @@ namespace Hunter.AI
             var idleValue = idle.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
             var wanderValue = wander.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
             var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat);
-            var retreatValue = retreat.CalculateRetreat(character.health, inCombat);
+            var retreatValue = retreat.CalculateRetreat(character.CurrentHealth, inCombat);
 
             #region Debug Logs
             //Debug.Log("Attack Value: " + attackValue);

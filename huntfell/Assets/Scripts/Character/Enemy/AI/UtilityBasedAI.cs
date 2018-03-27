@@ -17,16 +17,16 @@ namespace Hunter.AI
     /// </summary>
     public sealed class Attack : UtilityBasedAI
     {
-        private GameObject controller;
+        private GameObject aiGameObject;
 
-        public Attack(GameObject controller)
+        public Attack(GameObject aiGameObject)
         {
-            this.controller = controller;
+            this.aiGameObject = aiGameObject;
         }
 
         public override void Act()
         {
-            AttackAction(controller);
+            AttackAction(aiGameObject);
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace Hunter.AI
             return attackUrgeTotal;
         }
 
-        public void AttackAction(GameObject controller)
+        public void AttackAction(GameObject aiGameObject)
         {
-            //var aiComponentModule = controller.GetComponent<AIInputModule>();
+            //var aiComponentModule = aiGameObject.GetComponent<AIInputModule>();
             //aiComponentModule.GetComponent<IAttack>().Attack();
         }
     }
@@ -63,16 +63,16 @@ namespace Hunter.AI
     /// </summary>
     public sealed class MoveTo : UtilityBasedAI
     {
-        private GameObject controller;
+        private GameObject aiGameObject;
 
-        public MoveTo(GameObject controller)
+        public MoveTo(GameObject aiGameObject)
         {
-            this.controller = controller;
+            this.aiGameObject = aiGameObject;
         }
 
         public override void Act()
         {
-            MoveToAction(controller);
+            MoveToAction(aiGameObject);
         }
 
         /// <summary>
@@ -96,10 +96,10 @@ namespace Hunter.AI
             return moveToUrgeTotal;
         }
 
-        public void MoveToAction(GameObject controller)
+        public void MoveToAction(GameObject aiGameObject)
         {
-            var aiComponentModule = controller.GetComponent<AIInputModule>();
-            controller.GetComponent<IMoveable>().Move(aiComponentModule.Controller, aiComponentModule.MoveDirection, aiComponentModule.LookDirection, aiComponentModule.EnemyModel, aiComponentModule.Agent, aiComponentModule.Target);
+            var aiComponentModule = aiGameObject.GetComponent<AIInputModule>();
+            aiGameObject.GetComponent<IMoveable>().Move(aiComponentModule.Target);
         }
     }
 
@@ -108,16 +108,16 @@ namespace Hunter.AI
     /// </summary>
     public sealed class Retreat : UtilityBasedAI
     {
-        private GameObject controller;
+        private GameObject aiGameObject;
 
-        public Retreat(GameObject controller)
+        public Retreat(GameObject aiGameObject)
         {
-            this.controller = controller;
+            this.aiGameObject = aiGameObject;
         }
 
         public override void Act()
         {
-            RetreatAction(controller);
+            RetreatAction(aiGameObject);
         }
 
         /// <summary>
@@ -141,9 +141,9 @@ namespace Hunter.AI
             return retreatUrgeTotal;
         }
 
-        public void RetreatAction(GameObject controller)
+        public void RetreatAction(GameObject aiGameObject)
         {
-            //var aiComponentModule = controller.GetComponent<AIInputModule>();
+            //var aiComponentModule = aiGameObject.GetComponent<AIInputModule>();
         }
     }
 
@@ -152,16 +152,16 @@ namespace Hunter.AI
     /// </summary>
     public sealed class Idle : UtilityBasedAI
     {
-        private GameObject controller;
+        private GameObject aiGameObject;
 
-        public Idle(GameObject controller)
+        public Idle(GameObject aiGameObject)
         {
-            this.controller = controller;
+            this.aiGameObject = aiGameObject;
         }
 
         public override void Act()
         {
-            IdleAction(controller);
+            IdleAction(aiGameObject);
         }
 
         /// <summary>
@@ -187,9 +187,9 @@ namespace Hunter.AI
             return idleUrgeTotal;
         }
 
-        public void IdleAction(GameObject controller)
+        public void IdleAction(GameObject aiGameObject)
         {
-            var aiInputModule = controller.GetComponent<AIInputModule>();
+            var aiInputModule = aiGameObject.GetComponent<AIInputModule>();
             aiInputModule.PointTarget = aiInputModule.FindPointOnNavmesh();
         }
     }
@@ -199,16 +199,16 @@ namespace Hunter.AI
     /// </summary>
     public sealed class Wander : UtilityBasedAI
     {
-        private GameObject controller;
+        private GameObject aiGameObject;
 
-        public Wander(GameObject controller)
+        public Wander(GameObject aiGameObject)
         {
-            this.controller = controller;
+            this.aiGameObject = aiGameObject;
         }
 
         public override void Act()
         {
-            WanderAction(controller);
+            WanderAction(aiGameObject);
         }
 
         /// <summary>
@@ -234,10 +234,10 @@ namespace Hunter.AI
             return wanderUrgeTotal;
         }
 
-        public void WanderAction(GameObject controller)
+        public void WanderAction(GameObject aiGameObject)
         {
-            var aiInputModule = controller.GetComponent<AIInputModule>();
-            controller.GetComponent<IUtilityBasedAI>().Wander(aiInputModule.Controller, aiInputModule.PointTarget, aiInputModule.Agent);
+            var aiInputModule = aiGameObject.GetComponent<AIInputModule>();
+            aiGameObject.GetComponent<IUtilityBasedAI>().Wander(aiInputModule.PointTarget);
         }
     }
 }
