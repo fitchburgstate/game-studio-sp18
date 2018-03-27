@@ -1161,7 +1161,32 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+<<<<<<< HEAD:huntfell/Assets/Prefabs/Character/Player.prefab:huntfell/Assets/Prefabs/Character/Player.prefab
 --- !u!1 &1971597751379952
+=======
+--- !u!1 &1961680941423282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4899111706303818}
+  - component: {fileID: 114871887381183928}
+  - component: {fileID: 114855440633643794}
+  - component: {fileID: 136787786300364450}
+  - component: {fileID: 143639863186313080}
+  - component: {fileID: 195707474617528698}
+  - component: {fileID: 95765597404000086}
+  m_Layer: 0
+  m_Name: Player_Correct_Animation
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1963633417488280
+>>>>>>> development:huntfell/Assets/Prefabs/Character/Player_Correct_Animation.prefab:huntfell/Assets/Prefabs/Character/Player_Correct_Animation.prefab
 GameObject:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -2243,10 +2268,17 @@ Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
+<<<<<<< HEAD:huntfell/Assets/Prefabs/Character/Player.prefab:huntfell/Assets/Prefabs/Character/Player.prefab
   m_GameObject: {fileID: 1931082726198956}
   m_LocalRotation: {x: -0.09200287, y: -0.024080655, z: -0.23252654, w: 0.96792924}
   m_LocalPosition: {x: -0.16339688, y: -0.000000024223327, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+=======
+  m_GameObject: {fileID: 1986916449815684}
+  m_LocalRotation: {x: 0.69593185, y: 0.1252187, z: -0.69593066, w: 0.12521893}
+  m_LocalPosition: {x: -0.17393202, y: 0.09497322, z: 0.00091370393}
+  m_LocalScale: {x: 12.708646, y: 12.70865, z: 12.708647}
+>>>>>>> development:huntfell/Assets/Prefabs/Character/Player_Correct_Animation.prefab:huntfell/Assets/Prefabs/Character/Player_Correct_Animation.prefab
   m_Children: []
   m_Father: {fileID: 4429223448082644}
   m_RootOrder: 0
@@ -2807,6 +2839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0258c29db346274c8ca9eaf0312c76f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD:huntfell/Assets/Prefabs/Character/Player.prefab:huntfell/Assets/Prefabs/Character/Player.prefab
   displayName: Player 1
   health: 200
   meleeWeapon: {fileID: 114875686175448728}
@@ -2814,6 +2847,15 @@ MonoBehaviour:
   moveSpeed: 5
   rotationMaxSpeed: 12
   rotationSpeedCurve:
+=======
+  playerName: 
+  health: 100
+  melee: {fileID: 0}
+  rangeWeapon: {fileID: 0}
+  speed: 5
+  rotateChar: 500
+  rotateAnimation:
+>>>>>>> development:huntfell/Assets/Prefabs/Character/Player_Correct_Animation.prefab:huntfell/Assets/Prefabs/Character/Player_Correct_Animation.prefab
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2

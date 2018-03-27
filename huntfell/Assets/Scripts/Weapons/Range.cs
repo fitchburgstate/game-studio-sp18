@@ -118,9 +118,5 @@ namespace Hunter.Character
             }
         }
 
-        //void OnDrawGizmosSelected()
-        //{
-        //    Gizmos.DrawRay(ray.origin, ray.direction * weaponRange);
-        //}
     }
 }

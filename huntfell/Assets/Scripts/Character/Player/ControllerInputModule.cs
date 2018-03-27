@@ -9,7 +9,15 @@ public class ControllerInputModule : MonoBehaviour
 {
     //private Vector2 cameraPos;
     //private Vector3 worldCameraPos;
+
+    /// <summary>
+    /// Represents which direction the character should move in. Think of it as the input of the left stick.
+    /// </summary>
     private Vector3 moveDirection = Vector3.zero;
+
+    /// <summary>
+    /// Represents which direction the character should look in. Think of it as the input of the right stick.
+    /// </summary>
     private Vector3 lookDirection = Vector3.zero;
     private Vector3 animLookDirection = Vector3.zero;
 
