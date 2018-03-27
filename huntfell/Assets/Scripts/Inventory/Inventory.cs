@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Interactables
+namespace Interactable
 {
     public class Inventory : MonoBehaviour
     {
@@ -11,38 +11,29 @@ namespace Interactables
         [HideInInspector]
         public static Inventory instance;
 
-       // inventory lists for each type of inventroy item
-        [HideInInspector]
-        public List<InteractableInventoryItem> weapons = new List<InteractableInventoryItem>();
-        [HideInInspector]
-        public List<InteractableInventoryItem> elementMods = new List<InteractableInventoryItem>();
-        [HideInInspector]
-        public List<InteractableInventoryItem> journalEntries = new List<InteractableInventoryItem>();
-
         /// <summary>
-        /// adds object to list based of type of item
+        /// list of items modifiers 
         /// </summary>
-        /// <param name="interactable"></param>
+        [HideInInspector]
+        public List<Item> items = new List<Item>();
+        
+        /// <summary>
+        /// adds item to list if there is space
+        /// </summary>
+        /// <param name="item"></param>
         /// <returns></returns>
-        public bool AddItem(InteractableInventoryItem interactable) 
+        public bool AddItem(Item item) 
         {
-            interactable.transform.SetParent(transform);
-
-            if (interactable.item.itemType == ItemType.Weapons)
-            {
-                weapons.Add(interactable);
-            }
-            else if (interactable.item.itemType == ItemType.ElementalMods)
-            {
-                elementMods.Add(interactable);
-            }
-            else if (interactable.item.itemType == ItemType.JournalEntries)
-            {
-                journalEntries.Add(interactable);
-            }
+            items.Add(item);
             return true;
         }
-       
+
+        public bool RemoveItem(Item item)
+        {
+            items.Remove(item);
+            return true;
+        }
+
         private void Awake()
         {
             if (instance == null)

@@ -1,25 +1,16 @@
 ﻿using UnityEngine;
 
-namespace Interactables
+namespace Interactable
 {
-    public enum ItemType
-    {
-        Weapons,
-        ElementalMods,
-        JournalEntries
-    }
-
-    [CreateAssetMenu(menuName ="InventroyItem")]
+    [CreateAssetMenu(menuName = "Inventory/Item")]
     public class Item : ScriptableObject
     {
-        [Header("Type of Item")]
-        public ItemType itemType;
         [Header("Name of the item")]
         public string itemName;
-        [Header("Inventory item sprite")]
-        public Sprite icon;
         [Header("Description of item")]
         [TextArea]
         public string itemDescription;
+        [Header("Inventory item sprite")]
+        public Sprite icon; 
     }
 }

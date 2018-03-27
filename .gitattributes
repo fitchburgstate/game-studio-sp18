@@ -48,4 +48,4 @@
 # Scene, prefab and ScriptableObject files
 *.unity merge=unityyamlmerge lockable
 *.prefab merge=unityyamlmerge
-*.asset merge=unityyamlmerge
+*.asset filter=lfs diff=lfs merge=unityyamlmerge
