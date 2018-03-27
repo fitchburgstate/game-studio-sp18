@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Hunter.Elements;
 
 namespace Hunter.Character
 {
@@ -10,46 +11,38 @@ namespace Hunter.Character
         /// <summary>
         /// Element Type of the Enemy
         /// </summary>
-        public ElementType type;
+        public Element elementType;
 
         /// <summary>
         /// Options variable for Unity Inspector Dropdown
         /// </summary>
-        public OPTIONS elementType;
+        public ElementOptions inspectorElementType;
 
 
         /// <summary>
         /// Sets the element type of the weapon based upon the given options variable
         /// </summary>
         /// <param name="elementTypeOption">Option for the Element Type</param>
-        public void SetElementType(OPTIONS elementTypeOption)
+        public void SetElementType(ElementOptions elementTypeOption)
         {
             switch (elementTypeOption)
             {
-                case OPTIONS.Fire:
-                    type = new Elements.Fire();
+                case ElementOptions.Fire:
+                    elementType = new Fire();
                     break;
-                case OPTIONS.Ice:
-                    type = new Elements.Ice();
+                case ElementOptions.Ice:
+                    elementType = new Ice();
                     break;
-                case OPTIONS.Disease:
-                    type = new Elements.Disease();
+                case ElementOptions.Silver:
+                    elementType = new Silver();
                     break;
-                case OPTIONS.Silver:
-                    type = new Elements.Silver();
+                case ElementOptions.Lightning:
+                    elementType = new Lightning();
                     break;
-                case OPTIONS.Blood:
-                    type = new Elements.Blood();
+                case ElementOptions.Nature:
+                    elementType = new Nature();
                     break;
-                case OPTIONS.Lightning:
-                    type = new Elements.Lightning();
-                    break;
-                case OPTIONS.Mechanical:
-                    type = new Elements.Mechanical();
-                    break;
-                case OPTIONS.Stone:
-                    type = new Elements.Stone();
-                    break;
+
             }
         }
     }

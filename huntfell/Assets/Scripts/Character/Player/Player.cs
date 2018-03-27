@@ -8,7 +8,6 @@ namespace Hunter.Character
 {
     public sealed class Player : Character, IMoveable
     {
-        // ---------- SET THESE IN THE INSPECTOR ---------- \\
         [Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
         [Range(0, 20)]
         public float speed = 5f;
@@ -20,9 +19,6 @@ namespace Hunter.Character
         private float speedRamp;
         public AnimationCurve rotateAnimation;
 
-        public Animator anim;
-        // ------------------------------------------------ \\ 
-
         private void Start()
         {
             anim = GetComponent<Animator>();
@@ -32,6 +28,14 @@ namespace Hunter.Character
             }
 
             SetCurrentWeapon(melee);
+        }
+
+        private void Update()
+        {
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
 
         public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
@@ -60,9 +64,14 @@ namespace Hunter.Character
             controller.Move(moveDirection * Time.deltaTime);
         }
 
+        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
+        {
+            // This function should remain un-implemented.
+        }
+
         public void Dash(CharacterController controller)
         {
-            // This feature has not yet been implemented
+            // This feature has not yet been implemented.
         }
 
         public void Attack()
@@ -94,13 +103,10 @@ namespace Hunter.Character
                 mw.DisableHitbox();
             }
         }
-
-        // ----------- Animation Event Methods ----------- \\
+        
         public void GunFiring()
         {
-            range.Shoot();
+            range.ShootRangedWeapon();
         }
-
-        // -------------------------------------------------- \\
     }
 }
