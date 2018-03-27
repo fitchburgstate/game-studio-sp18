@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class AudioTestingInput : MonoBehaviour {
 	
-	[Header("Test Inputs (Player)")]
+	[Header("Test Inputs - Player")]
 	public KeyCode Footstep = KeyCode.F;
 	public KeyCode PlayerHit = KeyCode.H;
+	[Header("Test Inputs - Sword")]
 	public KeyCode PlayerSwordSwing = KeyCode.S;
+	[Header("Test Inputs - Luger")]
+	public KeyCode PlayerDrawLuger = KeyCode.D;
 	public KeyCode PlayerLugerShot = KeyCode.L;
-	[Header("Test Inputs (Mob)")]
+	[Header("Test Inputs - Mob")]
 	public KeyCode WolfAttack = KeyCode.W;
 	
 	void Update () {
@@ -21,9 +24,16 @@ public class AudioTestingInput : MonoBehaviour {
 		if(Input.GetKeyDown(PlayerHit)){
 			PlayPlayerHit();
 		}
+
+		/* Sword Events */
 		if(Input.GetKeyDown(PlayerSwordSwing)){
 			PlayPlayerSwordSwing();
 		}
+
+		/* Ranged Weapon Events */
+		if(Input.GetKeyDown(PlayerDrawLuger)){
+			PlayDrawLuger();
+		} 
 		if(Input.GetKeyDown(PlayerLugerShot)){
 			PlayLugerShot();
 		}
@@ -47,10 +57,17 @@ public class AudioTestingInput : MonoBehaviour {
 	void PlayPlayerHit(){
 		Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
 	}
+
+	/* Sword Events */
 	void PlayPlayerSwordSwing(){
 		Fabric.EventManager.Instance.PostEvent("Player Sword Swing", gameObject);
 	}
+
+	/* Ranged Weapon Events */
 	// Luger Shot
+	void PlayDrawLuger(){
+		Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject);
+	}
 	void PlayLugerShot(){
 		// Currently 1 shot pitch modulated, will fix later to be random container
 		Fabric.EventManager.Instance.PostEvent("Player Luger Shot", gameObject);
