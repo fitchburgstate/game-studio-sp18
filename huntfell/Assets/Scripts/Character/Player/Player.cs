@@ -8,105 +8,302 @@ namespace Hunter.Character
 {
     public sealed class Player : Character, IMoveable
     {
-        [Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
-        [Range(0, 20)]
-        public float speed = 5f;
+        [Header("Player Weapons")]
+        /// <summary>
+        /// Current Melee Weapon Equipped on the Player, to be set in the inspector
+        /// </summary>
+        [SerializeField]
+        private Melee meleeWeapon;
 
-        [Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
-        [Range(0, 2000)]
-        public float rotateChar = 12f;
+        /// <summary>
+        /// Current Ranged Weapon Equipped on the Player, to be set in the inspector
+        /// </summary>
+        [SerializeField]
+        private Range rangedWeapon;
 
+        [Header("Movement and Rotation Options")]
+        [Range(1, 20), Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
+        public float moveSpeed = 5f;
+        [Range(1, 2000), Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
+        public float rotationMaxSpeed = 12f;
+        public AnimationCurve rotationSpeedCurve; 
+
+        [Header("Dash Options")]
+        public float dashMaxDistance = 3;
+        public float dashCoolDown = 1;
+        public float dashMaxSpeed = 3;
+        public AnimationCurve dashSpeedCurve;
+        public float dashMaxHeight = 2;
+        public AnimationCurve dashHeightCurve;
+        public Transform eyeline;
+
+        private Animator anim;
+        private CharacterController characterController;
+        private NavMeshAgent agent;
+
+        private bool canMove = true;
         private float speedRamp;
-        public AnimationCurve rotateAnimation;
+        private IEnumerator attackCR;
+        private IEnumerator dashCR;
 
+
+        #region Unity Messages
         private void Start()
         {
             anim = GetComponent<Animator>();
-            if (range != null)
+            agent = GetComponent<NavMeshAgent>();
+            characterController = GetComponent<CharacterController>();
+
+            if (rangedWeapon != null)
             {
-                range.gameObject.SetActive(false);
+                rangedWeapon.gameObject.SetActive(false);
+            }
+            //Always start with your melee weapon
+            SetCurrentWeapon(meleeWeapon);
+        }
+        #endregion
+
+        #region Player Movement
+        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        {
+            //We do not want the player to be able to move during the dash
+            if(!canMove) {
+                return;
             }
 
-            SetCurrentWeapon(melee);
-        }
+            anim.SetFloat("dirX", moveDirection.x);
+            anim.SetFloat("dirY", moveDirection.z);
+            anim.SetFloat("lookX", animLookDirection.x);
+            anim.SetFloat("lookY", animLookDirection.z);
+            anim.SetBool("moving", moveDirection.magnitude != 0);
 
-        private void Update()
-        {
-            if (health <= 0)
-            {
-                Destroy(gameObject);
-            }
-        }
-
-        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 finalDirection, GameObject playerRoot, NavMeshAgent agent)
-        {
-            anim.SetFloat("dirY", Mathf.Abs(moveDirection.magnitude), 0, 1);
+            var characterRoot = RotationTransform;
 
             moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= speed;
+            moveDirection *= moveSpeed;
 
-            agent.destination = playerRoot.transform.position;
+            agent.destination = characterRoot.position;
             agent.updateRotation = false;
 
-            if (moveDirection.magnitude != 0 || finalDirection.magnitude != 0)
+            if (moveDirection.magnitude != 0 || lookDirection.magnitude != 0)
             {
-                var targetRotation = new Vector3(playerRoot.transform.localEulerAngles.x, Mathf.Atan2(finalDirection.x, finalDirection.z) * Mathf.Rad2Deg, playerRoot.transform.localEulerAngles.z);
+                var targetRotation = new Vector3(characterRoot.localEulerAngles.x, Mathf.Atan2(lookDirection.x, lookDirection.z) * Mathf.Rad2Deg, characterRoot.localEulerAngles.z);
 
                 speedRamp = Mathf.Clamp(speedRamp + Time.deltaTime, 0, 1);
-                var changeChar = rotateAnimation.Evaluate(speedRamp) * rotateChar;
+                var changeChar = rotationSpeedCurve.Evaluate(speedRamp) * rotationMaxSpeed;
 
-                playerRoot.transform.localRotation = Quaternion.RotateTowards(playerRoot.transform.localRotation, Quaternion.Euler(targetRotation), changeChar);
+                characterRoot.localRotation = Quaternion.RotateTowards(characterRoot.localRotation, Quaternion.Euler(targetRotation), changeChar);
             }
             else
             {
                 speedRamp = 0;
             }
-            controller.Move(moveDirection * Time.deltaTime);
-        }
 
-        public void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject characterModel, NavMeshAgent agent, Transform target)
+            characterController.Move(moveDirection * Time.deltaTime);
+        }
+        #endregion
+
+        #region Player Dash
+        /// <summary>
+        /// Dashes the Player in the direction they are facing
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="moveDirection"></param>
+        /// <param name="lookDirection"></param>
+        /// <param name="playerRoot"></param>
+        /// <param name="agent"></param>
+        public void Dash()
         {
-            // This function should remain un-implemented.
+            if (dashCR != null) {
+                Debug.LogWarning("Dash is still on cooldown.");
+                return;
+            }
+            dashCR = PlayDashAnimation();
+            //STARTS DASH COROUTINE
+            StartCoroutine(dashCR);
         }
 
-        public void Dash(CharacterController controller)
+        public void DashAnimationEvent ()
         {
-            // This feature has not yet been implemented.
+            if (dashCR == null) {
+                Debug.LogError("The Dash Coroutine reference is null despite the animation event being called. This reference should have been set when you gave the dash input.");
+                return;
+            }
+            //RESUMES DASH COROUTINE
+            StartCoroutine(dashCR);
         }
 
+        /// <summary>
+        /// Lerps the Player from their current postion to the dodge target
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        private IEnumerator PlayDashAnimation ()
+        {
+            //No moving during the dash movement
+            canMove = false;
+            var startPosition = eyeline.position;
+            Debug.Log(startPosition);
+            var characterForward = RotationTransform.forward;
+            var dashDirectionTarget = new Vector3();
+            
+            //Raycast to determine target point for dodge destination on the X and Z axis
+            var hit = new RaycastHit();
+            var ray = new Ray(startPosition, characterForward);
+            if (Physics.Raycast(ray, out hit, dashMaxDistance))
+            {
+                dashDirectionTarget = hit.point;
+            }
+            else
+            {
+                dashDirectionTarget = ray.GetPoint(dashMaxDistance);
+            }
+            Debug.DrawLine(startPosition, dashDirectionTarget, Color.red, 5);
+
+            //Raycast to determine target point for dodge destination on the Y axis
+            hit = new RaycastHit();
+            ray = new Ray(dashDirectionTarget, Vector3.down);
+            //Setting this to the start position because if we RayCast down and dont get a hit, that means you casted off the map. If you do we cancel the dash.
+            var floorPointFromDashTarget = startPosition;
+            if(Physics.Raycast(ray, out hit, dashMaxDistance))
+            {
+                floorPointFromDashTarget = hit.point;
+                Debug.DrawLine(dashDirectionTarget, floorPointFromDashTarget, Color.blue, 5);
+            }
+            else
+            {
+                Debug.LogWarning("You tried to Dash into the void. Canceling the dash.");
+                canMove = true;
+                dashCR = null;
+                yield break;
+            }
+
+            var closestNavMeshPointToTarget = GetClosestPointOnNavMesh(floorPointFromDashTarget);
+            var dashTarget = closestNavMeshPointToTarget;
+            //var dashTarget = new Vector3(closestNavMeshPointToTarget.x, closestNavMeshPointToTarget.y, closestNavMeshPointToTarget.z);
+
+            anim.SetTrigger("DodgeRoll");
+
+            //PAUSE HERE FOR ANIMATION EVENT
+            Debug.Log("Pausing Dash Coroutine to wait for Animation Event...");
+            StopCoroutine(dashCR);
+            yield return null;
+
+            //COROUTINE RESUMES HERE
+            Debug.Log("Animation Event has resumed the Coroutine.");
+
+            var dashDistanceCheckMargin = 0.09f;
+            float dashTime = 0;
+
+            //Turn off the normal means of moving / constraining the player since we are doing that ourselves
+            characterController.enabled = false;
+            agent.enabled = false;
+
+            //TODO: Make it so the player properly lerps to the position using the Animation Curves
+            //This is where we actually move the player
+            while (Vector3.Distance(transform.position, dashTarget) > dashDistanceCheckMargin)
+            {
+                dashTime += dashMaxSpeed * Time.deltaTime;
+                var dashAmount = dashSpeedCurve.Evaluate(dashTime);
+                transform.position = Vector3.Lerp(transform.position, dashTarget, dashAmount);
+                yield return null;
+            }
+            characterController.enabled = true;
+            agent.enabled = true;
+
+            //Let the player move again after they reached their destination
+            yield return null;
+            canMove = true;
+
+            //Dont want players to be able to spam dash, so we have a cooldown which resets the Coroutine reference after (If that reference isn't null, that means we're still dashing)
+            yield return new WaitForSeconds(dashCoolDown);
+            dashCR = null;
+        }
+        #endregion
+
+        #region Player Combat
         public void Attack()
         {
-            if (CurrentMeleeWeapon)
+            if(attackCR != null) { return; }
+            attackCR = PlayAttackAnimation();
+            StartCoroutine(attackCR);
+        }
+
+        public void WeaponAnimationEvent ()
+        {
+            CurrentWeapon.StartAttackFromAnimationEvent();
+        }
+
+        private IEnumerator PlayAttackAnimation ()
+        {
+            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+            if (CurrentWeapon is Melee)
             {
                 anim.SetTrigger("melee");
             }
-            else if (CurrentRangeWeapon)
+            else if (CurrentWeapon is Range)
             {
                 anim.SetTrigger("ranged");
             }
+            yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
+            attackCR = null;
         }
 
-        public void EnableMeleeHitbox()
+
+        #endregion
+
+        #region Helper Functions
+        public void SwitchWeapon ()
         {
-            var mw = CurrentMeleeWeapon;
-            if (mw != null)
+            if (CurrentWeapon is Melee)
             {
-                mw.EnableHitbox();
+                meleeWeapon.gameObject.SetActive(false);
+                rangedWeapon.gameObject.SetActive(true);
+                SetCurrentWeapon(rangedWeapon);
+            }
+            else if (CurrentWeapon is Range)
+            {
+                rangedWeapon.gameObject.SetActive(false);
+                meleeWeapon.gameObject.SetActive(true);
+                SetCurrentWeapon(meleeWeapon);
             }
         }
 
-        public void DisableMeleeHitbox()
+        /// <summary>
+        /// Determines if the point the player wants to dash to is on the navmesh
+        /// if not the target point is changed to the point they can dash to
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="characterRoot"></param>
+        /// <returns></returns>
+        private Vector3 GetClosestPointOnNavMesh(Vector3 target)
         {
-            var mw = CurrentMeleeWeapon;
-            if (mw != null)
+            var hit = new NavMeshHit();
+            //This gives us a sample radius for the NavMesh check relative to our NavMesh agent size, so given either scenerio where we are passed a floor point or the character's position, we should be able to find a point on the NavMesh
+            var sampleRadius = agent.height + agent.baseOffset;
+
+            if (NavMesh.SamplePosition(target, out hit, sampleRadius, NavMesh.AllAreas))
             {
-                mw.DisableHitbox();
+                target = hit.position;
+                Debug.Log("Hit Position of NavMesh Sample from RayCast: " + target);
             }
+            else if(NavMesh.SamplePosition(transform.position, out hit, sampleRadius, NavMesh.AllAreas))
+            {
+                target = hit.position;
+                Debug.LogWarning("Could not find a NavMesh point with the given target. Falling back to the character's current position. Hit Position of NavMesh Sample from current position: " + target);
+            }
+            else
+            {
+                target = transform.position;
+                Debug.LogError("Could not find a closest point on the NavMesh from either the RayCast Hit Position or the character's current location. Are you sure the character is on the NavMesh?");
+            }
+            return target;
         }
-        
-        public void GunFiring()
+
+        private float SignedAngle(Vector3 a, Vector3 b)
         {
-            range.ShootRangedWeapon();
+            return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
         }
+        #endregion
     }
 }

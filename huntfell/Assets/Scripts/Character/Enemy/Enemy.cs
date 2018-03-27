@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Hunter.Elements;
 
+
 namespace Hunter.Character
 {
     public abstract class Enemy : Character

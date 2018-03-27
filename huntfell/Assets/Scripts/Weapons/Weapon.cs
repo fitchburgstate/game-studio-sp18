@@ -12,22 +12,22 @@ namespace Hunter.Character
         /// <summary>
         /// Attack Speed of the Weapon.
         /// </summary>
-        public int attackSpeed;
+        public float attackSpeed = 1;
 
         /// <summary>
         /// Recovery Speed of the Weapon a.k.a how fast before you can attack again.
         /// </summary>
-        public int recoverySpeed;
+        public float recoverySpeed = 0.5f;
 
         /// <summary>
         /// Base Damage number of the weapon.
         /// </summary>
-        public int baseDamage;
+        public int baseDamage = 10;
 
         /// <summary>
         /// Element type of the weapon.
         /// </summary>
-        public Element elementType;
+        public Element elementType = null;
 
         /// <summary>
         /// Options variable for Unity Inspector Dropdown.
@@ -37,7 +37,7 @@ namespace Hunter.Character
         /// <summary>
         /// Critical Percentage Given to the Weapon.
         /// </summary>
-        public int critPercent;
+        public int critPercent = 10;
 
         [HideInInspector]
         public Character characterHoldingWeapon;
@@ -74,6 +74,11 @@ namespace Hunter.Character
             }
         }
 
+        public virtual void StartAttackFromAnimationEvent ()
+        {
+
+        }
+
         protected virtual int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var critMult = 1;
@@ -83,7 +88,7 @@ namespace Hunter.Character
             {
                 Type weaponType = weaponElement.GetType();
                 Type enemyType = enemyElementType.GetType();
-                Type enemyWeaknessType = enemyElementType.weakness.GetType();
+                Type enemyWeaknessType = enemyElementType.Weakness;
 
                 if (weaponType.Equals(enemyType))
                 {

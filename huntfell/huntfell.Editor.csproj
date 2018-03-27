@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3E87F8AB-F2E3-4AFF-E3A5-F92686907DC7}</ProjectGuid>
+    <ProjectGuid>{D13F6E10-EB9C-AF54-2B11-0718A3BE8761}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -339,17 +339,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="paranormal-hunter.Plugins.csproj">
-      <Project>{473AC588-1F5D-B2C7-8D4C-D28C6E7BF37B}</Project>
-      <Name>paranormal-hunter.Plugins</Name>
+    <ProjectReference Include="huntfell.Plugins.csproj">
+      <Project>{D7771C63-3859-8EE7-4924-4F76BC83E1BC}</Project>
+      <Name>huntfell.Plugins</Name>
     </ProjectReference>
-    <ProjectReference Include="paranormal-hunter.csproj">
-      <Project>{BC172D88-B375-7620-D641-3F409BF88ABA}</Project>
-      <Name>paranormal-hunter</Name>
+    <ProjectReference Include="huntfell.csproj">
+      <Project>{0F621A63-F44E-04DD-05D6-446F20FF3A67}</Project>
+      <Name>huntfell</Name>
     </ProjectReference>
-    <ProjectReference Include="paranormal-hunter.Editor.Plugins.csproj">
-      <Project>{9A64BE72-8799-9097-7772-919CCB8C8924}</Project>
-      <Name>paranormal-hunter.Editor.Plugins</Name>
+    <ProjectReference Include="huntfell.Editor.Plugins.csproj">
+      <Project>{9A245538-C61C-A50B-FF2A-AA4F2BEBEA6F}</Project>
+      <Name>huntfell.Editor.Plugins</Name>
     </ProjectReference>
     <ProjectReference Include="com.unity.postprocessing.Editor.csproj">
       <Project>{8C3967EF-EA5C-CD2A-F191-ADB2A5FEC7D2}</Project>
