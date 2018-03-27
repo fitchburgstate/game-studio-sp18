@@ -26,6 +26,7 @@ AudioMixerController:
     - 46b27360a4e3b4c478cdb48d8057e635
     - 25f264cd31822a6469ed4056779f08f5
     - 2911f543d66f51c4aa43618b75ecb572
+    - 14cd39190d42b9440bdf1e54fd2b54d8
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -194,10 +195,28 @@ AudioMixerGroupController:
   m_GroupID: e8c768bea4073764a975afb3d1ef8902
   m_Children:
   - {fileID: 243026601336898964}
+  - {fileID: 243586583022019972}
   m_Volume: b68551b28061c4143a30f57aaab7afe5
   m_Pitch: d5666c539668f034893dad1e1c3b4a66
   m_Effects:
   - {fileID: 244847219404107264}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!243 &243586583022019972
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Weapons
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 14cd39190d42b9440bdf1e54fd2b54d8
+  m_Children: []
+  m_Volume: 0b598ba987ecb264f8c8074fb68448e7
+  m_Pitch: 26bfb7ed759649e49ba902c1ceebf938
+  m_Effects:
+  - {fileID: 244289721124121394}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
@@ -241,6 +260,19 @@ AudioMixerEffectController:
   m_EffectID: c81c1132a2d5624468b3f16f849dc60c
   m_EffectName: Attenuation
   m_MixLevel: 04b0deaa91d80ba40afe287dcf1bc894
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!244 &244289721124121394
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_EffectID: 727f68454e742354aaa866237ee9cf83
+  m_EffectName: Attenuation
+  m_MixLevel: a61cd27ea6b1dea41a763981cc2e2a26
   m_Parameters: []
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
