@@ -9,12 +9,17 @@ namespace Hunter.Character
     {
         //public float windUpSpeed;
         public float hitBoxFrames = 5;
+        public TrailRenderer tipTrail;
         private Collider meleeHitBox;
 
         protected new void Start ()
         {
             base.Start();
             meleeHitBox = GetComponent<BoxCollider>();
+            if (tipTrail != null)
+            {
+                tipTrail.enabled = false;
+            }
             DisableHitbox();
         }
 
@@ -48,12 +53,17 @@ namespace Hunter.Character
 
         private IEnumerator OpenAndCloseHitBox ()
         {
+            if (tipTrail != null) { tipTrail.enabled = true; }
             EnableHitbox();
             for (int i = 0; i < hitBoxFrames; i++)
             {
                 yield return new WaitForEndOfFrame();
             }
             DisableHitbox();
+            if (tipTrail != null) {
+                yield return new WaitForSeconds(0.5f);
+                tipTrail.enabled = false;
+            }
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace Hunter.Character
         [Header("Movement and Rotation Options")]
         [Range(1, 20), Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
         public float moveSpeed = 5f;
-        [Range(1, 100), Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
+        [Range(1, 2000), Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
         public float rotationMaxSpeed = 12f;
         public AnimationCurve rotationSpeedCurve; 
 
@@ -35,6 +35,7 @@ namespace Hunter.Character
         public AnimationCurve dashSpeedCurve;
         public float dashMaxHeight = 2;
         public AnimationCurve dashHeightCurve;
+        public Transform eyeline;
 
         private Animator anim;
         private CharacterController characterController;
@@ -63,7 +64,7 @@ namespace Hunter.Character
         #endregion
 
         #region Player Movement
-        public void Move(Vector3 moveDirection, Vector3 lookDirection)
+        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
         {
             //We do not want the player to be able to move during the dash
             if(!canMove) {
@@ -72,8 +73,9 @@ namespace Hunter.Character
 
             anim.SetFloat("dirX", moveDirection.x);
             anim.SetFloat("dirY", moveDirection.z);
-            anim.SetFloat("lookX", lookDirection.x);
-            anim.SetFloat("lookY", lookDirection.z);
+            anim.SetFloat("lookX", animLookDirection.x);
+            anim.SetFloat("lookY", animLookDirection.z);
+            anim.SetBool("moving", moveDirection.magnitude != 0);
 
             var characterRoot = RotationTransform;
 
@@ -140,7 +142,8 @@ namespace Hunter.Character
         {
             //No moving during the dash movement
             canMove = false;
-            var startPosition = transform.position;
+            var startPosition = eyeline.position;
+            Debug.Log(startPosition);
             var characterForward = RotationTransform.forward;
             var dashDirectionTarget = new Vector3();
             

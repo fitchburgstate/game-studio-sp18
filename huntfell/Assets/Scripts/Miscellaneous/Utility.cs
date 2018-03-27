@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 public interface IMoveable
 {
-    void Move(Vector3 moveDirection, Vector3 lookDirection);
+    void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection);
 
     void Dash();
 

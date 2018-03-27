@@ -11,6 +11,7 @@ public class ControllerInputModule : MonoBehaviour
     //private Vector3 worldCameraPos;
     private Vector3 moveDirection = Vector3.zero;
     private Vector3 lookDirection = Vector3.zero;
+    private Vector3 animLookDirection = Vector3.zero;
 
     private DeviceManager myDeviceManager;
     private Player player;
@@ -51,7 +52,7 @@ public class ControllerInputModule : MonoBehaviour
         else
         {
             lookDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
-
+            animLookDirection = lookDirection;
             // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
             if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
             {
@@ -59,7 +60,7 @@ public class ControllerInputModule : MonoBehaviour
             }
 
         }
-        moveCharacter.Move(moveDirection, lookDirection);
+        moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
 
         var device = myDeviceManager.Device;
         if (device == null) {
