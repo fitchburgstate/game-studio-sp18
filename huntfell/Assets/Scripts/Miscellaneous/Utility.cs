@@ -7,18 +7,27 @@ using UnityEngine.AI;
 
 public interface IMoveable
 {
-    void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject playerRoot, NavMeshAgent agent);
+    void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject gameObjectRoot, NavMeshAgent agent);
 
     void Dash(CharacterController controller);
 
 }
 
-//public interface IDamageable<T, V>
-//{
-//    void TakeDamage(T healthValue, V amount);
+public interface IAttack
+{
+    void Attack();
 
-//    void DealDamage(T targetHealthValue, V amount);
-//}
+    void EnableMeleeHitbox();
+
+    void DisableMeleeHitbox();
+
+    void GunFiring();
+}
+
+public interface IDamageable
+{
+    void TakeDamage(int damage);
+}
 
 //public interface IHealth<T>
 //{

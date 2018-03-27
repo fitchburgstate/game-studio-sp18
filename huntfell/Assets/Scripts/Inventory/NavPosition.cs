@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-namespace Interactable
+namespace Interactables
 {
     public class NavPosition 
     {
