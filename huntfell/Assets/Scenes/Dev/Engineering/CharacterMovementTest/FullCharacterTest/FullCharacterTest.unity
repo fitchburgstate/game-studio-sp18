@@ -330,6 +330,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8bf6b6050f8e7f442a9c0ba3a197b8a8, type: 2}
   m_IsPrefabParent: 0
+--- !u!4 &364515407 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4219033539967030, guid: 2935a7875532d5e4fafab36180e13ec9,
+    type: 2}
+  m_PrefabInternal: {fileID: 932948865}
 --- !u!1 &536889816
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,6 +652,11 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 664251432}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!96 &775438425 stripped
+TrailRenderer:
+  m_PrefabParentObject: {fileID: 96943457896997660, guid: 2935a7875532d5e4fafab36180e13ec9,
+    type: 2}
+  m_PrefabInternal: {fileID: 932948865}
 --- !u!1001 &932948865
 Prefab:
   m_ObjectHideFlags: 0
@@ -654,6 +664,21 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashSpeedCurve.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashHeightCurve.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: rotationSpeedCurve.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4512040980706586, guid: 2935a7875532d5e4fafab36180e13ec9, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -701,6 +726,121 @@ Prefab:
     - target: {fileID: 4177859657162890, guid: 2935a7875532d5e4fafab36180e13ec9, type: 2}
       propertyPath: m_LocalRotation.w
       value: 0.12521893
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: health
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: rotationSpeedCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: rotationSpeedCurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: rotationSpeedCurve.m_Curve.Array.data[1].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: rotationSpeedCurve.m_Curve.Array.data[1].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: rotationSpeedCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashSpeedCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashSpeedCurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashSpeedCurve.m_Curve.Array.data[1].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashSpeedCurve.m_Curve.Array.data[1].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashSpeedCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashHeightCurve.m_Curve.Array.data[0].inSlope
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashHeightCurve.m_Curve.Array.data[0].outSlope
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashHeightCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashHeightCurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashHeightCurve.m_Curve.Array.data[1].inSlope
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashHeightCurve.m_Curve.Array.data[1].outSlope
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: dashHeightCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: eyeline
+      value: 
+      objectReference: {fileID: 364515407}
+    - target: {fileID: 114549486219218100, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: meleeWeapon
+      value: 
+      objectReference: {fileID: 2112208087}
+    - target: {fileID: 114875686175448728, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: tipTrail
+      value: 
+      objectReference: {fileID: 775438425}
+    - target: {fileID: 96943457896997660, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 96943457896997660, guid: 2935a7875532d5e4fafab36180e13ec9,
+        type: 2}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2935a7875532d5e4fafab36180e13ec9, type: 2}
@@ -1424,3 +1564,9 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1875073776}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2112208087 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114875686175448728, guid: 2935a7875532d5e4fafab36180e13ec9,
+    type: 2}
+  m_PrefabInternal: {fileID: 932948865}
+  m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
