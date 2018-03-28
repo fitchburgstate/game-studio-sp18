@@ -5,14 +5,17 @@ using UnityEngine;
 public class AudioTestingInput : MonoBehaviour {
 	[Header("Test Inputs - Music")]
 	public KeyCode MusicStop = KeyCode.Q;
+	
 	[Header("Test Inputs - Player")]
 	public KeyCode Footstep = KeyCode.F;
 	public KeyCode PlayerHit = KeyCode.H;
 	[Header("Test Inputs - Sword")]
 	public KeyCode PlayerSwordSwing = KeyCode.S;
+	public KeyCode PlayerSwordHit = KeyCode.A;
 	[Header("Test Inputs - Luger")]
 	public KeyCode PlayerDrawLuger = KeyCode.D;
 	public KeyCode PlayerLugerShot = KeyCode.L;
+	
 	[Header("Test Inputs - Mob")]
 	public KeyCode WolfAttack = KeyCode.W;
 
@@ -44,6 +47,13 @@ public class AudioTestingInput : MonoBehaviour {
 		/* Sword Events */
 		if(Input.GetKeyDown(PlayerSwordSwing)){
 			PlayPlayerSwordSwing();
+		}
+		if(Input.GetKeyDown(PlayerSwordHit)){
+			PlayPlayerSwordHit();
+		}
+		if(Input.GetKeyDown(PlayerSwordHit) && Input.GetKeyDown(KeyCode.LeftShift)){
+			PlayPlayerSwordSwing();
+			PlayPlayerSwordHit();
 		}
 
 		/* Ranged Weapon Events */
@@ -78,6 +88,9 @@ public class AudioTestingInput : MonoBehaviour {
 	/* Sword Events */
 	void PlayPlayerSwordSwing(){
 		Fabric.EventManager.Instance.PostEvent("Player Sword Swing", gameObject);
+	}
+	void PlayPlayerSwordHit(){
+		Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
 	}
 
 	/* Ranged Weapon Events */

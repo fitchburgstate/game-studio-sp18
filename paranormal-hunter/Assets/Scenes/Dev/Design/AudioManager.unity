@@ -168,6 +168,82 @@ MonoBehaviour:
   PlayerDrawLuger: 100
   PlayerLugerShot: 108
   WolfAttack: 119
+--- !u!1 &399554896 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1213208121539962, guid: 1a1172238f59399459e34d9848caae3a,
+    type: 2}
+  m_PrefabInternal: {fileID: 1947561743}
+--- !u!114 &399554897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 399554896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1137554331, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventName: Player Sword Hit
+  _eventID: 0
+  _overrideEventTriggerAction: 0
+  _overrideParameters:
+    _overrideIncomingEventAction: 0
+    _incomingEventAction: 0
+    _overrideEventAction: 0
+    _type: 0
+    _floatParameter: 1
+    _stringParameter: 
+    _switchPresetData:
+      _sourcePreset: 
+      _targetPreset: 
+    _dspParameterData:
+      _dspType: 0
+      _parameter: 
+      _value: 0
+      _time: 0
+      _curve: 0.5
+    _transitionToSnapshotData:
+      _snapshot: 
+      _timeToReach: 0
+--- !u!1 &829394417 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1279193261447494, guid: 1a1172238f59399459e34d9848caae3a,
+    type: 2}
+  m_PrefabInternal: {fileID: 1947561743}
+--- !u!114 &829394418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 829394417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1137554331, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventName: Player Sword Swing
+  _eventID: 0
+  _overrideEventTriggerAction: 0
+  _overrideParameters:
+    _overrideIncomingEventAction: 0
+    _incomingEventAction: 0
+    _overrideEventAction: 0
+    _type: 0
+    _floatParameter: 1
+    _stringParameter: 
+    _switchPresetData:
+      _sourcePreset: 
+      _targetPreset: 
+    _dspParameterData:
+      _dspType: 0
+      _parameter: 
+      _value: 0
+      _time: 0
+      _curve: 0.5
+    _transitionToSnapshotData:
+      _snapshot: 
+      _timeToReach: 0
 --- !u!1001 &1947561743
 Prefab:
   m_ObjectHideFlags: 0
@@ -175,6 +251,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _eventList.Array.size
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 4648832767578386, guid: 1a1172238f59399459e34d9848caae3a, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -206,6 +287,41 @@ Prefab:
     - target: {fileID: 4648832767578386, guid: 1a1172238f59399459e34d9848caae3a, type: 2}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114022710503301568, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _overrideParentVolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114022710503301568, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _volume
+      value: 0.56234133
+      objectReference: {fileID: 0}
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _eventList.Array.data[7]
+      value: Player Sword Hit
+      objectReference: {fileID: 0}
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _eventList.Array.data[8]
+      value: Player Sword Swing
+      objectReference: {fileID: 0}
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _eventList.Array.data[9]
+      value: Start Background Music
+      objectReference: {fileID: 0}
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _eventList.Array.data[10]
+      value: Start House Ambience
+      objectReference: {fileID: 0}
+    - target: {fileID: 114755701936535126, guid: 1a1172238f59399459e34d9848caae3a,
+        type: 2}
+      propertyPath: _eventList.Array.data[11]
+      value: Wolf Attack
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1a1172238f59399459e34d9848caae3a, type: 2}

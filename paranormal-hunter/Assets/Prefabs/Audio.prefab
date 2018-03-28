@@ -276,6 +276,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4424081333071472}
   - component: {fileID: 114294593121058176}
+  - component: {fileID: 114477640018522526}
   m_Layer: 0
   m_Name: Melee ATTACK [Random]
   m_TagString: Untagged
@@ -405,6 +406,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4875175549198600}
   - component: {fileID: 114022710503301568}
+  - component: {fileID: 114962246530207178}
   m_Layer: 0
   m_Name: Melee WHOOSH [Random]
   m_TagString: Untagged
@@ -2971,8 +2973,8 @@ MonoBehaviour:
   _maxInstances: 1
   _stealingBehaviour: 0
   _minimumPlaybackInterval: 0
-  _overrideParentVolume: 0
-  _volume: 1
+  _overrideParentVolume: 1
+  _volume: 0.56234133
   _volumeRandomization: 0
   _mute: 0
   _overrideParentPitch: 0
@@ -8391,6 +8393,39 @@ MonoBehaviour:
   _syncRegionsWithTempo: 0
   _audioClipTempo: 120
   _regions: []
+--- !u!114 &114477640018522526
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1213208121539962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1137554331, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventName: Player Sword Hit
+  _eventID: 0
+  _overrideEventTriggerAction: 0
+  _overrideParameters:
+    _overrideIncomingEventAction: 0
+    _incomingEventAction: 0
+    _overrideEventAction: 0
+    _type: 0
+    _floatParameter: 1
+    _stringParameter: 
+    _switchPresetData:
+      _sourcePreset: 
+      _targetPreset: 
+    _dspParameterData:
+      _dspType: 0
+      _parameter: 
+      _value: 0
+      _time: 0
+      _curve: 0.5
+    _transitionToSnapshotData:
+      _snapshot: 
+      _timeToReach: 0
 --- !u!114 &114480582360196286
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10882,6 +10917,7 @@ MonoBehaviour:
   - Player Draw Luger
   - Player Hit
   - Player Luger Shot
+  - Player Sword Hit
   - Player Sword Swing
   - Start Background Music
   - Start House Ambience
@@ -13408,6 +13444,39 @@ MonoBehaviour:
   _syncRegionsWithTempo: 0
   _audioClipTempo: 120
   _regions: []
+--- !u!114 &114962246530207178
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1279193261447494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1137554331, guid: 8fbbb066689c25147bc9215ea62dbd30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventName: Player Sword Swing
+  _eventID: 0
+  _overrideEventTriggerAction: 0
+  _overrideParameters:
+    _overrideIncomingEventAction: 0
+    _incomingEventAction: 0
+    _overrideEventAction: 0
+    _type: 0
+    _floatParameter: 1
+    _stringParameter: 
+    _switchPresetData:
+      _sourcePreset: 
+      _targetPreset: 
+    _dspParameterData:
+      _dspType: 0
+      _parameter: 
+      _value: 0
+      _time: 0
+      _curve: 0.5
+    _transitionToSnapshotData:
+      _snapshot: 
+      _timeToReach: 0
 --- !u!114 &114965647985971554
 MonoBehaviour:
   m_ObjectHideFlags: 1
