@@ -9,67 +9,84 @@ public class ControllerInputModule : MonoBehaviour
 {
     //private Vector2 cameraPos;
     //private Vector3 worldCameraPos;
-    private Vector3 moveDirection = Vector3.zero;
-    private Vector3 lookDirection = Vector3.zero;
 
-    private GameObject playerRoot;
-    private Camera mainCamera;
-    private NavMeshAgent agent;
+    /// <summary>
+    /// Represents which direction the character should move in. Think of it as the input of the left stick.
+    /// </summary>
+    private Vector3 moveDirection = Vector3.zero;
+
+    /// <summary>
+    /// Represents which direction the character should look in. Think of it as the input of the right stick.
+    /// </summary>
+    private Vector3 lookDirection = Vector3.zero;
+    private Vector3 animLookDirection = Vector3.zero;
 
     private DeviceManager myDeviceManager;
     private Player player;
+    private IMoveable moveCharacter;
 
     private void Start()
     {
-        playerRoot = gameObject.transform.GetChild(0).gameObject; // This will find the player-root gameobject, which means that the only child of this gameobject should be player-root
-
-        mainCamera = GameObject.FindObjectOfType<Camera>();
+        var mainCamera = Camera.main;
         transform.forward = mainCamera.transform.forward;
-        agent = GetComponent<NavMeshAgent>();
-
         myDeviceManager = mainCamera.GetComponent<DeviceManager>();
+
         player = GetComponent<Player>();
+        moveCharacter = GetComponent<IMoveable>();
     }
 
     private void Update()
     {
-        var moveCharacter = GetComponent<IMoveable>();
-        var characterController = GetComponent<CharacterController>();
-        var finalDirection = Vector3.zero;
-
         moveDirection = new Vector3(myDeviceManager.HorizontalInput, 0, myDeviceManager.VerticalInput);
 
         if (!myDeviceManager.isController)
         {
-            //cameraPos.x = Input.mousePosition.x;
-            //cameraPos.y = Input.mousePosition.y;
-            ////worldCameraPos = mainCamera.ScreenToWorldPoint(new Vector3(cameraPos.x, cameraPos.y, (playerRoot.transform.position.z + -(mainCamera.transform.position.z))));
-            //finalDirection = worldCameraPos;
+            //Working DONT DELETE
+            //RaycastHit hit;
+            //Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            //var test = 32f;
+            //if (Physics.Raycast(ray, out hit, test))
+            //{
+            //    lookDirection = new Vector3(hit.point.x, playerRoot.transform.position.y, hit.point.z);
+            //    playerRoot.transform.LookAt(new Vector3(hit.point.x, playerRoot.transform.position.y, hit.point.z));
+            //}
+            //else
+            //{
+            //    var rayvect = ray.getpoint(test);
+            //    lookdirection = new vector3(rayvect.x, playerroot.transform.position.y, rayvect.z);
+            //    playerroot.transform.lookat(new vector3(rayvect.x, playerroot.transform.position.y, rayvect.z));
+            //}
         }
         else
         {
             lookDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
-
+            animLookDirection = lookDirection;
             // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
             if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
             {
-                finalDirection = moveDirection;
+                lookDirection = moveDirection;
             }
-            // If the right stick is being used, override the character body's rotation to align with the right stick
-            else if (lookDirection != Vector3.zero)
-            {
-                finalDirection = lookDirection;
-            }
-        }
-        moveCharacter.Move(characterController, moveDirection, finalDirection, playerRoot, agent);
 
-        if (myDeviceManager.Device.RightBumper.WasReleased)
+        }
+        moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
+
+        var device = myDeviceManager.Device;
+        if (device == null) {
+            Debug.LogWarning("No devices are attatched to the Device Manager.");
+            return;
+        }
+
+        if (device.RightBumper.WasReleased)
         {
             player.Attack();
         }
-        else if (myDeviceManager.Device.LeftBumper.WasReleased)
+        else if (device.LeftBumper.WasReleased)
         {
             player.SwitchWeapon();
+        }
+        else if (device.Action1.WasPressed)
+        {
+            player.Dash();
         }
     }
 }

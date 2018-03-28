@@ -3,75 +3,124 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using InControl;
+using UnityEditor;
+using UnityEngine.AI;
 
 namespace Hunter.Character
 {
-    public abstract class Character : MonoBehaviour
+
+    public abstract class Character : MonoBehaviour, IDamageable
     {
         /// <summary>
-        /// Name of the Player
+        /// Name of the Player, to be set in the inspector
         /// </summary>
-        public string playerName;
-
-        /// <summary>
-        /// Health of the Character Object
-        /// </summary>
-        public int health;
-
-        /// <summary>
-        /// Current Melee Weapon Equipped on the Character
-        /// </summary>
-        public Melee melee;
-
-        /// <summary>
-        /// Current Ranged Weapon Equipped on the Character
-        /// </summary>
-        public Range range;
-
-
-        public Melee CurrentMeleeWeapon
+        [SerializeField]
+        private string displayName = "Nameless Being";
+        public string DisplayName
         {
             get
             {
-                return currentWeapon as Melee;
+                return displayName;
             }
         }
 
-        public Range CurrentRangeWeapon
+        /// <summary>
+        /// How much health the character has
+        /// </summary>
+        [SerializeField]
+        private int health = 100;
+        public int CurrentHealth
         {
             get
             {
-                return currentWeapon as Range;
+                return health;
             }
         }
 
-        private Weapon currentWeapon;
-
-        private bool swap = false;
-
-
-        public void SwitchWeapon()
+        private Weapon currentWeapon = null;
+        public Weapon CurrentWeapon
         {
-            swap = true;
-            if (CurrentMeleeWeapon && swap == true)
+            get
             {
-                melee.gameObject.SetActive(false);
-                range.gameObject.SetActive(true);
-                SetCurrentWeapon(range);
-                swap = false;
-            }
-            if (CurrentRangeWeapon && swap == true)
-            {
-                range.gameObject.SetActive(false);
-                melee.gameObject.SetActive(true);
-                SetCurrentWeapon(melee);
-                swap = false;
+                return currentWeapon;
             }
         }
 
-        public void SetCurrentWeapon(Weapon weapon)
+        //Variables for handeling character rotation
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
+        private Transform rotationTransform;
+        public Transform RotationTransform
         {
-            currentWeapon = weapon;
+            get
+            {
+                if (rotationTransform == null)
+                {
+                    foreach (Transform child in transform)
+                    {
+                        if (child.tag == ROTATION_TRANSFORM_TAG) { rotationTransform = child; }
+                    }
+                    //Fallback for if the tag isn't set
+                    if (rotationTransform == null)
+                    {
+                        Debug.LogWarning("GameObject: " + gameObject.name + " has no rotational transform set. Check the tag of the first childed GameObject underneath this GameObject.", gameObject);
+                        rotationTransform = transform.GetChild(0);
+                    }
+                }
+                return rotationTransform;
+            }
+
+        }
+
+        public Transform eyeLine;
+
+        protected CharacterController characterController;
+        protected NavMeshAgent agent;
+        protected Animator anim;
+
+
+        protected virtual void Start ()
+        {
+            anim = GetComponent<Animator>();
+            agent = GetComponent<NavMeshAgent>();
+            characterController = GetComponent<CharacterController>();
+        }
+
+        public void SetCurrentWeapon (Weapon weapon)
+        {
+            if (weapon != null)
+            {
+                currentWeapon = weapon;
+                //TODO: This isnt holding a reference when its time to do the combat checks
+                currentWeapon.characterHoldingWeapon = this;
+            }
+        }
+
+        public void DealDamage (int damage, bool isCritical)
+        {
+            //This is also where we'll do the damage number pop up
+            StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
+        }
+
+        private IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        {
+            //TODO: Refactor this so the health subtration lerp works
+            //float t = 0;
+            //while (t < 1.0 && !isCritical)
+            //{
+            //    t += Time.deltaTime / time;
+            //    health = (int)Mathf.Lerp(start, end, t);
+            //    //Debug.Log(c.health);
+            //}
+            //if (isCritical)
+            //{
+            //    damage = start - end;
+            //    damage = damage + critDamage;
+            //    Debug.Log("Total Damage: " + damage);
+            //    health = health - (int)damage;
+            //    isCritical = false;
+            //}
+            health -= damage;
+            yield return null;
         }
     }
 }

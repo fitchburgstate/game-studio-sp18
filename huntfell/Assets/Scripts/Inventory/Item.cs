@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Interactable
+namespace Hunter.Interactable
 {
     [CreateAssetMenu(menuName = "Inventory/Item")]
     public class Item : ScriptableObject

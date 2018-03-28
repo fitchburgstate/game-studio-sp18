@@ -5,19 +5,35 @@ using UnityEngine.AI;
 
 namespace Hunter.Character
 {
-    public sealed class Wolf : Minion
+    public sealed class Wolf : Minion, IMoveable, IUtilityBasedAI
     {
-        private void Start()
+
+        public void Move(Transform target)
         {
-            SetElementType(elementType);
+            var finalTarget = new Vector3(target.transform.position.x, RotationTransform.transform.localPosition.y, target.transform.position.z);
+            agent.speed = runSpeed;
+            agent.destination = finalTarget;
         }
 
-        private void Update()
+        public void Idle()
         {
-            if (health <= 0)
-            {
-                Destroy(gameObject);
-            }
+            // This feature has not yet been implemented.
+        }
+
+        public void Wander(Vector3 target)
+        {
+            agent.speed = walkSpeed;
+            agent.destination = target;
+        }
+
+        public void Move (Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        {
+            //fuck you
+        }
+
+        public void Dash ()
+        {
+            // no dash for wolfie boi
         }
     }
 }

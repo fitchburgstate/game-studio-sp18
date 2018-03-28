@@ -1,116 +1,85 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
+using Hunter.Elements;
 
 namespace Hunter.Character
 {
+    [RequireComponent(typeof(BoxCollider))]
     public class Melee : Weapon
     {
-        private float totalDamage;
-        public BoxCollider weaponBoxCollider;
+        //public float windUpSpeed;
+        public float hitBoxFrames = 5;
+        public TrailRenderer tipTrail;
+        private Collider meleeHitBox;
 
-        /// <summary>
-        /// Play Swing Animation of the Weapon.
-        /// </summary>
-        public virtual void Swing()
+        protected new void Start ()
         {
-            // Empty
-        }
-
-        void Start()
-        {
-            weaponBoxCollider = GetComponent<BoxCollider>();
-            weaponBoxCollider.enabled = false;
-        }
-
-        void OnTriggerEnter(Collider target)
-        {
-            //Debug.Log("HI!");
-            var playerCharacter = target.GetComponent<Character>();
-
-            if (playerCharacter is Enemy)
+            base.Start();
+            meleeHitBox = GetComponent<BoxCollider>();
+            if (tipTrail != null)
             {
-                playerCharacter = playerCharacter as Enemy;
-                Attack(playerCharacter, playerCharacter.GetComponent<Enemy>().type, playerCharacter.GetComponent<Enemy>().type.weakness, playerCharacter.GetComponent<Enemy>().type.resistance1, playerCharacter.GetComponent<Enemy>().type.resistance2);
+                tipTrail.enabled = false;
             }
-            if (playerCharacter is Player)
-            {
-                playerCharacter = playerCharacter as Player;
-                Attack(playerCharacter);
-            }
+            DisableHitbox();
         }
 
-        /// <summary>
-        /// Calculates damage base upon weapon base damage and given bonus multiplier and attack speed.
-        /// </summary>
-        /// <param name="ratio">Damage Falloff</param>
-        /// <param name="elementDamageBonus">Damage Multiplier</param>
-        /// <returns></returns>
-        public override int Damage(float ratio, double elementDamageBonus)
+        private void OnTriggerEnter (Collider target)
         {
-            totalDamage = baseDamage * atkSpeed * ratio * (float)elementDamageBonus;
-            return (int)totalDamage;
+            var damageableObject = target.GetComponent<IDamageable>();
+            //We do not want to apply damage to any object that doesnt extend IDamageable, as well as whoever is holding the weapon
+            if (damageableObject == null || target.gameObject == characterHoldingWeapon.gameObject)
+            {
+                return;
+            }
+
+            //Checking to see if the target is an Enemy because of elemental weaknesses
+            Enemy enemy = target.GetComponent<Enemy>();
+            Element enemyElementType = null;
+            if (enemy != null) { enemyElementType = enemy.elementType; }
+
+            bool isCritical = ShouldAttackBeCritical(critPercent);
+            int totalDamage = CalculateDamage(elementType, enemyElementType, isCritical);
+            damageableObject.DealDamage(totalDamage, isCritical);
         }
 
         /// <summary>
-        /// Determines which damage calculation formula is based on the given enemy type, weakness, and resistance.
+        /// Animation Event for Melee Weapon
         /// </summary>
-        /// <param name="e">Enemy variable</param>
-        /// <param name="elementType">Enemy type variable</param>
-        /// <param name="elementWeakness">Enemy weakness variable</param>
-        /// <param name="elementResistance1">Enemy 1st resistence variable</param>
-        /// <param name="elementResistance2">Enemy 2nd resistence</param>
-        /// 
-        public void Attack(Character enemyCharacter, ElementType elementType, Type elementWeakness, Type elementResistance1, Type elementResistance2)
+        public override void StartAttackFromAnimationEvent ()
         {
-            if (elementWeakness.Equals(type.GetType()))
-            {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 2)), 2f, enemyCharacter);
-            }
-            else if (elementResistance1.Equals(type.GetType()) || elementResistance2.Equals(type.GetType()))
-            {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 0.5)), 2f, enemyCharacter);
-            }
-            else if ((elementType.GetType()).Equals(type.GetType()))
-            {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 0)), 2f, enemyCharacter);
-            }
-            else
-            {
-                Critical(critPercent);
-                Damaged(enemyCharacter.health, (float)(enemyCharacter.health - Damage(1, 1)), 2f, enemyCharacter);
-            }
+            Debug.Log("Swinging Melee Weapon.");
+            StartCoroutine(OpenAndCloseHitBox());
         }
 
-        /// <summary>
-        /// Determines the damage done to the player when an enemy attack the player.
-        /// </summary>
-        /// <param name="playerCharacter">Character variable</param>
-        /// <param name="e">Enemy variable</param>
-        public void Attack(Character playerCharacter)
+        private IEnumerator OpenAndCloseHitBox ()
         {
-            Critical(critPercent);
-            Damaged(playerCharacter.health, (float)(playerCharacter.health - Damage(1, 1)), 2f, playerCharacter);
+            if (tipTrail != null) { tipTrail.enabled = true; }
+            EnableHitbox();
+            for (int i = 0; i < hitBoxFrames; i++)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            DisableHitbox();
+            if (tipTrail != null) {
+                yield return new WaitForSeconds(0.5f);
+                tipTrail.enabled = false;
+            }
         }
 
         /// <summary>
         /// Enables the hitbox of the equipped melee weapon.
         /// </summary>
-        public void EnableHitbox()
+        public void EnableHitbox ()
         {
-            weaponBoxCollider.enabled = true;
+            meleeHitBox.enabled = true;
         }
 
         /// <summary>
         /// Disables the hitbox of the equipped melee weapon.
         /// </summary>
-        public void DisableHitbox()
+        public void DisableHitbox ()
         {
-            weaponBoxCollider.enabled = false;
+            meleeHitBox.enabled = false;
         }
     }
 }

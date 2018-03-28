@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Interactable
+namespace Hunter.Interactable
 {
     [RequireComponent(typeof(Animator))]
     public class InteractableProp : MonoBehaviour

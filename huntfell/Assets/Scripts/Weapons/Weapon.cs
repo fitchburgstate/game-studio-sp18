@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Security.Cryptography;
-using static Hunter.Elements;
+using Hunter.Elements;
 
 namespace Hunter.Character
 {
@@ -12,154 +12,104 @@ namespace Hunter.Character
         /// <summary>
         /// Attack Speed of the Weapon.
         /// </summary>
-        public int atkSpeed;
+        public float attackSpeed = 1;
 
         /// <summary>
         /// Recovery Speed of the Weapon a.k.a how fast before you can attack again.
         /// </summary>
-        public int recSpeed;
+        public float recoverySpeed = 0.5f;
 
         /// <summary>
         /// Base Damage number of the weapon.
         /// </summary>
-        public int baseDamage;
+        public int baseDamage = 10;
 
         /// <summary>
         /// Element type of the weapon.
         /// </summary>
-        public ElementType type;
+        public Element elementType = null;
 
         /// <summary>
         /// Options variable for Unity Inspector Dropdown.
         /// </summary>
-        public OPTIONS elementType;
+        public ElementOptions inspectorElementType;
 
         /// <summary>
         /// Critical Percentage Given to the Weapon.
         /// </summary>
-        public int critPercent;
+        public int critPercent = 10;
 
-        /// <summary>
-        /// Boolean that gets set true when a critical hit happens.
-        /// </summary>
-        public bool isCritical = false;
+        [HideInInspector]
+        public Character characterHoldingWeapon;
 
-        /// <summary>
-        /// Ratio that holds critical percentage for hit calculation.
-        /// </summary>
-        private float critDamage;
-
-        void Update()
+        protected void Start()
         {
-            SetElementType(elementType);
-        }
-
-        /// <summary>
-        /// Damage function which can take a ratio float value and a bonus double value, can be override by
-        /// classes that inherit the Weapon class.
-        /// </summary>
-        /// <param name="ratio">Variable for damage falloff</param>
-        /// <param name="bonus">Variable for damage multiplier</param>
-        /// <returns>Damage based on falloff and multiplier</returns>
-        public virtual int Damage(float ratio, double bonus)
-        {
-            var dam = (int)(ratio * bonus);
-            return dam;
+            SetElementType(inspectorElementType);
         }
 
         /// <summary>
         /// Sets the element type of the weapon based upon the given options variable.
         /// </summary>
         /// <param name="elementType">Option for the Element Type</param>
-        private void SetElementType(OPTIONS elementType)
+        private void SetElementType(ElementOptions elementOption)
         {
-            switch (elementType)
+            switch (elementOption)
             {
-                case OPTIONS.Fire:
-                    type = new Fire();
+                case ElementOptions.Fire:
+                    elementType = new Fire();
                     break;
-                case OPTIONS.Ice:
-                    type = new Ice();
+                case ElementOptions.Ice:
+                    elementType = new Ice();
                     break;
-                case OPTIONS.Disease:
-                    type = new Disease();
+                case ElementOptions.Silver:
+                    elementType = new Silver();
                     break;
-                case OPTIONS.Silver:
-                    type = new Silver();
+                case ElementOptions.Lightning:
+                    elementType = new Lightning();
                     break;
-                case OPTIONS.Blood:
-                    type = new Blood();
+                case ElementOptions.Nature:
+                    elementType = new Nature();
                     break;
-                case OPTIONS.Lightning:
-                    type = new Lightning();
-                    break;
-                case OPTIONS.Mechanical:
-                    type = new Mechanical();
-                    break;
-                case OPTIONS.Stone:
-                    type = new Stone();
-                    break;
+
             }
         }
 
-        /// <summary>
-        /// Calculates damage to be applied against an enemy and be lerped if hit is not critical, if the hit is critical the 
-        /// damage is applied instantly.
-        /// </summary>
-        /// <param name="start">Starting Health value</param>
-        /// <param name="end">Ending Health value</param>
-        /// <param name="time">Time to lerp variables</param>
-        public void Damaged(float start, float end, float time, Enemy e)
+        public virtual void StartAttackFromAnimationEvent ()
         {
-            float t = 0;
-            while (t < 1.0 && !isCritical)
-            {
-                t += Time.deltaTime / time;
-                e.health = (int)Mathf.Lerp(start, end, t);
-                //Debug.Log(e.health);
-            }
-            if (isCritical)
-            {
-                var damage = start - end;
-                damage = (damage * critDamage) + damage;
-                e.health = e.health - (int)damage;
-                isCritical = false;
-            }
+
         }
 
-        /// <summary>
-        /// Calculates damage to be applied against the player and be lerped if hit is not critical, if hit is critical the 
-        /// damage is applied instantly.
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="time"></param>
-        /// <param name="c"></param>
-        public void Damaged(float start, float end, float time, Character c)
+        protected virtual int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
         {
-            float t = 0;
-            while (t < 1.0 && !isCritical)
+            var critMult = 1;
+            var elementMult = 1;
+
+            if (enemyElementType != null)
             {
-                t += Time.deltaTime / time;
-                c.health = (int)Mathf.Lerp(start, end, t);
-                //Debug.Log(c.health);
+                Type weaponType = weaponElement.GetType();
+                Type enemyType = enemyElementType.GetType();
+                Type enemyWeaknessType = enemyElementType.Weakness;
+
+                if (weaponType.Equals(enemyType))
+                {
+                    elementMult = 0;
+                }
+                else if (weaponType.Equals(enemyWeaknessType))
+                {
+                    elementMult = 2;
+                }
             }
-            if (isCritical)
-            {
-                var damage = start - end;
-                damage = damage + critDamage;
-                Debug.Log("Total Damage: " + damage);
-                c.health = c.health - (int)damage;
-                isCritical = false;
-            }
+
+            return baseDamage * critMult * elementMult;
         }
 
         /// <summary>
         /// Calculates whether or not the player crits based on crit percentage that is given to the function.
         /// </summary>
         /// <param name="percent"></param>
-        public void Critical(int percent)
+        protected bool ShouldAttackBeCritical(int percent)
         {
+            if(percent == 100) { return true; }
             var rng = new RNGCryptoServiceProvider();
             var buffer = new byte[4];
 
@@ -167,13 +117,7 @@ namespace Hunter.Character
 
             System.Random r = new System.Random();
             var num = r.Next(1, 100);
-            if (num >= (100 - percent))
-            {
-                isCritical = true;
-                //ratio = (float)num / 20;
-                critDamage = r.Next(baseDamage + 1, baseDamage * 3);
-                Debug.Log("Crit Damage Amount: " + critDamage);
-            }
+            return (num >= (100 - percent));
         }
     }
 }

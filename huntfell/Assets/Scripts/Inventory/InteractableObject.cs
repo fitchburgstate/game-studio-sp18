@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Interactable
+namespace Hunter.Interactable
 {
     public class InteractableObject : MonoBehaviour
     {

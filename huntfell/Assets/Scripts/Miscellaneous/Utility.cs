@@ -7,25 +7,33 @@ using UnityEngine.AI;
 
 public interface IMoveable
 {
-    void Move(CharacterController controller, Vector3 moveDirection, Vector3 lookDirection, GameObject playerRoot, NavMeshAgent agent);
+    void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection);
 
-    void Dash(CharacterController controller);
+    void Move (Transform navMeshTarget);
 
+    void Dash();
 }
 
-//public interface IDamageable<T, V>
-//{
-//    void TakeDamage(T healthValue, V amount);
+public interface IUtilityBasedAI
+{
+    void Idle();
 
-//    void DealDamage(T targetHealthValue, V amount);
-//}
+    void Wander(Vector3 finalTarget);
+}
 
-//public interface IHealth<T>
-//{
-//    void SetMaxHealth(T amount);
+public interface IDamageable
+{
+    void DealDamage(int damage, bool isCritical);
+}
 
-//    void SetStartingHealth(T amount);
+public interface IAttack
+{
+    void Attack();
 
-//    void SetCurrentHealth(T amount);
+    void EnableMeleeHitbox();
 
-//}
+    void DisableMeleeHitbox();
+
+    void GunFiring();
+}
+

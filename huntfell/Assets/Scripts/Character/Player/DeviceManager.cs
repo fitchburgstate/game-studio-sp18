@@ -60,18 +60,36 @@ namespace Hunter
             }
         }
 
+        /// <summary>
+        /// This is the vertical value of the left stick.
+        /// </summary>
         private float verticalInput;
+
+        /// <summary>
+        /// This is the horizontal value of the left stick.
+        /// </summary>
         private float horizontalInput;
+
+        /// <summary>
+        /// This is the vertical value of the right stick.
+        /// </summary>
         private float rightStickVertical;
+
+        /// <summary>
+        /// This is the horizontal value of the right stick.
+        /// </summary>
         private float rightStickHorizontal;
 
+        /// <summary>
+        /// A boolean to determine if a controller is being used or not.
+        /// </summary>
         [Tooltip("If true, the active device is a controller. If false, the active device is the keyboard / mouse.")]
         public bool isController;
 
         public InputDevice Device { get; set; }
         public Controls controls;
 
-        private void Start()
+        private void Awake()
         {
             if (InputManager.Devices.Count == 0)
             {
@@ -83,6 +101,7 @@ namespace Hunter
                 controls = Controls.ControllerBindings();
                 isController = true;
             }
+            Device = InputManager.ActiveDevice;
         }
 
         private void Update()
