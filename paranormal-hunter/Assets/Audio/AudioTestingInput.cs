@@ -11,6 +11,7 @@ public class AudioTestingInput : MonoBehaviour {
 	[Header("Test Inputs - Player")]
 	public KeyCode Footstep = KeyCode.F;
 	public KeyCode PlayerHit = KeyCode.H;
+	public KeyCode PlayerHitByWolf = KeyCode.J;
 	[Header("Test Inputs - Sword")]
 	public KeyCode PlayerSwordSwing = KeyCode.S;
 	public KeyCode PlayerSwordHit = KeyCode.A;
@@ -48,6 +49,9 @@ public class AudioTestingInput : MonoBehaviour {
 		}
 		if(Input.GetKeyDown(PlayerHit)){
 			PlayPlayerHit();
+		}
+		if(Input.GetKeyDown(PlayerHitByWolf)){
+			PlayPlayerHitByWolf();
 		}
 
 		/* Sword Events */
@@ -102,6 +106,12 @@ public class AudioTestingInput : MonoBehaviour {
 		void PlayPlayerHit()
 		{
 			Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
+		}
+		
+	// For when the player is hit by a Wolf
+		void PlayPlayerHitByWolf()
+		{
+			Fabric.EventManager.Instance.PostEvent("Player Hit By Wolf", gameObject);
 		}
 
 /*** Sword Events ***/
