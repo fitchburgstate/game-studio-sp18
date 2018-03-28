@@ -13,6 +13,7 @@ public class AudioTestingInput : MonoBehaviour {
 	public KeyCode PlayerHit = KeyCode.H;
 	public KeyCode PlayerHitByWolf = KeyCode.J;
 	[Header("Test Inputs - Sword")]
+	public KeyCode PlayerDrawSword = KeyCode.T;
 	public KeyCode PlayerSwordSwing = KeyCode.S;
 	public KeyCode PlayerSwordHit = KeyCode.A;
 	[Header("Test Inputs - Luger")]
@@ -55,6 +56,9 @@ public class AudioTestingInput : MonoBehaviour {
 		}
 
 		/* Sword Events */
+		if(Input.GetKeyDown(PlayerDrawSword)){
+			PlayPlayerDrawSword();
+		}
 		if(Input.GetKeyDown(PlayerSwordSwing)){
 			PlayPlayerSwordSwing();
 		}
@@ -116,6 +120,12 @@ public class AudioTestingInput : MonoBehaviour {
 
 /*** Sword Events ***/
 	
+	// For when the player draws their sword
+	void PlayPlayerDrawSword()
+	{
+		Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject);
+	}
+
 	// For *every time* the player swings their sword
 		void PlayPlayerSwordSwing()
 		{
