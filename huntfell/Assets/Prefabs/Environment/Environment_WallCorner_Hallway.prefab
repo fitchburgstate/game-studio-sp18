@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4384608252695900}
   - component: {fileID: 33786032868107098}
   - component: {fileID: 23354337232772948}
+  - component: {fileID: 65303888345675478}
+  - component: {fileID: 65857963073266974}
   m_Layer: 0
   m_Name: Tile_Hallway_WallCorner
   m_TagString: Untagged
@@ -36,8 +38,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4241819695039886}
-  - component: {fileID: 65245535818402898}
-  - component: {fileID: 65823356477660818}
   m_Layer: 0
   m_Name: Environment_WallCorner_Hallway
   m_TagString: Untagged
@@ -51,8 +51,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1655990212971426}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.19534, y: -0.31885907, z: 0.20864}
+  m_LocalRotation: {x: -0, y: 0.4984295, z: -0, w: 0.86693025}
+  m_LocalPosition: {x: -35.450413, y: -0.07676001, z: 72.03321}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4384608252695900}
@@ -113,27 +113,27 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1535399776489406}
   m_Mesh: {fileID: 4300000, guid: f2da7888ea613ce438594965dca9ef5d, type: 3}
---- !u!65 &65245535818402898
+--- !u!65 &65303888345675478
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1655990212971426}
+  m_GameObject: {fileID: 1535399776489406}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.15, y: 3.5, z: 7.14}
-  m_Center: {x: 0.07, y: 1.75, z: 3.57}
---- !u!65 &65823356477660818
+  m_Size: {x: 7.1442, y: 3.4824998, z: 0.1317501}
+  m_Center: {x: 3.5721, y: 1.7412499, z: 0.06587505}
+--- !u!65 &65857963073266974
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1655990212971426}
+  m_GameObject: {fileID: 1535399776489406}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 7.14, y: 3.5, z: 0.15}
-  m_Center: {x: 3.57, y: 1.75, z: 0.07}
+  m_Size: {x: 0.15562439, y: 3.4824998, z: 7.144199}
+  m_Center: {x: 0.077812195, y: 1.7412499, z: 3.5720994}

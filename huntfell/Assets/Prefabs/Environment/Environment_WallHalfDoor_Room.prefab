@@ -22,6 +22,9 @@ GameObject:
   - component: {fileID: 33490188663796844}
   - component: {fileID: 23285973431092154}
   - component: {fileID: 95756929419552296}
+  - component: {fileID: 65629538986758596}
+  - component: {fileID: 65023346175057780}
+  - component: {fileID: 65182288077385168}
   m_Layer: 0
   m_Name: Tile_WallHalf_Doorway_BlueGold
   m_TagString: Untagged
@@ -37,7 +40,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4393868310871408}
-  - component: {fileID: 64275581543038804}
   m_Layer: 0
   m_Name: Environment_WallHalfDoor_Room
   m_TagString: Untagged
@@ -51,14 +53,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1704647785479872}
-  m_LocalRotation: {x: 0.00000006657903, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.6766376, y: -0.31893748, z: 30.889366}
+  m_LocalRotation: {x: 0.000000017348546, y: 0.96545494, z: -0.00000006427903, w: 0.2605701}
+  m_LocalPosition: {x: -25.558, y: -0.076753, z: 45.939}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4479023559745448}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 149.792, z: 0}
 --- !u!4 &4479023559745448
 Transform:
   m_ObjectHideFlags: 1
@@ -114,20 +116,42 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1555701070940566}
   m_Mesh: {fileID: 4300000, guid: 316a43a4cd30f5347b36f666c8313b57, type: 3}
---- !u!64 &64275581543038804
-MeshCollider:
+--- !u!65 &65023346175057780
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1704647785479872}
+  m_GameObject: {fileID: 1555701070940566}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 316a43a4cd30f5347b36f666c8313b57, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 1.0635747, y: 3.4999933, z: 0.21000154}
+  m_Center: {x: -3.0382211, y: 1.7499967, z: 0.105004326}
+--- !u!65 &65182288077385168
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1555701070940566}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.5699978, y: 0.9303317, z: 0.21000148}
+  m_Center: {x: -1.7849995, y: 3.0348275, z: 0.10500426}
+--- !u!65 &65629538986758596
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1555701070940566}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0375797, y: 3.4999933, z: 0.21000195}
+  m_Center: {x: -0.51879126, y: 1.7499967, z: 0.10500446}
 --- !u!95 &95756929419552296
 Animator:
   serializedVersion: 3
