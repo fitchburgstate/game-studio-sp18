@@ -16,24 +16,34 @@ MonoBehaviour:
   - pbDisableAutoUV2Generation
   - pbForceConvex
   - pbMeshesAreAssets
+  - pbEnableBackfaceSelection
+  - pb_MeshImporter::quads
+  - pb_MeshImporter::smoothing
   m_Int_keys:
   - pbHandleAlignment
   - pbDefaultEntity
   - pbDefaultCollider
   - pbShadowCastingMode
+  - pbDefaultEditLevel
+  - pbDefaultSelectionMode
+  - pb_GIWorkflowMode
   m_Float_keys:
   - pbEditorScroll.x
   - pbEditorScroll.y
-  m_String_keys: []
+  - pb_MeshImporter::smoothingThreshold
+  m_String_keys:
+  - pbCurrentMaterialPalette
   m_Color_keys: []
   m_Material_keys:
   - pbDefaultMaterial
-  m_Bool_values: 01000000
-  m_Int_values: 00000000000000000200000002000000
+  m_Bool_values: 01000000000101
+  m_Int_values: 00000000000000000200000002000000000000000100000000000000
   m_Float_values:
   - 0
   - 0
-  m_String_values: []
+  - 3.5
+  m_String_values:
+  - Assets/Plugins/ProCore/ProBuilder/Data/Default Material Palette.asset
   m_Color_values: []
   m_Material_values:
   - {fileID: 2100000, guid: 55296d1b6ee54e14e8eb4648d4b448ee, type: 2}
