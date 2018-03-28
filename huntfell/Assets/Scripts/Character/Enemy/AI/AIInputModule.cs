@@ -200,7 +200,7 @@ namespace Hunter.AI
             pointTarget = FindPointOnNavmesh();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             var distanceToTarget = DistanceToTarget();
             var distanceToPoint = DistanceToPoint();
@@ -332,4 +332,3 @@ namespace Hunter.AI
         }
     }
 }
-
