@@ -10,6 +10,7 @@ namespace Hunter.AI
 {
     public class AIInputModule : MonoBehaviour
     {
+        #region Properties
         public Vector3 MoveDirection
         {
             get
@@ -113,7 +114,9 @@ namespace Hunter.AI
                 pointTarget = value;
             }
         }
+        #endregion
 
+        #region Variables
         /// <summary>
         /// Represents which direction the character should move in.
         /// </summary>
@@ -163,8 +166,7 @@ namespace Hunter.AI
 
         private bool enemyInLOS = false;
         private bool inCombat = false;
-
-        #region Classes
+        
         private Attack attack;
         private Idle idle;
         private Wander wander;
@@ -173,12 +175,11 @@ namespace Hunter.AI
         private NavPosition navPosition;
         private Character.Character character;
         private AIDetection aiDetection;
-        #endregion
 
         public UrgeWeights urgeWeights;
+        #endregion
 
-
-        private void Start()
+        private void Start ()
         {
             #region Classes
             attack = new Attack(gameObject);
@@ -200,7 +201,7 @@ namespace Hunter.AI
             pointTarget = FindPointOnNavmesh();
         }
 
-        private void FixedUpdate()
+        private void FixedUpdate ()
         {
             var distanceToTarget = DistanceToTarget();
             var distanceToPoint = DistanceToPoint();
@@ -252,7 +253,7 @@ namespace Hunter.AI
         /// This function performs various operations to determine what action has the highest urge value and then returns it.
         /// </summary>
         /// <returns></returns>
-        public UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
+        public UtilityBasedAI FindNextState (float distanceToTarget, float distanceToPoint)
         {
             var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, inCombat);
             var idleValue = idle.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
@@ -281,14 +282,14 @@ namespace Hunter.AI
             return max;
         }
 
-        private float DistanceToTarget()
+        private float DistanceToTarget ()
         {
             var distance = Vector3.Distance(target.position, gameObject.transform.position);
 
             return distance;
         }
 
-        private float DistanceToPoint()
+        private float DistanceToPoint ()
         {
             var distance = Vector3.Distance(pointTarget, gameObject.transform.position);
 
@@ -300,7 +301,7 @@ namespace Hunter.AI
         /// </summary>
         /// <param name="targetString">The name of the tag that is being searched for.</param>
         /// <returns></returns>
-        public Transform FindNearestTargetWithString(string targetString)
+        public Transform FindNearestTargetWithString (string targetString)
         {
             var targets = GameObject.FindGameObjectsWithTag(targetString);
             Transform bestTarget = null;
@@ -319,7 +320,7 @@ namespace Hunter.AI
             return bestTarget;
         }
 
-        public Vector3 FindPointOnNavmesh()
+        public Vector3 FindPointOnNavmesh ()
         {
             var targetPosition = new Vector3();
 

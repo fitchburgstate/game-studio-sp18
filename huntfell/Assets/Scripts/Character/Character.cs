@@ -8,9 +8,10 @@ using UnityEngine.AI;
 
 namespace Hunter.Character
 {
-
+    [RequireComponent(typeof(CharacterController), typeof(NavMeshAgent), typeof(Animator))]
     public abstract class Character : MonoBehaviour, IDamageable
     {
+        #region Variables / Properties
         /// <summary>
         /// Name of the Player, to be set in the inspector
         /// </summary>
@@ -28,12 +29,16 @@ namespace Hunter.Character
         /// How much health the character has
         /// </summary>
         [SerializeField]
-        private int health = 100;
-        public int CurrentHealth
+        protected int health = 100;
+        public virtual int CurrentHealth
         {
             get
             {
                 return health;
+            }
+            set
+            {
+                health = value;
             }
         }
 
@@ -46,7 +51,7 @@ namespace Hunter.Character
             }
         }
 
-        //Variables for handeling character rotation
+        // Variables for handeling character rotation
         public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
         private Transform rotationTransform;
         public Transform RotationTransform
@@ -59,7 +64,7 @@ namespace Hunter.Character
                     {
                         if (child.tag == ROTATION_TRANSFORM_TAG) { rotationTransform = child; }
                     }
-                    //Fallback for if the tag isn't set
+                    // Fallback for if the tag isn't set
                     if (rotationTransform == null)
                     {
                         Debug.LogWarning("GameObject: " + gameObject.name + " has no rotational transform set. Check the tag of the first childed GameObject underneath this GameObject.", gameObject);
@@ -76,7 +81,7 @@ namespace Hunter.Character
         protected CharacterController characterController;
         protected NavMeshAgent agent;
         protected Animator anim;
-
+        #endregion
 
         protected virtual void Start ()
         {
@@ -85,25 +90,25 @@ namespace Hunter.Character
             characterController = GetComponent<CharacterController>();
         }
 
-        public void SetCurrentWeapon (Weapon weapon)
+        public void EquipWeaponToCharacter (Weapon weapon)
         {
             if (weapon != null)
             {
                 currentWeapon = weapon;
-                //TODO: This isnt holding a reference when its time to do the combat checks
+                // TODO: This isnt holding a reference when its time to do the combat checks
                 currentWeapon.characterHoldingWeapon = this;
             }
         }
 
         public void DealDamage (int damage, bool isCritical)
         {
-            //This is also where we'll do the damage number pop up
+            // This is also where we'll do the damage number pop up
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
         private IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            //TODO: Refactor this so the health subtration lerp works
+            // TODO: Refactor this so the health subtration lerp works
             //float t = 0;
             //while (t < 1.0 && !isCritical)
             //{
@@ -119,7 +124,7 @@ namespace Hunter.Character
             //    health = health - (int)damage;
             //    isCritical = false;
             //}
-            health -= damage;
+            CurrentHealth -= damage;
             yield return null;
         }
     }

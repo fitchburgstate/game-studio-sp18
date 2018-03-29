@@ -7,8 +7,9 @@ using Hunter.Elements;
 
 namespace Hunter.Character
 {
-    public class Weapon : MonoBehaviour
+    public abstract class Weapon : MonoBehaviour
     {
+        #region Variables
         /// <summary>
         /// Attack Speed of the Weapon.
         /// </summary>
@@ -41,6 +42,7 @@ namespace Hunter.Character
 
         [HideInInspector]
         public Character characterHoldingWeapon;
+        #endregion
 
         protected void Start()
         {
@@ -74,10 +76,7 @@ namespace Hunter.Character
             }
         }
 
-        public virtual void StartAttackFromAnimationEvent ()
-        {
-
-        }
+        public abstract void StartAttackFromAnimationEvent ();
 
         protected virtual int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
         {

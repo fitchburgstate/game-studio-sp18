@@ -12,12 +12,15 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -354,8 +357,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Character\Character.cs" />
-    <Compile Include="Assets\Scripts\Character\Enemy\AIInputModule.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\AdvancedMonsterSpawner.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\AI\AIDetection.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\AI\AIInputModule.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\AI\PassiveAreaDamage.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\AI\UrgeWeights.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\AI\UtilityBasedAI.cs" />
     <Compile Include="Assets\Scripts\Character\Enemy\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\Minion\Bat\Bat.cs" />
     <Compile Include="Assets\Scripts\Character\Enemy\Minion\Minion.cs" />
     <Compile Include="Assets\Scripts\Character\Enemy\Minion\Wolf\Wolf.cs" />
     <Compile Include="Assets\Scripts\Character\Player\ControllerInputModule.cs" />
@@ -365,14 +374,15 @@
     <Compile Include="Assets\Scripts\CombatText\FloatingText.cs" />
     <Compile Include="Assets\Scripts\CombatText\FloatingTextController.cs" />
     <Compile Include="Assets\Scripts\Elements\Elements.cs" />
+    <Compile Include="Assets\Scripts\Inventory\InteractableInventoryItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\InteractableObject.cs" />
     <Compile Include="Assets\Scripts\Inventory\InteractableProp.cs" />
     <Compile Include="Assets\Scripts\Inventory\Inventory.cs" />
     <Compile Include="Assets\Scripts\Inventory\Item.cs" />
     <Compile Include="Assets\Scripts\Inventory\NavPosition.cs" />
+    <Compile Include="Assets\Scripts\Miscellaneous\CameraCull.cs" />
     <Compile Include="Assets\Scripts\Miscellaneous\CameraFollow.cs" />
-    <Compile Include="Assets\Scripts\Miscellaneous\NavMeshSpawner.cs" />
-    <Compile Include="Assets\Scripts\Miscellaneous\Utility.cs" />
+    <Compile Include="Assets\Scripts\Miscellaneous\Interfaces.cs" />
     <Compile Include="Assets\Scripts\Weapons\Melee.cs" />
     <Compile Include="Assets\Scripts\Weapons\Range.cs" />
     <Compile Include="Assets\Scripts\Weapons\Weapon.cs" />

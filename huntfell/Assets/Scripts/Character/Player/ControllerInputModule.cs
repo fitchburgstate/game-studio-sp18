@@ -7,9 +7,7 @@ using Hunter.Character;
 
 public class ControllerInputModule : MonoBehaviour
 {
-    //private Vector2 cameraPos;
-    //private Vector3 worldCameraPos;
-
+    #region Variables
     /// <summary>
     /// Represents which direction the character should move in. Think of it as the input of the left stick.
     /// </summary>
@@ -22,8 +20,10 @@ public class ControllerInputModule : MonoBehaviour
     private Vector3 animLookDirection = Vector3.zero;
 
     private DeviceManager myDeviceManager;
-    private Player player;
+
+    private IAttack attackCharacter;
     private IMoveable moveCharacter;
+    #endregion
 
     private void Start()
     {
@@ -31,13 +31,13 @@ public class ControllerInputModule : MonoBehaviour
         transform.forward = mainCamera.transform.forward;
         myDeviceManager = mainCamera.GetComponent<DeviceManager>();
 
-        player = GetComponent<Player>();
+        attackCharacter = GetComponent<IAttack>();
         moveCharacter = GetComponent<IMoveable>();
     }
 
     private void Update()
     {
-        moveDirection = new Vector3(myDeviceManager.HorizontalInput, 0, myDeviceManager.VerticalInput);
+        moveDirection = new Vector3(myDeviceManager.MoveAxis_Horizontal, 0, myDeviceManager.MoveAxis_Vertical);
 
         if (!myDeviceManager.isController)
         {
@@ -59,7 +59,7 @@ public class ControllerInputModule : MonoBehaviour
         }
         else
         {
-            lookDirection = new Vector3(myDeviceManager.RightStickHorizontal, 0, myDeviceManager.RightStickVertical);
+            lookDirection = new Vector3(myDeviceManager.LookAxis_Horizontal, 0, myDeviceManager.LookAxis_Vertical);
             animLookDirection = lookDirection;
             // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
             if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
@@ -68,25 +68,23 @@ public class ControllerInputModule : MonoBehaviour
             }
 
         }
-        moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
 
-        var device = myDeviceManager.Device;
-        if (device == null) {
-            Debug.LogWarning("No devices are attatched to the Device Manager.");
-            return;
+        if (moveCharacter != null)
+        {
+            moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
         }
 
-        if (device.RightBumper.WasReleased)
+        if (myDeviceManager.PressedAttack && attackCharacter != null)
         {
-            player.Attack();
+            attackCharacter.Attack();
         }
-        else if (device.LeftBumper.WasReleased)
+        else if ((myDeviceManager.PressedWeaponSwitchLeft || myDeviceManager.PressedWeaponSwitchRight) && attackCharacter != null)
         {
-            player.SwitchWeapon();
+            attackCharacter.SwitchWeapon(myDeviceManager.PressedWeaponSwitchLeft, myDeviceManager.PressedWeaponSwitchRight);
         }
-        else if (device.Action1.WasPressed)
+        else if (myDeviceManager.PressedDash && moveCharacter != null)
         {
-            player.Dash();
+            moveCharacter.Dash();
         }
     }
 }

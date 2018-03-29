@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
 namespace Hunter.Character
 {
-    public sealed class Player : Character, IMoveable
+    public sealed class Player : Character, IMoveable, IAttack
     {
+        #region Variables
         [Header("Player Weapons")]
         /// <summary>
         /// Current Melee Weapon Equipped on the Player, to be set in the inspector
@@ -26,7 +26,7 @@ namespace Hunter.Character
         public float moveSpeed = 5f;
         [Range(1, 2000), Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
         public float rotationMaxSpeed = 12f;
-        public AnimationCurve rotationSpeedCurve; 
+        public AnimationCurve rotationSpeedCurve;
 
         [Header("Dash Options")]
         public float dashMaxDistance = 3;
@@ -36,15 +36,14 @@ namespace Hunter.Character
         public float dashMaxHeight = 2;
         public AnimationCurve dashHeightCurve;
 
-
         private bool canMove = true;
         private float speedRamp;
         private IEnumerator attackCR;
         private IEnumerator dashCR;
-
+        #endregion
 
         #region Unity Messages
-        protected override void Start()
+        protected override void Start ()
         {
             base.Start();
 
@@ -53,15 +52,16 @@ namespace Hunter.Character
                 rangedWeapon.gameObject.SetActive(false);
             }
             //Always start with your melee weapon
-            SetCurrentWeapon(meleeWeapon);
+            EquipWeaponToCharacter(meleeWeapon);
         }
         #endregion
 
         #region Player Movement
-        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        public void Move (Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
         {
             //We do not want the player to be able to move during the dash
-            if(!canMove) {
+            if (!canMove)
+            {
                 return;
             }
 
@@ -96,7 +96,7 @@ namespace Hunter.Character
             characterController.Move(moveDirection * Time.deltaTime);
         }
 
-        public void Move(Transform fuckyou)
+        public void Move (Transform fuckyou)
         {
             //fuck you
         }
@@ -111,9 +111,10 @@ namespace Hunter.Character
         /// <param name="lookDirection"></param>
         /// <param name="playerRoot"></param>
         /// <param name="agent"></param>
-        public void Dash()
+        public void Dash ()
         {
-            if (dashCR != null) {
+            if (dashCR != null)
+            {
                 Debug.LogWarning("Dash is still on cooldown.");
                 return;
             }
@@ -124,7 +125,8 @@ namespace Hunter.Character
 
         public void DashAnimationEvent ()
         {
-            if (dashCR == null) {
+            if (dashCR == null)
+            {
                 Debug.LogError("The Dash Coroutine reference is null despite the animation event being called. This reference should have been set when you gave the dash input.");
                 return;
             }
@@ -145,7 +147,7 @@ namespace Hunter.Character
             Debug.Log(startPosition);
             var characterForward = RotationTransform.forward;
             var dashDirectionTarget = new Vector3();
-            
+
             //Raycast to determine target point for dodge destination on the X and Z axis
             var hit = new RaycastHit();
             var ray = new Ray(startPosition, characterForward);
@@ -164,7 +166,7 @@ namespace Hunter.Character
             ray = new Ray(dashDirectionTarget, Vector3.down);
             //Setting this to the start position because if we RayCast down and dont get a hit, that means you casted off the map. If you do we cancel the dash.
             var floorPointFromDashTarget = startPosition;
-            if(Physics.Raycast(ray, out hit, dashMaxDistance))
+            if (Physics.Raycast(ray, out hit, dashMaxDistance))
             {
                 floorPointFromDashTarget = hit.point;
                 Debug.DrawLine(dashDirectionTarget, floorPointFromDashTarget, Color.blue, 5);
@@ -221,9 +223,9 @@ namespace Hunter.Character
         #endregion
 
         #region Player Combat
-        public void Attack()
+        public void Attack ()
         {
-            if(attackCR != null) { return; }
+            if (attackCR != null) { return; }
             attackCR = PlayAttackAnimation();
             StartCoroutine(attackCR);
         }
@@ -233,7 +235,7 @@ namespace Hunter.Character
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        private IEnumerator PlayAttackAnimation ()
+        public IEnumerator PlayAttackAnimation ()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             if (CurrentWeapon is Melee)
@@ -248,26 +250,24 @@ namespace Hunter.Character
             attackCR = null;
         }
 
-
-        #endregion
-
-        #region Helper Functions
-        public void SwitchWeapon ()
+        public void SwitchWeapon (bool cycleRanged, bool cycleMelee)
         {
-            if (CurrentWeapon is Melee)
+            if (CurrentWeapon is Melee && cycleMelee)
             {
                 meleeWeapon.gameObject.SetActive(false);
                 rangedWeapon.gameObject.SetActive(true);
-                SetCurrentWeapon(rangedWeapon);
+                EquipWeaponToCharacter(rangedWeapon);
             }
-            else if (CurrentWeapon is Range)
+            else if (CurrentWeapon is Range && cycleRanged)
             {
                 rangedWeapon.gameObject.SetActive(false);
                 meleeWeapon.gameObject.SetActive(true);
-                SetCurrentWeapon(meleeWeapon);
+                EquipWeaponToCharacter(meleeWeapon);
             }
         }
+        #endregion
 
+        #region Helper Functions
         /// <summary>
         /// Determines if the point the player wants to dash to is on the navmesh
         /// if not the target point is changed to the point they can dash to
@@ -275,7 +275,7 @@ namespace Hunter.Character
         /// <param name="target"></param>
         /// <param name="characterRoot"></param>
         /// <returns></returns>
-        private Vector3 GetClosestPointOnNavMesh(Vector3 target)
+        private Vector3 GetClosestPointOnNavMesh (Vector3 target)
         {
             var hit = new NavMeshHit();
             //This gives us a sample radius for the NavMesh check relative to our NavMesh agent size, so given either scenerio where we are passed a floor point or the character's position, we should be able to find a point on the NavMesh
@@ -286,7 +286,7 @@ namespace Hunter.Character
                 target = hit.position;
                 Debug.Log("Hit Position of NavMesh Sample from RayCast: " + target);
             }
-            else if(NavMesh.SamplePosition(transform.position, out hit, sampleRadius, NavMesh.AllAreas))
+            else if (NavMesh.SamplePosition(transform.position, out hit, sampleRadius, NavMesh.AllAreas))
             {
                 target = hit.position;
                 Debug.LogWarning("Could not find a NavMesh point with the given target. Falling back to the character's current position. Hit Position of NavMesh Sample from current position: " + target);
@@ -299,7 +299,7 @@ namespace Hunter.Character
             return target;
         }
 
-        private float SignedAngle(Vector3 a, Vector3 b)
+        private float SignedAngle (Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
         }

@@ -109,7 +109,7 @@ public class AdvancedSpawnerEditor : Editor
             m_MonsterName.stringValue = characterToSpawn.name;
             if (characterToSpawn is Wolf)
             {
-                m_MonsterWalkSpeed.floatValue = characterToSpawn.GetComponent<Wolf>().walkSpeed;
+                //m_MonsterWalkSpeed.floatValue = characterToSpawn.GetComponent<Wolf>().walkSpeed;
                 m_MonsterRunSpeed.floatValue = characterToSpawn.GetComponent<Wolf>().runSpeed;
             }
         }

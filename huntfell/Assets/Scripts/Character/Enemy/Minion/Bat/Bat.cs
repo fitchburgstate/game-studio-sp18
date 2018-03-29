@@ -15,7 +15,7 @@ namespace Hunter.Character
 
         public void Wander(Vector3 target)
         {
-            agent.speed = walkSpeed;
+            agent.speed = runSpeed / 2;
             agent.destination = target;
         }
     }

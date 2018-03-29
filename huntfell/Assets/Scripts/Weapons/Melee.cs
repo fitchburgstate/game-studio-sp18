@@ -7,10 +7,12 @@ namespace Hunter.Character
     [RequireComponent(typeof(BoxCollider))]
     public class Melee : Weapon
     {
+        #region Variables
         //public float windUpSpeed;
         public float hitBoxFrames = 5;
         public TrailRenderer tipTrail;
         private Collider meleeHitBox;
+        #endregion
 
         protected new void Start ()
         {

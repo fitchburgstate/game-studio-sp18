@@ -53,8 +53,8 @@ namespace Hunter.AI
 
         public void AttackAction(GameObject aiGameObject)
         {
-            //var aiComponentModule = aiGameObject.GetComponent<AIInputModule>();
-            //aiComponentModule.GetComponent<IAttack>().Attack();
+            var aiComponentModule = aiGameObject.GetComponent<AIInputModule>();
+            aiComponentModule.GetComponent<IAttack>().Attack();
         }
     }
 
