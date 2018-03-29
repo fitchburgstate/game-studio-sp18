@@ -40,7 +40,7 @@ namespace Hunter.Character
         {
             anim.SetFloat("dirX", agent.velocity.x / runSpeed);
             anim.SetFloat("dirY", agent.velocity.z / runSpeed);
-            anim.SetBool("moving", agent.velocity.magnitude != 0);
+            anim.SetBool("moving", Mathf.Abs(agent.velocity.magnitude) > 0.02f);
         }
 
         public void Move(Transform target)
