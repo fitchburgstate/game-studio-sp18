@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hunter.Interactable
+namespace Interactables
 {
     public class Inventory : MonoBehaviour
     {
@@ -11,29 +11,38 @@ namespace Hunter.Interactable
         [HideInInspector]
         public static Inventory instance;
 
-        /// <summary>
-        /// list of items modifiers 
-        /// </summary>
+       // inventory lists for each type of inventroy item
         [HideInInspector]
-        public List<Item> items = new List<Item>();
-        
+        public List<InteractableInventoryItem> weapons = new List<InteractableInventoryItem>();
+        [HideInInspector]
+        public List<InteractableInventoryItem> elementMods = new List<InteractableInventoryItem>();
+        [HideInInspector]
+        public List<InteractableInventoryItem> journalEntries = new List<InteractableInventoryItem>();
+
         /// <summary>
-        /// adds item to list if there is space
+        /// adds object to list based of type of item
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="interactable"></param>
         /// <returns></returns>
-        public bool AddItem(Item item) 
+        public bool AddItem(InteractableInventoryItem interactable) 
         {
-            items.Add(item);
+            interactable.transform.SetParent(transform);
+
+            if (interactable.item.itemType == ItemType.Weapons)
+            {
+                weapons.Add(interactable);
+            }
+            else if (interactable.item.itemType == ItemType.ElementalMods)
+            {
+                elementMods.Add(interactable);
+            }
+            else if (interactable.item.itemType == ItemType.JournalEntries)
+            {
+                journalEntries.Add(interactable);
+            }
             return true;
         }
-
-        public bool RemoveItem(Item item)
-        {
-            items.Remove(item);
-            return true;
-        }
-
+       
         private void Awake()
         {
             if (instance == null)

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Hunter.Interactable
+namespace Interactables
 {
     public class InteractableInventoryItem : MonoBehaviour
     {
@@ -25,8 +25,8 @@ namespace Hunter.Interactable
 
         public void AddItemToInventory() // adds this item the the inventroy script item list and disable mesh
         {
-            //THIS MIGHT BE WRONG WHO KNOWS
-            var added = Inventory.instance.AddItem(item);
+            //TODO move inventory into Player
+            var added = Inventory.instance.AddItem(this);
 
             if (added == true)
             {

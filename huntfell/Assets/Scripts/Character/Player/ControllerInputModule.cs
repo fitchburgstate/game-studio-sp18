@@ -27,6 +27,9 @@ public class ControllerInputModule : MonoBehaviour
 
     private void Start()
     {
+        //Whoever this script is on is being controlled by the Player, so naturally they should be tagged as such
+        transform.tag = "Player";
+
         var mainCamera = Camera.main;
         transform.forward = mainCamera.transform.forward;
         myDeviceManager = mainCamera.GetComponent<DeviceManager>();
