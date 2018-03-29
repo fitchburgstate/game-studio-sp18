@@ -21,12 +21,15 @@ public class AudioTestingInput : MonoBehaviour {
 	public KeyCode PlayerLugerShot = KeyCode.L;
 
 	[Header("Test Inputs - Mob")]
+	public KeyCode BatAggro = KeyCode.U;
+	public KeyCode BatWingLoop = KeyCode.I;
 	public KeyCode WolfAggro = KeyCode.E;
 	public KeyCode WolfAttack = KeyCode.W;
 	public KeyCode WolfLunge = KeyCode.R;
 
 	/* Private */
 	bool ExpoMusicPlaying = true;
+	bool BatWingLoopPlaying = false;
 	
 	#endregion
 	
@@ -79,6 +82,23 @@ public class AudioTestingInput : MonoBehaviour {
 		}
 
 		/* Mob Events */
+
+		/* Bat Events */
+		if(Input.GetKeyDown(BatAggro)){
+			PlayBatAggro();
+		}
+		if(Input.GetKeyDown(BatWingLoop)){
+			if(BatWingLoopPlaying == false){
+				StartBatLoop();
+				BatWingLoopPlaying = true;
+			}
+			else {
+				StopBatLoop();
+				BatWingLoopPlaying = false;
+			}
+		}
+
+		/* Wolf Events */
 		if(Input.GetKeyDown(WolfAggro)){
 			PlayWolfAggro();
 		}
@@ -159,8 +179,28 @@ public class AudioTestingInput : MonoBehaviour {
 /***** Mob SFX Events *****/
 	// For the associated monsters
 
+/*** Bat Events ***/
+
+	// Bat screech when it aggros the player
+		void PlayBatAggro()
+		{
+			Fabric.EventManager.Instance.PostEvent("Bat Aggro", gameObject);
+		}
+
+	// When the bat starts moving towards the player begin the loop of its wings flapping
+		void StartBatLoop()
+		{
+			Fabric.EventManager.Instance.PostEvent("Bat Start Wing Loop", gameObject);
+		}
+
+	// When the bat dies, stop the looping bat wing sound
+	// Note to self: this event is set to override on the audiocomponent level, *not* event level
+		void StopBatLoop()
+		{
+			Fabric.EventManager.Instance.PostEvent("Bat Stop Wing Loop", gameObject);
+		}
+
 /*** Wolf Events ***/
-	// All wolf events posted from the wolf instance
 
 	// Whe the player is detected by a Wolf
 		void PlayWolfAggro()
