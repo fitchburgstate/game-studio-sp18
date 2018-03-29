@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Hunter.Character
 {
-    public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
+    public class Gargoyle : Minion, IMoveable, IUtilityBasedAI, IAttack
     {
         #region Properties
         public override int CurrentHealth
@@ -19,7 +18,7 @@ namespace Hunter.Character
                 if (health <= 0 && !isDying)
                 {
                     //TODO Change this to reflect wether the death anim should be cinematic or not later
-                    StartCoroutine(KillWolf(true));
+                    StartCoroutine(KillGargoyle(true));
                     isDying = true;
                 }
                 health = value;
@@ -36,47 +35,17 @@ namespace Hunter.Character
         private IEnumerator attackCR;
         #endregion
 
-        protected override void Start()
-        {
-            base.Start();
-            if (meleeWeapon != null) { EquipWeaponToCharacter(meleeWeapon); }
-        }
-
-        private void Update()
-        {
-            anim.SetFloat("dirX", agent.velocity.x / runSpeed);
-            anim.SetFloat("dirY", agent.velocity.z / runSpeed);
-            anim.SetBool("moving", Mathf.Abs(agent.velocity.magnitude) > 0.02f);
-        }
-
         public void Move(Transform target)
         {
             if (isDying) { return; }
             var finalTarget = new Vector3(target.transform.position.x, RotationTransform.transform.localPosition.y, target.transform.position.z);
-            agent.speed = runSpeed;
+            agent.speed = 0;
             agent.destination = finalTarget;
         }
 
         public void Idle()
         {
             if (isDying) { return; }
-        }
-
-        public void Wander(Vector3 target)
-        {
-            if (isDying) { return; }
-            agent.speed = runSpeed / 2;
-            agent.destination = target;
-        }
-
-        private IEnumerator KillWolf(bool isCinematic)
-        {
-            agent.speed = 0;
-            agent.destination = transform.position;
-            anim.SetTrigger(isCinematic ? "cinDeath" : "death");
-            // TODO Change this later to reflect the animation time
-            yield return new WaitForSeconds(5);
-            Destroy(gameObject);
         }
 
         public void Attack()
@@ -88,14 +57,14 @@ namespace Hunter.Character
 
         public void SwitchWeapon(bool cycleRanged, bool cycleMelee)
         {
-            //Wolf only has one weapon so we don't need to switch
+            //Gargoyle only has one weapon so we don't need to switch
             return;
         }
 
         public IEnumerator PlayAttackAnimation()
         {
-            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-            anim.SetTrigger("combat");
+            //anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+            //anim.SetTrigger("combat");
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
             attackCR = null;
         }
@@ -103,6 +72,16 @@ namespace Hunter.Character
         public void WeaponAnimationEvent()
         {
             CurrentWeapon.StartAttackFromAnimationEvent();
+        }
+
+        private IEnumerator KillGargoyle(bool isCinematic)
+        {
+            agent.speed = 0;
+            agent.destination = transform.position;
+            anim.SetTrigger(isCinematic ? "cinDeath" : "death");
+            // TODO Change this later to reflect the animation time
+            yield return new WaitForSeconds(5);
+            Destroy(gameObject);
         }
 
         #region Unused Functions
@@ -114,6 +93,11 @@ namespace Hunter.Character
         public void Dash()
         {
             // This should stay empty.
+        }
+
+        public void Wander(Vector3 target)
+        {
+            if (isDying) { return; }
         }
         #endregion
     }

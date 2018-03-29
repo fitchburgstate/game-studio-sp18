@@ -12,9 +12,9 @@ public class AdvancedSpawnerEditor : Editor
     SerializedProperty m_Monster;
     SerializedProperty m_MonsterHealth;
     SerializedProperty m_MonsterName;
-    SerializedProperty m_MonsterWalkSpeed;
+    //SerializedProperty m_MonsterWalkSpeed;
     SerializedProperty m_MonsterRunSpeed;
-    SerializedProperty m_MonsterDamage;
+    //SerializedProperty m_MonsterDamage;
     SerializedObject so_Monster;
 
     private Character oldCharacter;
@@ -25,9 +25,9 @@ public class AdvancedSpawnerEditor : Editor
         m_Monster = serializedObject.FindProperty("characterToSpawn");
         m_MonsterHealth = serializedObject.FindProperty("monsterHealth");
         m_MonsterName = serializedObject.FindProperty("monsterName");
-        m_MonsterWalkSpeed = serializedObject.FindProperty("monsterWalkSpeed");
+        //m_MonsterWalkSpeed = serializedObject.FindProperty("monsterWalkSpeed");
         m_MonsterRunSpeed = serializedObject.FindProperty("monsterRunSpeed");
-        m_MonsterDamage = serializedObject.FindProperty("monsterDamage");
+        //m_MonsterDamage = serializedObject.FindProperty("monsterDamage");
         so_Monster = new SerializedObject(m_Monster.objectReferenceValue);
     }
 

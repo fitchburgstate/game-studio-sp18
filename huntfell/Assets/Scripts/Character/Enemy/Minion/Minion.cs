@@ -8,13 +8,11 @@ namespace Hunter.Character
     {
         #region Variables
         /// <summary>
-        /// This is the speed at which the wolf runs.
+        /// This is the speed at which the character runs.
         /// </summary>
         [Range(1, 10)]
-        [Tooltip("The running speed of the wolf when it is in combat.")]
+        [Tooltip("The running speed of the character when it is in combat.")]
         public float runSpeed = 5f;
-
-        
         #endregion
     }
 }

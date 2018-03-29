@@ -7,6 +7,45 @@ namespace Hunter.AI
 {
     public class AIDetection : MonoBehaviour
     {
+        #region Properties
+        public Character.Character AiCharacter
+        {
+            get
+            {
+                if (aiCharacter == null)
+                {
+                    aiCharacter = transform.GetComponent<Character.Character>();
+                }
+                return aiCharacter;
+            }
+        }
+
+        public Character.Character PlayerCharacter
+        {
+            get
+            {
+                if (playerCharacter == null)
+                {
+                    var pcGO = GameObject.FindGameObjectWithTag("Player");
+                    if (pcGO == null)
+                    {
+                        //Debug.LogWarning("Could not find a GameObject tagged 'Player' in the scene.");
+                        return null;
+                    }
+
+                    playerCharacter = pcGO.GetComponent<Character.Character>();
+                    if (playerCharacter == null)
+                    {
+                        //Debug.LogWarning("The Player does not have the proper Character script attached to them.", pcGO);
+                        return null;
+                    }
+                }
+                return playerCharacter;
+            }
+        }
+        #endregion
+
+        #region Variables
         /// <summary>
         /// Determines if a target is too close to the AI. If so, the target should be automatically found.
         /// </summary>
@@ -27,45 +66,9 @@ namespace Hunter.AI
         /// </summary>
         private float distanceToTarget;
 
-
         private Character.Character aiCharacter;
-        public Character.Character AiCharacter
-        {
-            get
-            {
-                if(aiCharacter == null)
-                {
-                    aiCharacter = transform.GetComponent<Character.Character>();
-                }
-                return aiCharacter;
-            }
-        }
-
         private Character.Character playerCharacter;
-        public Character.Character PlayerCharacter
-        {
-            get
-            {
-                if(playerCharacter == null)
-                {
-                    var pcGO = GameObject.FindGameObjectWithTag("Player");
-                    if(pcGO == null)
-                    {
-                        Debug.LogWarning("Could not find a GameObject tagged 'Player' in the scene.");
-                        return null;
-                    }
-
-                    playerCharacter = pcGO.GetComponent<Character.Character>();
-                    if(playerCharacter == null)
-                    {
-                        Debug.LogWarning("The Player does not have the proper Character script attached to them.", pcGO);
-                        return null;
-                    }
-                }
-                return playerCharacter;
-            }
-        }
-
+        #endregion
 
         /// <summary>
         /// The AI searches for a gameobject tagged "Player" and returns true when the player has been found.
@@ -80,12 +83,12 @@ namespace Hunter.AI
 
             if (Vector3.Angle(rayDirection, aiCharacter.RotationTransform.forward) <= fieldOfViewRange * 0.5f)
             {
-                Debug.DrawRay(aiCharacterEyeLine.position, rayDirection, Color.red, 5);
+                //Debug.DrawRay(aiCharacterEyeLine.position, rayDirection, Color.red, 5);
                 if (Physics.Raycast(aiCharacterEyeLine.position, rayDirection, out rayHit, maxDetectionDistance)) // Detects to see if the player is within the field of view
                 {
                     if (rayHit.transform.tag == "Player") // Returns true if the raycast has hit the player
                     {
-                        //Debug.Log("The player has been found!");
+                        ////Debug.Log("The player has been found!");
                         return true;
                     }
                     else // Returns false if the raycast has hit anything (or nothing) BUT the player
@@ -115,4 +118,3 @@ namespace Hunter.AI
         }
     }
 }
-
