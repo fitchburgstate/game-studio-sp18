@@ -20,7 +20,7 @@ namespace Hunter.Character
         /// </summary>
         [SerializeField]
         private Range rangedWeapon;
-        public float gunTrailLength = 1f;
+        public float gunTrailLength = 1.5f;
 
         [Header("Movement and Rotation Options")]
         [Range(1, 20), Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
@@ -42,7 +42,6 @@ namespace Hunter.Character
         private float speedRamp;
         private IEnumerator attackCR;
         private IEnumerator dashCR;
-        private IEnumerator gunTrailCR;
         #endregion
 
         #region Unity Messages
@@ -241,16 +240,6 @@ namespace Hunter.Character
             else if (CurrentWeapon is Range)
             {
                 anim.SetTrigger("ranged");
-                if (gunTrailCR == null && rangedWeapon.lastTarget != null)
-                {
-                    gunTrailCR = MakeGunTrail();
-                    StartCoroutine(gunTrailCR);
-                }
-                var gunTrail = gameObject.GetComponent<LineRenderer>();
-                if (gunTrail != null && gunTrailCR == null)
-                {
-                    StopCoroutine(gunTrailCR);
-                }
             }
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
             attackCR = null;
@@ -305,34 +294,6 @@ namespace Hunter.Character
         private float SignedAngle(Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
-        }
-
-        private IEnumerator MakeGunTrail()
-        {
-            var gunTrail = gameObject.AddComponent<LineRenderer>();
-            var width = 0.1f;
-            var startPoint = rangedWeapon.transform.position;
-            var endPoint = new Vector3();
-            if (rangedWeapon.lastTarget != null)
-            {
-                endPoint = rangedWeapon.lastTarget.transform.position;
-            }
-
-            gunTrail.startColor = Color.grey;
-            gunTrail.endColor = Color.grey;
-            gunTrail.material = new Material(Shader.Find("Particles/Additive"));
-            gunTrail.startWidth = width;
-            gunTrail.endWidth = width;
-            gunTrail.positionCount = 2;
-            gunTrail.numCapVertices = 1;
-            gunTrail.useWorldSpace = false;
-
-            gunTrail.SetPosition(0, startPoint);
-            gunTrail.SetPosition(1, endPoint);
-
-            yield return new WaitForSeconds(gunTrailLength);
-            Destroy(gunTrail);
-            gunTrailCR = null;
         }
         #endregion
     }

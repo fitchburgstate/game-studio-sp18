@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Hunter.Elements
+namespace Hunter
 {
     /// <summary>
     /// Options Enum for the Elements that can be selected.
     /// </summary>
-    public enum ElementOptions
+    public enum ElementOption
     {
         None,
         Fire,
@@ -26,41 +26,41 @@ namespace Hunter.Elements
                 return weakness;
             }
         }
-    }
 
-    public class Fire : Element
-    {
-        public Fire()
+        public class Fire : Element
         {
-            weakness = typeof(Ice);
+            public Fire ()
+            {
+                weakness = typeof(Ice);
+            }
         }
-    }
 
-    public class Ice : Element
-    {
-        public Ice()
+        public class Ice : Element
         {
-            weakness = typeof(Fire);
+            public Ice ()
+            {
+                weakness = typeof(Fire);
+            }
         }
-    }
 
-    public class Lightning : Element
-    {
-        public Lightning()
+        public class Lightning : Element
         {
-            weakness = typeof(Nature);
+            public Lightning ()
+            {
+                weakness = typeof(Nature);
+            }
         }
-    }
 
-    public class Nature : Element
-    {
-        public Nature ()
+        public class Nature : Element
         {
-            weakness = typeof(Lightning);
+            public Nature ()
+            {
+                weakness = typeof(Lightning);
+            }
         }
-    }
 
-    public class Silver : Element
-    {
+        public class Silver : Element
+        {
+        }
     }
 }

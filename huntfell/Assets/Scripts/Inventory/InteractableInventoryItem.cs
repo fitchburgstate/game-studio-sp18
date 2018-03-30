@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Hunter.Interactable
+namespace Hunter
 {
     public class InteractableInventoryItem : MonoBehaviour
     {
-        [Header("Iventroy item")]
+        [Header("Inventory item")]
         public Item item;
 
         //Math variables for the Anim function
@@ -16,17 +16,16 @@ namespace Hunter.Interactable
         
         [Tooltip("Animation the prop plays")]
         [SerializeField]
-        private AnimationCurve curve;
+        private AnimationCurve propCurve;
         private MeshRenderer mesh;
         private Collider propCollider;
         private float propHeightOffset; // half the height of the object
         private Vector3 targetPosition;
-        private NavPosition navPosition = new NavPosition();
 
-        public void AddItemToInventory() // adds this item the the inventroy script item list and disable mesh
+        public void AddItemToInventory() // adds this item the the inventory script item list and disable mesh
         {
-            //THIS MIGHT BE WRONG WHO KNOWS
-            var added = Inventory.instance.AddItem(item);
+            //TODO move inventory into Player
+            var added = Inventory.instance.AddItem(this);
 
             if (added == true)
             {
@@ -34,22 +33,17 @@ namespace Hunter.Interactable
             }
         }
 
-        private void OnMouseDown()
-        {
-            AddItemToInventory();
-        }
-
-        public void SpawnFromProp() // when object is spawned from an interactable prop
+        public void SpawnFromProp() // when object is spawned from an interactble prop
         {         
             propHeightOffset = propCollider.bounds.extents.y; // get half the height of the object so it doesnt go in the ground
 
-            if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the height of the object on the y axis
+            if (Utility.RandomNavMeshPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the hieght of the object on the y axis
             {
                 targetPosition.y += propHeightOffset;
             }
 
-            propCollider.enabled = false; //  disable collider when item spawns
-            StartCoroutine(PlayAnim()); // plays animation curve
+            propCollider.enabled = false; //  disable colider when item spawns
+            StartCoroutine(PlayAnim()); // plays anination curve
         }
 
         public void SpawnOnGround()
@@ -74,13 +68,13 @@ namespace Hunter.Interactable
             while (Vector3.Distance(transform.position, targetPosition) > inRange)
             {
                 bounceTime += bounceSpeed * Time.deltaTime;
-                var bounceAmount = curve.Evaluate(bounceTime); // how big is the bounce
+                var bounceAmount = propCurve.Evaluate(bounceTime); // how big is the bounce
                 var bouncePosition = new Vector3(0, 0, 0)
                 {
                     y = (bounceHeight * bounceAmount) // the bounch changing the y axis of the object
                 };
                 var currentPosition = new Vector3(targetPosition.x, bouncePosition.y + propHeightOffset, targetPosition.z); // the nav mesh position x and z axis and the bounce's y axis
-                transform.position = Vector3.MoveTowards(transform.position, currentPosition, propSpeed * Time.deltaTime); // moves toawrds that current position
+                transform.position = Vector3.MoveTowards(transform.position, currentPosition, propSpeed * Time.deltaTime); // moves towards that current position
                 yield return null;
             }
 

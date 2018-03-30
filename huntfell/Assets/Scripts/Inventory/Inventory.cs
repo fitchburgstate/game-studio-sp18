@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hunter.Interactable
+namespace Hunter
 {
     public class Inventory : MonoBehaviour
     {
@@ -11,35 +11,44 @@ namespace Hunter.Interactable
         [HideInInspector]
         public static Inventory instance;
 
-        /// <summary>
-        /// list of items modifiers 
-        /// </summary>
+       // inventory lists for each type of inventroy item
         [HideInInspector]
-        public List<Item> items = new List<Item>();
-        
-        /// <summary>
-        /// adds item to list if there is space
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public bool AddItem(Item item) 
-        {
-            items.Add(item);
-            return true;
-        }
-
-        public bool RemoveItem(Item item)
-        {
-            items.Remove(item);
-            return true;
-        }
-
+        public List<InteractableInventoryItem> weapons = new List<InteractableInventoryItem>();
+        [HideInInspector]
+        public List<InteractableInventoryItem> elementMods = new List<InteractableInventoryItem>();
+        [HideInInspector]
+        public List<InteractableInventoryItem> journalEntries = new List<InteractableInventoryItem>();
+       
         private void Awake()
         {
             if (instance == null)
             {
                 instance = this;
             }
+        }
+
+        /// <summary>
+        /// adds object to list based of type of item
+        /// </summary>
+        /// <param name="interactable"></param>
+        /// <returns></returns>
+        public bool AddItem(InteractableInventoryItem interactable) 
+        {
+            interactable.transform.SetParent(transform);
+
+            if (interactable.item.itemType == ItemType.Weapons)
+            {
+                weapons.Add(interactable);
+            }
+            else if (interactable.item.itemType == ItemType.ElementalMods)
+            {
+                elementMods.Add(interactable);
+            }
+            else if (interactable.item.itemType == ItemType.JournalEntries)
+            {
+                journalEntries.Add(interactable);
+            }
+            return true;
         }
     }
 }
