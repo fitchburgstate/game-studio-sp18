@@ -43,6 +43,8 @@ namespace Hunter.Character
         /// </summary>
         private float playerRange;
 
+        public Transform lastTarget;
+
         /// <summary>
         /// Performs a raycast to the range of the weapon and then calls the damage calculation method if an enemy is hit,
         /// also plays the animation for shooting.
@@ -66,6 +68,13 @@ namespace Hunter.Character
                 var isCritical = ShouldAttackBeCritical(critPercent);
                 var totalDamage = CalculateDamage(elementType, enemyElementType, isCritical);
                 damageableObject.DealDamage(totalDamage, isCritical);
+
+                Debug.Log(target.name + " hit!");
+                lastTarget = target;
+            }
+            else
+            {
+                lastTarget = null;
             }
             CheckAmmo();
         }

@@ -79,11 +79,9 @@ namespace Hunter.AI
         private void DoRenderer()
         {
             var batLine = gameObject.AddComponent<LineRenderer>();
-            var batLineStartColor = Color.red;
-            var batLineEndColor = Color.magenta;
+            batLine.startColor = Color.red;
+            batLine.endColor = Color.red;
             batLine.material = new Material(Shader.Find("Particles/Additive"));
-            batLine.startColor = batLineStartColor;
-            batLine.endColor = batLineStartColor;
             batLine.startWidth = startWidth;
             batLine.endWidth = endWidth;
             batLine.positionCount = numSegments + 1;
@@ -104,7 +102,7 @@ namespace Hunter.AI
 
         private void OnDrawGizmosSelected()
         {
-            if (Application.isEditor)
+            if (!Application.isPlaying)
             {
                 var theta = 0f;
                 Gizmos.color = Color.red;

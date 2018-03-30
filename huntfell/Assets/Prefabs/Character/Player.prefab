@@ -2903,6 +2903,7 @@ MonoBehaviour:
   eyeLine: {fileID: 4219033539967030}
   meleeWeapon: {fileID: 114603247805854718}
   rangedWeapon: {fileID: 114751085011723920}
+  gunTrailLength: 1
   moveSpeed: 5
   rotationMaxSpeed: 12
   rotationSpeedCurve:
@@ -2999,9 +3000,10 @@ MonoBehaviour:
   inspectorElementType: 2
   critPercent: 10
   characterHoldingWeapon: {fileID: 0}
-  clipSize: 0
-  reloadSpeed: 0
-  weaponRange: 0
+  clipSize: 5
+  reloadSpeed: 1
+  weaponRange: 10
+  lastTarget: {fileID: 0}
 --- !u!137 &137184599421688314
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
