@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Hunter.Elements;
 
 
 namespace Hunter.Character
@@ -17,31 +16,31 @@ namespace Hunter.Character
         /// <summary>
         /// Options variable for Unity Inspector Dropdown
         /// </summary>
-        public ElementOptions inspectorElementType;
+        public ElementOption inspectorElementType;
 
 
         /// <summary>
         /// Sets the element type of the weapon based upon the given options variable
         /// </summary>
         /// <param name="elementTypeOption">Option for the Element Type</param>
-        public void SetElementType(ElementOptions elementTypeOption)
+        public void SetElementType(ElementOption elementTypeOption)
         {
             switch (elementTypeOption)
             {
-                case ElementOptions.Fire:
-                    elementType = new Fire();
+                case ElementOption.Fire:
+                    elementType = new Element.Fire();
                     break;
-                case ElementOptions.Ice:
-                    elementType = new Ice();
+                case ElementOption.Ice:
+                    elementType = new Element.Ice();
                     break;
-                case ElementOptions.Silver:
-                    elementType = new Silver();
+                case ElementOption.Silver:
+                    elementType = new Element.Silver();
                     break;
-                case ElementOptions.Lightning:
-                    elementType = new Lightning();
+                case ElementOption.Lightning:
+                    elementType = new Element.Lightning();
                     break;
-                case ElementOptions.Nature:
-                    elementType = new Nature();
+                case ElementOption.Nature:
+                    elementType = new Element.Nature();
                     break;
 
             }

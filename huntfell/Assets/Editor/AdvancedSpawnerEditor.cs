@@ -5,7 +5,7 @@ using UnityEditor;
 using System;
 using Hunter.Character;
 
-[CustomEditor(typeof(AdvancedMonsterSpawner))]
+[CustomEditor(typeof(CharacterSpawner))]
 [CanEditMultipleObjects]
 public class AdvancedSpawnerEditor : Editor
 {

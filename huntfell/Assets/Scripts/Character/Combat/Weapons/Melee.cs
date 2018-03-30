@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Hunter.Elements;
 
 namespace Hunter.Character
 {
@@ -40,8 +39,8 @@ namespace Hunter.Character
             if (enemy != null) { enemyElementType = enemy.elementType; }
 
             bool isCritical = ShouldAttackBeCritical(critPercent);
-            int totalDamage = CalculateDamage(elementType, enemyElementType, isCritical);
-            damageableObject.DealDamage(totalDamage, isCritical);
+            int totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
+            damageableObject.TakeDamage(totalDamage, isCritical, weaponElement);
         }
 
         /// <summary>

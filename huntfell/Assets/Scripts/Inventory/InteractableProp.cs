@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using Hunter;
 using Hunter.Character;
 
-
-namespace Interactables
+namespace Hunter
 {
     public enum PropType
     {
@@ -21,61 +19,81 @@ namespace Interactables
         public InteractableInventoryItem itemGiven; // the object the player gave
 
         private Player player;
+
         [Header("The items that will spawn from the prop")]
         [SerializeField]
         private List<InteractableInventoryItem> interactable = new List<InteractableInventoryItem>(); // list of iteractables to spawn
+
         [Header("Destructable prop or Prop that Shakes")]
         [SerializeField]
         private PropType propType;
+
         [Header("Does it need a mod element to be triggered")]
         [SerializeField]
         private bool elementRequired;
+
         [Header("Type of element it needs to be triggered")]
         [SerializeField]
-        private OPTIONS elementalType; 
+        private Element elementalType; 
+
         [Header("Does it spawn a item when interacted with")]
         [SerializeField]
         private bool spawnItem;
+
         //[Header("Does the player have to drop a item in")]
         //[SerializeField]
         //private bool dropItemIn;
         [Header("Does this prop give a player a item")]
         [SerializeField]
         private bool givePlayerItem;
+
         [Header("Does this prop activate another")]
         [SerializeField]
         private bool activateAnotherProp;
+
         //[Header("Item needed it prop needs item to activate")]
         //[SerializeField]
         //private InteractableInventoryItem itemNeeded;
         [Header("Item to give player if it gives item")]
         [SerializeField]
         private InteractableInventoryItem itemToGive;
+
         private Animator anim;
+
         [Header("Name of Trigger Animation")]
         [SerializeField]
         private string animationName;
+
         [Header("How much force is use to destroy the object")]
         [SerializeField]
         private float destructionForce = 50;
+
         private Vector3 destructionDirection; // based on player
+
         private Rigidbody[] pieces; // the ridgidbodies of the broken pieces of the destructible prop
+
         [Header("broken prefab if its destructible")]
         [SerializeField]
         private GameObject brokenProp;
+
         [Header("object and function is this prop activates another")]
         [SerializeField]
         private UnityEvent propEvent;
-        private OPTIONS typeFromWeapon; // type attribute of weapon player is holding
-        
-        public void TakeDamage(int damage)
+
+        public void TakeDamage(int damage, bool isCritical, Element weaponElement)
         {
-            Interact();
+            Interact(weaponElement);
         }
 
-        public void Interact()
+        public void Interact(Element elementFromInteraction)
         {
-            NeedElement();
+            if (player.CurrentWeapon != null)
+            {
+                if (CheckWeaponType(elementFromInteraction) || elementRequired == false)
+                {
+                    Attacked();
+                }
+            }
         }
 
         public void StartEvent()
@@ -86,6 +104,17 @@ namespace Interactables
         private void OnMouseDown()
         {
             Attacked();
+        }
+
+        private void Start()
+        {
+            if (propEvent == null)
+            {
+                propEvent = new UnityEvent();
+            }
+
+            anim = GetComponent<Animator>();
+            player = FindObjectOfType<Player>();
         }
 
         /// <summary>
@@ -111,16 +140,6 @@ namespace Interactables
             }
         }
 
-        private void Start()
-        {
-            if (propEvent == null)
-            {
-                propEvent = new UnityEvent();
-            }
-
-            anim = GetComponent<Animator>();
-            player = FindObjectOfType<Player>();
-        }
 
         /// <summary>
         /// cheks if prop is interactable or destructible the calls the appropriate function
@@ -236,32 +255,12 @@ namespace Interactables
         }
 
         /// <summary>
-        /// checks if element is need or not and gets element from current weapon
-        /// </summary>
-        private void NeedElement()
-        {
-            if (player.CurrentWeapon != null)
-            {
-                typeFromWeapon = player.CurrentWeapon.elementType;
-
-                if (CheckWeaponType(typeFromWeapon) || elementRequired == false)
-                {
-                    Attacked();
-                }                          
-            }          
-        }
-
-        /// <summary>
         /// checks if weapon element is the same as the one the prop needs
         /// </summary>
         /// <param name="weaponElement"></param>
-        private bool CheckWeaponType(OPTIONS weaponElement)
+        private bool CheckWeaponType(Element elementFromInteraction)
         {
-            if (weaponElement == elementalType)
-            {
-                return true;
-            }
-            return false;
+            return elementFromInteraction.GetType() == elementalType.GetType();
         }
 
         /// <summary>

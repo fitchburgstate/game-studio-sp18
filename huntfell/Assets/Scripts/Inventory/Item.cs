@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Interactables
+namespace Hunter
 {
     public enum ItemType
     {

@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Character;
 
-namespace Hunter.AI
+namespace Hunter
 {
     public class PassiveAreaDamage : MonoBehaviour
     {
@@ -16,7 +15,8 @@ namespace Hunter.AI
                 var damageable = other.GetComponent<IDamageable>();
                 if(damageable != null)
                 {
-                    damageable.DealDamage(damageAmount, false);
+                    //Currently this is passing null as the Element but we could set it so this does elemental damage if we wanted
+                    damageable.TakeDamage(damageAmount, false, null);
                 }
             }
         }

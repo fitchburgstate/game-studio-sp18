@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
-using Hunter.Interactable;
-using Hunter.Character;
 
-namespace Hunter.AI
+namespace Hunter.Character.AI
 {
     public class AIInputModule : MonoBehaviour
     {
@@ -172,8 +170,7 @@ namespace Hunter.AI
         private Wander wander;
         private MoveTo moveTo;
         private Retreat retreat;
-        private NavPosition navPosition;
-        private Character.Character character;
+        private Character character;
         private AIDetection aiDetection;
 
         public UrgeWeights urgeWeights;
@@ -189,8 +186,7 @@ namespace Hunter.AI
             retreat = new Retreat(gameObject);
 
             urgeWeights = new UrgeWeights();
-            navPosition = new NavPosition();
-            character = GetComponent<Character.Character>();
+            character = GetComponent<Character>();
             aiDetection = GetComponent<AIDetection>();
             #endregion
 
@@ -324,7 +320,7 @@ namespace Hunter.AI
         {
             var targetPosition = new Vector3();
 
-            if (navPosition.RandomPoint(transform.position, maxDistance, out targetPosition))
+            if (Utility.RandomNavMeshPoint(transform.position, maxDistance, out targetPosition))
             {
                 pointTarget = targetPosition;
             }

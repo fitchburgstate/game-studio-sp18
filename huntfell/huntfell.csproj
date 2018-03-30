@@ -353,35 +353,33 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Character\AI\AIDetection.cs" />
+    <Compile Include="Assets\Scripts\Character\AI\UrgeWeights.cs" />
+    <Compile Include="Assets\Scripts\Character\AI\UtilityBasedAI.cs" />
     <Compile Include="Assets\Scripts\Character\Character.cs" />
-    <Compile Include="Assets\Scripts\Character\Enemy\AdvancedMonsterSpawner.cs" />
-    <Compile Include="Assets\Scripts\Character\Enemy\AI\AIDetection.cs" />
-    <Compile Include="Assets\Scripts\Character\Enemy\AI\AIInputModule.cs" />
-    <Compile Include="Assets\Scripts\Character\Enemy\AI\PassiveAreaDamage.cs" />
-    <Compile Include="Assets\Scripts\Character\Enemy\AI\UrgeWeights.cs" />
-    <Compile Include="Assets\Scripts\Character\Enemy\AI\UtilityBasedAI.cs" />
+    <Compile Include="Assets\Scripts\Character\CharacterSpawner.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\PassiveAreaDamage.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\Weapons\Melee.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\Weapons\Range.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\Weapons\Weapon.cs" />
     <Compile Include="Assets\Scripts\Character\Enemy\Enemy.cs" />
-    <Compile Include="Assets\Scripts\Character\Enemy\Minion\Bat\Bat.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\Minion\Bat.cs" />
     <Compile Include="Assets\Scripts\Character\Enemy\Minion\Minion.cs" />
-    <Compile Include="Assets\Scripts\Character\Enemy\Minion\Wolf\Wolf.cs" />
-    <Compile Include="Assets\Scripts\Character\Player\ControllerInputModule.cs" />
-    <Compile Include="Assets\Scripts\Character\Player\Controls.cs" />
-    <Compile Include="Assets\Scripts\Character\Player\DeviceManager.cs" />
+    <Compile Include="Assets\Scripts\Character\Enemy\Minion\Wolf.cs" />
+    <Compile Include="Assets\Scripts\Character\Input\AIInputModule.cs" />
+    <Compile Include="Assets\Scripts\Character\Input\ControllerInputModule.cs" />
+    <Compile Include="Assets\Scripts\Character\Input\Controls.cs" />
+    <Compile Include="Assets\Scripts\Character\Input\DeviceManager.cs" />
     <Compile Include="Assets\Scripts\Character\Player\Player.cs" />
-    <Compile Include="Assets\Scripts\CombatText\FloatingText.cs" />
-    <Compile Include="Assets\Scripts\CombatText\FloatingTextController.cs" />
     <Compile Include="Assets\Scripts\Elements\Elements.cs" />
     <Compile Include="Assets\Scripts\Inventory\InteractableInventoryItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\InteractableProp.cs" />
     <Compile Include="Assets\Scripts\Inventory\Inventory.cs" />
     <Compile Include="Assets\Scripts\Inventory\Item.cs" />
-    <Compile Include="Assets\Scripts\Inventory\NavPosition.cs" />
     <Compile Include="Assets\Scripts\Miscellaneous\CameraCull.cs" />
-    <Compile Include="Assets\Scripts\Miscellaneous\CameraFollow.cs" />
-    <Compile Include="Assets\Scripts\Miscellaneous\Interfaces.cs" />
-    <Compile Include="Assets\Scripts\Weapons\Melee.cs" />
-    <Compile Include="Assets\Scripts\Weapons\Range.cs" />
-    <Compile Include="Assets\Scripts\Weapons\Weapon.cs" />
+    <Compile Include="Assets\Scripts\Miscellaneous\Utility.cs" />
+    <Compile Include="Assets\Scripts\UI\CombatText\FloatingText.cs" />
+    <Compile Include="Assets\Scripts\UI\CombatText\FloatingTextController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\Cinemachine\ReleaseNotes.txt" />

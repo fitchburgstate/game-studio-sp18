@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Hunter.Character;
 
-namespace Hunter.AI
+namespace Hunter.Character.AI
 {
     public class AIDetection : MonoBehaviour
     {
@@ -28,21 +28,21 @@ namespace Hunter.AI
         private float distanceToTarget;
 
 
-        private Character.Character aiCharacter;
-        public Character.Character AiCharacter
+        private Character aiCharacter;
+        public Character AiCharacter
         {
             get
             {
                 if(aiCharacter == null)
                 {
-                    aiCharacter = transform.GetComponent<Character.Character>();
+                    aiCharacter = transform.GetComponent<Character>();
                 }
                 return aiCharacter;
             }
         }
 
-        private Character.Character playerCharacter;
-        public Character.Character PlayerCharacter
+        private Character playerCharacter;
+        public Character PlayerCharacter
         {
             get
             {
@@ -55,7 +55,7 @@ namespace Hunter.AI
                         return null;
                     }
 
-                    playerCharacter = pcGO.GetComponent<Character.Character>();
+                    playerCharacter = pcGO.GetComponent<Character>();
                     if(playerCharacter == null)
                     {
                         Debug.LogWarning("The Player does not have the proper Character script attached to them.", pcGO);

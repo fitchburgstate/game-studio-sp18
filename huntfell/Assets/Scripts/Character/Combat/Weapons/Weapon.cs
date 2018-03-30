@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Security.Cryptography;
-using Hunter.Elements;
 
 namespace Hunter.Character
 {
@@ -28,12 +27,12 @@ namespace Hunter.Character
         /// <summary>
         /// Element type of the weapon.
         /// </summary>
-        public Element elementType = null;
+        public Element weaponElement = null;
 
         /// <summary>
         /// Options variable for Unity Inspector Dropdown.
         /// </summary>
-        public ElementOptions inspectorElementType;
+        public ElementOption inspectorElementType;
 
         /// <summary>
         /// Critical Percentage Given to the Weapon.
@@ -46,34 +45,7 @@ namespace Hunter.Character
 
         protected void Start()
         {
-            SetElementType(inspectorElementType);
-        }
-
-        /// <summary>
-        /// Sets the element type of the weapon based upon the given options variable.
-        /// </summary>
-        /// <param name="elementType">Option for the Element Type</param>
-        private void SetElementType(ElementOptions elementOption)
-        {
-            switch (elementOption)
-            {
-                case ElementOptions.Fire:
-                    elementType = new Fire();
-                    break;
-                case ElementOptions.Ice:
-                    elementType = new Ice();
-                    break;
-                case ElementOptions.Silver:
-                    elementType = new Silver();
-                    break;
-                case ElementOptions.Lightning:
-                    elementType = new Lightning();
-                    break;
-                case ElementOptions.Nature:
-                    elementType = new Nature();
-                    break;
-
-            }
+            weaponElement = Utility.ElementOptionToElement(inspectorElementType);
         }
 
         public abstract void StartAttackFromAnimationEvent ();

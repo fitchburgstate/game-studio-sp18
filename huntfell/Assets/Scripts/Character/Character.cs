@@ -1,9 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using InControl;
-using UnityEditor;
 using UnityEngine.AI;
 
 namespace Hunter.Character
@@ -100,7 +97,7 @@ namespace Hunter.Character
             }
         }
 
-        public void DealDamage (int damage, bool isCritical)
+        public void TakeDamage (int damage, bool isCritical, Element weaponElement)
         {
             // This is also where we'll do the damage number pop up
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Hunter.Elements;
 
 namespace Hunter.Character
 {
@@ -64,36 +63,9 @@ namespace Hunter.Character
                 if (enemy != null) { enemyElementType = enemy.elementType; }
 
                 var isCritical = ShouldAttackBeCritical(critPercent);
-                var totalDamage = CalculateDamage(elementType, enemyElementType, isCritical);
-                damageableObject.DealDamage(totalDamage, isCritical);
+                var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
+                damageableObject.TakeDamage(totalDamage, isCritical, weaponElement);
             }
-
-            //var player = FindObjectOfType<Player>();
-            //var hit = new RaycastHit();
-
-            //ray.origin = transform.position;
-            //ray.direction = player.transform.forward;
-
-            //if (Physics.Raycast(ray, out hit, weaponRange))
-            //{
-            //    var character = hit.collider.GetComponent<Character>();
-            //    if (character is Enemy)
-            //    {
-            //        //Debug.Log(transform.position);
-            //        //Debug.Log("working");
-            //        character = character as Enemy;
-            //        distanceBetweenWeaponAndEnemy = Vector3.Distance(character.transform.position, transform.position);
-            //        damageFalloffRatio = weaponRange / distanceBetweenWeaponAndEnemy;
-            //        AttackEnemy(character, character.GetComponent<Enemy>().elementType, character.GetComponent<Enemy>().elementType.weakness, character.GetComponent<Enemy>().elementType.resistance1, character.GetComponent<Enemy>().elementType.resistance2, damageFalloffRatio);
-            //    }
-            //    if (character is Player)
-            //    {
-            //        character = character as Player;
-            //        playerRange = Vector3.Distance(character.transform.position, transform.position);
-            //        damageFalloffRatio = weaponRange / playerRange;
-            //        AttackPlayer(character, playerRange);
-            //    }
-            //}
 
             CheckAmmo();
         }

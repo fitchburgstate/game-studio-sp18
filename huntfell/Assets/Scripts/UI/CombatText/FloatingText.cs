@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Hunter.Elements;
 
 namespace Hunter.Character
 {
@@ -26,17 +25,17 @@ namespace Hunter.Character
 
         public void SetTextColor(Element type)
         {
-            if(type is Elements.Fire)
+            if(type is Element.Fire)
             {
                 var colorRed = Color.red;
                 anim.GetComponent<Text>().color = colorRed;
             }
-            else if(type is Elements.Ice)
+            else if(type is Element.Ice)
             {
                 var colorLightBlue = Color.cyan;
                 anim.GetComponent<Text>().color = colorLightBlue;
             }
-            else if(type is Elements.Lightning)
+            else if(type is Element.Lightning)
             {
                 var colorYellow = Color.yellow;
                 anim.GetComponent<Text>().color = colorYellow;

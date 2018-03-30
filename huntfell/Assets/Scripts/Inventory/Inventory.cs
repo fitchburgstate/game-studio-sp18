@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Interactables
+namespace Hunter
 {
     public class Inventory : MonoBehaviour
     {
@@ -18,6 +18,14 @@ namespace Interactables
         public List<InteractableInventoryItem> elementMods = new List<InteractableInventoryItem>();
         [HideInInspector]
         public List<InteractableInventoryItem> journalEntries = new List<InteractableInventoryItem>();
+       
+        private void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+            }
+        }
 
         /// <summary>
         /// adds object to list based of type of item
@@ -41,14 +49,6 @@ namespace Interactables
                 journalEntries.Add(interactable);
             }
             return true;
-        }
-       
-        private void Awake()
-        {
-            if (instance == null)
-            {
-                instance = this;
-            }
         }
     }
 }

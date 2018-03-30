@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace Hunter.AI
+namespace Hunter.Character.AI
 {
     public class UrgeWeights : ScriptableObject
     {
