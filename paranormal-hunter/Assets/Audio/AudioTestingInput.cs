@@ -23,6 +23,7 @@ public class AudioTestingInput : MonoBehaviour {
 	[Header("Test Inputs - Mob")]
 	public KeyCode BatAggro = KeyCode.U;
 	public KeyCode BatWingLoop = KeyCode.I;
+	public KeyCode GargoyleAttack = KeyCode.G;
 	public KeyCode WolfAggro = KeyCode.E;
 	public KeyCode WolfAttack = KeyCode.W;
 	public KeyCode WolfLunge = KeyCode.R;
@@ -100,6 +101,11 @@ public class AudioTestingInput : MonoBehaviour {
 					StopBatLoop();
 					BatWingLoopPlaying = false;
 				}
+			}
+
+			/* Gargoyle Events */
+			if(Input.GetKeyDown(GargoyleAttack)){
+				PlayGargoyleAttack();
 			}
 
 			/* Wolf Events */
@@ -218,6 +224,14 @@ public class AudioTestingInput : MonoBehaviour {
 		void StopBatLoop()
 		{
 			Fabric.EventManager.Instance.PostEvent("Bat Stop Wing Loop", gameObject);
+		}
+
+/*** Gargoyle Events ***/
+
+	// Temporary Gargoyle laser attack sound
+		void PlayGargoyleAttack()
+		{
+			Fabric.EventManager.Instance.PostEvent("Gargoyle Attack", gameObject);
 		}
 
 /*** Wolf Events ***/
