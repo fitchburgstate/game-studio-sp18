@@ -5,8 +5,9 @@ namespace Hunter
 {
     public class InteractableInventoryItem : MonoBehaviour
     {
-        [Header("Inventory item")]
-        public Item item;
+        //A reference to the item that this interactable was spawned from
+        [HideInInspector]
+        public InventoryItem originItem;
 
         //Math variables for the Anim function
         public float propSpeed = 2;
@@ -17,50 +18,39 @@ namespace Hunter
         [Tooltip("Animation the prop plays")]
         [SerializeField]
         private AnimationCurve propCurve;
-        private MeshRenderer mesh;
-        private Collider propCollider;
+
+        private Collider interactableItemCollider;
         private float propHeightOffset; // half the height of the object
         private Vector3 targetPosition;
 
-        public void AddItemToInventory() // adds this item the the inventory script item list and disable mesh
+        private void Awake()
         {
-            //TODO move inventory into Player
-            var added = Inventory.instance.AddItem(this);
+            interactableItemCollider = GetComponent<Collider>();
+        }
 
-            if (added == true)
+        public void AddItemToInventory()
+        {
+            if (Inventory.instance.TryAddItem(originItem))
             {
+                transform.SetParent(Inventory.instance.transform);
                 gameObject.SetActive(false);
             }
         }
 
         public void SpawnFromProp() // when object is spawned from an interactble prop
         {         
-            propHeightOffset = propCollider.bounds.extents.y; // get half the height of the object so it doesnt go in the ground
+            propHeightOffset = interactableItemCollider.bounds.extents.y; // get half the height of the object so it doesnt go in the ground
 
             if (Utility.RandomNavMeshPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the hieght of the object on the y axis
             {
                 targetPosition.y += propHeightOffset;
             }
 
-            propCollider.enabled = false; //  disable colider when item spawns
-            StartCoroutine(PlayAnim()); // plays anination curve
+            interactableItemCollider.enabled = false; //  disable colider when item spawns
+            StartCoroutine(PlaySpawnAnimation()); // plays anination curve
         }
 
-        public void SpawnOnGround()
-        {
-            // spawn the interactable on the ground below
-            var groundPosition = new Vector3(transform.position.x, targetPosition.y, targetPosition.z);
-            transform.position = groundPosition;
-            // change to give it small radius
-        }
-
-        private void Start()
-        {
-            mesh = GetComponent<MeshRenderer>();
-            propCollider = GetComponent<Collider>();
-        }
-
-        private IEnumerator PlayAnim() // plays animation for object to move to point on navmesh
+        private IEnumerator PlaySpawnAnimation() // plays animation for object to move to point on navmesh
         {
             var inRange = 0.1f; // range for how close object has to get to destination
             float bounceTime = 0; // bounce speed
@@ -78,11 +68,20 @@ namespace Hunter
                 yield return null;
             }
 
-            propCollider.enabled = true; // enables collider when reaches current position
+            interactableItemCollider.enabled = true; // enables collider when reaches current position
+        }
+
+        public void SpawnOnGround()
+        {
+            // spawn the interactable on the ground below
+            var groundPosition = new Vector3(transform.position.x, targetPosition.y, targetPosition.z);
+            transform.position = groundPosition;
+            // change to give it small radius
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            Debug.Log("Something is in the prop.");
             if(other.gameObject.tag == "Player")
             {
                 AddItemToInventory();

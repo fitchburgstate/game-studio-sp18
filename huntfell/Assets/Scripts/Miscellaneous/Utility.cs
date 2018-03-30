@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using Hunter.Character;
 
 namespace Hunter
 {
@@ -84,7 +85,7 @@ namespace Hunter
 
     public interface IDamageable
     {
-        void TakeDamage (int damage, bool isCritical, Element weaponElement);
+        void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith);
     }
 
     public interface IAttack

@@ -56,7 +56,7 @@ namespace Hunter.Character
             {
                 var target = hit.transform;
                 var damageableObject = target.GetComponent<IDamageable>();
-                if (damageableObject == null) { return; }
+                if (damageableObject != null) { return; }
 
                 var enemy = target.GetComponent<Enemy>();
                 Element enemyElementType = null;
@@ -64,7 +64,7 @@ namespace Hunter.Character
 
                 var isCritical = ShouldAttackBeCritical(critPercent);
                 var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
-                damageableObject.TakeDamage(totalDamage, isCritical, weaponElement);
+                damageableObject.TakeDamage(totalDamage, isCritical, this);
             }
 
             CheckAmmo();

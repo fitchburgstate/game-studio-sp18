@@ -40,7 +40,7 @@ namespace Hunter.Character
 
             bool isCritical = ShouldAttackBeCritical(critPercent);
             int totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
-            damageableObject.TakeDamage(totalDamage, isCritical, weaponElement);
+            damageableObject.TakeDamage(totalDamage, isCritical, this);
         }
 
         /// <summary>

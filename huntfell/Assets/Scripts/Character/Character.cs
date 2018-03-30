@@ -97,7 +97,7 @@ namespace Hunter.Character
             }
         }
 
-        public void TakeDamage (int damage, bool isCritical, Element weaponElement)
+        public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             // This is also where we'll do the damage number pop up
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));

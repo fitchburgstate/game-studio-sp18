@@ -12,9 +12,6 @@ public class AdvancedSpawnerEditor : Editor
     SerializedProperty m_Monster;
     SerializedProperty m_MonsterHealth;
     SerializedProperty m_MonsterName;
-    SerializedProperty m_MonsterWalkSpeed;
-    SerializedProperty m_MonsterRunSpeed;
-    SerializedProperty m_MonsterDamage;
     SerializedObject so_Monster;
 
     private Character oldCharacter;
@@ -25,9 +22,6 @@ public class AdvancedSpawnerEditor : Editor
         m_Monster = serializedObject.FindProperty("characterToSpawn");
         m_MonsterHealth = serializedObject.FindProperty("monsterHealth");
         m_MonsterName = serializedObject.FindProperty("monsterName");
-        m_MonsterWalkSpeed = serializedObject.FindProperty("monsterWalkSpeed");
-        m_MonsterRunSpeed = serializedObject.FindProperty("monsterRunSpeed");
-        m_MonsterDamage = serializedObject.FindProperty("monsterDamage");
         so_Monster = new SerializedObject(m_Monster.objectReferenceValue);
     }
 
@@ -64,18 +58,6 @@ public class AdvancedSpawnerEditor : Editor
         }
         EditorGUILayout.EndVertical();
 
-        #region Hard-Coded Wolf
-        //if (characterToSpawn is Wolf)
-        //{
-        //    EditorGUILayout.LabelField(m_MonsterName.stringValue + " Specific Variables", EditorStyles.boldLabel);
-        //    EditorGUILayout.BeginVertical("Box");
-        //    EditorGUILayout.PropertyField(m_MonsterWalkSpeed);
-        //    EditorGUILayout.PropertyField(m_MonsterRunSpeed);
-        //    EditorGUILayout.PropertyField(m_MonsterDamage);
-        //    EditorGUILayout.EndVertical();
-        //}
-        #endregion
-
         oldCharacter = characterToSpawn;
 
         EditorGUILayout.Space();
@@ -107,11 +89,6 @@ public class AdvancedSpawnerEditor : Editor
         {
             m_MonsterHealth.floatValue = characterToSpawn.CurrentHealth;
             m_MonsterName.stringValue = characterToSpawn.name;
-            if (characterToSpawn is Wolf)
-            {
-                //m_MonsterWalkSpeed.floatValue = characterToSpawn.GetComponent<Wolf>().walkSpeed;
-                m_MonsterRunSpeed.floatValue = characterToSpawn.GetComponent<Wolf>().runSpeed;
-            }
         }
     }
 }
