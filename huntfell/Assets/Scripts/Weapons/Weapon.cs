@@ -76,9 +76,9 @@ namespace Hunter.Character
             }
         }
 
-        public abstract void StartAttackFromAnimationEvent ();
+        public abstract void StartAttackFromAnimationEvent();
 
-        protected virtual int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
+        protected virtual int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var critMult = 1;
             var elementMult = 1;
@@ -108,7 +108,7 @@ namespace Hunter.Character
         /// <param name="percent"></param>
         protected bool ShouldAttackBeCritical(int percent)
         {
-            if(percent == 100) { return true; }
+            if (percent == 100) { return true; }
             var rng = new RNGCryptoServiceProvider();
             var buffer = new byte[4];
 

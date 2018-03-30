@@ -104,13 +104,8 @@ namespace Hunter.Character
 
         #region Player Dash
         /// <summary>
-        /// Dashes the Player in the direction they are facing
+        /// Dashes the Player in the direction they are facing.
         /// </summary>
-        /// <param name="controller"></param>
-        /// <param name="moveDirection"></param>
-        /// <param name="lookDirection"></param>
-        /// <param name="playerRoot"></param>
-        /// <param name="agent"></param>
         public void Dash ()
         {
             if (dashCR != null)
@@ -135,10 +130,8 @@ namespace Hunter.Character
         }
 
         /// <summary>
-        /// Lerps the Player from their current postion to the dodge target
+        /// Lerps the Player from their current postion to the dodge target.
         /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
         private IEnumerator PlayDashAnimation ()
         {
             //No moving during the dash movement

@@ -73,7 +73,7 @@ namespace Hunter.Character
         {
             agent.speed = 0;
             agent.destination = transform.position;
-            anim.SetTrigger(isCinematic ? "cinDeath" : "death");
+            anim.SetTrigger(isCinematic ? "death" : "cindeath");
             // TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);
             Destroy(gameObject);

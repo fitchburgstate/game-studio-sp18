@@ -10,7 +10,7 @@ namespace Hunter.Character
         /// <summary>
         /// This is the speed at which the character runs.
         /// </summary>
-        [Range(1, 10)]
+        [Range(0, 20)]
         [Tooltip("The running speed of the character when it is in combat.")]
         public float runSpeed = 5f;
         #endregion

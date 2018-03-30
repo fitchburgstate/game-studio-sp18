@@ -11,12 +11,7 @@ namespace Hunter.Character
     [RequireComponent(typeof(CharacterController), typeof(NavMeshAgent), typeof(Animator))]
     public abstract class Character : MonoBehaviour, IDamageable
     {
-        #region Variables / Properties
-        /// <summary>
-        /// Name of the Player, to be set in the inspector
-        /// </summary>
-        [SerializeField]
-        private string displayName = "Nameless Being";
+        #region Properties
         public string DisplayName
         {
             get
@@ -25,11 +20,6 @@ namespace Hunter.Character
             }
         }
 
-        /// <summary>
-        /// How much health the character has
-        /// </summary>
-        [SerializeField]
-        protected int health = 100;
         public virtual int CurrentHealth
         {
             get
@@ -42,7 +32,6 @@ namespace Hunter.Character
             }
         }
 
-        private Weapon currentWeapon = null;
         public Weapon CurrentWeapon
         {
             get
@@ -51,9 +40,6 @@ namespace Hunter.Character
             }
         }
 
-        // Variables for handeling character rotation
-        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
-        private Transform rotationTransform;
         public Transform RotationTransform
         {
             get
@@ -75,6 +61,26 @@ namespace Hunter.Character
             }
 
         }
+        #endregion
+
+        #region Variables
+        /// <summary>
+        /// Name of the Player, to be set in the inspector
+        /// </summary>
+        [SerializeField]
+        private string displayName = "No Name";
+
+        /// <summary>
+        /// How much health the character has
+        /// </summary>
+        [SerializeField]
+        protected int health = 100;
+
+        private Weapon currentWeapon = null;
+
+        // Variables for handeling character rotation
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
+        private Transform rotationTransform;
 
         public Transform eyeLine;
 
@@ -83,14 +89,14 @@ namespace Hunter.Character
         protected Animator anim;
         #endregion
 
-        protected virtual void Start ()
+        protected virtual void Start()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
         }
 
-        public void EquipWeaponToCharacter (Weapon weapon)
+        public void EquipWeaponToCharacter(Weapon weapon)
         {
             if (weapon != null)
             {
@@ -100,13 +106,13 @@ namespace Hunter.Character
             }
         }
 
-        public void DealDamage (int damage, bool isCritical)
+        public void DealDamage(int damage, bool isCritical)
         {
             // This is also where we'll do the damage number pop up
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
-        private IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        private IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
             // TODO: Refactor this so the health subtration lerp works
             //float t = 0;

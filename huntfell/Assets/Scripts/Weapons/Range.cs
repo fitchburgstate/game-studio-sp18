@@ -47,7 +47,7 @@ namespace Hunter.Character
         /// Performs a raycast to the range of the weapon and then calls the damage calculation method if an enemy is hit,
         /// also plays the animation for shooting.
         /// </summary>
-        public override void StartAttackFromAnimationEvent ()
+        public override void StartAttackFromAnimationEvent()
         {
             var ray = new Ray();
             var hit = new RaycastHit();
@@ -67,38 +67,10 @@ namespace Hunter.Character
                 var totalDamage = CalculateDamage(elementType, enemyElementType, isCritical);
                 damageableObject.DealDamage(totalDamage, isCritical);
             }
-
-            //var player = FindObjectOfType<Player>();
-            //var hit = new RaycastHit();
-
-            //ray.origin = transform.position;
-            //ray.direction = player.transform.forward;
-
-            //if (Physics.Raycast(ray, out hit, weaponRange))
-            //{
-            //    var character = hit.collider.GetComponent<Character>();
-            //    if (character is Enemy)
-            //    {
-            //        //Debug.Log(transform.position);
-            //        //Debug.Log("working");
-            //        character = character as Enemy;
-            //        distanceBetweenWeaponAndEnemy = Vector3.Distance(character.transform.position, transform.position);
-            //        damageFalloffRatio = weaponRange / distanceBetweenWeaponAndEnemy;
-            //        AttackEnemy(character, character.GetComponent<Enemy>().elementType, character.GetComponent<Enemy>().elementType.weakness, character.GetComponent<Enemy>().elementType.resistance1, character.GetComponent<Enemy>().elementType.resistance2, damageFalloffRatio);
-            //    }
-            //    if (character is Player)
-            //    {
-            //        character = character as Player;
-            //        playerRange = Vector3.Distance(character.transform.position, transform.position);
-            //        damageFalloffRatio = weaponRange / playerRange;
-            //        AttackPlayer(character, playerRange);
-            //    }
-            //}
-
             CheckAmmo();
         }
 
-        protected override int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
+        protected override int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var normalDamage = base.CalculateDamage(weaponElement, enemyElementType, isCritical);
             return normalDamage;

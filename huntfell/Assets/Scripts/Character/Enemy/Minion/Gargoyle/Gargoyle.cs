@@ -28,24 +28,17 @@ namespace Hunter.Character
 
         #region Variables
         bool isDying = false;
-
+        
         [SerializeField]
-        private Melee meleeWeapon;
+        private Range rangedWeapon;
 
         private IEnumerator attackCR;
         #endregion
 
-        public void Move(Transform target)
+        protected override void Start()
         {
-            if (isDying) { return; }
-            var finalTarget = new Vector3(target.transform.position.x, RotationTransform.transform.localPosition.y, target.transform.position.z);
-            agent.speed = 0;
-            agent.destination = finalTarget;
-        }
-
-        public void Idle()
-        {
-            if (isDying) { return; }
+            base.Start();
+            if (rangedWeapon != null) { EquipWeaponToCharacter(rangedWeapon); }
         }
 
         public void Attack()
@@ -76,9 +69,7 @@ namespace Hunter.Character
 
         private IEnumerator KillGargoyle(bool isCinematic)
         {
-            agent.speed = 0;
-            agent.destination = transform.position;
-            anim.SetTrigger(isCinematic ? "cinDeath" : "death");
+            anim.SetTrigger("death");
             // TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);
             Destroy(gameObject);
@@ -96,6 +87,16 @@ namespace Hunter.Character
         }
 
         public void Wander(Vector3 target)
+        {
+            if (isDying) { return; }
+        }
+
+        public void Move(Transform target)
+        {
+            if (isDying) { return; }
+        }
+
+        public void Idle()
         {
             if (isDying) { return; }
         }
