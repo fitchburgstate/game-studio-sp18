@@ -5,9 +5,8 @@ namespace Hunter
 {
     public class InteractableInventoryItem : MonoBehaviour
     {
-        //A reference to the item that this interactable was spawned from
-        [HideInInspector]
-        public InventoryItem originItem;
+        //All the relevent data about this item
+        public InventoryItem itemData;
 
         //Math variables for the Anim function
         public float propSpeed = 2;
@@ -30,7 +29,7 @@ namespace Hunter
 
         public void AddItemToInventory()
         {
-            if (Inventory.instance.TryAddItem(originItem))
+            if (Inventory.instance.TryAddItem(itemData, this))
             {
                 transform.SetParent(Inventory.instance.transform);
                 gameObject.SetActive(false);
@@ -52,11 +51,13 @@ namespace Hunter
 
         private IEnumerator PlaySpawnAnimation() // plays animation for object to move to point on navmesh
         {
-            var inRange = 0.1f; // range for how close object has to get to destination
+            //TODO this whole thing needs to be refactored
+            var inRange = 0.2f; // range for how close object has to get to destination
             float bounceTime = 0; // bounce speed
 
             while (Vector3.Distance(transform.position, targetPosition) > inRange)
             {
+                Debug.Log(Vector3.Distance(transform.position, targetPosition) + " -- " + inRange);
                 bounceTime += bounceSpeed * Time.deltaTime;
                 var bounceAmount = propCurve.Evaluate(bounceTime); // how big is the bounce
                 var bouncePosition = new Vector3(0, 0, 0)

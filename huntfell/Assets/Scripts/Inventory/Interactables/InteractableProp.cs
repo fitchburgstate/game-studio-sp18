@@ -126,16 +126,15 @@ namespace Hunter
 
             foreach(var item in itemsToSpawn)
             {
-                item.interactableInventoryItem = Instantiate(item.InteractableItemPrefab, transform.position, transform.rotation);
-                item.interactableInventoryItem.originItem = item;
+                var spawnedItem = Instantiate(item.InteractableItemPrefab, transform.position, transform.rotation);
 
                 switch (propType)
                 {
                     case PropType.Interactable:
-                        item.interactableInventoryItem.SpawnFromProp();
+                        spawnedItem.SpawnFromProp();
                         break;
                     default:
-                        item.interactableInventoryItem.SpawnOnGround();
+                        spawnedItem.SpawnOnGround();
                         break;
                 }
             }

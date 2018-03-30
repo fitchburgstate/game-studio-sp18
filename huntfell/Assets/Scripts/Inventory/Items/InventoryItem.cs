@@ -11,9 +11,6 @@ namespace Hunter
         [Header("Description of item")]
         [TextArea]
         public string itemDescription;
-        /// <summary>
-        /// THIS SHOULD NEVER BE MODIFIED, ONLY USE THIS VARIABLE TO INSTANTIATE AN INSTANCE OF THE INTERACTABLE ITEM. Use interactableInventoryItem instead.
-        /// </summary>
         [SerializeField]
         private InteractableInventoryItem interactableItemPrefab;
         public InteractableInventoryItem InteractableItemPrefab
@@ -23,8 +20,5 @@ namespace Hunter
                 return interactableItemPrefab;
             }
         }
-
-        [HideInInspector]
-        public InteractableInventoryItem interactableInventoryItem;
     }
 }

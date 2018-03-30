@@ -240,22 +240,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1181290055277802
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4126195611805694}
-  - component: {fileID: 96503577383585190}
-  m_Layer: 0
-  m_Name: Tip Trail
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1183369804101414
 GameObject:
   m_ObjectHideFlags: 1
@@ -328,6 +312,26 @@ GameObject:
   - component: {fileID: 4953597692590710}
   m_Layer: 0
   m_Name: Left Thigh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1256937151189028
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4505697240317746}
+  - component: {fileID: 33396946899612930}
+  - component: {fileID: 23095636609786502}
+  - component: {fileID: 65391228557360068}
+  - component: {fileID: 114164728385024680}
+  - component: {fileID: 54809211943034612}
+  m_Layer: 0
+  m_Name: Cutlass Melee Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -715,6 +719,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1633869729926112
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4631322183350362}
+  - component: {fileID: 96096800125878338}
+  m_Layer: 0
+  m_Name: Tip Trail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1657910121544608
 GameObject:
   m_ObjectHideFlags: 1
@@ -787,25 +807,6 @@ GameObject:
   - component: {fileID: 4220083255450180}
   m_Layer: 0
   m_Name: Upper Spine
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &1717715281928736
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4682289875456864}
-  - component: {fileID: 33486942942863208}
-  - component: {fileID: 23215913793033108}
-  - component: {fileID: 65317430605484994}
-  - component: {fileID: 114603247805854718}
-  m_Layer: 0
-  m_Name: Weapon_Melee_Cutlass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1365,19 +1366,6 @@ Transform:
   m_Father: {fileID: 4859865527009212}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4126195611805694
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1181290055277802}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.72, y: 0.037, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4682289875456864}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4132231768627382
 Transform:
   m_ObjectHideFlags: 1
@@ -1809,6 +1797,20 @@ Transform:
   m_Father: {fileID: 4859865527009212}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4505697240317746
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1256937151189028}
+  m_LocalRotation: {x: 0.49836314, y: 0.39767906, z: 0.698077, w: -0.3258435}
+  m_LocalPosition: {x: -0.303, y: 0.006, z: 0.433}
+  m_LocalScale: {x: 1.0689427, y: 1.068943, z: 1.0689433}
+  m_Children:
+  - {fileID: 4631322183350362}
+  m_Father: {fileID: 4859865527009212}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: -118.358, y: 246.819, z: 7.0809937}
 --- !u!4 &4510047177101308
 Transform:
   m_ObjectHideFlags: 1
@@ -1951,6 +1953,19 @@ Transform:
   m_Father: {fileID: 4859865527009212}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4631322183350362
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1633869729926112}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.72, y: 0.037, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4505697240317746}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4650859752093254
 Transform:
   m_ObjectHideFlags: 1
@@ -1964,20 +1979,6 @@ Transform:
   m_Father: {fileID: 4813450346716428}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4682289875456864
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1717715281928736}
-  m_LocalRotation: {x: 0.49836314, y: 0.39767906, z: 0.698077, w: -0.3258435}
-  m_LocalPosition: {x: -0.303, y: 0.006, z: 0.433}
-  m_LocalScale: {x: 1.0689427, y: 1.068943, z: 1.0689433}
-  m_Children:
-  - {fileID: 4126195611805694}
-  m_Father: {fileID: 4859865527009212}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: -118.358, y: 246.819, z: 7.0809937}
 --- !u!4 &4692683092651176
 Transform:
   m_ObjectHideFlags: 1
@@ -2192,7 +2193,7 @@ Transform:
   - {fileID: 4620058017561818}
   - {fileID: 4113708492128220}
   - {fileID: 4419162025308640}
-  - {fileID: 4682289875456864}
+  - {fileID: 4505697240317746}
   m_Father: {fileID: 4704759121873652}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2336,12 +2337,12 @@ Transform:
   m_Father: {fileID: 4335381703765106}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23215913793033108
+--- !u!23 &23095636609786502
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1717715281928736}
+  m_GameObject: {fileID: 1256937151189028}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -2622,6 +2623,13 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1984131979454112}
   m_Mesh: {fileID: 4300006, guid: 73706267faeed554d9aeb7354583b1d5, type: 3}
+--- !u!33 &33396946899612930
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1256937151189028}
+  m_Mesh: {fileID: 4300000, guid: 37e7d2e63d8938347be3c41d365d0444, type: 3}
 --- !u!33 &33475067680049288
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -2629,13 +2637,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1183369804101414}
   m_Mesh: {fileID: 4300004, guid: 73706267faeed554d9aeb7354583b1d5, type: 3}
---- !u!33 &33486942942863208
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1717715281928736}
-  m_Mesh: {fileID: 4300000, guid: 37e7d2e63d8938347be3c41d365d0444, type: 3}
 --- !u!33 &33503858543435214
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -2664,12 +2665,27 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1821761318946862}
   m_Mesh: {fileID: 4300008, guid: 73706267faeed554d9aeb7354583b1d5, type: 3}
---- !u!65 &65317430605484994
+--- !u!54 &54809211943034612
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1256937151189028}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &65391228557360068
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1717715281928736}
+  m_GameObject: {fileID: 1256937151189028}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
@@ -2710,13 +2726,13 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!96 &96503577383585190
+--- !u!96 &96096800125878338
 TrailRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1181290055277802}
+  m_GameObject: {fileID: 1633869729926112}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -2803,6 +2819,25 @@ TrailRenderer:
     generateLightingData: 0
   m_MinVertexDistance: 0.001
   m_Autodestruct: 0
+--- !u!114 &114164728385024680
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1256937151189028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSpeed: 1.25
+  recoverySpeed: 0.5
+  baseDamage: 10
+  inspectorElementType: 0
+  critPercent: 10
+  characterHoldingWeapon: {fileID: 0}
+  hitBoxFrames: 10
+  tipTrail: {fileID: 96096800125878338}
 --- !u!114 &114265102825011292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2828,7 +2863,7 @@ MonoBehaviour:
   displayName: Big Jimbo
   health: 500
   eyeLine: {fileID: 4219033539967030}
-  meleeWeapon: {fileID: 114603247805854718}
+  meleeWeapon: {fileID: 114164728385024680}
   rangedWeapon: {fileID: 0}
   moveSpeed: 5
   rotationMaxSpeed: 12
@@ -2890,25 +2925,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114603247805854718
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1717715281928736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackSpeed: 1.25
-  recoverySpeed: 0.5
-  baseDamage: 10
-  inspectorElementType: 0
-  critPercent: 10
-  characterHoldingWeapon: {fileID: 0}
-  hitBoxFrames: 10
-  tipTrail: {fileID: 96503577383585190}
 --- !u!137 &137184599421688314
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

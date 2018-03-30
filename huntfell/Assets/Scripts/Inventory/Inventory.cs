@@ -11,10 +11,12 @@ namespace Hunter
         [HideInInspector]
         public static Inventory instance;
 
-        public List<WeaponItem> weapons = new List<WeaponItem>();
-        public List<ElementModItem> elementMods = new List<ElementModItem>();
-        public List<JournalItem> journalEntries = new List<JournalItem>();
-        public List<DiaryItem> diaryEntries = new List<DiaryItem>();
+        public List<InventoryItem> startingItems;
+
+        private Dictionary<WeaponItem, InteractableInventoryItem> weapons = new Dictionary<WeaponItem, InteractableInventoryItem>();
+        private Dictionary<ElementModItem, InteractableInventoryItem> elementMods = new Dictionary<ElementModItem, InteractableInventoryItem>();
+        private Dictionary<JournalItem, InteractableInventoryItem> journalEntries = new Dictionary<JournalItem, InteractableInventoryItem>();
+        private Dictionary<DiaryItem, InteractableInventoryItem> diaryEntries = new Dictionary<DiaryItem, InteractableInventoryItem>();
 
         private void Awake()
         {
@@ -27,36 +29,80 @@ namespace Hunter
             {
                 Destroy(gameObject);
             }
+
+            if(startingItems != null && startingItems.Count > 0)
+            {
+                foreach(var item in startingItems)
+                {
+                    TryAddItem(item);
+                }
+            }
         }
 
+        //Method for simply giving the player an instance of item data from which we spawn it's interactble prefab too
         public bool TryAddItem(InventoryItem item) 
         {
-            //So if we have a prefab instance of an interactable items set but no live instance, pre spawn one and set it under the Inventory
-            if(item.InteractableItemPrefab != null && item.interactableInventoryItem == null)
+            if (item is WeaponItem && !weapons.ContainsKey(item as WeaponItem))
             {
-                item.interactableInventoryItem = Instantiate(item.InteractableItemPrefab, transform);
-                item.interactableInventoryItem.originItem = item;
+                var spawnedItem = SpawnInteractableItem(item);
+                weapons.Add(item as WeaponItem, spawnedItem);
             }
-
-            if (item is WeaponItem)
+            else if (item is ElementModItem && !elementMods.ContainsKey(item as ElementModItem))
             {
-                weapons.Add(item as WeaponItem);
+                var spawnedItem = SpawnInteractableItem(item);
+                elementMods.Add(item as ElementModItem, spawnedItem);
             }
-            else if (item is ElementModItem)
+            else if (item is JournalItem && !journalEntries.ContainsKey(item as JournalItem))
             {
-                elementMods.Add(item as ElementModItem);
+                var spawnedItem = SpawnInteractableItem(item);
+                journalEntries.Add(item as JournalItem, spawnedItem);
             }
-            else if (item is JournalItem)
+            else if(item is DiaryItem && !diaryEntries.ContainsKey(item as DiaryItem))
             {
-                journalEntries.Add(item as JournalItem);
-            }
-            else if(item is DiaryItem)
-            {
-                diaryEntries.Add(item as DiaryItem);
+                var spawnedItem = SpawnInteractableItem(item);
+                diaryEntries.Add(item as DiaryItem, spawnedItem);
             }
             else
             {
-                Debug.LogError("Tried to add the item to the Inventory but it was not a recognizable item. Check that the Inventory is able to handle that type of item.");
+                Debug.LogWarning("Tried to add the item to the Inventory but it was not a recognizable item or its already in the Inventory. Check that the Inventory is able to handle that type of item and that it already isnt in the Inventory.");
+                return false;
+            }
+            return true;
+        }
+
+        private InteractableInventoryItem SpawnInteractableItem (InventoryItem item)
+        {
+            if(item.InteractableItemPrefab == null)
+            {
+                Debug.LogWarning("Couldn't spawn an interactble object from the inventory item data provided. Make sure a prefab reference is set in the scriptable object.");
+                return null;
+            }
+            var spawnedItem = Instantiate(item.InteractableItemPrefab, transform);
+            spawnedItem.gameObject.SetActive(false);
+            return spawnedItem;
+        }
+
+        public bool TryAddItem (InventoryItem item, InteractableInventoryItem spawnedInteractableItem)
+        {
+            if (item is WeaponItem && !weapons.ContainsKey(item as WeaponItem))
+            {
+                weapons.Add(item as WeaponItem, spawnedInteractableItem);
+            }
+            else if (item is ElementModItem && !elementMods.ContainsKey(item as ElementModItem))
+            {
+                elementMods.Add(item as ElementModItem, spawnedInteractableItem);
+            }
+            else if (item is JournalItem && !journalEntries.ContainsKey(item as JournalItem))
+            {
+                journalEntries.Add(item as JournalItem, spawnedInteractableItem);
+            }
+            else if (item is DiaryItem && !diaryEntries.ContainsKey(item as DiaryItem))
+            {
+                diaryEntries.Add(item as DiaryItem, spawnedInteractableItem);
+            }
+            else
+            {
+                Debug.LogWarning("Tried to add the item to the Inventory but it was not a recognizable item or its already in the Inventory. Check that the Inventory is able to handle that type of item and that it already isnt in the Inventory.");
                 return false;
             }
             return true;
