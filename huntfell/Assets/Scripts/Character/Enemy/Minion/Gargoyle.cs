@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Hunter.Character.AI;
 
 namespace Hunter.Character
 {
-    public class Gargoyle : Minion, IMoveable, IUtilityBasedAI, IAttack
+    public class Gargoyle : Minion
     {
         #region Properties
         public override int CurrentHealth
@@ -15,11 +16,9 @@ namespace Hunter.Character
             }
             set
             {
-                if (health <= 0 && !isDying)
+                if (health <= 0)
                 {
-                    //TODO Change this to reflect wether the death anim should be cinematic or not later
-                    StartCoroutine(KillGargoyle(true));
-                    isDying = true;
+                    Destroy(gameObject);
                 }
                 health = value;
             }
@@ -27,79 +26,35 @@ namespace Hunter.Character
         #endregion
 
         #region Variables
-        bool isDying = false;
-        
         [SerializeField]
         private Range rangedWeapon;
 
-        private IEnumerator attackCR;
+        private AIDetection gargoyleDetection;
+
+        private GameObject target;
         #endregion
 
         protected override void Start()
         {
             base.Start();
-            if (rangedWeapon != null) { EquipWeaponToCharacter(rangedWeapon); }
+            gargoyleDetection = GetComponent<AIDetection>();
+            target = GameObject.FindGameObjectWithTag("Player");
         }
 
-        public void Attack()
+        private void FixedUpdate()
         {
-            if (attackCR != null) { return; }
-            attackCR = PlayAttackAnimation();
-            StartCoroutine(attackCR);
-        }
+            var enemyInLOS = gargoyleDetection.DetectPlayer();
 
-        public void SwitchWeapon(bool cycleRanged, bool cycleMelee)
-        {
-            //Gargoyle only has one weapon so we don't need to switch
-            return;
-        }
+            transform.LookAt(target.transform);
 
-        public IEnumerator PlayAttackAnimation()
-        {
-            //anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-            //anim.SetTrigger("combat");
-            yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
-            attackCR = null;
-        }
-
-        public void WeaponAnimationEvent()
-        {
-            CurrentWeapon.StartAttackFromAnimationEvent();
-        }
-
-        private IEnumerator KillGargoyle(bool isCinematic)
-        {
-            anim.SetTrigger("death");
-            // TODO Change this later to reflect the animation time
-            yield return new WaitForSeconds(5);
-            Destroy(gameObject);
+            if (enemyInLOS)
+            {
+                rangedWeapon.StartAttackFromAnimationEvent();
+            }
         }
 
         #region Unused Functions
-        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
-        {
-            if (isDying) { return; }
-        }
 
-        public void Dash()
-        {
-            // This should stay empty.
-        }
-
-        public void Wander(Vector3 target)
-        {
-            if (isDying) { return; }
-        }
-
-        public void Move(Transform target)
-        {
-            if (isDying) { return; }
-        }
-
-        public void Idle()
-        {
-            if (isDying) { return; }
-        }
         #endregion
     }
 }

@@ -85,7 +85,7 @@ namespace Hunter.Character.AI
                 {
                     if (rayHit.transform.tag == "Player") // Returns true if the raycast has hit the player
                     {
-                        ////Debug.Log("The player has been found!");
+                        //Debug.Log("The player has been found!");
                         return true;
                     }
                     else // Returns false if the raycast has hit anything (or nothing) BUT the player
@@ -98,17 +98,18 @@ namespace Hunter.Character.AI
         }
 
         // TODO Fix this jank-ass Gizmo Draw Call
-        /// <summary>
-        /// This function draws lines in the scene view to let us developers know the cone of vision that the clicked mob has.
-        /// </summary>
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.blue;
+
             var direction = AiCharacter.eyeLine.TransformDirection(Vector3.forward) * maxDetectionDistance;
+
             var leftRayRotation = Quaternion.AngleAxis(-(fieldOfViewRange / 2), Vector3.up);
             var leftRayDirection = leftRayRotation * AiCharacter.RotationTransform.forward;
+
             var rightRayRotation = Quaternion.AngleAxis((fieldOfViewRange / 2), Vector3.up);
             var rightRayDirection = rightRayRotation * AiCharacter.RotationTransform.forward;
+
             Gizmos.DrawRay(AiCharacter.eyeLine.position, direction);
             Gizmos.DrawRay(AiCharacter.eyeLine.position, leftRayDirection * maxDetectionDistance);
             Gizmos.DrawRay(AiCharacter.eyeLine.position, rightRayDirection * maxDetectionDistance);

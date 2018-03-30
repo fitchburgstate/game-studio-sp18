@@ -67,15 +67,16 @@ namespace Hunter.Character
                 //Debug.Log(hit.transform.name);
                 var target = hit.transform;
                 var damageableObject = target.GetComponent<IDamageable>();
-                if (damageableObject == null) { return; }
+                if (damageableObject == null)
+                {
+                    var enemy = target.GetComponent<Enemy>();
+                    Element enemyElementType = null;
+                    if (enemy != null) { enemyElementType = enemy.elementType; }
 
-                var enemy = target.GetComponent<Enemy>();
-                Element enemyElementType = null;
-                if (enemy != null) { enemyElementType = enemy.elementType; }
-
-                var isCritical = ShouldAttackBeCritical(critPercent);
-                var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
-                damageableObject.TakeDamage(totalDamage, isCritical, weaponElement);
+                    var isCritical = ShouldAttackBeCritical(critPercent);
+                    var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
+                    damageableObject.TakeDamage(totalDamage, isCritical, weaponElement);
+                }
 
                 endOfRay = target.position;
             }
@@ -107,8 +108,6 @@ namespace Hunter.Character
             clipS++;
             if (clipS == clipSize)
             {
-                //reload animation
-                //anim.Play(clip2.name);
                 clipS = 0;
             }
         }
