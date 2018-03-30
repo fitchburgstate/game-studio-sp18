@@ -27,87 +27,107 @@ public class AudioTestingInput : MonoBehaviour {
 	public KeyCode WolfAttack = KeyCode.W;
 	public KeyCode WolfLunge = KeyCode.R;
 
+	[Header("Test Inputs - UI")]
+	public KeyCode UIEvent = KeyCode.M;
+
 	/* Private */
 	bool ExpoMusicPlaying = true;
 	bool BatWingLoopPlaying = false;
+	int UIeventi = 0;
 	
 	#endregion
 	
 	void Update () {
 
 		/* Music Events */
-		if(Input.GetKeyDown(MusicStop)){
-			if(ExpoMusicPlaying == false){
-				CombattoExpoMusic();
-				ExpoMusicPlaying = true;
+			if(Input.GetKeyDown(MusicStop)){
+				if(ExpoMusicPlaying == false){
+					CombattoExpoMusic();
+					ExpoMusicPlaying = true;
+				}
+				else {
+					ExpotoCombatMusic();
+					ExpoMusicPlaying = false;
+				}
 			}
-			else {
-				ExpotoCombatMusic();
-				ExpoMusicPlaying = false;
-			}
-		}
 		
 		/* Player Events */
-		if(Input.GetKeyDown(Footstep)){
-			PlayFootsteps();
-		}
-		if(Input.GetKeyDown(PlayerHit)){
-			PlayPlayerHit();
-		}
-		if(Input.GetKeyDown(PlayerHitByWolf)){
-			PlayPlayerHitByWolf();
-		}
+			if(Input.GetKeyDown(Footstep)){
+				PlayFootsteps();
+			}
+			if(Input.GetKeyDown(PlayerHit)){
+				PlayPlayerHit();
+			}
+			if(Input.GetKeyDown(PlayerHitByWolf)){
+				PlayPlayerHitByWolf();
+			}
 
-		/* Sword Events */
-		if(Input.GetKeyDown(PlayerDrawSword)){
-			PlayPlayerDrawSword();
-		}
-		if(Input.GetKeyDown(PlayerSwordSwing)){
-			PlayPlayerSwordSwing();
-		}
-		if(Input.GetKeyDown(PlayerSwordHit)){
-			PlayPlayerSwordHit();
-		}
-		if(Input.GetKeyDown(PlayerSwordHit) && Input.GetKeyDown(KeyCode.LeftShift)){
-			PlayPlayerSwordSwing();
-			PlayPlayerSwordHit();
-		}
+			/* Sword Events */
+			if(Input.GetKeyDown(PlayerDrawSword)){
+				PlayPlayerDrawSword();
+			}
+			if(Input.GetKeyDown(PlayerSwordSwing)){
+				PlayPlayerSwordSwing();
+			}
+			if(Input.GetKeyDown(PlayerSwordHit)){
+				PlayPlayerSwordHit();
+			}
+			if(Input.GetKeyDown(PlayerSwordHit) && Input.GetKeyDown(KeyCode.LeftShift)){
+				PlayPlayerSwordSwing();
+				PlayPlayerSwordHit();
+			}
 
-		/* Ranged Weapon Events */
-		if(Input.GetKeyDown(PlayerDrawLuger)){
-			PlayDrawLuger();
-		} 
-		if(Input.GetKeyDown(PlayerLugerShot)){
-			PlayLugerShot();
-		}
+			/* Ranged Weapon Events */
+			if(Input.GetKeyDown(PlayerDrawLuger)){
+				PlayDrawLuger();
+			} 
+			if(Input.GetKeyDown(PlayerLugerShot)){
+				PlayLugerShot();
+			}
 
 		/* Mob Events */
 
-		/* Bat Events */
-		if(Input.GetKeyDown(BatAggro)){
-			PlayBatAggro();
-		}
-		if(Input.GetKeyDown(BatWingLoop)){
-			if(BatWingLoopPlaying == false){
-				StartBatLoop();
-				BatWingLoopPlaying = true;
+			/* Bat Events */
+			if(Input.GetKeyDown(BatAggro)){
+				PlayBatAggro();
 			}
-			else {
-				StopBatLoop();
-				BatWingLoopPlaying = false;
+			if(Input.GetKeyDown(BatWingLoop)){
+				if(BatWingLoopPlaying == false){
+					StartBatLoop();
+					BatWingLoopPlaying = true;
+				}
+				else {
+					StopBatLoop();
+					BatWingLoopPlaying = false;
+				}
 			}
-		}
 
-		/* Wolf Events */
-		if(Input.GetKeyDown(WolfAggro)){
-			PlayWolfAggro();
-		}
-		if(Input.GetKeyDown(WolfAttack)){
-			PlayWolfAttack();
-		}
-		if(Input.GetKeyDown(WolfLunge)){
-			PlayWolfLungeAttack();
-		}
+			/* Wolf Events */
+			if(Input.GetKeyDown(WolfAggro)){
+				PlayWolfAggro();
+			}
+			if(Input.GetKeyDown(WolfAttack)){
+				PlayWolfAttack();
+			}
+			if(Input.GetKeyDown(WolfLunge)){
+				PlayWolfLungeAttack();
+			}
+		/* UI Events */
+			if(Input.GetKeyDown(UIEvent)){
+				switch (UIeventi)
+				{	
+					case 1: PlayStartGame();
+						break;
+					case 2: PlayUINavigation();
+						break;
+					case 3: PlayUINavigationBack();
+						break;
+					case 4: PlayPageFlip();
+						break;
+				}
+				if(UIeventi == 4){UIeventi = 0;}
+				else{UIeventi++;}
+			}
 	}
 	
 /* All SFX should be posted with a reference to their parent object,
@@ -140,7 +160,7 @@ public class AudioTestingInput : MonoBehaviour {
 
 /*** Sword Events ***/
 	
-	// For when the player draws their sword
+	// For when the player draws their sword or change the modifier on their sword
 	void PlayPlayerDrawSword()
 	{
 		Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject);
@@ -160,7 +180,7 @@ public class AudioTestingInput : MonoBehaviour {
 
 /*** Ranged Weapon Events ***/
 	
-	// For when the player switches to the Luger weapon
+	// For when the player switches to the Luger weapon or change the modifier on their gun
 		void PlayDrawLuger()
 		{
 			Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject);
@@ -237,5 +257,36 @@ public class AudioTestingInput : MonoBehaviour {
 		{
 			Fabric.EventManager.Instance.PostEvent("Combat to Expo Music");
 		}
-}
 #endregion
+
+#region UI-Events
+/***** UI Events *****/
+	// UI Events don't need to pass a gameObject because they are entirely 2D.
+
+	// For when the player hits the "start game" button
+		void PlayStartGame()
+		{
+			Fabric.EventManager.Instance.PostEvent("UI Start Game");
+		}
+
+	// Every time the player navigates between *menu* items
+		void PlayUINavigation()
+		{
+			Fabric.EventManager.Instance.PostEvent("UI Navigation Blip");
+		}
+
+	// Every time the player goes *back* a UI layer
+		void PlayUINavigationBack()
+		{
+			Fabric.EventManager.Instance.PostEvent("UI Navigation Back");
+		}
+
+	// When the player picks up a journal entry or changes the tab of their journal
+		void PlayPageFlip()
+		{
+			Fabric.EventManager.Instance.PostEvent("UI Page Flip");
+		}
+
+#endregion
+
+}
