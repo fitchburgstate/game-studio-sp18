@@ -23,7 +23,7 @@ namespace Hunter
 
         [Tooltip("Type of element it needs to be triggered. If this is set to None any kind of interaction will trigger this prop.")]
         [SerializeField]
-        private ElementOption elementTypeForInteraction; 
+        private ElementOption elementTypeForInteraction;
 
         [Tooltip("Name of the animation clip that the prop should play when it is interacted with.")]
         [SerializeField]
@@ -53,22 +53,22 @@ namespace Hunter
 
         //private Animator anim;
 
-        private void Start()
+        private void Start ()
         {
             //anim = GetComponent<Animator>();
 
         }
 
-        public void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith)
+        public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             Interact(weaponAttackedWith);
         }
 
         //What should the prop do when it is interacted with, also checks to see if there are any elemental constraints
-        public void Interact(Weapon weaponAttackedWith)
+        public void Interact (Weapon weaponAttackedWith)
         {
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
-            if (elementTypeForInteraction == ElementOption.None ||  weaponElementOption == elementTypeForInteraction)
+            if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
             {
                 switch (propType)
                 {
@@ -82,7 +82,7 @@ namespace Hunter
             }
         }
 
-        private void ShakeProp()  
+        private void ShakeProp ()
         {
             StartCoroutine(ShakeGameObject(0.25f, 0.2f));
             ExecutePropInteractions();
@@ -112,7 +112,7 @@ namespace Hunter
             yield return null;
         }
 
-        private void DestructProp(Vector3 forceDirection)
+        private void DestructProp (Vector3 forceDirection)
         {
             //Disable the regular prop and swap in the broken prefab
             GetComponent<MeshRenderer>().enabled = false;
@@ -125,7 +125,7 @@ namespace Hunter
         }
 
         //Everything to do with Prop Interaction as far as items and firing events on other gameObjects
-        private void ExecutePropInteractions()
+        private void ExecutePropInteractions ()
         {
             if (giveItemsDirectly)
             {
@@ -142,14 +142,15 @@ namespace Hunter
             }
         }
 
-        private void SpawnItems() 
+        private void SpawnItems ()
         {
-            if(itemsToSpawn.Count == 0) {
+            if (itemsToSpawn.Count == 0)
+            {
                 Debug.Log("Nothing in this prop!");
                 return;
             }
 
-            foreach(var item in itemsToSpawn)
+            foreach (var item in itemsToSpawn)
             {
                 var spawnedItem = Instantiate(item.InteractableItemPrefab, transform.position, transform.rotation);
 
@@ -176,17 +177,17 @@ namespace Hunter
             }
         }
 
-        public void StartEvent()
+        public void StartEvent ()
         {
             propEvent.Invoke();
         }
-        
+
         //Destructible Prop Pieces Handeling, this should probably be moves to a seperate component that is put on the broken prop prefab
-        private void SendBrokenPropFlying(GameObject brokenProp, Vector3 forceDirection)
+        private void SendBrokenPropFlying (GameObject brokenProp, Vector3 forceDirection)
         {
             var pieces = brokenProp.GetComponentsInChildren<Rigidbody>();
 
-            for(var i = 0; i < pieces.Length; i++)
+            for (var i = 0; i < pieces.Length; i++)
             {
                 pieces[i].isKinematic = false;
             }
@@ -201,7 +202,7 @@ namespace Hunter
             StartCoroutine(DestroyPieces(pieces));
         }
 
-        private IEnumerator DestroyPieces(Rigidbody[] pieces)
+        private IEnumerator DestroyPieces (Rigidbody[] pieces)
         {
             yield return new WaitForSeconds(4f);
 
@@ -211,5 +212,5 @@ namespace Hunter
             }
             gameObject.SetActive(false);
         }
-    } 
+    }
 }

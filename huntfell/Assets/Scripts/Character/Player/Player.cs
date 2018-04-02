@@ -8,19 +8,10 @@ namespace Hunter.Character
     public sealed class Player : Character, IMoveable, IAttack
     {
         #region Variables
-        [Header("Player Weapons")]
+        [Header("Combat Options")]
         public Transform weaponContainer;
-        ///// <summary>
-        ///// Current Melee Weapon Equipped on the Player, to be set in the inspector
-        ///// </summary>
-        //[SerializeField]
-        //private Melee meleeWeapon;
-
-        ///// <summary>
-        ///// Current Ranged Weapon Equipped on the Player, to be set in the inspector
-        ///// </summary>
-        //[SerializeField]
-        //private Range rangedWeapon;
+        [Tooltip("The total ammount of time it should take for the wound bar to catch up to the health bar."), Range(0.1f, 10f)]
+        public float healthSubtractionTime = 1;
 
         [Header("Movement and Rotation Options")]
         [Range(1, 20), Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
@@ -264,13 +255,14 @@ namespace Hunter.Character
                 EquipWeaponToCharacter(InventoryManager.instance.CycleMeleeWeapons(weaponContainer));
             }
 
-            if (CurrentWeapon != null) { 
+            if (CurrentWeapon != null)
+            {
                 CurrentWeapon?.gameObject.SetActive(true);
                 Debug.Log("Equipped the " + CurrentWeapon.name);
             }
         }
 
-        public void SwitchElement(bool cycleUp, bool cycleDown)
+        public void SwitchElement (bool cycleUp, bool cycleDown)
         {
             if (cycleUp) { EquipElementToCharacter(InventoryManager.instance.CycleElementsUp()); }
             else if (cycleDown) { EquipElementToCharacter(InventoryManager.instance.CycleElementsDown()); }
@@ -278,6 +270,41 @@ namespace Hunter.Character
             if (CurrentWeapon != null)
             {
                 Debug.Log("Equipped the " + Utility.ElementToElementOption(CurrentWeapon.weaponElement) + " to the " + CurrentWeapon.name);
+            }
+        }
+
+        protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        {
+            var startHealth = CurrentHealth;
+            var targetHealth = startHealth - damage;
+
+            if (!isCritical | healthSubtractionTime == 0)
+            {
+                var startTime = Time.time;
+                var percentComplete = 0f;
+                if (UIManager.instance != null) { UIManager.instance.healthBar.fillAmount = targetHealth / totalHealth; }
+
+                while (percentComplete < 1)
+                {
+                    var elapsedTime = Time.time - startTime;
+                    percentComplete = Mathf.Clamp01(elapsedTime / healthSubtractionTime);
+
+                    CurrentHealth = Mathf.Lerp(startHealth, targetHealth, percentComplete);
+                    if (UIManager.instance != null) { UIManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth; }
+
+                    yield return null;
+                }
+                Debug.Log("Ok it should be stopped now: " + (Time.time - startTime));
+            }
+            else
+            {
+                CurrentHealth = targetHealth;
+                if (UIManager.instance != null)
+                {
+                    UIManager.instance.healthBar.fillAmount = CurrentHealth / totalHealth;
+                    UIManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth;
+                }
+
             }
         }
         #endregion

@@ -12,15 +12,12 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -361,6 +358,7 @@
     <Compile Include="Assets\Scripts\Character\AI\UtilityBasedAI.cs" />
     <Compile Include="Assets\Scripts\Character\Character.cs" />
     <Compile Include="Assets\Scripts\Character\CharacterSpawner.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\HealthDrainDot.cs" />
     <Compile Include="Assets\Scripts\Character\Combat\PassiveAreaDamage.cs" />
     <Compile Include="Assets\Scripts\Character\Combat\Weapons\Melee.cs" />
     <Compile Include="Assets\Scripts\Character\Combat\Weapons\Range.cs" />
@@ -390,6 +388,7 @@
     <Compile Include="Assets\Scripts\Miscellaneous\Utility.cs" />
     <Compile Include="Assets\Scripts\UI\CombatText\FloatingText.cs" />
     <Compile Include="Assets\Scripts\UI\CombatText\FloatingTextController.cs" />
+    <Compile Include="Assets\Scripts\UI\UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\Cinemachine\ReleaseNotes.txt" />

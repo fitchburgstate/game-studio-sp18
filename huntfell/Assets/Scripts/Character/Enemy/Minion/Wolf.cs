@@ -12,7 +12,7 @@ namespace Hunter.Character
         private Melee meleeWeapon;
         private IEnumerator attackCR;
 
-        public override int CurrentHealth
+        public override float CurrentHealth
         {
             get
             {
@@ -20,13 +20,13 @@ namespace Hunter.Character
             }
             set
             {
+                health = value;
                 if (health <= 0 && !isDying)
                 {
                     //TODO Change this to reflect wether the death anim should be cinematic or not later
                     StartCoroutine(KillWolf(true));
                     isDying = true;
                 }
-                health = value;
             }
         }
 

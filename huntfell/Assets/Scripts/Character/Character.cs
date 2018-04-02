@@ -25,9 +25,9 @@ namespace Hunter.Character
         /// <summary>
         /// How much health the character has
         /// </summary>
-        [SerializeField]
-        protected int health = 100;
-        public virtual int CurrentHealth
+        //This needs to be a float for when we do the health bar
+        protected float health;
+        public virtual float CurrentHealth
         {
             get
             {
@@ -38,6 +38,8 @@ namespace Hunter.Character
                 health = value;
             }
         }
+        [SerializeField]
+        protected int totalHealth = 100;
 
         private Weapon currentWeapon = null;
         public Weapon CurrentWeapon
@@ -80,11 +82,17 @@ namespace Hunter.Character
         protected Animator anim;
         #endregion
 
-        protected virtual void Start ()
+        protected virtual void Awake ()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
+            CurrentHealth = totalHealth;
+        }
+
+        protected virtual void Start ()
+        {
+
         }
 
         public void EquipWeaponToCharacter (Weapon weapon)
@@ -110,24 +118,8 @@ namespace Hunter.Character
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
-        private IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            // TODO: Refactor this so the health subtration lerp works
-            //float t = 0;
-            //while (t < 1.0 && !isCritical)
-            //{
-            //    t += Time.deltaTime / time;
-            //    health = (int)Mathf.Lerp(start, end, t);
-            //    //Debug.Log(c.health);
-            //}
-            //if (isCritical)
-            //{
-            //    damage = start - end;
-            //    damage = damage + critDamage;
-            //    Debug.Log("Total Damage: " + damage);
-            //    health = health - (int)damage;
-            //    isCritical = false;
-            //}
             CurrentHealth -= damage;
             yield return null;
         }
