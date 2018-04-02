@@ -76,6 +76,11 @@ namespace Hunter.Character
                 moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
             }
 
+            if (myDeviceManager.PressedAim && attackCharacter != null)
+            {
+
+            }
+
             if (myDeviceManager.PressedAttack && attackCharacter != null)
             {
                 attackCharacter.Attack();

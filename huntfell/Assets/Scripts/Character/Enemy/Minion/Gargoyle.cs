@@ -32,23 +32,25 @@ namespace Hunter.Character
         private AIDetection gargoyleDetection;
 
         private GameObject target;
+        private Transform targetEyeline;
         #endregion
 
         protected override void Start()
         {
             base.Start();
             gargoyleDetection = GetComponent<AIDetection>();
+            EquipWeaponToCharacter(rangedWeapon);
             target = GameObject.FindGameObjectWithTag("Player");
+            targetEyeline = target.GetComponent<Character>().eyeLine;
         }
 
         private void FixedUpdate()
         {
             var enemyInLOS = gargoyleDetection.DetectPlayer();
 
-            transform.LookAt(target.transform);
-
             if (enemyInLOS)
             {
+                transform.LookAt(targetEyeline.transform.position);
                 rangedWeapon.StartAttackFromAnimationEvent();
             }
         }

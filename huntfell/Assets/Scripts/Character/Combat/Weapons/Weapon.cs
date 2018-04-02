@@ -57,9 +57,9 @@ namespace Hunter.Character
 
             if (enemyElementType != null)
             {
-                Type weaponType = weaponElement.GetType();
-                Type enemyType = enemyElementType.GetType();
-                Type enemyWeaknessType = enemyElementType.Weakness;
+                var weaponType = weaponElement.GetType();
+                var enemyType = enemyElementType.GetType();
+                var enemyWeaknessType = enemyElementType.Weakness;
 
                 if (weaponType.Equals(enemyType))
                 {

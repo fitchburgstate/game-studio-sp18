@@ -260,6 +260,11 @@ namespace Hunter.Character
                 EquipWeaponToCharacter(meleeWeapon);
             }
         }
+
+        public void AimWeapon()
+        {
+            canMove = false;
+        }
         #endregion
 
         #region Helper Functions
