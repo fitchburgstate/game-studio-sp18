@@ -212,6 +212,19 @@ namespace Hunter.Character
             yield return new WaitForSeconds(dashCoolDown);
             dashCR = null;
         }
+
+        private IEnumerator SetStaminaBar(float targetFill, float totalTime)
+        {
+            if (UIManager.instance == null) { yield break; }
+
+            float startFill = UIManager.instance.staminaBar.fillAmount;
+            float startTime = Time.time;
+            var percentComplete = 0f;
+            while(percentComplete < 1)
+            {
+
+            }
+        }
         #endregion
 
         #region Player Combat
@@ -278,7 +291,7 @@ namespace Hunter.Character
             var startHealth = CurrentHealth;
             var targetHealth = startHealth - damage;
 
-            if (!isCritical | healthSubtractionTime == 0)
+            if (!isCritical || healthSubtractionTime == 0)
             {
                 var startTime = Time.time;
                 var percentComplete = 0f;
@@ -294,7 +307,6 @@ namespace Hunter.Character
 
                     yield return null;
                 }
-                Debug.Log("Ok it should be stopped now: " + (Time.time - startTime));
             }
             else
             {
