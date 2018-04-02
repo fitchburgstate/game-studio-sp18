@@ -213,6 +213,7 @@ namespace Hunter.Character.AI
                 else if ((distanceToTarget > aiDetection.maxDetectionDistance) && (!enemyInLOS))
                 {
                     inCombat = false;
+                    GetComponent<Wolf>().justFound = false;
                 }
             }
 

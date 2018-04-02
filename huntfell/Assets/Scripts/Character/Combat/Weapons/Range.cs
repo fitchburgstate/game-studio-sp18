@@ -47,6 +47,8 @@ namespace Hunter.Character
 
         public float weaponTrailDuration = .05f;
 
+        public Color weaponTrailColor;
+
         private Vector3 endOfRay = Vector3.zero;
 
         private IEnumerator weaponTrailCR;
@@ -61,10 +63,11 @@ namespace Hunter.Character
             var hit = new RaycastHit();
             ray.origin = transform.position;
             ray.direction = characterHoldingWeapon.RotationTransform.forward;
+
             Debug.DrawRay(ray.origin, ray.direction * weaponRange, Color.green, 5);
+
             if (Physics.Raycast(ray, out hit, weaponRange))
             {
-                //Debug.Log(hit.transform.name);
                 var target = hit.transform;
                 var damageableObject = target.GetComponent<IDamageable>();
                 if (damageableObject == null)
@@ -77,8 +80,7 @@ namespace Hunter.Character
                     var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
                     damageableObject.TakeDamage(totalDamage, isCritical, weaponElement);
                 }
-
-                endOfRay = target.position;
+                //endOfRay = target.position;
             }
             else
             {
@@ -90,7 +92,6 @@ namespace Hunter.Character
                 weaponTrailCR = MakeGunTrail();
                 StartCoroutine(weaponTrailCR);
             }
-
             CheckAmmo();
         }
 
@@ -134,8 +135,8 @@ namespace Hunter.Character
             weaponTrail.SetPosition(0, startPoint);
             weaponTrail.SetPosition(1, endPoint);
 
-            weaponTrail.startColor = Color.white;
-            weaponTrail.endColor = Color.white;
+            weaponTrail.startColor = weaponTrailColor;
+            weaponTrail.endColor = weaponTrailColor;
             weaponTrail.material = new Material(Shader.Find("Particles/Additive"));
             weaponTrail.startWidth = width;
             weaponTrail.endWidth = width;

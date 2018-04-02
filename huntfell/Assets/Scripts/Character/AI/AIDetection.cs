@@ -56,7 +56,7 @@ namespace Hunter.Character.AI
                     }
 
                     playerCharacter = pcGO.GetComponent<Character>();
-                    if(playerCharacter == null)
+                    if (playerCharacter == null)
                     {
                         //Debug.LogWarning("The Player does not have the proper Character script attached to them.", pcGO);
                         return null;
@@ -78,6 +78,9 @@ namespace Hunter.Character.AI
             var aiCharacterEyeLine = AiCharacter.eyeLine;
             var rayDirection = PlayerCharacter.eyeLine.position - aiCharacterEyeLine.position;
 
+            var wolfComponent = AiCharacter.GetComponent<Wolf>();
+            var playerComponent = PlayerCharacter.GetComponent<Player>();
+
             if (Vector3.Angle(rayDirection, aiCharacter.RotationTransform.forward) <= fieldOfViewRange * 0.5f)
             {
                 //Debug.DrawRay(aiCharacterEyeLine.position, rayDirection, Color.red, 5);
@@ -85,7 +88,14 @@ namespace Hunter.Character.AI
                 {
                     if (rayHit.transform.tag == "Player") // Returns true if the raycast has hit the player
                     {
-                        //Debug.Log("The player has been found!");
+                        if (wolfComponent != null)
+                        {
+                            if (!wolfComponent.justFound)
+                            {
+                                Fabric.EventManager.Instance.PostEvent("Wolf Aggro", gameObject);
+                                wolfComponent.justFound = true;
+                            }
+                        }
                         return true;
                     }
                     else // Returns false if the raycast has hit anything (or nothing) BUT the player

@@ -33,6 +33,8 @@ namespace Hunter.Character
 
         private GameObject target;
         private Transform targetEyeline;
+
+        private IEnumerator gargoyleAttackCR;
         #endregion
 
         protected override void Start()
@@ -51,8 +53,24 @@ namespace Hunter.Character
             if (enemyInLOS)
             {
                 transform.LookAt(targetEyeline.transform.position);
-                rangedWeapon.StartAttackFromAnimationEvent();
+                Attack();
             }
+        }
+
+        private void Attack()
+        {
+            if (gargoyleAttackCR != null) { return; }
+            gargoyleAttackCR = GargoyleAttack();
+            StartCoroutine(gargoyleAttackCR);
+        }
+
+        private IEnumerator GargoyleAttack()
+        {
+            rangedWeapon.StartAttackFromAnimationEvent();
+            Fabric.EventManager.Instance.PostEvent("Gargoyle Attack", gameObject);
+
+            yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
+            gargoyleAttackCR = null;
         }
 
         #region Unused Functions

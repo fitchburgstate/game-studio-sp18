@@ -27,20 +27,30 @@ namespace Hunter.Character
         private void OnTriggerEnter (Collider target)
         {
             var damageableObject = target.GetComponent<IDamageable>();
-            //We do not want to apply damage to any object that doesnt extend IDamageable, as well as whoever is holding the weapon
+            // We do not want to apply damage to any object that doesnt extend IDamageable, as well as whoever is holding the weapon
             if (damageableObject == null || target.gameObject == characterHoldingWeapon.gameObject)
             {
                 return;
             }
 
-            //Checking to see if the target is an Enemy because of elemental weaknesses
-            Enemy enemy = target.GetComponent<Enemy>();
+            // Checking to see if the target is an Enemy because of elemental weaknesses
+            var enemy = target.GetComponent<Enemy>();
             Element enemyElementType = null;
             if (enemy != null) { enemyElementType = enemy.elementType; }
 
-            bool isCritical = ShouldAttackBeCritical(critPercent);
-            int totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
+            var isCritical = ShouldAttackBeCritical(critPercent);
+            var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
             damageableObject.TakeDamage(totalDamage, isCritical, weaponElement);
+
+            if (characterHoldingWeapon.tag == "Player")
+            {
+                Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
+            }
+
+            if (characterHoldingWeapon.tag == "Enemy")
+            {
+                Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
+            }
         }
 
         /// <summary>

@@ -42,6 +42,9 @@ namespace Hunter.Character
         private float speedRamp;
         private IEnumerator attackCR;
         private IEnumerator dashCR;
+
+        public ParticleSystem nullHitSystem;
+        public ParticleSystem swordSwingSystem;
         #endregion
 
         #region Unity Messages
@@ -55,6 +58,9 @@ namespace Hunter.Character
             }
             // Always start with your melee weapon
             EquipWeaponToCharacter(meleeWeapon);
+
+            nullHitSystem.Stop();
+            swordSwingSystem.Stop();
         }
         #endregion
 
@@ -230,6 +236,33 @@ namespace Hunter.Character
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
+        public void FootstepSoundAnimationEvent()
+        {
+            Fabric.EventManager.Instance.PostEvent("Footstep", gameObject);
+        }
+
+        public void MeleeWeaponSwingAnimationEvent()
+        {
+            Fabric.EventManager.Instance.PostEvent("Player Sword Swing", gameObject);
+        }
+
+        public void SwordSwingParticleAnimationEvent()
+        {
+            if (swordSwingSystem.isStopped)
+            {
+                swordSwingSystem.Play();
+            }
+            else if (swordSwingSystem.isPlaying)
+            {
+                swordSwingSystem.Stop();
+            }
+        }
+
+        public void RangedWeaponFireAnimationEvent()
+        {
+            Fabric.EventManager.Instance.PostEvent("Player Luger Shot", gameObject);
+        }
+
         public IEnumerator PlayAttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
@@ -261,10 +294,11 @@ namespace Hunter.Character
             }
         }
 
-        public void AimWeapon()
-        {
-            canMove = false;
-        }
+        // TODO PostMaloned until after PAX East
+        //public void AimWeapon()
+        //{
+        //    canMove = false;
+        //}
         #endregion
 
         #region Helper Functions

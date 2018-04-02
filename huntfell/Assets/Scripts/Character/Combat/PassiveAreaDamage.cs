@@ -64,6 +64,7 @@ namespace Hunter.AI
             {
                 var dotComponent = other.transform.gameObject.AddComponent<HealthDrainDot>();
                 dotComponent.InitializeDot(damageAmount, damageInterval, damageable);
+                Fabric.EventManager.Instance.PostEvent("Bat Aggro", gameObject);
             }
         }
 

@@ -31,6 +31,12 @@ namespace Hunter.Character
         bool isDying = false;
         #endregion
 
+        protected override void Start()
+        {
+            base.Start();
+            Fabric.EventManager.Instance.PostEvent("Bat Start Wing Loop", gameObject);
+        }
+
         public void Idle()
         {
             if (isDying) { return; }
@@ -48,6 +54,7 @@ namespace Hunter.Character
             agent.speed = 0;
             agent.destination = transform.position;
             anim.SetTrigger("death");
+            Fabric.EventManager.Instance.PostEvent("Bat Stop Wing Loop", gameObject);
             //TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);
             Destroy(gameObject);
