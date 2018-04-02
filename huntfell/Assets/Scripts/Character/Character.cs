@@ -92,8 +92,15 @@ namespace Hunter.Character
             if (weapon != null)
             {
                 currentWeapon = weapon;
-                // TODO: This isnt holding a reference when its time to do the combat checks
                 currentWeapon.characterHoldingWeapon = this;
+            }
+        }
+
+        public void EquipElementToCharacter (Element element)
+        {
+            if (CurrentWeapon != null)
+            {
+                currentWeapon.weaponElement = element;
             }
         }
 

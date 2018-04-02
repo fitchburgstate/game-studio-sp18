@@ -9,17 +9,18 @@ namespace Hunter.Character
     {
         #region Variables
         [Header("Player Weapons")]
-        /// <summary>
-        /// Current Melee Weapon Equipped on the Player, to be set in the inspector
-        /// </summary>
-        [SerializeField]
-        private Melee meleeWeapon;
+        public Transform weaponContainer;
+        ///// <summary>
+        ///// Current Melee Weapon Equipped on the Player, to be set in the inspector
+        ///// </summary>
+        //[SerializeField]
+        //private Melee meleeWeapon;
 
-        /// <summary>
-        /// Current Ranged Weapon Equipped on the Player, to be set in the inspector
-        /// </summary>
-        [SerializeField]
-        private Range rangedWeapon;
+        ///// <summary>
+        ///// Current Ranged Weapon Equipped on the Player, to be set in the inspector
+        ///// </summary>
+        //[SerializeField]
+        //private Range rangedWeapon;
 
         [Header("Movement and Rotation Options")]
         [Range(1, 20), Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
@@ -47,12 +48,12 @@ namespace Hunter.Character
         {
             base.Start();
 
-            if (rangedWeapon != null)
-            {
-                rangedWeapon.gameObject.SetActive(false);
-            }
+            //if (rangedWeapon != null)
+            //{
+            //    rangedWeapon.gameObject.SetActive(false);
+            //}
             //Always start with your melee weapon
-            EquipWeaponToCharacter(meleeWeapon);
+            EquipWeaponToCharacter(InventoryManager.instance.CycleMeleeWeapons(weaponContainer));
         }
         #endregion
 
@@ -252,17 +253,31 @@ namespace Hunter.Character
 
         public void SwitchWeapon (bool cycleRanged, bool cycleMelee)
         {
-            if (CurrentWeapon is Melee && cycleMelee)
+            CurrentWeapon?.gameObject.SetActive(false);
+
+            if (cycleMelee)
             {
-                meleeWeapon.gameObject.SetActive(false);
-                rangedWeapon.gameObject.SetActive(true);
-                EquipWeaponToCharacter(rangedWeapon);
+                EquipWeaponToCharacter(InventoryManager.instance.CycleRangedWeapons(weaponContainer));
             }
-            else if (CurrentWeapon is Range && cycleRanged)
+            else if (cycleRanged)
             {
-                rangedWeapon.gameObject.SetActive(false);
-                meleeWeapon.gameObject.SetActive(true);
-                EquipWeaponToCharacter(meleeWeapon);
+                EquipWeaponToCharacter(InventoryManager.instance.CycleMeleeWeapons(weaponContainer));
+            }
+
+            if (CurrentWeapon != null) { 
+                CurrentWeapon?.gameObject.SetActive(true);
+                Debug.Log("Equipped the " + CurrentWeapon.name);
+            }
+        }
+
+        public void SwitchElement(bool cycleUp, bool cycleDown)
+        {
+            if (cycleUp) { EquipElementToCharacter(InventoryManager.instance.CycleElementsUp()); }
+            else if (cycleDown) { EquipElementToCharacter(InventoryManager.instance.CycleElementsDown()); }
+
+            if (CurrentWeapon != null)
+            {
+                Debug.Log("Equipped the " + Utility.ElementToElementOption(CurrentWeapon.weaponElement) + " to the " + CurrentWeapon.name);
             }
         }
         #endregion

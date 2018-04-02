@@ -108,5 +108,11 @@ namespace Hunter.Character
         {
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
+
+        public void SwitchElement (bool cycleUp, bool cycleDown)
+        {
+            //This can be implemented later if we want elemental wolves
+            return;
+        }
     }
 }

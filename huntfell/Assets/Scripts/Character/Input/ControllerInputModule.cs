@@ -84,6 +84,10 @@ namespace Hunter.Character
             {
                 attackCharacter.SwitchWeapon(myDeviceManager.PressedWeaponSwitchLeft, myDeviceManager.PressedWeaponSwitchRight);
             }
+            else if((myDeviceManager.PressedElementDown || myDeviceManager.PressedElementUp) && attackCharacter != null)
+            {
+                attackCharacter.SwitchElement(myDeviceManager.PressedElementUp, myDeviceManager.PressedElementDown);
+            }
             else if (myDeviceManager.PressedDash && moveCharacter != null)
             {
                 moveCharacter.Dash();

@@ -29,9 +29,9 @@ namespace Hunter
 
         public void AddItemToInventory()
         {
-            if (Inventory.instance.TryAddItem(itemData, this))
+            if (InventoryManager.instance.TryAddItem(itemData, this))
             {
-                transform.SetParent(Inventory.instance.transform);
+                transform.SetParent(InventoryManager.instance.transform);
                 gameObject.SetActive(false);
             }
         }
@@ -40,7 +40,8 @@ namespace Hunter
         {         
             propHeightOffset = interactableItemCollider.bounds.extents.y; // get half the height of the object so it doesnt go in the ground
 
-            if (Utility.RandomNavMeshPoint(transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the hieght of the object on the y axis
+            //Making it so it always spawns somewhere near the player and not behind the prop it came from
+            if (Utility.RandomNavMeshPoint(GameObject.FindGameObjectWithTag("Player").transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the hieght of the object on the y axis
             {
                 targetPosition.y += propHeightOffset;
             }
@@ -57,7 +58,7 @@ namespace Hunter
 
             while (Vector3.Distance(transform.position, targetPosition) > inRange)
             {
-                Debug.Log(Vector3.Distance(transform.position, targetPosition) + " -- " + inRange);
+                //Debug.Log(Vector3.Distance(transform.position, targetPosition) + " -- " + inRange);
                 bounceTime += bounceSpeed * Time.deltaTime;
                 var bounceAmount = propCurve.Evaluate(bounceTime); // how big is the bounce
                 var bouncePosition = new Vector3(0, 0, 0)

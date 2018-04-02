@@ -51,11 +51,12 @@ namespace Hunter
         [SerializeField]
         private UnityEvent propEvent;
 
-        private Animator anim;
+        //private Animator anim;
 
         private void Start()
         {
-            anim = GetComponent<Animator>();
+            //anim = GetComponent<Animator>();
+
         }
 
         public void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith)
@@ -83,8 +84,32 @@ namespace Hunter
 
         private void ShakeProp()  
         {
-            anim.SetTrigger(animationName);
+            StartCoroutine(ShakeGameObject(0.25f, 0.2f));
             ExecutePropInteractions();
+        }
+
+        private IEnumerator ShakeGameObject (float duration, float magnitude)
+        {
+            float elapsed = 0.0f;
+            Vector3 originalObjectPos = gameObject.transform.localPosition;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+
+                float percentComplete = elapsed / duration;
+                float damper = 1.0f - Mathf.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
+                float x = (Random.value * 2.0f - 1.0f);
+                float y = (Random.value * 2.0f - 1.0f);
+                x *= magnitude * damper;
+                y *= magnitude * damper;
+
+                gameObject.transform.localPosition = new Vector3(originalObjectPos.x + x, originalObjectPos.y + y, originalObjectPos.z);
+                yield return null;
+            }
+
+            gameObject.transform.localPosition = originalObjectPos;
+            yield return null;
         }
 
         private void DestructProp(Vector3 forceDirection)
@@ -147,7 +172,7 @@ namespace Hunter
             foreach (var item in itemsToSpawn)
             {
                 //item.transform.SetParent(Inventory.instance.transform);
-                Inventory.instance.TryAddItem(item);
+                InventoryManager.instance.TryAddItem(item);
             }
         }
 
