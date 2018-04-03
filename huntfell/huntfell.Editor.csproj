@@ -331,6 +331,12 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/cbotts1/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
+    <Reference Include="Fabric.Core.Editor">
+      <HintPath>Assets/Plugins/Fabric/Editor/Fabric.Core.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Fabric.Core">
+      <HintPath>Assets/Plugins/Fabric/Fabric.Core.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
     </Reference>
@@ -364,7 +370,9 @@
     <Compile Include="Assets\Editor\AdvancedSpawnerEditor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Audio\FabricEventList_3.27.18.txt" />
     <None Include="Assets\Plugins\Cinemachine\ReleaseNotes.txt" />
+    <None Include="Assets\Plugins\Fabric\Readme.txt" />
     <None Include="Assets\Plugins\InControl\Readme\CHANGELOG.txt" />
     <None Include="Assets\Plugins\InControl\Readme\README.txt" />
     <None Include="Assets\Plugins\PostProcessing\Shaders\ACES.hlsl" />

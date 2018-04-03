@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Hunter
 {
@@ -17,8 +18,9 @@ namespace Hunter
 
     public abstract class Element
     {
-        protected Type weakness;
-
+        public Color elementColor = Color.white;
+        protected Type weakness = null;
+        
         public Type Weakness
         {
             get
@@ -32,6 +34,7 @@ namespace Hunter
             public Fire ()
             {
                 weakness = typeof(Ice);
+                elementColor = Color.red;
             }
         }
 
@@ -40,6 +43,7 @@ namespace Hunter
             public Ice ()
             {
                 weakness = typeof(Fire);
+                elementColor = Color.cyan;
             }
         }
 
@@ -48,6 +52,7 @@ namespace Hunter
             public Lightning ()
             {
                 weakness = typeof(Nature);
+                elementColor = Color.yellow;
             }
         }
 
@@ -56,11 +61,16 @@ namespace Hunter
             public Nature ()
             {
                 weakness = typeof(Lightning);
+                elementColor = Color.green;
             }
         }
 
         public class Silver : Element
         {
+            public Silver ()
+            {
+                elementColor = Color.gray;
+            }
         }
     }
 }

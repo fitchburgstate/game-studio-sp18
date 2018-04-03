@@ -9,7 +9,7 @@ namespace Hunter.Character
         #region Variables
         //public float windUpSpeed;
         public float hitBoxFrames = 5;
-        public TrailRenderer tipTrail;
+        public ParticleSystem swingParticleSystem;
         private Collider meleeHitBox;
         #endregion
 
@@ -17,9 +17,9 @@ namespace Hunter.Character
         {
             base.Start();
             meleeHitBox = GetComponent<BoxCollider>();
-            if (tipTrail != null)
+            if (swingParticleSystem != null)
             {
-                tipTrail.enabled = false;
+                swingParticleSystem.Stop();
             }
             DisableHitbox();
         }
@@ -27,20 +27,30 @@ namespace Hunter.Character
         private void OnTriggerEnter (Collider target)
         {
             var damageableObject = target.GetComponent<IDamageable>();
-            //We do not want to apply damage to any object that doesnt extend IDamageable, as well as whoever is holding the weapon
+            // We do not want to apply damage to any object that doesnt extend IDamageable, as well as whoever is holding the weapon
             if (damageableObject == null || target.gameObject == characterHoldingWeapon.gameObject)
             {
                 return;
             }
 
-            //Checking to see if the target is an Enemy because of elemental weaknesses
-            Enemy enemy = target.GetComponent<Enemy>();
+            // Checking to see if the target is an Enemy because of elemental weaknesses
+            var enemy = target.GetComponent<Enemy>();
             Element enemyElementType = null;
             if (enemy != null) { enemyElementType = enemy.elementType; }
 
-            bool isCritical = ShouldAttackBeCritical(critPercent);
-            int totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
+            var isCritical = ShouldAttackBeCritical(critPercent);
+            var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
             damageableObject.TakeDamage(totalDamage, isCritical, this);
+
+            if (characterHoldingWeapon.tag == "Player")
+            {
+                Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
+            }
+
+            if (characterHoldingWeapon.tag == "Enemy")
+            {
+                Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
+            }
         }
 
         /// <summary>
@@ -54,16 +64,23 @@ namespace Hunter.Character
 
         private IEnumerator OpenAndCloseHitBox ()
         {
-            if (tipTrail != null) { tipTrail.enabled = true; }
             EnableHitbox();
             for (int i = 0; i < hitBoxFrames; i++)
             {
                 yield return new WaitForEndOfFrame();
             }
             DisableHitbox();
-            if (tipTrail != null) {
-                yield return new WaitForSeconds(0.5f);
-                tipTrail.enabled = false;
+        }
+
+        public void StartStopParticleSystem ()
+        {
+            if (swingParticleSystem.isStopped)
+            {
+                swingParticleSystem.Play();
+            }
+            else if (swingParticleSystem.isPlaying)
+            {
+                swingParticleSystem.Stop();
             }
         }
 

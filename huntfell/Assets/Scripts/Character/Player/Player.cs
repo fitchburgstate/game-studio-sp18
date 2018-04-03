@@ -10,6 +10,7 @@ namespace Hunter.Character
         #region Variables
         [Header("Combat Options")]
         public Transform weaponContainer;
+        public float gunTrailLength = 1.5f;
         [Tooltip("The total ammount of time it should take for the wound bar to catch up to the health bar."), Range(0.1f, 10f)]
         public float healthSubtractionTime = 1;
 
@@ -18,6 +19,7 @@ namespace Hunter.Character
         public float moveSpeed = 5f;
         [Range(1, 2000), Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
         public float rotationMaxSpeed = 12f;
+
         public AnimationCurve rotationSpeedCurve;
 
         [Header("Dash Options")]
@@ -32,26 +34,24 @@ namespace Hunter.Character
         private float speedRamp;
         private IEnumerator attackCR;
         private IEnumerator dashCR;
+
+        public ParticleSystem nullHitSystem;
         #endregion
 
         #region Unity Messages
-        protected override void Start ()
+        protected override void Start()
         {
             base.Start();
-
-            //if (rangedWeapon != null)
-            //{
-            //    rangedWeapon.gameObject.SetActive(false);
-            //}
-            //Always start with your melee weapon
             EquipWeaponToCharacter(InventoryManager.instance.CycleMeleeWeapons(weaponContainer));
+
+            nullHitSystem.Stop();
         }
         #endregion
 
         #region Player Movement
-        public void Move (Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
         {
-            //We do not want the player to be able to move during the dash
+            // We do not want the player to be able to move during the dash
             if (!canMove)
             {
                 return;
@@ -88,22 +88,17 @@ namespace Hunter.Character
             characterController.Move(moveDirection * Time.deltaTime);
         }
 
-        public void Move (Transform fuckyou)
+        public void Move(Transform target)
         {
-            //fuck you
+            // This should stay empty.
         }
         #endregion
 
         #region Player Dash
         /// <summary>
-        /// Dashes the Player in the direction they are facing
+        /// Dashes the Player in the direction they are facing.
         /// </summary>
-        /// <param name="controller"></param>
-        /// <param name="moveDirection"></param>
-        /// <param name="lookDirection"></param>
-        /// <param name="playerRoot"></param>
-        /// <param name="agent"></param>
-        public void Dash ()
+        public void Dash()
         {
             if (dashCR != null)
             {
@@ -111,27 +106,25 @@ namespace Hunter.Character
                 return;
             }
             dashCR = PlayDashAnimation();
-            //STARTS DASH COROUTINE
+            // STARTS DASH COROUTINE
             StartCoroutine(dashCR);
         }
 
-        public void DashAnimationEvent ()
+        public void DashAnimationEvent()
         {
             if (dashCR == null)
             {
                 Debug.LogError("The Dash Coroutine reference is null despite the animation event being called. This reference should have been set when you gave the dash input.");
                 return;
             }
-            //RESUMES DASH COROUTINE
+            // RESUMES DASH COROUTINE
             StartCoroutine(dashCR);
         }
 
         /// <summary>
-        /// Lerps the Player from their current postion to the dodge target
+        /// Lerps the Player from their current postion to the dodge target.
         /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        private IEnumerator PlayDashAnimation ()
+        private IEnumerator PlayDashAnimation()
         {
             //No moving during the dash movement
             canMove = false;
@@ -140,7 +133,7 @@ namespace Hunter.Character
             var characterForward = RotationTransform.forward;
             var dashDirectionTarget = new Vector3();
 
-            //Raycast to determine target point for dodge destination on the X and Z axis
+            // Raycast to determine target point for dodge destination on the X and Z axis
             var hit = new RaycastHit();
             var ray = new Ray(startPosition, characterForward);
             if (Physics.Raycast(ray, out hit, dashMaxDistance))
@@ -153,10 +146,10 @@ namespace Hunter.Character
             }
             Debug.DrawLine(startPosition, dashDirectionTarget, Color.red, 5);
 
-            //Raycast to determine target point for dodge destination on the Y axis
+            // Raycast to determine target point for dodge destination on the Y axis.
             hit = new RaycastHit();
             ray = new Ray(dashDirectionTarget, Vector3.down);
-            //Setting this to the start position because if we RayCast down and dont get a hit, that means you casted off the map. If you do we cancel the dash.
+            // Setting this to the start position because if we RayCast down and dont get a hit, that means you casted off the map. If you do we cancel the dash.
             var floorPointFromDashTarget = startPosition;
             if (Physics.Raycast(ray, out hit, dashMaxDistance))
             {
@@ -176,24 +169,24 @@ namespace Hunter.Character
             //var dashTarget = new Vector3(closestNavMeshPointToTarget.x, closestNavMeshPointToTarget.y, closestNavMeshPointToTarget.z);
 
             anim.SetTrigger("DodgeRoll");
-
-            //PAUSE HERE FOR ANIMATION EVENT
+            StartCoroutine(SetStaminaBar(0, 0.3f));
+            // PAUSE HERE FOR ANIMATION EVENT
             Debug.Log("Pausing Dash Coroutine to wait for Animation Event...");
             StopCoroutine(dashCR);
             yield return null;
 
-            //COROUTINE RESUMES HERE
+            // COROUTINE RESUMES HERE
             Debug.Log("Animation Event has resumed the Coroutine.");
 
             var dashDistanceCheckMargin = 0.09f;
             float dashTime = 0;
 
-            //Turn off the normal means of moving / constraining the player since we are doing that ourselves
+            // Turn off the normal means of moving / constraining the player since we are doing that ourselves
             characterController.enabled = false;
             agent.enabled = false;
 
-            //TODO: Make it so the player properly lerps to the position using the Animation Curves
-            //This is where we actually move the player
+            // TODO: Make it so the player properly lerps to the position using the Animation Curves
+            // This is where we actually move the player
             while (Vector3.Distance(transform.position, dashTarget) > dashDistanceCheckMargin)
             {
                 dashTime += dashMaxSpeed * Time.deltaTime;
@@ -204,43 +197,71 @@ namespace Hunter.Character
             characterController.enabled = true;
             agent.enabled = true;
 
-            //Let the player move again after they reached their destination
+            // Let the player move again after they reached their destination
             yield return null;
             canMove = true;
 
-            //Dont want players to be able to spam dash, so we have a cooldown which resets the Coroutine reference after (If that reference isn't null, that means we're still dashing)
+            // Dont want players to be able to spam dash, so we have a cooldown which resets the Coroutine reference after (If that reference isn't null, that means we're still dashing)
+            StartCoroutine(SetStaminaBar(1, dashCoolDown));
             yield return new WaitForSeconds(dashCoolDown);
             dashCR = null;
         }
 
+        //TODO This needs to be moved into the HUD Manager
         private IEnumerator SetStaminaBar(float targetFill, float totalTime)
         {
-            if (UIManager.instance == null) { yield break; }
+            if (HUDManager.instance == null) { yield break; }
 
-            float startFill = UIManager.instance.staminaBar.fillAmount;
+            float startFill = HUDManager.instance.staminaBar.fillAmount;
             float startTime = Time.time;
             var percentComplete = 0f;
             while(percentComplete < 1)
             {
-
+                var elapsedTime = Time.time - startTime;
+                percentComplete = Mathf.Clamp01(elapsedTime / totalTime);
+                HUDManager.instance.staminaBar.fillAmount = Mathf.Lerp(startFill, targetFill, percentComplete);
+                yield return null;
             }
         }
         #endregion
 
         #region Player Combat
-        public void Attack ()
+        public void Attack()
         {
             if (attackCR != null) { return; }
             attackCR = PlayAttackAnimation();
             StartCoroutine(attackCR);
         }
 
-        public void WeaponAnimationEvent ()
+        public void WeaponAnimationEvent()
         {
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public IEnumerator PlayAttackAnimation ()
+        public void FootstepSoundAnimationEvent()
+        {
+            Fabric.EventManager.Instance.PostEvent("Footstep", gameObject);
+        }
+
+        public void MeleeWeaponSwingAnimationEvent()
+        {
+            Fabric.EventManager.Instance.PostEvent("Player Sword Swing", gameObject);
+        }
+
+        public void SwordSwingParticleAnimationEvent()
+        {
+            if(CurrentWeapon != null && CurrentWeapon is Melee)
+            {
+                (CurrentWeapon as Melee).StartStopParticleSystem();
+            }
+        }
+
+        public void RangedWeaponFireAnimationEvent()
+        {
+            Fabric.EventManager.Instance.PostEvent("Player Luger Shot", gameObject);
+        }
+
+        public IEnumerator PlayAttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             if (CurrentWeapon is Melee)
@@ -255,7 +276,7 @@ namespace Hunter.Character
             attackCR = null;
         }
 
-        public void SwitchWeapon (bool cycleRanged, bool cycleMelee)
+        public void SwitchWeapon(bool cycleRanged, bool cycleMelee)
         {
             CurrentWeapon?.gameObject.SetActive(false);
 
@@ -295,7 +316,7 @@ namespace Hunter.Character
             {
                 var startTime = Time.time;
                 var percentComplete = 0f;
-                if (UIManager.instance != null) { UIManager.instance.healthBar.fillAmount = targetHealth / totalHealth; }
+                if (HUDManager.instance != null) { HUDManager.instance.healthBar.fillAmount = targetHealth / totalHealth; }
 
                 while (percentComplete < 1)
                 {
@@ -303,7 +324,7 @@ namespace Hunter.Character
                     percentComplete = Mathf.Clamp01(elapsedTime / healthSubtractionTime);
 
                     CurrentHealth = Mathf.Lerp(startHealth, targetHealth, percentComplete);
-                    if (UIManager.instance != null) { UIManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth; }
+                    if (HUDManager.instance != null) { HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth; }
 
                     yield return null;
                 }
@@ -311,28 +332,31 @@ namespace Hunter.Character
             else
             {
                 CurrentHealth = targetHealth;
-                if (UIManager.instance != null)
+                if (HUDManager.instance != null)
                 {
-                    UIManager.instance.healthBar.fillAmount = CurrentHealth / totalHealth;
-                    UIManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth;
+                    HUDManager.instance.healthBar.fillAmount = CurrentHealth / totalHealth;
+                    HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth;
                 }
 
             }
         }
+
+        // TODO PostMaloned until after PAX East
+        //public void AimWeapon()
+        //{
+        //    canMove = false;
+        //}
         #endregion
 
         #region Helper Functions
         /// <summary>
-        /// Determines if the point the player wants to dash to is on the navmesh
-        /// if not the target point is changed to the point they can dash to
+        /// Determines if the point the player wants to dash to is on the navmesh,
+        /// if not, the target point is changed to the point they can dash to.
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="characterRoot"></param>
-        /// <returns></returns>
-        private Vector3 GetClosestPointOnNavMesh (Vector3 target)
+        private Vector3 GetClosestPointOnNavMesh(Vector3 target)
         {
             var hit = new NavMeshHit();
-            //This gives us a sample radius for the NavMesh check relative to our NavMesh agent size, so given either scenerio where we are passed a floor point or the character's position, we should be able to find a point on the NavMesh
+            // This gives us a sample radius for the NavMesh check relative to our NavMesh agent size, so given either scenerio where we are passed a floor point or the character's position, we should be able to find a point on the NavMesh
             var sampleRadius = agent.height + agent.baseOffset;
 
             if (NavMesh.SamplePosition(target, out hit, sampleRadius, NavMesh.AllAreas))
@@ -353,7 +377,7 @@ namespace Hunter.Character
             return target;
         }
 
-        private float SignedAngle (Vector3 a, Vector3 b)
+        private float SignedAngle(Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
         }

@@ -7,7 +7,10 @@ namespace Hunter.Character
 {
     public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
-        bool isDying = false;
+        [HideInInspector]
+        public bool justFound = false;
+
+        private bool isDying = false;
         [SerializeField]
         private Melee meleeWeapon;
         private IEnumerator attackCR;
@@ -102,6 +105,16 @@ namespace Hunter.Character
             anim.SetTrigger("combat");
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
             attackCR = null;
+        }
+
+        public void WolfBiteSoundAnimationEvent()
+        {
+            Fabric.EventManager.Instance.PostEvent("Wolf Attack", gameObject);
+        }
+
+        public void WolfLungeSoundAnimationEvent()
+        {
+            Fabric.EventManager.Instance.PostEvent("Wolf Lunge Attack", gameObject);
         }
 
         public void WeaponAnimationEvent ()

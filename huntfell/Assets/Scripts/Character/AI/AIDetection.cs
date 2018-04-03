@@ -33,7 +33,7 @@ namespace Hunter.Character.AI
         {
             get
             {
-                if(aiCharacter == null)
+                if (aiCharacter == null)
                 {
                     aiCharacter = transform.GetComponent<Character>();
                 }
@@ -46,19 +46,19 @@ namespace Hunter.Character.AI
         {
             get
             {
-                if(playerCharacter == null)
+                if (playerCharacter == null)
                 {
                     var pcGO = GameObject.FindGameObjectWithTag("Player");
-                    if(pcGO == null)
+                    if (pcGO == null)
                     {
-                        Debug.LogWarning("Could not find a GameObject tagged 'Player' in the scene.");
+                        //Debug.LogWarning("Could not find a GameObject tagged 'Player' in the scene.");
                         return null;
                     }
 
                     playerCharacter = pcGO.GetComponent<Character>();
-                    if(playerCharacter == null)
+                    if (playerCharacter == null)
                     {
-                        Debug.LogWarning("The Player does not have the proper Character script attached to them.", pcGO);
+                        //Debug.LogWarning("The Player does not have the proper Character script attached to them.", pcGO);
                         return null;
                     }
                 }
@@ -78,14 +78,24 @@ namespace Hunter.Character.AI
             var aiCharacterEyeLine = AiCharacter.eyeLine;
             var rayDirection = PlayerCharacter.eyeLine.position - aiCharacterEyeLine.position;
 
+            var wolfComponent = AiCharacter.GetComponent<Wolf>();
+            //var playerComponent = PlayerCharacter.GetComponent<Player>();
+
             if (Vector3.Angle(rayDirection, aiCharacter.RotationTransform.forward) <= fieldOfViewRange * 0.5f)
             {
-                Debug.DrawRay(aiCharacterEyeLine.position, rayDirection, Color.red, 5);
+                //Debug.DrawRay(aiCharacterEyeLine.position, rayDirection, Color.red, 5);
                 if (Physics.Raycast(aiCharacterEyeLine.position, rayDirection, out rayHit, maxDetectionDistance)) // Detects to see if the player is within the field of view
                 {
                     if (rayHit.transform.tag == "Player") // Returns true if the raycast has hit the player
                     {
-                        //Debug.Log("The player has been found!");
+                        if (wolfComponent != null)
+                        {
+                            if (!wolfComponent.justFound)
+                            {
+                                Fabric.EventManager.Instance.PostEvent("Wolf Aggro", gameObject);
+                                wolfComponent.justFound = true;
+                            }
+                        }
                         return true;
                     }
                     else // Returns false if the raycast has hit anything (or nothing) BUT the player
@@ -98,21 +108,21 @@ namespace Hunter.Character.AI
         }
 
         // TODO Fix this jank-ass Gizmo Draw Call
-        /// <summary>
-        /// This function draws lines in the scene view to let us developers know the cone of vision that the clicked mob has.
-        /// </summary>
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.blue;
+
             var direction = AiCharacter.eyeLine.TransformDirection(Vector3.forward) * maxDetectionDistance;
+
             var leftRayRotation = Quaternion.AngleAxis(-(fieldOfViewRange / 2), Vector3.up);
             var leftRayDirection = leftRayRotation * AiCharacter.RotationTransform.forward;
+
             var rightRayRotation = Quaternion.AngleAxis((fieldOfViewRange / 2), Vector3.up);
             var rightRayDirection = rightRayRotation * AiCharacter.RotationTransform.forward;
+
             Gizmos.DrawRay(AiCharacter.eyeLine.position, direction);
             Gizmos.DrawRay(AiCharacter.eyeLine.position, leftRayDirection * maxDetectionDistance);
             Gizmos.DrawRay(AiCharacter.eyeLine.position, rightRayDirection * maxDetectionDistance);
         }
     }
 }
-

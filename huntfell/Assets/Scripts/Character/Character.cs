@@ -8,12 +8,7 @@ namespace Hunter.Character
     [RequireComponent(typeof(CharacterController), typeof(NavMeshAgent), typeof(Animator))]
     public abstract class Character : MonoBehaviour, IDamageable
     {
-        #region Variables / Properties
-        /// <summary>
-        /// Name of the Player, to be set in the inspector
-        /// </summary>
-        [SerializeField]
-        private string displayName = "Nameless Being";
+        #region Properties
         public string DisplayName
         {
             get
@@ -41,7 +36,6 @@ namespace Hunter.Character
         [SerializeField]
         protected int totalHealth = 100;
 
-        private Weapon currentWeapon = null;
         public Weapon CurrentWeapon
         {
             get
@@ -50,9 +44,6 @@ namespace Hunter.Character
             }
         }
 
-        // Variables for handeling character rotation
-        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
-        private Transform rotationTransform;
         public Transform RotationTransform
         {
             get
@@ -74,6 +65,20 @@ namespace Hunter.Character
             }
 
         }
+        #endregion
+
+        #region Variables
+        /// <summary>
+        /// Name of the Player, to be set in the inspector
+        /// </summary>
+        [SerializeField]
+        private string displayName = "No Name";
+
+        private Weapon currentWeapon = null;
+
+        // Variables for handeling character rotation
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
+        private Transform rotationTransform;
 
         public Transform eyeLine;
 
@@ -114,7 +119,7 @@ namespace Hunter.Character
 
         public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
-            // This is also where we'll do the damage number pop up
+            if(HUDManager.instance != null) { HUDManager.instance.SpawnDamageText(damage, transform, weaponAttackedWith?.weaponElement); }
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 

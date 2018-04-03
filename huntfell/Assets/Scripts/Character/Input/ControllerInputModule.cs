@@ -76,13 +76,24 @@ namespace Hunter.Character
                 moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
             }
 
+            //if (myDeviceManager.PressedAim && attackCharacter != null)
+            //{
+
+            //}
+
             if (myDeviceManager.PressedAttack && attackCharacter != null)
             {
                 attackCharacter.Attack();
             }
-            else if ((myDeviceManager.PressedWeaponSwitchLeft || myDeviceManager.PressedWeaponSwitchRight) && attackCharacter != null)
+            else if (myDeviceManager.PressedWeaponSwitchLeft && attackCharacter != null)
             {
                 attackCharacter.SwitchWeapon(myDeviceManager.PressedWeaponSwitchLeft, myDeviceManager.PressedWeaponSwitchRight);
+                Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject);
+            }
+            else if (myDeviceManager.PressedWeaponSwitchRight && attackCharacter != null)
+            {
+                attackCharacter.SwitchWeapon(myDeviceManager.PressedWeaponSwitchLeft, myDeviceManager.PressedWeaponSwitchRight);
+                Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject);
             }
             else if((myDeviceManager.PressedElementDown || myDeviceManager.PressedElementUp) && attackCharacter != null)
             {

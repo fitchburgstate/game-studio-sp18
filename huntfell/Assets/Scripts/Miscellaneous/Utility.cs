@@ -15,9 +15,9 @@ namespace Hunter
         /// <param name="range"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool RandomNavMeshPoint (Vector3 center, float range, out Vector3 result)
+        public static bool RandomNavMeshPoint(Vector3 center, float range, out Vector3 result)
         {
-            for (var i = 0; i < 30; i++)
+            for(var i = 0; i < 30; i++)
             {
                 var randomPoint = center + UnityEngine.Random.insideUnitSphere * range;
                 NavMeshHit hit;
@@ -31,9 +31,9 @@ namespace Hunter
             return false;
         }
 
-        public static Element ElementOptionToElement (ElementOption elementOption)
+        public static Element ElementOptionToElement(ElementOption elementOption)
         {
-            switch (elementOption)
+            switch(elementOption)
             {
                 case ElementOption.Fire:
                     return new Element.Fire();
@@ -69,18 +69,18 @@ namespace Hunter
     //Interface behaviours for characters and interactables
     public interface IMoveable
     {
-        void Move (Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection);
+        void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection);
 
-        void Move (Transform navMeshTarget);
+        void Move(Transform navMeshTarget);
 
-        void Dash ();
+        void Dash();
     }
 
     public interface IUtilityBasedAI
     {
-        void Idle ();
+        void Idle();
 
-        void Wander (Vector3 finalTarget);
+        void Wander(Vector3 finalTarget);
     }
 
     public interface IDamageable
@@ -90,15 +90,14 @@ namespace Hunter
 
     public interface IAttack
     {
-        void Attack ();
+        void Attack();
 
-        IEnumerator PlayAttackAnimation ();
+        IEnumerator PlayAttackAnimation();
 
-        void WeaponAnimationEvent ();
+        void WeaponAnimationEvent();
 
         void SwitchWeapon (bool cycleRanged, bool cycleMelee);
 
         void SwitchElement (bool cycleUp, bool cycleDown);
     }
 }
-

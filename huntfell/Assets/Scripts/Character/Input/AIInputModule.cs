@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEditor;
 using System.Linq;
 
 namespace Hunter.Character.AI
@@ -164,7 +165,7 @@ namespace Hunter.Character.AI
 
         private bool enemyInLOS = false;
         private bool inCombat = false;
-        
+
         private Attack attack;
         private Idle idle;
         private Wander wander;
@@ -176,7 +177,7 @@ namespace Hunter.Character.AI
         public UrgeWeights urgeWeights;
         #endregion
 
-        private void Start ()
+        private void Start()
         {
             #region Classes
             attack = new Attack(gameObject);
@@ -197,7 +198,7 @@ namespace Hunter.Character.AI
             pointTarget = FindPointOnNavmesh();
         }
 
-        private void FixedUpdate ()
+        private void FixedUpdate()
         {
             var distanceToTarget = DistanceToTarget();
             var distanceToPoint = DistanceToPoint();
@@ -212,12 +213,11 @@ namespace Hunter.Character.AI
                 else if ((distanceToTarget > aiDetection.maxDetectionDistance) && (!enemyInLOS))
                 {
                     inCombat = false;
+                    GetComponent<Wolf>().justFound = false;
                 }
             }
 
             var currentState = FindNextState(distanceToTarget, distanceToPoint);
-
-            Debug.Log("Current State: " + currentState);
 
             currentState.Act();
 
@@ -249,7 +249,7 @@ namespace Hunter.Character.AI
         /// This function performs various operations to determine what action has the highest urge value and then returns it.
         /// </summary>
         /// <returns></returns>
-        public UtilityBasedAI FindNextState (float distanceToTarget, float distanceToPoint)
+        public UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
         {
             var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, inCombat);
             var idleValue = idle.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
@@ -258,11 +258,11 @@ namespace Hunter.Character.AI
             var retreatValue = retreat.CalculateRetreat(character.CurrentHealth, inCombat);
 
             #region Debug Logs
-            //Debug.Log("Attack Value: " + attackValue);
-            //Debug.Log("Idle Value: " + idleValue);
-            //Debug.Log("Wander Value: " + wanderValue);
-            //Debug.Log("MoveTo Value: " + moveToValue);
-            //Debug.Log("Retreat Value: " + retreatValue);
+            ////Debug.Log("Attack Value: " + attackValue);
+            ////Debug.Log("Idle Value: " + idleValue);
+            ////Debug.Log("Wander Value: " + wanderValue);
+            ////Debug.Log("MoveTo Value: " + moveToValue);
+            ////Debug.Log("Retreat Value: " + retreatValue);
             #endregion
 
             var largestValue = new Dictionary<UtilityBasedAI, float>
@@ -278,14 +278,14 @@ namespace Hunter.Character.AI
             return max;
         }
 
-        private float DistanceToTarget ()
+        private float DistanceToTarget()
         {
             var distance = Vector3.Distance(target.position, gameObject.transform.position);
 
             return distance;
         }
 
-        private float DistanceToPoint ()
+        private float DistanceToPoint()
         {
             var distance = Vector3.Distance(pointTarget, gameObject.transform.position);
 
@@ -297,7 +297,7 @@ namespace Hunter.Character.AI
         /// </summary>
         /// <param name="targetString">The name of the tag that is being searched for.</param>
         /// <returns></returns>
-        public Transform FindNearestTargetWithString (string targetString)
+        public Transform FindNearestTargetWithString(string targetString)
         {
             var targets = GameObject.FindGameObjectsWithTag(targetString);
             Transform bestTarget = null;
@@ -316,7 +316,7 @@ namespace Hunter.Character.AI
             return bestTarget;
         }
 
-        public Vector3 FindPointOnNavmesh ()
+        public Vector3 FindPointOnNavmesh()
         {
             var targetPosition = new Vector3();
 
