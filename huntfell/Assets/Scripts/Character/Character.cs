@@ -1,9 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using InControl;
-using UnityEditor;
 using UnityEngine.AI;
 
 namespace Hunter.Character
@@ -11,12 +8,7 @@ namespace Hunter.Character
     [RequireComponent(typeof(CharacterController), typeof(NavMeshAgent), typeof(Animator))]
     public abstract class Character : MonoBehaviour, IDamageable
     {
-        #region Variables / Properties
-        /// <summary>
-        /// Name of the Player, to be set in the inspector
-        /// </summary>
-        [SerializeField]
-        private string displayName = "Nameless Being";
+        #region Properties
         public string DisplayName
         {
             get
@@ -28,9 +20,9 @@ namespace Hunter.Character
         /// <summary>
         /// How much health the character has
         /// </summary>
-        [SerializeField]
-        protected int health = 100;
-        public virtual int CurrentHealth
+        //This needs to be a float for when we do the health bar
+        protected float health;
+        public virtual float CurrentHealth
         {
             get
             {
@@ -41,8 +33,9 @@ namespace Hunter.Character
                 health = value;
             }
         }
+        [SerializeField]
+        protected int totalHealth = 100;
 
-        private Weapon currentWeapon = null;
         public Weapon CurrentWeapon
         {
             get
@@ -51,9 +44,6 @@ namespace Hunter.Character
             }
         }
 
-        // Variables for handeling character rotation
-        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
-        private Transform rotationTransform;
         public Transform RotationTransform
         {
             get
@@ -75,6 +65,24 @@ namespace Hunter.Character
             }
 
         }
+        //Effects
+        [HideInInspector]
+        public EffectsController effectsController;
+
+        #endregion
+
+        #region Variables
+        /// <summary>
+        /// Name of the Player, to be set in the inspector
+        /// </summary>
+        [SerializeField]
+        private string displayName = "No Name";
+
+        private Weapon currentWeapon = null;
+
+        // Variables for handeling character rotation
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
+        private Transform rotationTransform;
 
         public Transform eyeLine;
 
@@ -83,11 +91,19 @@ namespace Hunter.Character
         protected Animator anim;
         #endregion
 
-        protected virtual void Start ()
+        protected virtual void Awake ()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
+            effectsController = GetComponentInChildren<EffectsController>();
+            if(effectsController == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
+            CurrentHealth = totalHealth;
+        }
+
+        protected virtual void Start ()
+        {
+
         }
 
         public void EquipWeaponToCharacter (Weapon weapon)
@@ -95,35 +111,36 @@ namespace Hunter.Character
             if (weapon != null)
             {
                 currentWeapon = weapon;
-                // TODO: This isnt holding a reference when its time to do the combat checks
                 currentWeapon.characterHoldingWeapon = this;
             }
         }
 
-        public void DealDamage (int damage, bool isCritical)
+        public void EquipElementToCharacter (Element element)
         {
-            // This is also where we'll do the damage number pop up
+            if (CurrentWeapon != null)
+            {
+                currentWeapon.weaponElement = element;
+            }
+        }
+
+        public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
+        {
+            if(effectsController != null) {
+                //Dont apply hits particles for Dot Effects, kinda jank
+                if (damage > 3)
+                {
+                    effectsController.StartDamageEffects(damage, isCritical, weaponAttackedWith?.weaponElement);
+                }
+                else
+                {
+                    effectsController.StartDamageEffects(damage);
+                }
+            }
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
-        private IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            // TODO: Refactor this so the health subtration lerp works
-            //float t = 0;
-            //while (t < 1.0 && !isCritical)
-            //{
-            //    t += Time.deltaTime / time;
-            //    health = (int)Mathf.Lerp(start, end, t);
-            //    //Debug.Log(c.health);
-            //}
-            //if (isCritical)
-            //{
-            //    damage = start - end;
-            //    damage = damage + critDamage;
-            //    Debug.Log("Total Damage: " + damage);
-            //    health = health - (int)damage;
-            //    isCritical = false;
-            //}
             CurrentHealth -= damage;
             yield return null;
         }
