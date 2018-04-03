@@ -35,7 +35,6 @@ namespace Hunter.Character
         private IEnumerator attackCR;
         private IEnumerator dashCR;
 
-        public ParticleSystem nullHitSystem;
         #endregion
 
         #region Unity Messages
@@ -43,8 +42,6 @@ namespace Hunter.Character
         {
             base.Start();
             EquipWeaponToCharacter(InventoryManager.instance.CycleMeleeWeapons(weaponContainer));
-
-            nullHitSystem.Stop();
         }
         #endregion
 
@@ -65,6 +62,8 @@ namespace Hunter.Character
 
             var characterRoot = RotationTransform;
 
+            var turningSpeedSlow = Mathf.Clamp((moveDirection - lookDirection).magnitude, 1.0f, 1.5f); 
+
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= moveSpeed;
 
@@ -75,7 +74,7 @@ namespace Hunter.Character
             {
                 var targetRotation = new Vector3(characterRoot.localEulerAngles.x, Mathf.Atan2(lookDirection.x, lookDirection.z) * Mathf.Rad2Deg, characterRoot.localEulerAngles.z);
 
-                speedRamp = Mathf.Clamp(speedRamp + Time.deltaTime, 0, 1);
+                speedRamp = Mathf.Clamp01(speedRamp + Time.deltaTime);
                 var changeChar = rotationSpeedCurve.Evaluate(speedRamp) * rotationMaxSpeed;
 
                 characterRoot.localRotation = Quaternion.RotateTowards(characterRoot.localRotation, Quaternion.Euler(targetRotation), changeChar);
@@ -84,8 +83,7 @@ namespace Hunter.Character
             {
                 speedRamp = 0;
             }
-
-            characterController.Move(moveDirection * Time.deltaTime);
+            characterController.Move((moveDirection * Time.deltaTime) / turningSpeedSlow);
         }
 
         public void Move(Transform target)

@@ -80,8 +80,7 @@ namespace Hunter.AI
         private void DoRenderer()
         {
             var batLine = gameObject.AddComponent<LineRenderer>();
-            batLine.startColor = Color.red;
-            batLine.endColor = Color.red;
+            batLine.colorGradient = lineColorGradient;
             batLine.material = new Material(Shader.Find("Particles/Additive"));
             batLine.startWidth = startWidth;
             batLine.endWidth = endWidth;

@@ -70,7 +70,7 @@ namespace Hunter.Character
             {
                 var target = hit.transform;
                 var damageableObject = target.GetComponent<IDamageable>();
-                if (damageableObject == null)
+                if (damageableObject != null)
                 {
                     var enemy = target.GetComponent<Enemy>();
                     Element enemyElementType = null;

@@ -36,19 +36,6 @@ namespace Hunter {
             }
         }
 
-        public void SpawnDamageText (int damage, Transform targetLocation, Element element)
-        {
-            //Create the text pop-up from a prefab
-            var damageTextRoot = Instantiate(damagePopUpPrefab, hudCanvas.transform, false);
-
-            //Set its position to be relative to the character that got hurt
-            var worldPos = Camera.main.WorldToScreenPoint(targetLocation.position);
-            damageTextRoot.transform.position = worldPos;
-
-            //Set the text to the proper color and damage amount
-            var damageText = damageTextRoot.GetComponentInChildren<TextMeshPro>();
-            damageText.SetText(damage.ToString());
-            if(element != null) { damageText.color = element.elementColor; }
-        }
+        
     }
 }

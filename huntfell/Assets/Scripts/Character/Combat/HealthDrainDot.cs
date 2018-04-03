@@ -23,12 +23,14 @@ namespace Hunter.Character
                 return;
             }
             dotCR = HealthDrain();
+            GetComponent<Character>()?.effectsController?.poisonDamageSystem?.Play();
             StartCoroutine(dotCR);
         }
 
         private void OnDestroy()
         {
             StopCoroutine(dotCR);
+            GetComponent<Character>()?.effectsController?.poisonDamageSystem?.Stop();
         }
 
         private IEnumerator HealthDrain()

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DestroyAnimEvent : MonoBehaviour {
 
-	public void DestroyAnimationEvent ()
+	public void DestroyParent ()
     {
-        Destroy(gameObject);
+        Destroy(transform.parent.gameObject);
     }
 }

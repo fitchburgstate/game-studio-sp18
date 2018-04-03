@@ -65,6 +65,10 @@ namespace Hunter.Character
             }
 
         }
+        //Effects
+        [HideInInspector]
+        public EffectsController effectsController;
+
         #endregion
 
         #region Variables
@@ -92,6 +96,8 @@ namespace Hunter.Character
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
+            effectsController = GetComponentInChildren<EffectsController>();
+            if(effectsController == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
             CurrentHealth = totalHealth;
         }
 
@@ -119,7 +125,17 @@ namespace Hunter.Character
 
         public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
-            if(HUDManager.instance != null) { HUDManager.instance.SpawnDamageText(damage, transform, weaponAttackedWith?.weaponElement); }
+            if(effectsController != null) {
+                //Dont apply hits particles for Dot Effects, kinda jank
+                if (damage > 3)
+                {
+                    effectsController.StartDamageEffects(damage, isCritical, weaponAttackedWith?.weaponElement);
+                }
+                else
+                {
+                    effectsController.StartDamageEffects(damage);
+                }
+            }
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
