@@ -26,13 +26,11 @@ namespace Hunter
         private int meleeWeaponIndex = 0;
         private int elementIndex = 0;
 
-
         private void Awake()
         {
             if (instance == null)
             {
                 instance = this;
-                DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -61,14 +59,20 @@ namespace Hunter
 
             //Checks to see if there is already an instance of the weapon underneath the player's weapon container and if so returns that weapon, otherwise spawn one
             var existingWeapons = weaponContainer.GetComponentsInChildren<Range>(true);
-            var rangedWeaponPrefab = rangedWeapons.Keys.ElementAt(rangedWeaponIndex).RangedWeaponPrefab;
+            var rangedItemData = rangedWeapons.Keys.ElementAt(rangedWeaponIndex);
+            var rangedWeaponPrefab = rangedItemData.RangedWeaponPrefab;
+            if(HUDManager.instance != null) { HUDManager.instance.UpdateWeaponImage(rangedItemData.icon); }
             foreach (var weapon in existingWeapons)
             {
-                if(weapon.name == rangedWeaponPrefab.name) { return weapon; }
+                if(weapon.name == rangedWeaponPrefab.name) {
+                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.weaponElement?.elementHUDSprite); }
+                    return weapon;
+                }
             }
 
             var newRanged = Instantiate(rangedWeaponPrefab, weaponContainer);
             newRanged.name = rangedWeaponPrefab.name;
+            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newRanged?.weaponElement?.elementHUDSprite); }
             return newRanged;
         }
 
@@ -85,29 +89,47 @@ namespace Hunter
 
             //Checks to see if there is already an instance of the weapon underneath the player's weapon container and if so returns that weapon, otherwise spawn one
             var existingWeapons = weaponContainer.GetComponentsInChildren<Melee>(true);
-            var meleeWeaponPrefab = meleeWeapons.Keys.ElementAt(meleeWeaponIndex).MeleeWeaponPrefab;
+            var meleeItemData = meleeWeapons.Keys.ElementAt(meleeWeaponIndex);
+            var meleeWeaponPrefab = meleeItemData.MeleeWeaponPrefab;
+            if (HUDManager.instance != null) { HUDManager.instance.UpdateWeaponImage(meleeItemData.icon); }
             foreach (var weapon in existingWeapons)
             {
-                if (weapon.name == meleeWeaponPrefab.name) { return weapon; }
+                if (weapon.name == meleeWeaponPrefab.name) {
+                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.weaponElement?.elementHUDSprite); }
+                    return weapon;
+                }
             }
 
             var newMelee = Instantiate(meleeWeapons.Keys.ElementAt(meleeWeaponIndex).MeleeWeaponPrefab, weaponContainer);
             newMelee.name = meleeWeaponPrefab.name;
+            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newMelee?.weaponElement?.elementHUDSprite); }
             return newMelee;
         }
 
         public Element CycleElementsUp ()
         {
-            if(elementMods.Count == 0)
+            if (elementMods.Count == 0)
             {
                 Debug.LogWarning("There are no element mods in your inventory!");
                 return null;
             }
             elementIndex++;
-            if(elementIndex >= elementMods.Count) { elementIndex = 0; }
+            if (elementIndex >= elementMods.Count) { elementIndex = 0; }
 
+            return GetElementAtIndex(elementIndex);
+        }
 
-            return Utility.ElementOptionToElement(elementMods.Keys.ElementAt(elementIndex).elementOption);
+        private Element GetElementAtIndex (int elementIndex)
+        {
+            var elementItemData = elementMods.Keys.ElementAt(elementIndex);
+            var element = Utility.ElementOptionToElement(elementItemData.elementOption);
+
+            if (element != null)
+            {
+                element.elementHUDSprite = elementItemData.icon;
+            }
+            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(element?.elementHUDSprite); }
+            return element;
         }
 
         public Element CycleElementsDown ()
@@ -120,45 +142,14 @@ namespace Hunter
             elementIndex--;
             if (elementIndex < 0) { elementIndex = elementMods.Count - 1; }
 
-
-            return Utility.ElementOptionToElement(elementMods.Keys.ElementAt(elementIndex).elementOption);
+            return GetElementAtIndex(elementIndex);
         }
 
         //Method for simply giving the player an instance of item data from which we spawn it's interactble prefab too
         public bool TryAddItem(InventoryItem item) 
         {
-            if (item is RangedWeaponItem && !rangedWeapons.ContainsKey(item as RangedWeaponItem))
-            {
-                var spawnedItem = SpawnInteractableItem(item);
-                rangedWeapons.Add(item as RangedWeaponItem, spawnedItem);
-            }
-            else if (item is MeleeWeaponItem && !meleeWeapons.ContainsKey(item as MeleeWeaponItem))
-            {
-                var spawnedItem = SpawnInteractableItem(item);
-                meleeWeapons.Add(item as MeleeWeaponItem, spawnedItem);
-            }
-            else if (item is ElementModItem && !elementMods.ContainsKey(item as ElementModItem))
-            {
-                var spawnedItem = SpawnInteractableItem(item);
-                elementMods.Add(item as ElementModItem, spawnedItem);
-            }
-            else if (item is JournalItem && !journalEntries.ContainsKey(item as JournalItem))
-            {
-                var spawnedItem = SpawnInteractableItem(item);
-                journalEntries.Add(item as JournalItem, spawnedItem);
-            }
-            else if(item is DiaryItem && !diaryEntries.ContainsKey(item as DiaryItem))
-            {
-                var spawnedItem = SpawnInteractableItem(item);
-                diaryEntries.Add(item as DiaryItem, spawnedItem);
-            }
-            else
-            {
-                Debug.LogWarning("Tried to add the item to the Inventory but it was not a recognizable item or its already in the Inventory. Check that the Inventory is able to handle that type of item and that it already isnt in the Inventory.");
-                return false;
-            }
-            Debug.Log($"Added the Item {item.itemName} to your inventory.");
-            return true;
+            var spawnedItem = SpawnInteractableItem(item);
+            return TryAddItem(item, spawnedItem);
         }
 
         private InteractableInventoryItem SpawnInteractableItem (InventoryItem item)

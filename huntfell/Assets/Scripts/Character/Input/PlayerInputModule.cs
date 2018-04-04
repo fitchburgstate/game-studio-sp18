@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Hunter.Character
 {
-    public class ControllerInputModule : MonoBehaviour
+    public class PlayerInputModule : MonoBehaviour
     {
         #region Variables
         /// <summary>
@@ -31,7 +31,7 @@ namespace Hunter.Character
 
             var mainCamera = Camera.main;
             transform.forward = mainCamera.transform.forward;
-            myDeviceManager = mainCamera.GetComponent<DeviceManager>();
+            myDeviceManager = DeviceManager.instance;
 
             attackCharacter = GetComponent<IAttack>();
             moveCharacter = GetComponent<IMoveable>();
@@ -41,45 +41,20 @@ namespace Hunter.Character
         {
             moveDirection = new Vector3(myDeviceManager.MoveAxis_Horizontal, 0, myDeviceManager.MoveAxis_Vertical);
 
-            if (!myDeviceManager.isController)
+            lookDirection = new Vector3(myDeviceManager.LookAxis_Horizontal, 0, myDeviceManager.LookAxis_Vertical);
+            animLookDirection = lookDirection;
+            // If the left axis is being used and the right axis is not, adjust the character body to align with the left 
+            if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
             {
-                //Working DONT DELETE
-                //RaycastHit hit;
-                //Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                //var test = 32f;
-                //if (Physics.Raycast(ray, out hit, test))
-                //{
-                //    lookDirection = new Vector3(hit.point.x, playerRoot.transform.position.y, hit.point.z);
-                //    playerRoot.transform.LookAt(new Vector3(hit.point.x, playerRoot.transform.position.y, hit.point.z));
-                //}
-                //else
-                //{
-                //    var rayvect = ray.getpoint(test);
-                //    lookdirection = new vector3(rayvect.x, playerroot.transform.position.y, rayvect.z);
-                //    playerroot.transform.lookat(new vector3(rayvect.x, playerroot.transform.position.y, rayvect.z));
-                //}
+                lookDirection = moveDirection;
             }
-            else
-            {
-                lookDirection = new Vector3(myDeviceManager.LookAxis_Horizontal, 0, myDeviceManager.LookAxis_Vertical);
-                animLookDirection = lookDirection;
-                // If the left stick is being used and the right stick is not, adjust the character body to align with the left 
-                if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
-                {
-                    lookDirection = moveDirection;
-                }
-
-            }
+            
 
             if (moveCharacter != null)
             {
                 moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
             }
 
-            //if (myDeviceManager.PressedAim && attackCharacter != null)
-            //{
-
-            //}
 
             if (myDeviceManager.PressedAttack && attackCharacter != null)
             {
@@ -88,12 +63,10 @@ namespace Hunter.Character
             else if (myDeviceManager.PressedWeaponSwitchLeft && attackCharacter != null)
             {
                 attackCharacter.SwitchWeapon(myDeviceManager.PressedWeaponSwitchLeft, myDeviceManager.PressedWeaponSwitchRight);
-                Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject);
             }
             else if (myDeviceManager.PressedWeaponSwitchRight && attackCharacter != null)
             {
                 attackCharacter.SwitchWeapon(myDeviceManager.PressedWeaponSwitchLeft, myDeviceManager.PressedWeaponSwitchRight);
-                Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject);
             }
             else if((myDeviceManager.PressedElementDown || myDeviceManager.PressedElementUp) && attackCharacter != null)
             {
@@ -102,6 +75,14 @@ namespace Hunter.Character
             else if (myDeviceManager.PressedDash && moveCharacter != null)
             {
                 moveCharacter.Dash();
+            }
+            //else if (myDeviceManager.PressedAim && attackCharacter != null)
+            //{
+
+            //}
+            else if (myDeviceManager.PressedPause)
+            {
+
             }
         }
     }

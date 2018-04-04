@@ -14,7 +14,7 @@ namespace Hunter.AI
             {
                 if (aiCharacter == null)
                 {
-                    aiCharacter = transform.GetComponent<Character.Character>();
+                    aiCharacter = transform.parent.GetComponent<Character.Character>();
                 }
                 return aiCharacter;
             }

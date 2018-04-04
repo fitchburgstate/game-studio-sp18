@@ -9,11 +9,22 @@ namespace Hunter {
 
         [HideInInspector]
         public static HUDManager instance;
-
-        public Canvas hudCanvas;
+        [SerializeField]
+        private Canvas hudCanvas;
+        [SerializeField]
         public Image healthBar;
+        [SerializeField]
         public Image woundBar;
+        [SerializeField]
         public Image staminaBar;
+        [SerializeField]
+        private Image activeWeapon;
+        [SerializeField]
+        private Image inactiveWeapon;
+        [SerializeField]
+        private Image activeElement;
+        [SerializeField]
+        private Sprite nullElementSprite;
 
         public GameObject damagePopUpPrefab;
 
@@ -22,7 +33,6 @@ namespace Hunter {
             if (instance == null)
             {
                 instance = this;
-                DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -36,6 +46,20 @@ namespace Hunter {
             }
         }
 
-        
+        public void UpdateWeaponImage(Sprite newSprite)
+        {
+            inactiveWeapon.sprite = activeWeapon.sprite;
+            activeWeapon.sprite = newSprite;
+        }
+
+        public void UpdateElementImage (Sprite newSprite)
+        {
+            if(newSprite == null)
+            {
+                activeElement.sprite = nullElementSprite;
+                return;
+            }
+            activeElement.sprite = newSprite;
+        }
     }
 }

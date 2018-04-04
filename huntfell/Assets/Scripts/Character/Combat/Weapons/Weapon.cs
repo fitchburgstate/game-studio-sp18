@@ -43,7 +43,7 @@ namespace Hunter.Character
         public Character characterHoldingWeapon;
         #endregion
 
-        protected void Start()
+        protected virtual void Start()
         {
             weaponElement = Utility.ElementOptionToElement(inspectorElementType);
         }

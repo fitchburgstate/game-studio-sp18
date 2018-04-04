@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 namespace Hunter.Character
 {
@@ -180,7 +181,7 @@ namespace Hunter.Character
             float dashTime = 0;
 
             // Turn off the normal means of moving / constraining the player since we are doing that ourselves
-            characterController.enabled = false;
+            //characterController.enabled = false;
             agent.enabled = false;
 
             // TODO: Make it so the player properly lerps to the position using the Animation Curves
@@ -192,7 +193,7 @@ namespace Hunter.Character
                 transform.position = Vector3.Lerp(transform.position, dashTarget, dashAmount);
                 yield return null;
             }
-            characterController.enabled = true;
+            //characterController.enabled = true;
             agent.enabled = true;
 
             // Let the player move again after they reached their destination
@@ -276,15 +277,22 @@ namespace Hunter.Character
 
         public void SwitchWeapon(bool cycleRanged, bool cycleMelee)
         {
+            if((cycleMelee && CurrentWeapon is Range) || (cycleRanged && CurrentWeapon is Melee))
+            {
+                return;
+            }
+
             CurrentWeapon?.gameObject.SetActive(false);
 
             if (cycleMelee)
             {
                 EquipWeaponToCharacter(InventoryManager.instance.CycleRangedWeapons(weaponContainer));
+                Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject);
             }
             else if (cycleRanged)
             {
                 EquipWeaponToCharacter(InventoryManager.instance.CycleMeleeWeapons(weaponContainer));
+                Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject);
             }
 
             if (CurrentWeapon != null)
@@ -296,8 +304,8 @@ namespace Hunter.Character
 
         public void SwitchElement (bool cycleUp, bool cycleDown)
         {
-            if (cycleUp) { EquipElementToCharacter(InventoryManager.instance.CycleElementsUp()); }
-            else if (cycleDown) { EquipElementToCharacter(InventoryManager.instance.CycleElementsDown()); }
+            if (cycleUp) { EquipElementToWeapon(InventoryManager.instance.CycleElementsUp()); }
+            else if (cycleDown) { EquipElementToWeapon(InventoryManager.instance.CycleElementsDown()); }
 
             if (CurrentWeapon != null)
             {

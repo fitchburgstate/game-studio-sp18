@@ -13,15 +13,19 @@ namespace Hunter.Character
         private Collider meleeHitBox;
         #endregion
 
-        protected new void Start ()
+        protected void Awake ()
+        {
+            meleeHitBox = GetComponent<BoxCollider>();
+            DisableHitbox();
+        }
+
+        protected override void Start ()
         {
             base.Start();
-            meleeHitBox = GetComponent<BoxCollider>();
             if (swingParticleSystem != null)
             {
                 swingParticleSystem.Stop();
             }
-            DisableHitbox();
         }
 
         private void OnTriggerEnter (Collider target)

@@ -28,7 +28,8 @@ namespace Hunter.Character
         #endregion
 
         #region Variables
-        bool isDying = false;
+
+
         #endregion
 
         protected override void Start()
@@ -55,6 +56,7 @@ namespace Hunter.Character
             agent.destination = transform.position;
             anim.SetTrigger("death");
             Fabric.EventManager.Instance.PostEvent("Bat Stop Wing Loop", gameObject);
+            minionHealthBarParent?.gameObject.SetActive(false);
             //TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);
             Destroy(gameObject);

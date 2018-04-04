@@ -68,7 +68,8 @@ namespace Hunter.Character
         //Effects
         [HideInInspector]
         public EffectsController effectsController;
-
+        protected bool invinvible = false;
+        protected bool isDying = false;
         #endregion
 
         #region Variables
@@ -115,7 +116,7 @@ namespace Hunter.Character
             }
         }
 
-        public void EquipElementToCharacter (Element element)
+        public void EquipElementToWeapon (Element element)
         {
             if (CurrentWeapon != null)
             {
@@ -125,6 +126,7 @@ namespace Hunter.Character
 
         public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
+            if (invinvible || isDying) { return; }
             if(effectsController != null) {
                 //Dont apply hits particles for Dot Effects, kinda jank
                 if (damage > 3)
