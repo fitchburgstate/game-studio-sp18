@@ -1500,7 +1500,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4892743926623624}
   - {fileID: 4335954900991288}
   - {fileID: 4466119860154192}
   m_Father: {fileID: 4512040980706586}
@@ -1978,7 +1977,7 @@ Transform:
   m_LocalScale: {x: 12.708644, y: 12.708644, z: 12.708644}
   m_Children: []
   m_Father: {fileID: 4016347807903170}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4336028867560080
 Transform:
@@ -2086,7 +2085,7 @@ Transform:
   m_Children:
   - {fileID: 4185674374217428}
   m_Father: {fileID: 4016347807903170}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4477764117036994
 Transform:
@@ -2357,6 +2356,7 @@ Transform:
   m_Children:
   - {fileID: 4497686672022334}
   - {fileID: 224102848272660790}
+  - {fileID: 4892743926623624}
   m_Father: {fileID: 4512040980706586}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2666,13 +2666,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1716669543329724}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3, y: 1.48, z: 0.057057858}
+  m_LocalRotation: {x: 0.70710576, y: -0, z: -0, w: 0.7071079}
+  m_LocalPosition: {x: 0.06099987, y: 3.014, z: 0.20699978}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4016347807903170}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 4660554182852302}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: 0}
 --- !u!4 &4893206767278496
 Transform:
   m_ObjectHideFlags: 1
@@ -3144,11 +3144,11 @@ Light:
   m_GameObject: {fileID: 1716669543329724}
   m_Enabled: 1
   serializedVersion: 8
-  m_Type: 2
+  m_Type: 0
   m_Color: {r: 0.8602941, g: 0.5213243, b: 0.1581423, a: 1}
   m_Intensity: 5
-  m_Range: 3.56
-  m_SpotAngle: 30
+  m_Range: 4
+  m_SpotAngle: 90
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
