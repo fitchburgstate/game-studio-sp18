@@ -79,7 +79,7 @@ namespace Hunter {
 
         public void ShowItemPickupPrompt(string itemName)
         {
-            pickupText.text = "You have picked up the " + itemName;
+            pickupText.text = "You have picked up " + itemName;
             var cg = promptParent.GetComponent<CanvasGroup>();
             StartCoroutine(FadeInAndOut(cg, 2, 3));
         }
@@ -88,7 +88,7 @@ namespace Hunter {
         {
             journalText.text = bookText;
             var cg = journalParent.GetComponent<CanvasGroup>();
-            StartCoroutine(FadeInAndOut(cg, 2, 12));
+            StartCoroutine(FadeInAndOut(cg, 2, 15));
         }
 
         private IEnumerator FadeInAndOut(CanvasGroup canvasGroup, float fadeDuration, float stayDuration)

@@ -43,7 +43,10 @@ namespace Hunter
 
         private void CheckMainSceneLoaded (Scene oldScene, Scene newScene)
         {
-            if (newScene.buildIndex == 1) { SceneManager.LoadScene("UI_Hud", LoadSceneMode.Additive); }
+            if (newScene.buildIndex == 1) {
+                SceneManager.LoadScene("UI_Hud", LoadSceneMode.Additive);
+                SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
+            }
         }
 
         public void LoadNewScene (string sceneName, bool loadAdditively)
