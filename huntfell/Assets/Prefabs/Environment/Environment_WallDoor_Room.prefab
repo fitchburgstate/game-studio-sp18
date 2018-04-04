@@ -22,9 +22,6 @@ GameObject:
   - component: {fileID: 33106540805027692}
   - component: {fileID: 23330857214511946}
   - component: {fileID: 95230500842349390}
-  - component: {fileID: 65980657656545006}
-  - component: {fileID: 65043805410136740}
-  - component: {fileID: 65220984069800708}
   - component: {fileID: 65932049989665562}
   m_Layer: 8
   m_Name: Tile_Wall_Doorway_BlueGold
@@ -117,30 +114,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1052951427058162}
   m_Mesh: {fileID: 4300000, guid: 860f05219497025479bf5215840e12e1, type: 3}
---- !u!65 &65043805410136740
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1052951427058162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.54, y: 3.4999995, z: -0.18}
-  m_Center: {x: -1.2, y: 1.7499998, z: 0.10500515}
---- !u!65 &65220984069800708
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1052951427058162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.54, y: 3.4999995, z: -0.18}
-  m_Center: {x: -5.73, y: 1.7499998, z: 0.10500515}
 --- !u!65 &65932049989665562
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -153,18 +126,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: -0.66, y: 0.99, z: 0.21}
   m_Center: {x: -3.5699985, y: 3.26, z: 0.10499754}
---- !u!65 &65980657656545006
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1052951427058162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: -7.15, y: 0.75, z: -0.18}
-  m_Center: {x: -3.5699985, y: 3.14, z: 0.10500515}
 --- !u!95 &95230500842349390
 Animator:
   serializedVersion: 3

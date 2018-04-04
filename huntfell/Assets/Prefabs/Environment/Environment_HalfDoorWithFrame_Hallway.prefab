@@ -38,8 +38,6 @@ GameObject:
   - component: {fileID: 23674894143572436}
   - component: {fileID: 95257603398519746}
   - component: {fileID: 65508241079077782}
-  - component: {fileID: 65831247363128262}
-  - component: {fileID: 65558876816759840}
   m_Layer: 8
   m_Name: Tile_Hallway_WallHalfDoor
   m_TagString: Untagged
@@ -202,18 +200,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: -0.18, y: 0.67, z: 3.6}
   m_Center: {x: -0.05, y: 3.31, z: 1.8}
---- !u!65 &65558876816759840
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1259074377404120}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: -0.18, y: 2.82, z: 0.91}
-  m_Center: {x: 0.0000034272673, y: 1.57, z: 3.11}
 --- !u!65 &65822084578145762
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -226,18 +212,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: -0.18, y: 2.82, z: 0.91}
   m_Center: {x: 0.0000034272673, y: 1.57, z: 1.29}
---- !u!65 &65831247363128262
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1259074377404120}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: -0.18, y: 2.82, z: 0.91}
-  m_Center: {x: 0.0000034272673, y: 1.57, z: 0.4}
 --- !u!95 &95257603398519746
 Animator:
   serializedVersion: 3
