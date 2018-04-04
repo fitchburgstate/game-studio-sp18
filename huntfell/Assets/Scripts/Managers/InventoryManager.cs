@@ -130,6 +130,7 @@ namespace Hunter
                 element.elementHUDSprite = elementItemData.icon;
             }
             if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(element?.elementHUDSprite); }
+            Fabric.EventManager.Instance.PostEvent("UI Navigation Blip");
             return element;
         }
 

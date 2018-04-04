@@ -22,7 +22,9 @@ GameObject:
   - component: {fileID: 33286988899479298}
   - component: {fileID: 23657422277010314}
   - component: {fileID: 65963892222646746}
-  m_Layer: 0
+  - component: {fileID: 95634865186878318}
+  - component: {fileID: 114688406033008472}
+  m_Layer: 8
   m_Name: Prop_ComfyChair_Blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,3 +97,43 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.6450332, y: 1.8893085, z: 1.2375572}
   m_Center: {x: 0.5344437, y: 0.9362472, z: -0.6022725}
+--- !u!95 &95634865186878318
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1479448809641054}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114688406033008472
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1479448809641054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToSpawn: []
+  elementTypeForInteraction: 0
+  animationName: 
+  giveItemsDirectly: 0
+  propType: 0
+  destructionForce: 50
+  brokenPropPrefab: {fileID: 0}
+  propEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null

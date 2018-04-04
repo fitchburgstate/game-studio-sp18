@@ -30,7 +30,7 @@ namespace Hunter.Character
             }
             set
             {
-                health = value;
+                health = Mathf.Clamp(value, 0 , totalHealth);
             }
         }
         [SerializeField]

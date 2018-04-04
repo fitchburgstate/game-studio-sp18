@@ -57,9 +57,6 @@ namespace Hunter
         private Character.Character playerCharacter;
         #endregion
 
-
-
-
         private void Start()
         {
             cachedList = new List<GameObject>();
@@ -87,14 +84,15 @@ namespace Hunter
                     for (var i = 0; i < makeTransparentList.Count; i++)
                     {
                         var objectToChange = makeTransparentList[i];
-                        var rend = objectToChange.transform.GetComponent<Renderer>();
+                        var rend = objectToChange.transform.GetComponentInChildren<Renderer>();
+                        cachedShader = rend.material.shader;
                         MakeTransparent(rend);
                     }
 
                     for (var i = 0; i < makeOpaqueList.Count; i++)
                     {
                         var objectToChange = makeOpaqueList[i];
-                        var rend = objectToChange.transform.GetComponent<Renderer>();
+                        var rend = objectToChange.transform.GetComponentInChildren<Renderer>();
                         MakeOpaque(rend);
                     }
                     cachedList = makeTransparentList;
@@ -105,7 +103,7 @@ namespace Hunter
                 for (var i = 0; i < cachedList.Count; i++)
                 {
                     var objectToChange = cachedList[i];
-                    var rend = objectToChange.transform.GetComponent<Renderer>();
+                    var rend = objectToChange.transform.GetComponentInChildren<Renderer>();
                     MakeOpaque(rend);
                 }
                 cachedList.Clear();
@@ -117,9 +115,12 @@ namespace Hunter
             if (rend)
             {
                 rend.material.shader = cachedShader;
-                var tempColor = rend.material.color;
-                tempColor.a = opaqueAmount;
-                rend.material.color = tempColor;
+                if (rend.material.color != null)
+                {
+                    var tempColor = rend.material.color;
+                    tempColor.a = opaqueAmount;
+                    rend.material.color = tempColor;
+                }
             }
         }
 
@@ -128,9 +129,12 @@ namespace Hunter
             if (rend)
             {
                 rend.material.shader = Shader.Find("Transparent/Diffuse");
-                var tempColor = rend.material.color;
-                tempColor.a = transparencyAmount;
-                rend.material.color = tempColor;
+                if (rend.material.color != null)
+                {
+                    var tempColor = rend.material.color;
+                    tempColor.a = transparencyAmount;
+                    rend.material.color = tempColor;
+                }
             }
         }
     }

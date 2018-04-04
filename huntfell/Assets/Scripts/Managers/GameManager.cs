@@ -46,6 +46,17 @@ namespace Hunter
             if (newScene.buildIndex == 1) {
                 SceneManager.LoadScene("UI_Hud", LoadSceneMode.Additive);
                 SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
+                if (Fabric.EventManager.Instance != null)
+                {
+                    Fabric.EventManager.Instance.PostEvent("Expo to Combat Music");
+                }
+            }
+            else if(newScene.buildIndex == 0)
+            {
+                if (Fabric.EventManager.Instance != null)
+                {
+                    Fabric.EventManager.Instance.PostEvent("Combat to Expo Music");
+                }
             }
         }
 

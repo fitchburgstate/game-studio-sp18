@@ -3056,7 +3056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9199cca3d76a8b34596514712ddc5423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalHealth: 100
+  totalHealth: 40
   effectsController: {fileID: 0}
   displayName: Wolf
   eyeLine: {fileID: 4792408177706122}
@@ -3098,7 +3098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54082744c3473f047aaaad4aa8c57dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 5
+  maxDistance: 2
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
 --- !u!114 &114361328388092754
 MonoBehaviour:
@@ -3160,8 +3160,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackSpeed: 1
-  recoverySpeed: 0.5
-  baseDamage: 10
+  recoverySpeed: 1.2
+  baseDamage: 9
   inspectorElementType: 0
   critPercent: 10
   characterHoldingWeapon: {fileID: 0}

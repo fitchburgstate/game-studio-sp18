@@ -52,8 +52,8 @@ namespace Hunter.Character
 
         protected virtual int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
-            var critMult = 1;
-            var elementMult = 1;
+            var critMult = isCritical ? 1.3f : 1.0f;
+            var elementMult = 1.0f;
 
             if (enemyElementType != null)
             {
@@ -67,11 +67,12 @@ namespace Hunter.Character
                 }
                 else if (weaponType.Equals(enemyWeaknessType))
                 {
-                    elementMult = 2;
+                    elementMult = 1.3f;
                 }
             }
+            var randomInt = UnityEngine.Random.Range(-1, 3);
 
-            return baseDamage * critMult * elementMult;
+            return (int)((baseDamage + randomInt) * critMult * elementMult);
         }
 
         /// <summary>

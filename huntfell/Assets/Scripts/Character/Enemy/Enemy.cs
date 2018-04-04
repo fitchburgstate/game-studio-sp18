@@ -18,5 +18,10 @@ namespace Hunter.Character
         /// </summary>
         public ElementOption enemyElementOption;
 
+        protected override void Start ()
+        {
+            elementType = Utility.ElementOptionToElement(enemyElementOption);
+        }
+
     }
 }

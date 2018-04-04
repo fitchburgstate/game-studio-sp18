@@ -37,12 +37,14 @@ namespace Hunter
             {
                 menuCanvas = GetComponentInChildren<Canvas>();
             }
-            UnpauseGame();
+            Time.timeScale = 1;
+            menuCanvas.gameObject.SetActive(false);
         }
 
         public void PauseGame ()
         {
             Time.timeScale = 0;
+            Fabric.EventManager.Instance.PostEvent("UI Start Game");
             DisplayJournals();
             menuCanvas.gameObject.SetActive(true);
         }
@@ -50,6 +52,7 @@ namespace Hunter
         public void UnpauseGame ()
         {
             Time.timeScale = 1;
+            Fabric.EventManager.Instance.PostEvent("UI Navigation Back");
             menuCanvas.gameObject.SetActive(false);
         }
 
