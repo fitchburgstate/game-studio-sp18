@@ -51,11 +51,13 @@ namespace Hunter
         [SerializeField]
         private UnityEvent propEvent;
 
-        //private Animator anim;
+        private bool currentlyInteracting = false;
+
+        // private Animator anim;
 
         private void Start ()
         {
-            //anim = GetComponent<Animator>();
+            // anim = GetComponent<Animator>();
 
         }
 
@@ -64,12 +66,14 @@ namespace Hunter
             Interact(weaponAttackedWith);
         }
 
-        //What should the prop do when it is interacted with, also checks to see if there are any elemental constraints
+        // What should the prop do when it is interacted with, also checks to see if there are any elemental constraints
         public void Interact (Weapon weaponAttackedWith)
         {
+            if (currentlyInteracting) { return; }
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
             {
+                currentlyInteracting = true;
                 switch (propType)
                 {
                     case PropType.Destructible:
@@ -90,17 +94,17 @@ namespace Hunter
 
         private IEnumerator ShakeGameObject (float duration, float magnitude)
         {
-            float elapsed = 0.0f;
-            Vector3 originalObjectPos = gameObject.transform.localPosition;
+            var elapsed = 0.0f;
+            var originalObjectPos = gameObject.transform.localPosition;
 
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
 
-                float percentComplete = elapsed / duration;
-                float damper = 1.0f - Mathf.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
-                float x = (Random.value * 2.0f - 1.0f);
-                float y = (Random.value * 2.0f - 1.0f);
+                var percentComplete = elapsed / duration;
+                var damper = 1.0f - Mathf.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
+                var x = (Random.value * 2.0f - 1.0f);
+                var y = (Random.value * 2.0f - 1.0f);
                 x *= magnitude * damper;
                 y *= magnitude * damper;
 
@@ -110,21 +114,22 @@ namespace Hunter
 
             gameObject.transform.localPosition = originalObjectPos;
             yield return null;
+            currentlyInteracting = false;
         }
 
         private void DestructProp (Vector3 forceDirection)
         {
-            //Disable the regular prop and swap in the broken prefab
-            GetComponent<MeshRenderer>().enabled = false;
-            GetComponent<Collider>().enabled = false;
+            // Disable the regular prop and swap in the broken prefab
+            // GetComponent<MeshRenderer>().enabled = false;
+            // GetComponent<Collider>().enabled = false;
+            gameObject.SetActive(false);
             brokenPropPrefab = Instantiate(brokenPropPrefab, transform.position, transform.rotation);
 
             ExecutePropInteractions();
-
-            SendBrokenPropFlying(brokenPropPrefab, forceDirection);
+            //SendBrokenPropFlying(brokenPropPrefab, forceDirection);
         }
 
-        //Everything to do with Prop Interaction as far as items and firing events on other gameObjects
+        // Everything to do with Prop Interaction as far as items and firing events on other gameObjects
         private void ExecutePropInteractions ()
         {
             if (giveItemsDirectly)
@@ -172,7 +177,7 @@ namespace Hunter
         {
             foreach (var item in itemsToSpawn)
             {
-                //item.transform.SetParent(Inventory.instance.transform);
+                // item.transform.SetParent(Inventory.instance.transform);
                 InventoryManager.instance.TryAddItem(item);
             }
         }
@@ -182,7 +187,7 @@ namespace Hunter
             propEvent.Invoke();
         }
 
-        //Destructible Prop Pieces Handeling, this should probably be moves to a seperate component that is put on the broken prop prefab
+        // Destructible Prop Pieces Handeling, this should probably be moves to a seperate component that is put on the broken prop prefab
         private void SendBrokenPropFlying (GameObject brokenProp, Vector3 forceDirection)
         {
             var pieces = brokenProp.GetComponentsInChildren<Rigidbody>();
@@ -195,7 +200,7 @@ namespace Hunter
             for (var i = 0; i < pieces.Length; i++)
             {
                 pieces[i].AddForce(forceDirection * destructionForce);
-                //might change to general explosion
+                // might change to general explosion
                 // have object destroy the direct the player facing
             }
 

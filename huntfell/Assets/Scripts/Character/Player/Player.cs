@@ -347,6 +347,17 @@ namespace Hunter.Character
             }
         }
 
+        public void RestoreHealth(int amount)
+        {
+            StopCoroutine("SubtractHealthFromCharacter");
+            CurrentHealth += amount;
+            if (HUDManager.instance != null)
+            {
+                HUDManager.instance.healthBar.fillAmount = CurrentHealth / totalHealth;
+                HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth;
+            }
+        }
+
         // TODO PostMaloned until after PAX East
         //public void AimWeapon()
         //{

@@ -53,10 +53,11 @@ namespace Hunter
         private IEnumerator PlaySpawnAnimation() // plays animation for object to move to point on navmesh
         {
             //TODO this whole thing needs to be refactored
-            var inRange = 0.2f; // range for how close object has to get to destination
+            var inRange = 0.5f; // range for how close object has to get to destination
             float bounceTime = 0; // bounce speed
 
-            while (Vector3.Distance(transform.position, targetPosition) > inRange)
+            //Adding the or here because this is super jank atm
+            while (Vector3.Distance(transform.position, targetPosition) > inRange || bounceTime < 3)
             {
                 //Debug.Log(Vector3.Distance(transform.position, targetPosition) + " -- " + inRange);
                 bounceTime += bounceSpeed * Time.deltaTime;
@@ -81,7 +82,7 @@ namespace Hunter
             // change to give it small radius
         }
 
-        private void OnTriggerEnter(Collider other)
+        protected virtual void OnTriggerEnter(Collider other)
         {
             Debug.Log("Something is in the prop.");
             if(other.gameObject.tag == "Player")

@@ -31,7 +31,7 @@ namespace Hunter
                 else
                 {
                     Fabric.EventManager.Instance.PostEvent("UI Start Game");
-                    GameManager.instance.LoadNewScene("FullCharacterTest", false);
+                    GameManager.instance.LoadNewScene("PAXLevelScene", false);
                     acceptingInput = false;
                 }
             }

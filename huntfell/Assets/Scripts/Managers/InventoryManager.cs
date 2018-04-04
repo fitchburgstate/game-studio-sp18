@@ -154,7 +154,7 @@ namespace Hunter
 
         private InteractableInventoryItem SpawnInteractableItem (InventoryItem item)
         {
-            if(item.InteractableItemPrefab == null)
+            if(item == null || item.InteractableItemPrefab == null)
             {
                 Debug.LogWarning("Couldn't spawn an interactble object from the inventory item data provided. Make sure a prefab reference is set in the scriptable object.");
                 return null;

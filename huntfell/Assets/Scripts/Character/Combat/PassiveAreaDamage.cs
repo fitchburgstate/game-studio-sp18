@@ -31,7 +31,7 @@ namespace Hunter.AI
         public int damageAmount = 1;
 
         [Tooltip("How often the enemy should deal damage to the player.")]
-        public int damageInterval = 1;
+        public float damageInterval = 1;
 
         [Header("Line Renderer Variables")]
         [Range(3, 256)]
