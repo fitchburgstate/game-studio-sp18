@@ -245,11 +245,28 @@ namespace Hunter
         public InputDevice Device { get; set; }
 
         public Controls controls;
+
+        public static DeviceManager instance;
         #endregion
 
-        private void Awake()
+        private void Awake ()
         {
-            //Detect if there are any controllers plugged in and if so use that, if not use the keyboard
+            if (instance == null)
+            {
+                instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+            NewDeviceAttatched(InputManager.ActiveDevice);
+            InputManager.OnDeviceAttached += NewDeviceAttatched;
+            InputManager.OnDeviceDetached += OldDeviceDetached;
+        }
+
+        private void NewDeviceAttatched(InputDevice device)
+        {
             if (InputManager.Devices.Count == 0)
             {
                 controls = Controls.KeyboardBindings();
@@ -261,14 +278,27 @@ namespace Hunter
                 isController = true;
             }
 
-            //Need this here so if something tried to use the controls in Update we dont get an NRE because of execution order
+            Device = device;
+        }
+
+        private void OldDeviceDetached (InputDevice device)
+        {
+            if (InputManager.Devices.Count == 0)
+            {
+                controls = Controls.KeyboardBindings();
+                isController = false;
+            }
+            else if (InputManager.Devices.Count > 0)
+            {
+                controls = Controls.ControllerBindings();
+                isController = true;
+            }
+
             Device = InputManager.ActiveDevice;
         }
 
         private void Update ()
         {
-            Device = InputManager.ActiveDevice;
-
             MoveAxis_Horizontal = controls.move.X;
             MoveAxis_Vertical = controls.move.Y;
             LookAxis_Horizontal = controls.look.X;
@@ -286,27 +316,6 @@ namespace Hunter
             PressedElementDown = controls.altAxis_Down.WasPressed;
             PressedWeaponSwitchLeft = controls.altAxis_Left.WasPressed;
             PressedWeaponSwitchRight = controls.altAxis_Right.WasPressed;
-
-            // This is for debugging purposes only, and should be deprecated
-            if (controls.pause.WasReleased)
-            {
-                SetBinding();
-            }
-        }
-
-        public void SetBinding()
-        {
-            //Checks to see what your current input method is and then switches to the opposite
-            if (isController)
-            {
-                controls = Controls.KeyboardBindings();
-                isController = false;
-            }
-            else if (!isController)
-            {
-                controls = Controls.ControllerBindings();
-                isController = true;
-            }
         }
     }
 }

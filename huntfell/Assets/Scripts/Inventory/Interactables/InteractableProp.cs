@@ -70,10 +70,10 @@ namespace Hunter
         public void Interact (Weapon weaponAttackedWith)
         {
             if (currentlyInteracting) { return; }
-            currentlyInteracting = true;
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
             {
+                currentlyInteracting = true;
                 switch (propType)
                 {
                     case PropType.Destructible:

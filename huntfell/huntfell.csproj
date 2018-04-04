@@ -12,13 +12,16 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -366,6 +369,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Audio\AudioTestingInput.cs" />
+    <Compile Include="Assets\Scripts\Audio\CombatMusicTrigger.cs" />
     <Compile Include="Assets\Scripts\Character\AI\AIDetection.cs" />
     <Compile Include="Assets\Scripts\Character\AI\UrgeWeights.cs" />
     <Compile Include="Assets\Scripts\Character\AI\UtilityBasedAI.cs" />
@@ -383,14 +388,12 @@
     <Compile Include="Assets\Scripts\Character\Enemy\Minion\Minion.cs" />
     <Compile Include="Assets\Scripts\Character\Enemy\Minion\Wolf.cs" />
     <Compile Include="Assets\Scripts\Character\Input\AIInputModule.cs" />
-    <Compile Include="Assets\Scripts\Character\Input\ControllerInputModule.cs" />
-    <Compile Include="Assets\Scripts\Character\Input\Controls.cs" />
-    <Compile Include="Assets\Scripts\Character\Input\DeviceManager.cs" />
+    <Compile Include="Assets\Scripts\Character\Input\PlayerInputModule.cs" />
     <Compile Include="Assets\Scripts\Character\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Elements\Elements.cs" />
+    <Compile Include="Assets\Scripts\Inventory\Interactables\InteractableHealthRestore.cs" />
     <Compile Include="Assets\Scripts\Inventory\Interactables\InteractableInventoryItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\Interactables\InteractableProp.cs" />
-    <Compile Include="Assets\Scripts\Inventory\InventoryManager.cs" />
     <Compile Include="Assets\Scripts\Inventory\Items\Combat\ElementModItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\Items\Combat\MeleeWeaponItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\Items\Combat\RangedWeaponItem.cs" />
@@ -399,12 +402,16 @@
     <Compile Include="Assets\Scripts\Inventory\Items\Narrative\BookItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\Items\Narrative\DiaryItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\Items\Narrative\JournalItem.cs" />
-    <Compile Include="Assets\Scripts\Miscellaneous\AudioTestingInput.cs" />
+    <Compile Include="Assets\Scripts\Managers\DeviceManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\HUDManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\InventoryManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\TitleManager.cs" />
     <Compile Include="Assets\Scripts\Miscellaneous\CameraCull.cs" />
-    <Compile Include="Assets\Scripts\Miscellaneous\CombatMusicTrigger.cs" />
+    <Compile Include="Assets\Scripts\Miscellaneous\Controls.cs" />
+    <Compile Include="Assets\Scripts\Miscellaneous\DestroyBarricade.cs" />
     <Compile Include="Assets\Scripts\Miscellaneous\Utility.cs" />
     <Compile Include="Assets\Scripts\UI\Damage Pop-Up\DestroyAnimEvent.cs" />
-    <Compile Include="Assets\Scripts\UI\HUDManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Audio\FabricEventList_3.27.18.txt" />
@@ -513,6 +520,8 @@
     <None Include="Assets\Plugins\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\Plugins\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\Plugins\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Shaders\Test\ShadersForAlpha\OpacityCell.shader" />
+    <None Include="Assets\Shaders\Test\ShadersForAlpha\Shader_CellShader.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

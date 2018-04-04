@@ -94,7 +94,6 @@ namespace Hunter {
             controls.cancel.AddDefaultBinding(InputControlType.Action2);
             // This is in controller bindings anyways just for debugging and shit
             controls.pause.AddDefaultBinding(Key.Escape);
-
             controls.pause.AddDefaultBinding(InputControlType.Command);
             
             // Left Axis Input Bindings

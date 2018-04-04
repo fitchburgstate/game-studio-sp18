@@ -10,7 +10,6 @@ namespace Hunter.Character
         [HideInInspector]
         public bool justFound = false;
 
-        private bool isDying = false;
         [SerializeField]
         private Melee meleeWeapon;
         private IEnumerator attackCR;
@@ -81,6 +80,7 @@ namespace Hunter.Character
             agent.speed = 0;
             agent.destination = transform.position;
             anim.SetTrigger(isCinematic ? "cinDeath" : "death");
+            minionHealthBarParent?.gameObject.SetActive(false);
             //TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);
             Destroy(gameObject);

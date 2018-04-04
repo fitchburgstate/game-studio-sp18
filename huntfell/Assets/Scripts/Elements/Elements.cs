@@ -18,6 +18,7 @@ namespace Hunter
 
     public abstract class Element
     {
+        public Sprite elementHUDSprite;
         public Color elementColor = Color.white;
         protected Type weakness = null;
         
