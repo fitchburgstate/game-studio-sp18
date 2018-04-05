@@ -13,7 +13,7 @@ namespace Hunter
     }
 
     [RequireComponent(typeof(Animator))]
-    public class InteractableProp : MonoBehaviour, IDamageable
+    public class InteractableProp : MonoBehaviour, IDamageable, IInteractable
     {
         [Header("Interaction Options")]
         [Tooltip("The items that will spawn from the prop or be given to the player. If this is left empty the prop will simply shake in place.")]
@@ -32,6 +32,12 @@ namespace Hunter
         [Tooltip("Instead of the item being dropped on the ground, should this item be automatically given to the player instead?")]
         [SerializeField]
         private bool giveItemsDirectly;
+
+        [SerializeField]
+        private bool requiresDamage;
+
+        public string interactionSuccessMessage;
+        public string interactionFailMessage;
 
         [Header("Destructible Options")]
         [Tooltip("Are you able to destroy this prop?")]
@@ -63,26 +69,59 @@ namespace Hunter
 
         public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
-            Interact(weaponAttackedWith);
+            Interact(weaponAttackedWith.characterHoldingWeapon, true);
         }
 
         // What should the prop do when it is interacted with, also checks to see if there are any elemental constraints
-        public void Interact (Weapon weaponAttackedWith)
+        public void Interact (Character.Character characterWhoAttacked)
         {
-            if (currentlyInteracting) { return; }
+            if (currentlyInteracting || characterWhoAttacked.tag != "Player") { return; }
+            var weaponAttackedWith = characterWhoAttacked.CurrentWeapon;
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
             {
                 currentlyInteracting = true;
+                if(HUDManager.instance != null && !string.IsNullOrEmpty(interactionSuccessMessage)) { HUDManager.instance.ShowPrompt(interactionSuccessMessage); }
                 switch (propType)
                 {
                     case PropType.Destructible:
-                        DestructProp(weaponAttackedWith.characterHoldingWeapon.RotationTransform.forward);
+                        DestructProp(characterWhoAttacked.RotationTransform.forward);
                         break;
                     default:
                         ShakeProp();
                         break;
                 }
+            }
+            else
+            {
+                if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowPrompt(interactionFailMessage); }
+            }
+        }
+
+        public void Interact (Character.Character characterWhoAttacked, bool wasDamaged)
+        {
+            if (currentlyInteracting || characterWhoAttacked.tag != "Player") { return; }
+            Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
+            var weaponAttackedWith = characterWhoAttacked.CurrentWeapon;
+            var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
+            if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
+            {
+                if(requiresDamage && !wasDamaged) { return; }
+                currentlyInteracting = true;
+                if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionSuccessMessage)) { HUDManager.instance.ShowPrompt(interactionSuccessMessage); }
+                switch (propType)
+                {
+                    case PropType.Destructible:
+                        DestructProp(characterWhoAttacked.RotationTransform.forward);
+                        break;
+                    default:
+                        ShakeProp();
+                        break;
+                }
+            }
+            else
+            {
+                if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowPrompt(interactionFailMessage); }
             }
         }
 

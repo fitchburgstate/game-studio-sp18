@@ -206,7 +206,7 @@ namespace Hunter
                 return false;
             }
             Debug.Log($"Added the Item {item.itemName} to your inventory.");
-            if(HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(item.itemName); }
+            if(HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(item.itemName, item.icon); }
             return true;
         }
     }

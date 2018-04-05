@@ -55,7 +55,7 @@ namespace Hunter.Character
             var critMult = isCritical ? 1.3f : 1.0f;
             var elementMult = 1.0f;
 
-            if (enemyElementType != null)
+            if (enemyElementType != null && weaponElement != null)
             {
                 var weaponType = weaponElement.GetType();
                 var enemyType = enemyElementType.GetType();

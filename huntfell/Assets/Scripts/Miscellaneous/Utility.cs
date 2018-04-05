@@ -100,4 +100,10 @@ namespace Hunter
 
         void SwitchElement (bool cycleUp, bool cycleDown);
     }
+
+    
+    public interface IInteractable
+    {
+        void Interact (Character.Character characterTriggeringInteraction);
+    }
 }

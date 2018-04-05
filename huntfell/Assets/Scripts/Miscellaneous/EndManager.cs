@@ -11,7 +11,7 @@ namespace Hunter {
 
         private IEnumerator WaitThenLoad ()
         {
-            yield return new WaitForSeconds(6);
+            yield return new WaitForSeconds(8);
             GameManager.instance.LoadNewScene("UI_Title_Menu", false);
         }
     }

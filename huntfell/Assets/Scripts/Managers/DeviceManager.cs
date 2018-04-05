@@ -165,6 +165,19 @@ namespace Hunter
             }
         }
 
+        public bool PressedInteract
+        {
+            get
+            {
+                return pressedInteract;
+            }
+
+            set
+            {
+                pressedInteract = value;
+            }
+        }
+
         public bool PressedElementUp
         {
             get
@@ -233,6 +246,7 @@ namespace Hunter
         private bool pressedAttack;
         private bool pressedAim;
         private bool pressedDash;
+        private bool pressedInteract;
 
         private bool pressedElementUp;
         private bool pressedElementDown;
@@ -243,6 +257,8 @@ namespace Hunter
         public bool isController;
 
         public InputDevice Device { get; set; }
+
+        
 
         public Controls controls;
 
@@ -311,6 +327,7 @@ namespace Hunter
             PressedAttack = controls.attack.WasPressed;
             PressedAim = controls.aim.WasPressed;
             PressedDash = controls.dash.WasPressed;
+            PressedInteract = controls.interact.WasPressed;
 
             PressedElementUp = controls.altAxis_Up.WasPressed;
             PressedElementDown = controls.altAxis_Down.WasPressed;

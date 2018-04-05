@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+//#if UNITY_EDITOR
+//using UnityEditor;
+//#endif
 
 namespace Hunter.Character.AI
 {
+    [CreateAssetMenu(fileName = "NewUrgeWeights", menuName = "Urge Weights", order = -1)]
     public class UrgeWeights : ScriptableObject
     {
         public float distanceToTarget = 0f;
@@ -21,19 +22,19 @@ namespace Hunter.Character.AI
 
         public float attackRangeMin = 2f;
 
-#if UNITY_EDITOR
-        [MenuItem("Assets/Create/Urge Weights")]
-        public static void CreateUrgeWeights()
-        {
-            var asset = CreateInstance<UrgeWeights>();
+//#if UNITY_EDITOR
+//        [MenuItem("Assets/Create/Urge Weights")]
+//        public static void CreateUrgeWeights()
+//        {
+//            var asset = CreateInstance<UrgeWeights>();
 
-            AssetDatabase.CreateAsset(asset, "Assets/UrgeWeights.asset");
-            AssetDatabase.SaveAssets();
+//            AssetDatabase.CreateAsset(asset, "Assets/UrgeWeights.asset");
+//            AssetDatabase.SaveAssets();
 
-            EditorUtility.FocusProjectWindow();
+//            EditorUtility.FocusProjectWindow();
 
-            Selection.activeObject = asset;
-        }
-#endif
+//            Selection.activeObject = asset;
+//        }
+//#endif
     }
 }

@@ -46,15 +46,7 @@ namespace Hunter.Character
             var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
             damageableObject.TakeDamage(totalDamage, isCritical, this);
 
-            if (characterHoldingWeapon.tag == "Player")
-            {
-                Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
-            }
-
-            if (characterHoldingWeapon.tag == "Enemy")
-            {
-                Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
-            }
+            
         }
 
         /// <summary>

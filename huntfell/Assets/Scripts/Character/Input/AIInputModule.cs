@@ -188,7 +188,7 @@ namespace Hunter.Character.AI
             moveTo = new MoveTo(gameObject);
             retreat = new Retreat(gameObject);
 
-            urgeWeights = new UrgeWeights();
+            urgeWeights = ScriptableObject.CreateInstance<UrgeWeights>();
             character = GetComponent<Character>();
             aiDetection = GetComponent<AIDetection>();
             #endregion

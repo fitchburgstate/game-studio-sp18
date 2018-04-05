@@ -62,6 +62,7 @@ namespace Hunter
             var journals = InventoryManager.instance.GetAllJournals();
             journalHeader.fontStyle = FontStyles.Bold;
             diaryHeader.fontStyle = FontStyles.Normal;
+            Fabric.EventManager.Instance.PostEvent("UI Page Flip");
             //Only displaying two journals for now
             for (int i = 0; i < 2; i++)
             {
@@ -100,6 +101,7 @@ namespace Hunter
             var diaries = InventoryManager.instance.GetAllDiaries();
             diaryHeader.fontStyle = FontStyles.Bold;
             journalHeader.fontStyle = FontStyles.Normal;
+            Fabric.EventManager.Instance.PostEvent("UI Page Flip");
             //Only displaying two diaries for now
             for (int i = 0; i < 2; i++)
             {

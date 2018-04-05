@@ -128,7 +128,7 @@ namespace Hunter {
 
             controls.attack.AddDefaultBinding(InputControlType.RightTrigger);
 
-            controls.interact.AddDefaultBinding(InputControlType.Action4);
+            controls.interact.AddDefaultBinding(InputControlType.Action3);
 
             controls.aim.AddDefaultBinding(InputControlType.LeftTrigger);
 

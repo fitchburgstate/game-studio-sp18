@@ -3093,7 +3093,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDetectionDistance: 3
   maxDetectionDistance: 6
-  fieldOfViewRange: 180
+  fieldOfViewRange: 130
+  detectionLayers:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!114 &114252411858806674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3142,7 +3145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54082744c3473f047aaaad4aa8c57dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 2
+  maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
 --- !u!114 &114519196581505832
 MonoBehaviour:

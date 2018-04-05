@@ -26,6 +26,8 @@ namespace Hunter {
         [SerializeField]
         private TextMeshProUGUI pickupText;
         [SerializeField]
+        private Image pickupIcon;
+        [SerializeField]
         private TextMeshProUGUI journalText;
         public AnimationCurve fadeCurve;
         [SerializeField]
@@ -34,6 +36,9 @@ namespace Hunter {
         public GameObject damagePopUpPrefab;
         private GameObject promptParent;
         private GameObject journalParent;
+
+        private IEnumerator promptFadeCR;
+        private IEnumerator journalFadeCR;
 
         public void Awake ()
         {
@@ -77,18 +82,43 @@ namespace Hunter {
             activeElement.sprite = newSprite;
         }
 
-        public void ShowItemPickupPrompt(string itemName)
+        public void ShowItemPickupPrompt(string itemName, Sprite itemIcon)
         {
             pickupText.text = "You have picked up " + itemName;
+            pickupIcon.sprite = itemIcon;
+            pickupIcon.enabled = true;
             var cg = promptParent.GetComponent<CanvasGroup>();
-            StartCoroutine(FadeInAndOut(cg, 2, 3));
+            if (promptFadeCR != null)
+            {
+                StopCoroutine(promptFadeCR);
+            }
+            promptFadeCR = FadeInAndOut(cg, 2, 3);
+            StartCoroutine(promptFadeCR);
+        }
+
+        public void ShowPrompt (string text)
+        {
+            pickupText.text = text;
+            pickupIcon.enabled = false;
+            var cg = promptParent.GetComponent<CanvasGroup>();
+            if(promptFadeCR != null)
+            {
+                StopCoroutine(promptFadeCR);
+            }
+            promptFadeCR = FadeInAndOut(cg, 2, 3);
+            StartCoroutine(promptFadeCR);
         }
 
         public void ShowJournalPickup(string bookText)
         {
-            journalText.text = bookText;
-            var cg = journalParent.GetComponent<CanvasGroup>();
-            StartCoroutine(FadeInAndOut(cg, 2, 15));
+            //journalText.text = bookText;
+            //var cg = journalParent.GetComponent<CanvasGroup>();
+            //if (journalFadeCR != null)
+            //{
+            //    StopCoroutine(journalFadeCR);
+            //}
+            //journalFadeCR = FadeInAndOut(cg, 2, 3);
+            //StartCoroutine(journalFadeCR);
         }
 
         private IEnumerator FadeInAndOut(CanvasGroup canvasGroup, float fadeDuration, float stayDuration)

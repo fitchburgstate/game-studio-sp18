@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Hunter.Character
 {
@@ -28,13 +29,16 @@ namespace Hunter.Character
         public float dashCoolDown = 1;
         public float dashMaxSpeed = 3;
         public AnimationCurve dashSpeedCurve;
-        public float dashMaxHeight = 2;
-        public AnimationCurve dashHeightCurve;
+        public LayerMask dashValidLayers;
+
+        [Header("World UI Options")]
+        public Image interactPromptImage;
 
         private bool canMove = true;
         private float speedRamp;
         private IEnumerator attackCR;
         private IEnumerator dashCR;
+        private List<IInteractable> itemsPlayerIsStandingIn = new List<IInteractable>();
 
         #endregion
 
@@ -43,7 +47,28 @@ namespace Hunter.Character
         {
             base.Start();
             EquipWeaponToCharacter(InventoryManager.instance.CycleMeleeWeapons(weaponContainer));
+            CheckInteractImage();
         }
+
+        private void OnTriggerEnter (Collider other)
+        {
+            var interactableItem = other.GetComponent<IInteractable>();
+            if (interactableItem != null && !itemsPlayerIsStandingIn.Contains(interactableItem))
+            {
+                itemsPlayerIsStandingIn.Add(interactableItem);
+                CheckInteractImage();
+            }
+        }
+
+        private void OnTriggerExit (Collider other)
+        {
+            var interactableItem = other.GetComponent<IInteractable>();
+            if (interactableItem != null && itemsPlayerIsStandingIn.Contains(interactableItem))
+            {
+                itemsPlayerIsStandingIn.Remove(interactableItem);
+                CheckInteractImage();
+            }
+        }        
         #endregion
 
         #region Player Movement
@@ -135,7 +160,7 @@ namespace Hunter.Character
             // Raycast to determine target point for dodge destination on the X and Z axis
             var hit = new RaycastHit();
             var ray = new Ray(startPosition, characterForward);
-            if (Physics.Raycast(ray, out hit, dashMaxDistance))
+            if (Physics.Raycast(ray, out hit, dashMaxDistance, dashValidLayers))
             {
                 dashDirectionTarget = hit.point;
             }
@@ -150,7 +175,7 @@ namespace Hunter.Character
             ray = new Ray(dashDirectionTarget, Vector3.down);
             // Setting this to the start position because if we RayCast down and dont get a hit, that means you casted off the map. If you do we cancel the dash.
             var floorPointFromDashTarget = startPosition;
-            if (Physics.Raycast(ray, out hit, dashMaxDistance))
+            if (Physics.Raycast(ray, out hit, dashMaxDistance, dashValidLayers))
             {
                 floorPointFromDashTarget = hit.point;
                 Debug.DrawLine(dashDirectionTarget, floorPointFromDashTarget, Color.blue, 5);
@@ -347,7 +372,7 @@ namespace Hunter.Character
             }
         }
 
-        public void RestoreHealth(int amount)
+        public override void RestoreHealthToCharacter(int amount)
         {
             StopCoroutine("SubtractHealthFromCharacter");
             CurrentHealth += amount;
@@ -397,6 +422,47 @@ namespace Hunter.Character
         private float SignedAngle(Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
+        }
+
+        private void CheckInteractImage ()
+        {
+            if(itemsPlayerIsStandingIn.Count > 0 && !interactPromptImage.enabled)
+            {
+                interactPromptImage.enabled = true;
+            }
+            else if(itemsPlayerIsStandingIn.Count == 0 && interactPromptImage.enabled)
+            {
+                interactPromptImage.enabled = false;
+            }
+        }
+
+        public void TriggerItemInteractions ()
+        {
+            foreach (var item in itemsPlayerIsStandingIn)
+            {
+                item.Interact(this);
+            }
+            itemsPlayerIsStandingIn.Clear();
+            CheckInteractImage();
+        }
+
+        public void PlayPickupAnimation (Transform itemTransform)
+        {
+            var triggerName = "PickupLow";
+            if(weaponContainer.transform.position.y < itemTransform.position.y)
+            {
+                triggerName = "PickupHigh";
+            }
+            StartCoroutine(PickupAnim(triggerName));
+        }
+
+        private IEnumerator PickupAnim (string triggerName)
+        {
+            var pim = GetComponent<PlayerInputModule>();
+            if(pim != null) { pim.characterInputEnabled = false; }
+            anim.SetTrigger(triggerName);
+            yield return new WaitForSeconds(2.2f);
+            if (pim != null) { pim.characterInputEnabled = true; }
         }
         #endregion
     }

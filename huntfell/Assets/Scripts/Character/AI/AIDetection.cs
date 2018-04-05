@@ -22,11 +22,14 @@ namespace Hunter.Character.AI
         /// </summary>
         public float fieldOfViewRange = 48f;
 
+        public LayerMask detectionLayers;
+
         /// <summary>
         /// The distance between the AI and the target.
         /// </summary>
         private float distanceToTarget;
 
+        private float cachedFOV;
 
         private Character aiCharacter;
         public Character AiCharacter
@@ -66,12 +69,11 @@ namespace Hunter.Character.AI
             }
         }
 
-
         /// <summary>
         /// The AI searches for a gameobject tagged "Player" and returns true when the player has been found.
         /// </summary>
         /// <returns></returns>
-        public bool DetectPlayer()
+        public bool DetectPlayer ()
         {
             var rayHit = new RaycastHit();
             //Dont do this every frame, cache the player or something
@@ -84,31 +86,32 @@ namespace Hunter.Character.AI
             if (Vector3.Angle(rayDirection, aiCharacter.RotationTransform.forward) <= fieldOfViewRange * 0.5f)
             {
                 //Debug.DrawRay(aiCharacterEyeLine.position, rayDirection, Color.red, 5);
-                if (Physics.Raycast(aiCharacterEyeLine.position, rayDirection, out rayHit, maxDetectionDistance)) // Detects to see if the player is within the field of view
+                if (Physics.Raycast(aiCharacterEyeLine.position, rayDirection, out rayHit, maxDetectionDistance, detectionLayers)) // Detects to see if the player is within the field of view
                 {
-                    if (rayHit.transform.tag == "Player") // Returns true if the raycast has hit the player
+                    if (wolfComponent != null && !wolfComponent.justFound)
                     {
-                        if (wolfComponent != null)
-                        {
-                            if (!wolfComponent.justFound)
-                            {
-                                Fabric.EventManager.Instance.PostEvent("Wolf Aggro", gameObject);
-                                wolfComponent.justFound = true;
-                            }
-                        }
-                        return true;
+                        Fabric.EventManager.Instance.PostEvent("Wolf Aggro", gameObject);
+                        wolfComponent.justFound = true;
                     }
-                    else // Returns false if the raycast has hit anything (or nothing) BUT the player
-                    {
-                        return false;
-                    }
+                    return true;
                 }
+            }
+
+            var collidersInRadius = Physics.OverlapSphere(aiCharacterEyeLine.position, minDetectionDistance, detectionLayers);
+            if (collidersInRadius.Length > 0)
+            {
+                if (wolfComponent != null && !wolfComponent.justFound)
+                {
+                    Fabric.EventManager.Instance.PostEvent("Wolf Aggro", gameObject);
+                    wolfComponent.justFound = true;
+                }
+                return true;
             }
             return false;
         }
 
         // TODO Fix this jank-ass Gizmo Draw Call
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmosSelected ()
         {
             Gizmos.color = Color.blue;
 
