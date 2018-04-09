@@ -21,20 +21,5 @@ namespace Hunter.Character.AI
         public float distanceToPointMax = 2f;
 
         public float attackRangeMin = 2f;
-
-//#if UNITY_EDITOR
-//        [MenuItem("Assets/Create/Urge Weights")]
-//        public static void CreateUrgeWeights()
-//        {
-//            var asset = CreateInstance<UrgeWeights>();
-
-//            AssetDatabase.CreateAsset(asset, "Assets/UrgeWeights.asset");
-//            AssetDatabase.SaveAssets();
-
-//            EditorUtility.FocusProjectWindow();
-
-//            Selection.activeObject = asset;
-//        }
-//#endif
     }
 }

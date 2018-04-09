@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4455020610008690}
   - component: {fileID: 95392213885554332}
   - component: {fileID: 114567992083674954}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_Bookcase_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 33794746866544662}
   - component: {fileID: 23137531370826820}
   - component: {fileID: 95776548069093860}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_Book_Single (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 33299934029165324}
   - component: {fileID: 23563695135372956}
   - component: {fileID: 95398940405183934}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_Book_Short (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 33663872907307564}
   - component: {fileID: 23699180823206766}
   - component: {fileID: 95439495504737882}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_Book_Short (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 33858572572903814}
   - component: {fileID: 23922135423307380}
   - component: {fileID: 95341365823990050}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_Bookcase_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 33440266165932236}
   - component: {fileID: 23095457190834842}
   - component: {fileID: 95543325582937194}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_Book_Long (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 33405164330884456}
   - component: {fileID: 23079414193259294}
   - component: {fileID: 95697517734698426}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_Book_Single (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 33979048288721720}
   - component: {fileID: 23345465239672400}
   - component: {fileID: 95630761414971190}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_Book_Short (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 33132252133504016}
   - component: {fileID: 23391582041902312}
   - component: {fileID: 95322680745826346}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_Book_Long (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -793,6 +793,9 @@ MonoBehaviour:
   elementTypeForInteraction: 0
   animationName: 
   giveItemsDirectly: 0
+  requiresDamage: 0
+  interactionSuccessMessage: 
+  interactionFailMessage: 
   propType: 0
   destructionForce: 50
   brokenPropPrefab: {fileID: 0}

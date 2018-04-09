@@ -7,13 +7,7 @@ namespace Hunter.Character
 {
     public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
-        [HideInInspector]
-        public bool justFound = false;
-
-        [SerializeField]
-        private Melee meleeWeapon;
-        private IEnumerator attackCR;
-
+        #region Properties
         public override float CurrentHealth
         {
             get
@@ -25,20 +19,40 @@ namespace Hunter.Character
                 health = value;
                 if (health <= 0 && !isDying)
                 {
-                    //TODO Change this to reflect wether the death anim should be cinematic or not later
+                    // TODO Change this to reflect wether the death anim should be cinematic or not later
                     StartCoroutine(KillWolf(true));
                     isDying = true;
                 }
             }
         }
+        #endregion
 
-        protected override void Start ()
+        #region Variables
+        /// <summary>
+        /// Has the wolf just found the player?
+        /// </summary>
+        [HideInInspector]
+        public bool justFound = false;
+
+        /// <summary>
+        /// The melee weapon that the wolf will use.
+        /// </summary>
+        [SerializeField]
+        private Melee meleeWeapon;
+
+        /// <summary>
+        /// The coroutine for the wolf's attack.
+        /// </summary>
+        private IEnumerator attackCR;
+        #endregion
+
+        protected override void Start()
         {
             base.Start();
             if (meleeWeapon != null) { EquipWeaponToCharacter(meleeWeapon); }
         }
 
-        private void Update ()
+        private void Update()
         {
             anim.SetFloat("dirX", agent.velocity.x / runSpeed);
             anim.SetFloat("dirY", agent.velocity.z / runSpeed);
@@ -65,17 +79,17 @@ namespace Hunter.Character
             agent.destination = target;
         }
 
-        public void Move (Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
         {
-            //fuck you
+            // This feature will not be implemented.
         }
 
-        public void Dash ()
+        public void Dash()
         {
-            // no dash for wolfie boi
+            // This feature will not be implemented.
         }
 
-        private IEnumerator KillWolf (bool isCinematic)
+        private IEnumerator KillWolf(bool isCinematic)
         {
             agent.speed = 0;
             agent.destination = transform.position;
@@ -86,20 +100,20 @@ namespace Hunter.Character
             Destroy(gameObject);
         }
 
-        public void Attack ()
+        public void Attack()
         {
             if (attackCR != null) { return; }
             attackCR = PlayAttackAnimation();
             StartCoroutine(attackCR);
         }
 
-        public void SwitchWeapon (bool cycleRanged, bool cycleMelee)
+        public void SwitchWeapon(bool cycleRanged, bool cycleMelee)
         {
             //Wolf only has one weapon so we don't need to switch
             return;
         }
 
-        public IEnumerator PlayAttackAnimation ()
+        public IEnumerator PlayAttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("combat");
@@ -117,14 +131,14 @@ namespace Hunter.Character
             Fabric.EventManager.Instance.PostEvent("Wolf Lunge Attack", gameObject);
         }
 
-        public void WeaponAnimationEvent ()
+        public void WeaponAnimationEvent()
         {
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public void SwitchElement (bool cycleUp, bool cycleDown)
+        public void SwitchElement(bool cycleUp, bool cycleDown)
         {
-            //This can be implemented later if we want elemental wolves
+            // This can be implemented later if we want elemental wolves
             return;
         }
     }

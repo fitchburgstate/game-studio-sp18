@@ -22,9 +22,7 @@ namespace Hunter.AI
         #endregion
 
         #region Variables
-        [Header("Damage Radius Variables")]
-        [Range(0.1f, 100f)]
-        [Tooltip("The size of the circle.")]
+        [Header("Damage Radius Variables"), Range(0.1f, 100f), Tooltip("The size of the circle.")]
         public float damageRadius = 1.0f;
 
         [Tooltip("The amount of damage the enemy should do to the player every tick.")]
@@ -33,9 +31,7 @@ namespace Hunter.AI
         [Tooltip("How often the enemy should deal damage to the player.")]
         public float damageInterval = 1;
 
-        [Header("Line Renderer Variables")]
-        [Range(3, 256)]
-        [Tooltip("The number of segments the circle has, for a circle make at least 100.")]
+        [Header("Line Renderer Variables"), Range(3, 256), Tooltip("The number of segments the circle has, for a circle make at least 100.")]
         public int numSegments = 100;
 
         [Tooltip("The height of the circle")]

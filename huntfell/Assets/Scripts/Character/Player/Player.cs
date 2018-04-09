@@ -12,13 +12,16 @@ namespace Hunter.Character
         #region Variables
         [Header("Combat Options")]
         public Transform weaponContainer;
+
         public float gunTrailLength = 1.5f;
+
         [Tooltip("The total ammount of time it should take for the wound bar to catch up to the health bar."), Range(0.1f, 10f)]
         public float healthSubtractionTime = 1;
 
         [Header("Movement and Rotation Options")]
         [Range(1, 20), Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
         public float moveSpeed = 5f;
+
         [Range(1, 2000), Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
         public float rotationMaxSpeed = 12f;
 
@@ -34,6 +37,7 @@ namespace Hunter.Character
         [Header("World UI Options")]
         public Image interactPromptImage;
 
+        // Private variables
         private bool canMove = true;
         private float speedRamp;
         private IEnumerator attackCR;
@@ -153,7 +157,7 @@ namespace Hunter.Character
             //No moving during the dash movement
             canMove = false;
             var startPosition = eyeLine.position;
-            Debug.Log(startPosition);
+            //Debug.Log(startPosition);
             var characterForward = RotationTransform.forward;
             var dashDirectionTarget = new Vector3();
 
@@ -182,7 +186,7 @@ namespace Hunter.Character
             }
             else
             {
-                Debug.LogWarning("You tried to Dash into the void. Canceling the dash.");
+                //Debug.LogWarning("You tried to Dash into the void. Canceling the dash.");
                 canMove = true;
                 dashCR = null;
                 yield break;
@@ -203,7 +207,7 @@ namespace Hunter.Character
             Debug.Log("Animation Event has resumed the Coroutine.");
 
             var dashDistanceCheckMargin = 0.09f;
-            float dashTime = 0;
+            var dashTime = 0f;
 
             // Turn off the normal means of moving / constraining the player since we are doing that ourselves
             //characterController.enabled = false;
@@ -236,8 +240,8 @@ namespace Hunter.Character
         {
             if (HUDManager.instance == null) { yield break; }
 
-            float startFill = HUDManager.instance.staminaBar.fillAmount;
-            float startTime = Time.time;
+            var startFill = HUDManager.instance.staminaBar.fillAmount;
+            var startTime = Time.time;
             var percentComplete = 0f;
             while(percentComplete < 1)
             {

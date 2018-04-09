@@ -260,11 +260,11 @@ namespace Hunter.Character.AI
             var retreatValue = retreat.CalculateRetreat(character.CurrentHealth, inCombat);
 
             #region Debug Logs
-            ////Debug.Log("Attack Value: " + attackValue);
-            ////Debug.Log("Idle Value: " + idleValue);
-            ////Debug.Log("Wander Value: " + wanderValue);
-            ////Debug.Log("MoveTo Value: " + moveToValue);
-            ////Debug.Log("Retreat Value: " + retreatValue);
+            // Debug.Log("Attack Value: " + attackValue);
+            // Debug.Log("Idle Value: " + idleValue);
+            // Debug.Log("Wander Value: " + wanderValue);
+            // Debug.Log("MoveTo Value: " + moveToValue);
+            // Debug.Log("Retreat Value: " + retreatValue);
             #endregion
 
             var largestValue = new Dictionary<UtilityBasedAI, float>
