@@ -13,12 +13,7 @@ namespace Hunter
         {
             get
             {
-                return moveAxis_Vertical;
-            }
-
-            set
-            {
-                moveAxis_Vertical = value;
+                return move_Vertical;
             }
         }
 
@@ -26,12 +21,7 @@ namespace Hunter
         {
             get
             {
-                return moveAxis_Horizontal;
-            }
-
-            set
-            {
-                moveAxis_Horizontal = value;
+                return move_Horizontal;
             }
         }
 
@@ -39,12 +29,7 @@ namespace Hunter
         {
             get
             {
-                return lookAxis_Vertical;
-            }
-
-            set
-            {
-                lookAxis_Vertical = value;
+                return look_Vertical;
             }
         }
 
@@ -52,12 +37,7 @@ namespace Hunter
         {
             get
             {
-                return lookAxis_Horizontal;
-            }
-
-            set
-            {
-                lookAxis_Horizontal = value;
+                return look_Horizontal;
             }
         }
 
@@ -67,11 +47,6 @@ namespace Hunter
             {
                 return altAxis_Horizontal;
             }
-
-            set
-            {
-                altAxis_Horizontal = value;
-            }
         }
 
         public float AltAxis_Vertical
@@ -79,11 +54,6 @@ namespace Hunter
             get
             {
                 return altAxis_Vertical;
-            }
-
-            set
-            {
-                altAxis_Vertical = value;
             }
         }
 
@@ -93,11 +63,6 @@ namespace Hunter
             {
                 return pressedConfirm;
             }
-
-            set
-            {
-                pressedConfirm = value;
-            }
         }
 
         public bool PressedCancel
@@ -105,11 +70,6 @@ namespace Hunter
             get
             {
                 return pressedCancel;
-            }
-
-            set
-            {
-                pressedCancel = value;
             }
         }
 
@@ -119,11 +79,6 @@ namespace Hunter
             {
                 return pressedPause;
             }
-
-            set
-            {
-                pressedPause = value;
-            }
         }
 
         public bool PressedAttack
@@ -131,11 +86,6 @@ namespace Hunter
             get
             {
                 return pressedAttack;
-            }
-
-            set
-            {
-                pressedAttack = value;
             }
         }
 
@@ -145,11 +95,6 @@ namespace Hunter
             {
                 return pressedAim;
             }
-
-            set
-            {
-                pressedAim = value;
-            }
         }
 
         public bool PressedDash
@@ -158,11 +103,6 @@ namespace Hunter
             {
                 return pressedDash;
             }
-
-            set
-            {
-                pressedDash = value;
-            }
         }
 
         public bool PressedInteract
@@ -170,11 +110,6 @@ namespace Hunter
             get
             {
                 return pressedInteract;
-            }
-
-            set
-            {
-                pressedInteract = value;
             }
         }
 
@@ -185,10 +120,6 @@ namespace Hunter
                 return pressedElementUp;
             }
 
-            set
-            {
-                pressedElementUp = value;
-            }
         }
 
         public bool PressedElementDown
@@ -197,23 +128,13 @@ namespace Hunter
             {
                 return pressedElementDown;
             }
-
-            set
-            {
-                pressedElementDown = value;
-            }
         }
 
         public bool PressedWeaponSwitchLeft
         {
             get
             {
-                return pressedWeaponSwitchLeft;
-            }
-
-            set
-            {
-                pressedWeaponSwitchLeft = value;
+                return pressedSwitchRanged;
             }
         }
 
@@ -221,21 +142,24 @@ namespace Hunter
         {
             get
             {
-                return pressedWeaponSwitchRight;
+                return pressedSwitchMelee;
             }
+        }
 
-            set
+        public bool PressedPotion
+        {
+            get
             {
-                pressedWeaponSwitchRight = value;
+                return pressedPotion;
             }
         }
         #endregion
 
         #region Variables
-        private float moveAxis_Vertical;
-        private float moveAxis_Horizontal;
-        private float lookAxis_Vertical;
-        private float lookAxis_Horizontal;
+        private float move_Vertical;
+        private float move_Horizontal;
+        private float look_Vertical;
+        private float look_Horizontal;
 
         private float altAxis_Horizontal;
         private float altAxis_Vertical;
@@ -247,18 +171,17 @@ namespace Hunter
         private bool pressedAim;
         private bool pressedDash;
         private bool pressedInteract;
+        private bool pressedPotion;
 
         private bool pressedElementUp;
         private bool pressedElementDown;
-        private bool pressedWeaponSwitchLeft;
-        private bool pressedWeaponSwitchRight;
+        private bool pressedSwitchRanged;
+        private bool pressedSwitchMelee;
 
         [Tooltip("If true, the active device is a controller. If false, the active device is the keyboard / mouse.")]
         public bool isController;
 
-        public InputDevice Device { get; set; }
-
-        
+        public InputDevice Device { get; private set; }
 
         public Controls controls;
 
@@ -285,12 +208,12 @@ namespace Hunter
         {
             if (InputManager.Devices.Count == 0)
             {
-                controls = Controls.KeyboardBindings();
+                controls = Controls.KeyboardDefaultLayout();
                 isController = false;
             }
             else if (InputManager.Devices.Count > 0)
             {
-                controls = Controls.ControllerBindings();
+                controls = Controls.ControllerFaceLayout();
                 isController = true;
             }
 
@@ -301,12 +224,12 @@ namespace Hunter
         {
             if (InputManager.Devices.Count == 0)
             {
-                controls = Controls.KeyboardBindings();
+                controls = Controls.KeyboardDefaultLayout();
                 isController = false;
             }
             else if (InputManager.Devices.Count > 0)
             {
-                controls = Controls.ControllerBindings();
+                controls = Controls.ControllerFaceLayout();
                 isController = true;
             }
 
@@ -315,24 +238,25 @@ namespace Hunter
 
         private void Update ()
         {
-            MoveAxis_Horizontal = controls.move.X;
-            MoveAxis_Vertical = controls.move.Y;
-            LookAxis_Horizontal = controls.look.X;
-            LookAxis_Vertical = controls.look.Y;
+            move_Horizontal = controls.moveAxes.X;
+            move_Vertical = controls.moveAxes.Y;
+            look_Horizontal = controls.lookAxes.X;
+            look_Vertical = controls.lookAxes.Y;
 
-            PressedPause = controls.pause.WasPressed;
-            PressedConfirm = controls.confirm.WasPressed;
-            PressedCancel = controls.cancel.WasPressed;
+            pressedPause = controls.openMenuButton.WasPressed;
+            pressedConfirm = controls.confirmButton.WasPressed;
+            pressedCancel = controls.cancelButton.WasPressed;
 
-            PressedAttack = controls.attack.WasPressed;
-            PressedAim = controls.aim.WasPressed;
-            PressedDash = controls.dash.WasPressed;
-            PressedInteract = controls.interact.WasPressed;
+            pressedAttack = controls.attackButton.WasPressed;
+            pressedAim = controls.aim.WasPressed;
+            pressedDash = controls.dashButton.WasPressed;
+            pressedInteract = controls.interactButton.WasPressed;
+            pressedPotion = controls.potionButton.WasPressed;
 
-            PressedElementUp = controls.altAxis_Up.WasPressed;
-            PressedElementDown = controls.altAxis_Down.WasPressed;
-            PressedWeaponSwitchLeft = controls.altAxis_Left.WasPressed;
-            PressedWeaponSwitchRight = controls.altAxis_Right.WasPressed;
+            pressedElementUp = controls.switchElement.Value < 0;
+            pressedElementDown = controls.switchElement.Value > 0;
+            pressedSwitchRanged = controls.switchWeaponTypeRangedButton.WasPressed;
+            pressedSwitchMelee = controls.switchWeaponTypeMeleeButton.WasPressed;
         }
     }
 }

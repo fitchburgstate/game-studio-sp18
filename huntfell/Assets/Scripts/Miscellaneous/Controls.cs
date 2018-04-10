@@ -3,183 +3,274 @@ using System.Collections.Generic;
 using UnityEngine;
 using InControl;
 
-namespace Hunter { 
+namespace Hunter {
 
     public class Controls : PlayerActionSet
     {
         #region Variables
         // UI Input Actions
-        public PlayerAction confirm;
-        public PlayerAction cancel;
-        public PlayerAction pause;
+        public PlayerAction confirmButton;
+        public PlayerAction cancelButton;
+        public PlayerAction openMenuButton;
+        public PlayerAction openJournalsButton;
+
+        private PlayerAction cyclePage_Negative;
+        private PlayerAction cyclePage_Positive;
+
+        public PlayerOneAxisAction cyclePagesAxis;
 
         // Left Axis Input Actions
-        public PlayerAction leftAxis_Left;
-        public PlayerAction leftAxis_Right;
-        public PlayerAction leftAxis_Up;
-        public PlayerAction leftAxis_Down;
+        private PlayerAction moveAxis_XNegative;
+        private PlayerAction moveAxis_XPositive;
+        private PlayerAction moveAxis_YNegative;
+        private PlayerAction moveAxis_YPositive;
 
-        public PlayerTwoAxisAction move;
+        public PlayerTwoAxisAction moveAxes;
 
         // Right Axis Input Actions
-        public PlayerAction rightAxis_Left;
-        public PlayerAction rightAxis_Right;
-        public PlayerAction rightAxis_Down;
-        public PlayerAction rightAxis_Up;
+        private PlayerAction lookAxis_XNegative;
+        private PlayerAction lookAxis_XPositive;
+        private PlayerAction lookAxis_YNegative;
+        private PlayerAction lookAxis_YPositive;
 
-        public PlayerTwoAxisAction look;
+        public PlayerTwoAxisAction lookAxes;
 
-        // Alt Axis Input Actions
-        public PlayerAction altAxis_Left;
-        public PlayerAction altAxis_Right;
-        public PlayerAction altAxis_Down;
-        public PlayerAction altAxis_Up;
+        // Weapon Input Actions
+        public PlayerAction switchWeaponTypeRangedButton;
+        public PlayerAction switchWeaponTypeMeleeButton;
 
-        public PlayerOneAxisAction switchWeapon;
-        public PlayerOneAxisAction switchElement;
+        private PlayerAction cycleElement_Negative;
+        private PlayerAction cycleElement_Positive;
+
+        public PlayerOneAxisAction cycleElementsAxis;
+
+        private PlayerAction cycleWeapon_Negative;
+        private PlayerAction cycleWeapon_Positive;
+
+        public PlayerOneAxisAction cycleWeaponsAxis;
 
         // Main Game Input Actions
-        public PlayerAction dash;
-        public PlayerAction attack;
-        public PlayerAction interact;
-        public PlayerAction aim;
+        public PlayerAction attackButton;
+        public PlayerAction dashButton;
+        public PlayerAction interactButton;
+        public PlayerAction potionButton;
+        //public PlayerAction aim;
         #endregion
 
         public Controls ()
         {
             // UI
-            confirm = CreatePlayerAction("Confirm");
-            cancel = CreatePlayerAction("Cancel");
-            pause = CreatePlayerAction("Pause");
+            confirmButton = CreatePlayerAction("Confirm");
+            cancelButton = CreatePlayerAction("Cancel");
+            openMenuButton = CreatePlayerAction("Pause");
+            openJournalsButton = CreatePlayerAction("Journals");
 
-            // Left Axis
-            leftAxis_Left = CreatePlayerAction("Move Left");
-            leftAxis_Right = CreatePlayerAction("Move Right");
-            leftAxis_Up = CreatePlayerAction("Move Up");
-            leftAxis_Down = CreatePlayerAction("Move Down");
+            cyclePage_Negative = CreatePlayerAction("Page Left");
+            cyclePage_Positive = CreatePlayerAction("Page Right");
 
-            move = CreateTwoAxisPlayerAction(leftAxis_Left, leftAxis_Right, leftAxis_Down, leftAxis_Up);
+            cyclePagesAxis = CreateOneAxisPlayerAction(cyclePage_Negative, cyclePage_Positive);
 
-            // Right Axis
-            rightAxis_Left = CreatePlayerAction("Look Left");
-            rightAxis_Right = CreatePlayerAction("Look Right");
-            rightAxis_Down = CreatePlayerAction("Look Down");
-            rightAxis_Up = CreatePlayerAction("Look Up");
+            // Move Axis
+            moveAxis_XNegative = CreatePlayerAction("Move Left");
+            moveAxis_XPositive = CreatePlayerAction("Move Right");
+            moveAxis_YPositive = CreatePlayerAction("Move Up");
+            moveAxis_YNegative = CreatePlayerAction("Move Down");
 
-            look = CreateTwoAxisPlayerAction(rightAxis_Left, rightAxis_Right, rightAxis_Down, rightAxis_Up);
+            moveAxes = CreateTwoAxisPlayerAction(moveAxis_XNegative, moveAxis_XPositive, moveAxis_YNegative, moveAxis_YPositive);
 
-            // Alt Axis
-            altAxis_Up = CreatePlayerAction("Cycle Element Up");
-            altAxis_Down = CreatePlayerAction("Cycle Element Down");
-            altAxis_Left = CreatePlayerAction("Cycle Ranged Weapon");
-            altAxis_Right = CreatePlayerAction("Cycle Melee Weapon");
+            // Look Axis
+            lookAxis_XNegative = CreatePlayerAction("Look Left");
+            lookAxis_XPositive = CreatePlayerAction("Look Right");
+            lookAxis_YNegative = CreatePlayerAction("Look Down");
+            lookAxis_XPositive = CreatePlayerAction("Look Up");
 
-            switchElement = CreateOneAxisPlayerAction(altAxis_Down, altAxis_Up);
-            switchWeapon = CreateOneAxisPlayerAction(altAxis_Left, altAxis_Right);
+            lookAxes = CreateTwoAxisPlayerAction(lookAxis_XNegative, lookAxis_XPositive, lookAxis_YNegative, lookAxis_XPositive);
+
+            // Weapons
+            switchWeaponTypeRangedButton = CreatePlayerAction("Switch to Ranged");
+            switchWeaponTypeMeleeButton = CreatePlayerAction("Switch to Melee");
+
+            cycleElement_Negative = CreatePlayerAction("Cycle Element Down");
+            cycleElement_Positive = CreatePlayerAction("Cycle Element Up");
+
+            cycleElementsAxis = CreateOneAxisPlayerAction(cycleElement_Negative, cycleElement_Positive);
+
+            cycleWeapon_Negative = CreatePlayerAction("Cycle Weapon Down");
+            cycleWeapon_Positive = CreatePlayerAction("Cycle Weapon Up");
+
+            cycleWeaponsAxis = CreateOneAxisPlayerAction(cycleWeapon_Negative, cycleWeapon_Positive);
 
             // Main Game
-            dash = CreatePlayerAction("Dash");
-            attack = CreatePlayerAction("Attack");
-            interact = CreatePlayerAction("Interact");
-            aim = CreatePlayerAction("Aim");
+            dashButton = CreatePlayerAction("Dash");
+            attackButton = CreatePlayerAction("Attack");
+            interactButton = CreatePlayerAction("Interact");
+            potionButton = CreatePlayerAction("Potion");
+            //aim = CreatePlayerAction("Aim");
         }
 
-        public static Controls ControllerBindings()
+        public static Controls ControllerFaceLayout ()
         {
             var controls = new Controls();
-            
+
             // UI Input Bindings
-            controls.confirm.AddDefaultBinding(InputControlType.Action1);
+            controls.confirmButton.AddDefaultBinding(InputControlType.Action1);
 
-            controls.cancel.AddDefaultBinding(InputControlType.Action2);
+            controls.cancelButton.AddDefaultBinding(InputControlType.Action2);
+
             // This is in controller bindings anyways just for debugging and shit
-            controls.pause.AddDefaultBinding(Key.Escape);
-            controls.pause.AddDefaultBinding(InputControlType.Command);
-            
-            // Left Axis Input Bindings
-            controls.leftAxis_Up.AddDefaultBinding(InputControlType.LeftStickUp);
+            controls.openMenuButton.AddDefaultBinding(Key.Escape);
+            controls.openMenuButton.AddDefaultBinding(InputControlType.Start);
 
-            controls.leftAxis_Down.AddDefaultBinding(InputControlType.LeftStickDown);
-            
-            controls.leftAxis_Left.AddDefaultBinding(InputControlType.LeftStickLeft);
-            
-            controls.leftAxis_Right.AddDefaultBinding(InputControlType.LeftStickRight);
+            controls.openJournalsButton.AddDefaultBinding(InputControlType.Select);
+
+            controls.cyclePage_Negative.AddDefaultBinding(InputControlType.LeftBumper);
+
+            controls.cyclePage_Positive.AddDefaultBinding(InputControlType.RightBumper);
+
+            // Left Axis Input Bindings
+            controls.moveAxis_YPositive.AddDefaultBinding(InputControlType.LeftStickUp);
+
+            controls.moveAxis_YNegative.AddDefaultBinding(InputControlType.LeftStickDown);
+
+            controls.moveAxis_XNegative.AddDefaultBinding(InputControlType.LeftStickLeft);
+
+            controls.moveAxis_XPositive.AddDefaultBinding(InputControlType.LeftStickRight);
 
             // Right Axis Input Bindings
-            controls.rightAxis_Left.AddDefaultBinding(InputControlType.RightStickLeft);
-            
-            controls.rightAxis_Right.AddDefaultBinding(InputControlType.RightStickRight);
-            
-            controls.rightAxis_Down.AddDefaultBinding(InputControlType.RightStickDown);
-            
-            controls.rightAxis_Up.AddDefaultBinding(InputControlType.RightStickUp);
+            controls.lookAxis_XNegative.AddDefaultBinding(InputControlType.RightStickLeft);
+
+            controls.lookAxis_XPositive.AddDefaultBinding(InputControlType.RightStickRight);
+
+            controls.lookAxis_YNegative.AddDefaultBinding(InputControlType.RightStickDown);
+
+            controls.lookAxis_XPositive.AddDefaultBinding(InputControlType.RightStickUp);
 
             // Alt Axis Input Bindings
-            controls.altAxis_Up.AddDefaultBinding(InputControlType.DPadUp);
+            controls.cycleElement_Positive.AddDefaultBinding(InputControlType.DPadUp);
 
-            controls.altAxis_Down.AddDefaultBinding(InputControlType.DPadDown);
+            controls.cycleElement_Negative.AddDefaultBinding(InputControlType.DPadDown);
 
-            controls.altAxis_Left.AddDefaultBinding(InputControlType.DPadLeft);
+            controls.switchWeaponTypeRangedButton.AddDefaultBinding(InputControlType.DPadLeft);
 
-            controls.altAxis_Right.AddDefaultBinding(InputControlType.DPadRight);
+            controls.switchWeaponTypeMeleeButton.AddDefaultBinding(InputControlType.DPadRight);
+
+            controls.cc
 
             // Main Game Input Bindings
-            controls.dash.AddDefaultBinding(InputControlType.Action1);
+            controls.attackButton.AddDefaultBinding(InputControlType.Action1);
 
-            controls.attack.AddDefaultBinding(InputControlType.RightTrigger);
+            controls.dashButton.AddDefaultBinding(InputControlType.Action2);
 
-            controls.interact.AddDefaultBinding(InputControlType.Action3);
+            controls.interactButton.AddDefaultBinding(InputControlType.Action3);
 
-            controls.aim.AddDefaultBinding(InputControlType.LeftTrigger);
+            controls.potionButton.AddDefaultBinding(InputControlType.Action4);
+
+            //controls.aim.AddDefaultBinding(InputControlType.LeftTrigger);
+
+            return controls;
+        }
+
+        public static Controls ControllerTriggerLayout ()
+        {
+            var controls = new Controls();
+
+            // UI Input Bindings
+            controls.confirmButton.AddDefaultBinding(InputControlType.Action1);
+
+            controls.cancelButton.AddDefaultBinding(InputControlType.Action2);
+
+            // This is in controller bindings anyways just for debugging and shit
+            controls.openMenuButton.AddDefaultBinding(Key.Escape);
+            controls.openMenuButton.AddDefaultBinding(InputControlType.Start);
+
+            controls.openJournalsButton.AddDefaultBinding(InputControlType.Select);
+
+            // Left Axis Input Bindings
+            controls.moveAxis_YPositive.AddDefaultBinding(InputControlType.LeftStickUp);
+
+            controls.moveAxis_YNegative.AddDefaultBinding(InputControlType.LeftStickDown);
+
+            controls.moveAxis_XNegative.AddDefaultBinding(InputControlType.LeftStickLeft);
+
+            controls.moveAxis_XPositive.AddDefaultBinding(InputControlType.LeftStickRight);
+
+            // Right Axis Input Bindings
+            controls.lookAxis_XNegative.AddDefaultBinding(InputControlType.RightStickLeft);
+
+            controls.lookAxis_XPositive.AddDefaultBinding(InputControlType.RightStickRight);
+
+            controls.lookAxis_YNegative.AddDefaultBinding(InputControlType.RightStickDown);
+
+            controls.lookAxis_XPositive.AddDefaultBinding(InputControlType.RightStickUp);
+
+            // Alt Axis Input Bindings
+            controls.cycleElement_Positive.AddDefaultBinding(InputControlType.DPadUp);
+
+            controls.cycleElement_Negative.AddDefaultBinding(InputControlType.DPadDown);
+
+            controls.switchWeaponTypeRangedButton.AddDefaultBinding(InputControlType.DPadLeft);
+
+            controls.switchWeaponTypeMeleeButton.AddDefaultBinding(InputControlType.DPadRight);
+
+            // Main Game Input Bindings
+            controls.attackButton.AddDefaultBinding(InputControlType.RightTrigger);
+
+            controls.dashButton.AddDefaultBinding(InputControlType.Action1);
+
+            controls.interactButton.AddDefaultBinding(InputControlType.Action3);
+
+            controls.potionButton.AddDefaultBinding(InputControlType.Action4);
+
+            //controls.aim.AddDefaultBinding(InputControlType.LeftTrigger);
 
             return controls;
         }
         
-        public static Controls KeyboardBindings()
+        public static Controls KeyboardDefaultLayout()
         {
             var controls = new Controls();
 
             // UI Input Bindings
-            controls.confirm.AddDefaultBinding(Key.Return);
+            controls.confirmButton.AddDefaultBinding(Key.Return);
 
-            controls.cancel.AddDefaultBinding(Key.Escape);
+            controls.cancelButton.AddDefaultBinding(Key.Escape);
 
-            controls.pause.AddDefaultBinding(Key.Escape);
+            controls.openMenuButton.AddDefaultBinding(Key.Escape);
 
             // Left Axis Input Bindings
-            controls.leftAxis_Up.AddDefaultBinding(Key.W);
+            controls.moveAxis_YPositive.AddDefaultBinding(Key.W);
 
-            controls.leftAxis_Down.AddDefaultBinding(Key.S);
+            controls.moveAxis_YNegative.AddDefaultBinding(Key.S);
 
-            controls.leftAxis_Left.AddDefaultBinding(Key.A);
+            controls.moveAxis_XNegative.AddDefaultBinding(Key.A);
 
-            controls.leftAxis_Right.AddDefaultBinding(Key.D);
+            controls.moveAxis_XPositive.AddDefaultBinding(Key.D);
 
             // Right Axis Input Bindings
-            controls.rightAxis_Left.AddDefaultBinding(Mouse.NegativeX);
+            controls.lookAxis_XNegative.AddDefaultBinding(Mouse.NegativeX);
 
-            controls.rightAxis_Right.AddDefaultBinding(Mouse.PositiveX);
+            controls.lookAxis_XPositive.AddDefaultBinding(Mouse.PositiveX);
 
-            controls.rightAxis_Down.AddDefaultBinding(Mouse.NegativeY);
+            controls.lookAxis_YNegative.AddDefaultBinding(Mouse.NegativeY);
 
-            controls.rightAxis_Up.AddDefaultBinding(Mouse.PositiveY);
+            controls.lookAxis_XPositive.AddDefaultBinding(Mouse.PositiveY);
 
             // Alt Axis Input Bindings
-            controls.altAxis_Up.AddDefaultBinding(Mouse.PositiveScrollWheel);
+            controls.cycleElement_Positive.AddDefaultBinding(Mouse.PositiveScrollWheel);
 
-            controls.altAxis_Down.AddDefaultBinding(Mouse.NegativeScrollWheel);
+            controls.cycleElement_Negative.AddDefaultBinding(Mouse.NegativeScrollWheel);
 
-            controls.altAxis_Right.AddDefaultBinding(Key.Key1);
+            controls.switchWeaponTypeMeleeButton.AddDefaultBinding(Key.Key1);
 
-            controls.altAxis_Left.AddDefaultBinding(Key.Key2);
+            controls.switchWeaponTypeRangedButton.AddDefaultBinding(Key.Key2);
 
             // Main Game Input Bindings
-            controls.dash.AddDefaultBinding(Key.Space);
+            controls.dashButton.AddDefaultBinding(Key.Space);
 
-            controls.attack.AddDefaultBinding(Mouse.LeftButton);
+            controls.attackButton.AddDefaultBinding(Mouse.LeftButton);
 
-            controls.interact.AddDefaultBinding(Key.E);
-            controls.interact.AddDefaultBinding(Key.F);
+            controls.interactButton.AddDefaultBinding(Key.E);
+            controls.interactButton.AddDefaultBinding(Key.F);
 
             controls.aim.AddDefaultBinding(Mouse.RightButton);
 
