@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
@@ -125,6 +125,12 @@ namespace Hunter.Character
         public void SwitchElement (bool cycleUp, bool cycleDown)
         {
             //This can be implemented later if we want elemental wolves
+            return;
+        }
+
+        public void Interact ()
+        {
+            //Wolves cannot interact with stuff!
             return;
         }
     }

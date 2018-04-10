@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
+    [RequireComponent(typeof(PlayerInventory))]
     public sealed class Player : Character, IMoveable, IAttack
     {
         #region Variables
@@ -19,8 +21,8 @@ namespace Hunter.Character
         [Header("Movement and Rotation Options")]
         [Range(1, 20), Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
         public float moveSpeed = 5f;
-        [Range(1, 2000), Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
-        public float rotationMaxSpeed = 12f;
+        [Range(1, 100), Tooltip("Controls the speed at which the character is turning. Can be adjusted between a value of 0 and 20.")]
+        public float maxRotationSpeed = 12f;
 
         public AnimationCurve rotationSpeedCurve;
 
@@ -34,28 +36,55 @@ namespace Hunter.Character
         [Header("World UI Options")]
         public Image interactPromptImage;
 
-        private bool canMove = true;
-        private float speedRamp;
+        private bool performingAction = false;
+        private float rotationCurvePosition;
+
         private IEnumerator attackCR;
         private IEnumerator dashCR;
-        private List<IInteractable> itemsPlayerIsStandingIn = new List<IInteractable>();
+
+        public PlayerInventory Inventory { get; private set; }
+
+        private List<IInteractable> nearbyInteractables = new List<IInteractable>();
+        private IInteractable itemToInteractWith;
+
+        public bool PerformingAction
+        {
+            get
+            {
+                return performingAction;
+            }
+
+            set
+            {
+                performingAction = value;
+                if (performingAction) { interactPromptImage.enabled = false; }
+                else { CheckInteractImage(); }
+            }
+        }
 
         #endregion
 
         #region Unity Messages
-        protected override void Start()
+
+        protected override void Awake ()
+        {
+            base.Awake();
+            Inventory = GetComponent<PlayerInventory>();
+        }
+
+        protected override void Start ()
         {
             base.Start();
-            EquipWeaponToCharacter(InventoryManager.instance.CycleMeleeWeapons(weaponContainer));
+            EquipWeaponToCharacter(Inventory.CycleMeleeWeapons(weaponContainer));
             CheckInteractImage();
         }
 
         private void OnTriggerEnter (Collider other)
         {
             var interactableItem = other.GetComponent<IInteractable>();
-            if (interactableItem != null && !itemsPlayerIsStandingIn.Contains(interactableItem))
+            if (interactableItem != null && !nearbyInteractables.Contains(interactableItem))
             {
-                itemsPlayerIsStandingIn.Add(interactableItem);
+                nearbyInteractables.Add(interactableItem);
                 CheckInteractImage();
             }
         }
@@ -63,32 +92,32 @@ namespace Hunter.Character
         private void OnTriggerExit (Collider other)
         {
             var interactableItem = other.GetComponent<IInteractable>();
-            if (interactableItem != null && itemsPlayerIsStandingIn.Contains(interactableItem))
+            if (interactableItem != null && nearbyInteractables.Contains(interactableItem))
             {
-                itemsPlayerIsStandingIn.Remove(interactableItem);
+                nearbyInteractables.Remove(interactableItem);
                 CheckInteractImage();
             }
-        }        
+        }
         #endregion
 
         #region Player Movement
-        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        public void Move (Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
         {
-            // We do not want the player to be able to move during the dash
-            if (!canMove)
-            {
-                return;
-            }
+            // We do not want the player to be able to move during the dash or item pickup
+            if (PerformingAction) { return; }
 
+            //Setting animation params
             anim.SetFloat("dirX", moveDirection.x);
             anim.SetFloat("dirY", moveDirection.z);
             anim.SetFloat("lookX", animLookDirection.x);
             anim.SetFloat("lookY", animLookDirection.z);
             anim.SetBool("moving", moveDirection.magnitude != 0);
 
+            //Cacheing Rotation Transform since its used for both movement and rotation
             var characterRoot = RotationTransform;
 
-            var turningSpeedSlow = Mathf.Clamp((moveDirection - lookDirection).magnitude, 1.0f, 1.5f); 
+            //Moving the Player
+            var turningSpeedSlow = Mathf.Clamp((moveDirection - lookDirection).magnitude, 1.0f, 1.5f);
 
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= moveSpeed;
@@ -96,23 +125,26 @@ namespace Hunter.Character
             agent.destination = characterRoot.position;
             agent.updateRotation = false;
 
-            if (moveDirection.magnitude != 0 || lookDirection.magnitude != 0)
+            characterController.Move((moveDirection * Time.deltaTime) / turningSpeedSlow);
+
+            //Rotating the Player
+            if (lookDirection.magnitude != 0)
             {
                 var targetRotation = new Vector3(characterRoot.localEulerAngles.x, Mathf.Atan2(lookDirection.x, lookDirection.z) * Mathf.Rad2Deg, characterRoot.localEulerAngles.z);
 
-                speedRamp = Mathf.Clamp01(speedRamp + Time.deltaTime);
-                var changeChar = rotationSpeedCurve.Evaluate(speedRamp) * rotationMaxSpeed;
+                rotationCurvePosition = Mathf.Clamp01(rotationCurvePosition + Time.deltaTime);
+                var rotationSpeed = rotationSpeedCurve.Evaluate(rotationCurvePosition) * maxRotationSpeed;
 
-                characterRoot.localRotation = Quaternion.RotateTowards(characterRoot.localRotation, Quaternion.Euler(targetRotation), changeChar);
+                characterRoot.localRotation = Quaternion.RotateTowards(characterRoot.localRotation, Quaternion.Euler(targetRotation), rotationSpeed);
             }
             else
             {
-                speedRamp = 0;
+                rotationCurvePosition = 0;
             }
-            characterController.Move((moveDirection * Time.deltaTime) / turningSpeedSlow);
+
         }
 
-        public void Move(Transform target)
+        public void Move (Transform target)
         {
             // This should stay empty.
         }
@@ -122,19 +154,21 @@ namespace Hunter.Character
         /// <summary>
         /// Dashes the Player in the direction they are facing.
         /// </summary>
-        public void Dash()
+        public void Dash ()
         {
             if (dashCR != null)
             {
                 Debug.LogWarning("Dash is still on cooldown.");
                 return;
             }
+            else if (PerformingAction) { return; }
+
             dashCR = PlayDashAnimation();
             // STARTS DASH COROUTINE
             StartCoroutine(dashCR);
         }
 
-        public void DashAnimationEvent()
+        public void DashAnimationEvent ()
         {
             if (dashCR == null)
             {
@@ -148,10 +182,10 @@ namespace Hunter.Character
         /// <summary>
         /// Lerps the Player from their current postion to the dodge target.
         /// </summary>
-        private IEnumerator PlayDashAnimation()
+        private IEnumerator PlayDashAnimation ()
         {
             //No moving during the dash movement
-            canMove = false;
+            PerformingAction = true;
             var startPosition = eyeLine.position;
             Debug.Log(startPosition);
             var characterForward = RotationTransform.forward;
@@ -183,7 +217,7 @@ namespace Hunter.Character
             else
             {
                 Debug.LogWarning("You tried to Dash into the void. Canceling the dash.");
-                canMove = true;
+                PerformingAction = false;
                 dashCR = null;
                 yield break;
             }
@@ -223,7 +257,7 @@ namespace Hunter.Character
 
             // Let the player move again after they reached their destination
             yield return null;
-            canMove = true;
+            PerformingAction = false;
 
             // Dont want players to be able to spam dash, so we have a cooldown which resets the Coroutine reference after (If that reference isn't null, that means we're still dashing)
             StartCoroutine(SetStaminaBar(1, dashCoolDown));
@@ -232,14 +266,14 @@ namespace Hunter.Character
         }
 
         //TODO This needs to be moved into the HUD Manager
-        private IEnumerator SetStaminaBar(float targetFill, float totalTime)
+        private IEnumerator SetStaminaBar (float targetFill, float totalTime)
         {
             if (HUDManager.instance == null) { yield break; }
 
             float startFill = HUDManager.instance.staminaBar.fillAmount;
             float startTime = Time.time;
             var percentComplete = 0f;
-            while(percentComplete < 1)
+            while (percentComplete < 1)
             {
                 var elapsedTime = Time.time - startTime;
                 percentComplete = Mathf.Clamp01(elapsedTime / totalTime);
@@ -250,42 +284,43 @@ namespace Hunter.Character
         #endregion
 
         #region Player Combat
-        public void Attack()
+        public void Attack ()
         {
             if (attackCR != null) { return; }
+            else if (PerformingAction) { return; }
             attackCR = PlayAttackAnimation();
             StartCoroutine(attackCR);
         }
 
-        public void WeaponAnimationEvent()
+        public void WeaponAnimationEvent ()
         {
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public void FootstepSoundAnimationEvent()
+        public void FootstepSoundAnimationEvent ()
         {
             Fabric.EventManager.Instance.PostEvent("Footstep", gameObject);
         }
 
-        public void MeleeWeaponSwingAnimationEvent()
+        public void MeleeWeaponSwingAnimationEvent ()
         {
             Fabric.EventManager.Instance.PostEvent("Player Sword Swing", gameObject);
         }
 
-        public void SwordSwingParticleAnimationEvent()
+        public void SwordSwingParticleAnimationEvent ()
         {
-            if(CurrentWeapon != null && CurrentWeapon is Melee)
+            if (CurrentWeapon != null && CurrentWeapon is Melee)
             {
                 (CurrentWeapon as Melee).StartStopParticleSystem();
             }
         }
 
-        public void RangedWeaponFireAnimationEvent()
+        public void RangedWeaponFireAnimationEvent ()
         {
             Fabric.EventManager.Instance.PostEvent("Player Luger Shot", gameObject);
         }
 
-        public IEnumerator PlayAttackAnimation()
+        public IEnumerator PlayAttackAnimation ()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             if (CurrentWeapon is Melee)
@@ -300,9 +335,9 @@ namespace Hunter.Character
             attackCR = null;
         }
 
-        public void SwitchWeapon(bool cycleRanged, bool cycleMelee)
+        public void SwitchWeapon (bool cycleRanged, bool cycleMelee)
         {
-            if((cycleMelee && CurrentWeapon is Range) || (cycleRanged && CurrentWeapon is Melee))
+            if ((cycleMelee && CurrentWeapon is Range) || (cycleRanged && CurrentWeapon is Melee))
             {
                 return;
             }
@@ -311,12 +346,12 @@ namespace Hunter.Character
 
             if (cycleMelee)
             {
-                EquipWeaponToCharacter(InventoryManager.instance.CycleRangedWeapons(weaponContainer));
+                EquipWeaponToCharacter(Inventory.CycleRangedWeapons(weaponContainer));
                 Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject);
             }
             else if (cycleRanged)
             {
-                EquipWeaponToCharacter(InventoryManager.instance.CycleMeleeWeapons(weaponContainer));
+                EquipWeaponToCharacter(Inventory.CycleMeleeWeapons(weaponContainer));
                 Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject);
             }
 
@@ -329,8 +364,8 @@ namespace Hunter.Character
 
         public void SwitchElement (bool cycleUp, bool cycleDown)
         {
-            if (cycleUp) { EquipElementToWeapon(InventoryManager.instance.CycleElementsUp()); }
-            else if (cycleDown) { EquipElementToWeapon(InventoryManager.instance.CycleElementsDown()); }
+            if (cycleUp) { EquipElementToWeapon(Inventory.CycleElementsUp()); }
+            else if (cycleDown) { EquipElementToWeapon(Inventory.CycleElementsDown()); }
 
             if (CurrentWeapon != null)
             {
@@ -372,7 +407,7 @@ namespace Hunter.Character
             }
         }
 
-        public override void RestoreHealthToCharacter(int amount)
+        public override void RestoreHealthToCharacter (int amount)
         {
             StopCoroutine("SubtractHealthFromCharacter");
             CurrentHealth += amount;
@@ -390,12 +425,84 @@ namespace Hunter.Character
         //}
         #endregion
 
+        #region Player Interaction
+
+        public void Interact ()
+        {
+            if(nearbyInteractables.Count == 0) { return; }
+            
+            // Always try to interact with Interactable Items first before Props
+            var interactableItem = FirstNearbyInteractableItem();
+            if(interactableItem != null)
+            {
+                PlayPickupAnimation(interactableItem);
+            }
+            else
+            {
+                foreach (var item in nearbyInteractables)
+                {
+                    item.FireInteraction(this);
+                }
+                nearbyInteractables.Clear();
+                CheckInteractImage();
+            }
+        }
+
+        private InteractableInventoryItem FirstNearbyInteractableItem ()
+        {
+            return nearbyInteractables.OfType<InteractableInventoryItem>().FirstOrDefault();
+        }
+
+        private void PlayPickupAnimation (InteractableInventoryItem interactableItem)
+        {
+            itemToInteractWith = interactableItem;
+
+            var triggerName = "PickupLow";
+            if (weaponContainer.transform.position.y < interactableItem.transform.position.y)
+            {
+                triggerName = "PickupHigh";
+            }
+
+            anim.SetTrigger(triggerName);
+            PerformingAction = true;
+        }
+
+        public void PickupItemAnimationEvent ()
+        {
+            if(itemToInteractWith != null) { itemToInteractWith.FireInteraction(this); }
+            nearbyInteractables.Remove(itemToInteractWith);
+            PerformingAction = false;
+        }
+
+        public void CheckInteractImage ()
+        {
+            if (ThereAnyNearbyImportantItems() && !interactPromptImage.enabled)
+            {
+                interactPromptImage.enabled = true;
+            }
+            else if (nearbyInteractables.Count == 0 && interactPromptImage.enabled)
+            {
+                interactPromptImage.enabled = false;
+            }
+        }
+
+        private bool ThereAnyNearbyImportantItems ()
+        {
+            if(nearbyInteractables.Count == 0) { return false; }
+            foreach(var item in nearbyInteractables)
+            {
+                if (item.IsImportant()) { return true; }
+            }
+            return false;
+        }
+        #endregion
+
         #region Helper Functions
         /// <summary>
         /// Determines if the point the player wants to dash to is on the navmesh,
         /// if not, the target point is changed to the point they can dash to.
         /// </summary>
-        private Vector3 GetClosestPointOnNavMesh(Vector3 target)
+        private Vector3 GetClosestPointOnNavMesh (Vector3 target)
         {
             var hit = new NavMeshHit();
             // This gives us a sample radius for the NavMesh check relative to our NavMesh agent size, so given either scenerio where we are passed a floor point or the character's position, we should be able to find a point on the NavMesh
@@ -419,51 +526,11 @@ namespace Hunter.Character
             return target;
         }
 
-        private float SignedAngle(Vector3 a, Vector3 b)
+        private float SignedAngle (Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
         }
 
-        private void CheckInteractImage ()
-        {
-            if(itemsPlayerIsStandingIn.Count > 0 && !interactPromptImage.enabled)
-            {
-                interactPromptImage.enabled = true;
-            }
-            else if(itemsPlayerIsStandingIn.Count == 0 && interactPromptImage.enabled)
-            {
-                interactPromptImage.enabled = false;
-            }
-        }
-
-        public void TriggerItemInteractions ()
-        {
-            foreach (var item in itemsPlayerIsStandingIn)
-            {
-                item.Interact(this);
-            }
-            itemsPlayerIsStandingIn.Clear();
-            CheckInteractImage();
-        }
-
-        public void PlayPickupAnimation (Transform itemTransform)
-        {
-            var triggerName = "PickupLow";
-            if(weaponContainer.transform.position.y < itemTransform.position.y)
-            {
-                triggerName = "PickupHigh";
-            }
-            StartCoroutine(PickupAnim(triggerName));
-        }
-
-        private IEnumerator PickupAnim (string triggerName)
-        {
-            var pim = GetComponent<PlayerInputModule>();
-            if(pim != null) { pim.characterInputEnabled = false; }
-            anim.SetTrigger(triggerName);
-            yield return new WaitForSeconds(2.2f);
-            if (pim != null) { pim.characterInputEnabled = true; }
-        }
         #endregion
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     public class PlayerInputModule : MonoBehaviour
     {
@@ -45,13 +45,16 @@ namespace Hunter.Character
             {
                 moveDirection = new Vector3(myDeviceManager.MoveAxis_Horizontal, 0, myDeviceManager.MoveAxis_Vertical);
 
-                lookDirection = new Vector3(myDeviceManager.LookAxis_Horizontal, 0, myDeviceManager.LookAxis_Vertical);
+                lookDirection = moveDirection;
+
+                //lookDirection = new Vector3(myDeviceManager.LookAxis_Horizontal, 0, myDeviceManager.LookAxis_Vertical);
+                //// If the left axis is being used and the right axis is not, adjust the character body to align with the left 
+                //if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
+                //{
+                //    lookDirection = moveDirection;
+                //}
+
                 animLookDirection = lookDirection;
-                // If the left axis is being used and the right axis is not, adjust the character body to align with the left 
-                if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
-                {
-                    lookDirection = moveDirection;
-                }
 
                 if (characterInputEnabled)
                 {
@@ -83,7 +86,7 @@ namespace Hunter.Character
                     }
                     else if (myDeviceManager.PressedInteract)
                     {
-                        GetComponent<Player>()?.TriggerItemInteractions();
+                        moveCharacter.Interact();
                     }
                 }
                 //else if (myDeviceManager.PressedAim && attackCharacter != null)
@@ -99,7 +102,7 @@ namespace Hunter.Character
                     }
                     else
                     {
-                        PauseManager.instance.PauseGame();
+                        PauseManager.instance.PauseGame(GetComponent<Player>());
                     }
                 }
             }

@@ -5,7 +5,7 @@ using UnityEngine;
 //using UnityEditor;
 //#endif
 
-namespace Hunter.Character.AI
+namespace Hunter.Characters.AI
 {
     [CreateAssetMenu(fileName = "NewUrgeWeights", menuName = "Urge Weights", order = -1)]
     public class UrgeWeights : ScriptableObject

@@ -1,18 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Character;
+using Hunter.Characters;
 using System.Linq;
 
 namespace Hunter
 {
-    public class InventoryManager : MonoBehaviour
+    public class PlayerInventory : MonoBehaviour
     {
-        /// <summary>
-        /// singleton
-        /// </summary>
-        [HideInInspector]
-        public static InventoryManager instance;
-
         public List<InventoryItem> startingItems;
 
         //TODO Make it so that the InteractableInventoryItem and the seperate actual Weapon are the same thing
@@ -28,16 +22,6 @@ namespace Hunter
 
         private void Awake()
         {
-            if (instance == null)
-            {
-                instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-                return;
-            }
-
             if(startingItems != null && startingItems.Count > 0)
             {
                 foreach(var item in startingItems)
@@ -171,9 +155,7 @@ namespace Hunter
                 Debug.LogWarning("Couldn't spawn an interactble object from the inventory item data provided. Make sure a prefab reference is set in the scriptable object.");
                 return null;
             }
-            var spawnedItem = Instantiate(item.InteractableItemPrefab, transform);
-            spawnedItem.gameObject.SetActive(false);
-            return spawnedItem;
+            return Instantiate(item.InteractableItemPrefab);
         }
 
         public bool TryAddItem (InventoryItem item, InteractableInventoryItem spawnedInteractableItem)
@@ -205,8 +187,13 @@ namespace Hunter
                 Debug.LogWarning("Tried to add the item to the Inventory but it was not a recognizable item or its already in the Inventory. Check that the Inventory is able to handle that type of item and that it already isnt in the Inventory.");
                 return false;
             }
+
             Debug.Log($"Added the Item {item.itemName} to your inventory.");
             if(HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(item.itemName, item.icon); }
+
+            spawnedInteractableItem.transform.SetParent(transform);
+            spawnedInteractableItem.gameObject.SetActive(false);
+
             return true;
         }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Hunter.Character;
+using Hunter.Characters;
 
 /*    THE ROUTINE FOR CULLING AWAY OBJECTS IN FRONT OF THE CAMERA
  * 1) Linecast from camera to player 
@@ -17,7 +17,7 @@ namespace Hunter
     public class CameraCull : MonoBehaviour
     {
         #region Properties
-        public Character.Character PlayerCharacter
+        public Character PlayerCharacter
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Hunter
                         return null;
                     }
 
-                    playerCharacter = pcGO.GetComponent<Character.Character>();
+                    playerCharacter = pcGO.GetComponent<Character>();
                     if (playerCharacter == null)
                     {
                         Debug.LogWarning("The Player does not have the proper Character script attached to them.", pcGO);
@@ -54,7 +54,7 @@ namespace Hunter
 
         private List<GameObject> cachedList;
         private Shader cachedShader;
-        private Character.Character playerCharacter;
+        private Character playerCharacter;
         #endregion
 
         private void Start()
@@ -115,12 +115,9 @@ namespace Hunter
             if (rend)
             {
                 rend.material.shader = cachedShader;
-                if (rend.material.color != null)
-                {
-                    var tempColor = rend.material.color;
-                    tempColor.a = opaqueAmount;
-                    rend.material.color = tempColor;
-                }
+                var tempColor = rend.material.color;
+                tempColor.a = opaqueAmount;
+                rend.material.color = tempColor;
             }
         }
 
@@ -129,12 +126,9 @@ namespace Hunter
             if (rend)
             {
                 rend.material.shader = Shader.Find("Transparent/Diffuse");
-                if (rend.material.color != null)
-                {
-                    var tempColor = rend.material.color;
-                    tempColor.a = transparencyAmount;
-                    rend.material.color = tempColor;
-                }
+                var tempColor = rend.material.color;
+                tempColor.a = transparencyAmount;
+                rend.material.color = tempColor;
             }
         }
     }

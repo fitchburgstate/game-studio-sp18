@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Hunter.Characters;
 
 namespace Hunter
 {
@@ -20,6 +21,8 @@ namespace Hunter
         public TextMeshProUGUI diaryHeader;
 
         public Canvas menuCanvas;
+
+        private Player playerWhoPaused;
 
         private void Awake ()
         {
@@ -41,25 +44,30 @@ namespace Hunter
             menuCanvas.gameObject.SetActive(false);
         }
 
-        public void PauseGame ()
+        public void PauseGame (Player player)
         {
             Time.timeScale = 0;
+            playerWhoPaused = player;
+
             Fabric.EventManager.Instance.PostEvent("UI Start Game");
-            DisplayJournals();
             menuCanvas.gameObject.SetActive(true);
+
+            DisplayJournals();
         }
 
         public void UnpauseGame ()
         {
             Time.timeScale = 1;
+            playerWhoPaused = null;
+
             Fabric.EventManager.Instance.PostEvent("UI Navigation Back");
             menuCanvas.gameObject.SetActive(false);
         }
 
         public void DisplayJournals ()
         {
-            if (InventoryManager.instance == null) { return; }
-            var journals = InventoryManager.instance.GetAllJournals();
+            if (playerWhoPaused == null) { return; }
+            var journals = playerWhoPaused.Inventory.GetAllJournals();
             journalHeader.fontStyle = FontStyles.Bold;
             diaryHeader.fontStyle = FontStyles.Normal;
             Fabric.EventManager.Instance.PostEvent("UI Page Flip");
@@ -97,8 +105,8 @@ namespace Hunter
 
         public void DisplayDiaries ()
         {
-            if (InventoryManager.instance == null) { return; }
-            var diaries = InventoryManager.instance.GetAllDiaries();
+            if (playerWhoPaused == null) { return; }
+            var diaries = playerWhoPaused.Inventory.GetAllDiaries();
             diaryHeader.fontStyle = FontStyles.Bold;
             journalHeader.fontStyle = FontStyles.Normal;
             Fabric.EventManager.Instance.PostEvent("UI Page Flip");

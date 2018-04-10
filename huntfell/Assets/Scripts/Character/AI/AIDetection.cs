@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Character;
+using Hunter.Characters;
 
-namespace Hunter.Character.AI
+namespace Hunter.Characters.AI
 {
     public class AIDetection : MonoBehaviour
     {

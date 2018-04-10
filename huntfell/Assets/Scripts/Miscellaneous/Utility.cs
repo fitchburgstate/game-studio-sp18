@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Hunter.Character;
+using Hunter.Characters;
 
 namespace Hunter
 {
@@ -74,6 +74,8 @@ namespace Hunter
         void Move(Transform navMeshTarget);
 
         void Dash();
+
+        void Interact();
     }
 
     public interface IUtilityBasedAI
@@ -104,6 +106,8 @@ namespace Hunter
     
     public interface IInteractable
     {
-        void Interact (Character.Character characterTriggeringInteraction);
+        void FireInteraction (Character characterTriggeringInteraction);
+
+        bool IsImportant ();
     }
 }

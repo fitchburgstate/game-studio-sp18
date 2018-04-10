@@ -441,6 +441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4512040980706586}
   - component: {fileID: 114549486219218100}
+  - component: {fileID: 114667400183726208}
   - component: {fileID: 114265102825011292}
   - component: {fileID: 95342551330136972}
   - component: {fileID: 143796428135121728}
@@ -3258,6 +3259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 389798393a3ec434bb496be63e67c0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterInputEnabled: 1
 --- !u!114 &114375975836453656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3341,21 +3343,21 @@ MonoBehaviour:
   gunTrailLength: 1.5
   healthSubtractionTime: 1
   moveSpeed: 5
-  rotationMaxSpeed: 12
+  maxRotationSpeed: 60
   rotationSpeedCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
     - serializedVersion: 2
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -3383,8 +3385,22 @@ MonoBehaviour:
     m_RotationOrder: 0
   dashValidLayers:
     serializedVersion: 2
-    m_Bits: 4294965759
+    m_Bits: 4294963657
   interactPromptImage: {fileID: 114466759864653546}
+--- !u!114 &114667400183726208
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1275573556108248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce22da9e3a4f21f4cab8a0885b51845a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingItems:
+  - {fileID: 11400000, guid: aa9f88c9b4c13094daa1e8430dadf062, type: 2}
+  - {fileID: 11400000, guid: 47330a7e9ff4a5b49bec96c09a1990db, type: 2}
 --- !u!114 &114701405234032384
 MonoBehaviour:
   m_ObjectHideFlags: 1

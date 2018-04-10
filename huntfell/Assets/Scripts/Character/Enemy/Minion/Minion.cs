@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     public abstract class Minion : Enemy
     {

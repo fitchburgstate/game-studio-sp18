@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Security.Cryptography;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     public abstract class Weapon : MonoBehaviour
     {

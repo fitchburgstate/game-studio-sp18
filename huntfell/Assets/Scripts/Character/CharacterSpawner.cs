@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     [Serializable]
     public class CharacterSpawner : MonoBehaviour

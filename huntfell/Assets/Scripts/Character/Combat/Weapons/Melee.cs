@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     [RequireComponent(typeof(BoxCollider))]
     public class Melee : Weapon

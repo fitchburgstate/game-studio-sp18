@@ -7,7 +7,7 @@ using UnityEditor;
 #endif
 using System.Linq;
 
-namespace Hunter.Character.AI
+namespace Hunter.Characters.AI
 {
     public class AIInputModule : MonoBehaviour
     {

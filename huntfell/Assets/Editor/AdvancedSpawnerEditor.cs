@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
-using Hunter.Character;
+using Hunter.Characters;
 
 [CustomEditor(typeof(CharacterSpawner))]
 [CanEditMultipleObjects]
