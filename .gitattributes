@@ -11,7 +11,6 @@
 *.psd filter=lfs diff=lfs merge=lfs -text
 *.tga filter=lfs diff=lfs merge=lfs -text
 *.tiff filter=lfs diff=lfs merge=lfs -text
-
 # Audio files
 *.mp3 filter=lfs diff=lfs merge=lfs -text
 *.ogg filter=lfs diff=lfs merge=lfs -text
@@ -22,8 +21,6 @@
 *.it filter=lfs diff=lfs merge=lfs -text
 *.s3m filter=lfs diff=lfs merge=lfs -text
 *.xm filter=lfs diff=lfs merge=lfs -text
-
-
 # Video files
 *.mov filter=lfs diff=lfs merge=lfs -text
 *.mpg filter=lfs diff=lfs merge=lfs -text
@@ -31,7 +28,6 @@
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.avi filter=lfs diff=lfs merge=lfs -text
 *.asf filter=lfs diff=lfs merge=lfs -text
-
 # 3D model files
 *.fbx filter=lfs diff=lfs merge=lfs -text
 *.dae filter=lfs diff=lfs merge=lfs -text
@@ -39,13 +35,13 @@
 *.dxf filter=lfs diff=lfs merge=lfs -text
 *.obj filter=lfs diff=lfs merge=lfs -text
 *.skp filter=lfs diff=lfs merge=lfs -text
-
 # Proprietary 3D model files
 # TODO add more
 *.blend filter=lfs diff=lfs merge=lfs -text
 *.c4d filter=lfs diff=lfs merge=lfs -text
-
 # Scene, prefab and ScriptableObject files
 *.unity merge=unityyamlmerge lockable
 *.prefab merge=unityyamlmerge
 *.asset filter=lfs diff=lfs merge=unityyamlmerge
+huntfell/Assets/Art/3D/Character/Player filter=lfs diff=lfs merge=lfs -text
+Character/Model/Character_Player_Animations.FBX filter=lfs diff=lfs merge=lfs -text

@@ -1,96 +1,76 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 namespace Hunter
 {
-    public class Elements : MonoBehaviour
+    /// <summary>
+    /// Options Enum for the Elements that can be selected.
+    /// </summary>
+    public enum ElementOption
     {
-        public class Blood : ElementType
+        None,
+        Fire,
+        Ice,
+        Lightning,
+        Nature,
+        Silver
+    }
+
+    public abstract class Element
+    {
+        public Sprite elementHUDSprite;
+        public Color elementColor = Color.white;
+        protected Type weakness = null;
+        
+        public Type Weakness
         {
-            public Blood()
+            get
             {
-                weakness = typeof(Disease);
-                resistance1 = typeof(Silver);
-                resistance2 = typeof(None);
+                return weakness;
             }
         }
 
-        public class Disease : ElementType
+        public class Fire : Element
         {
-            public Disease()
-            {
-                weakness = typeof(Silver);
-                resistance1 = typeof(Blood);
-                resistance2 = typeof(None);
-            }
-        }
-
-        public class Fire : ElementType
-        {
-            public Fire()
+            public Fire ()
             {
                 weakness = typeof(Ice);
-                resistance1 = typeof(None);
-                resistance2 = typeof(None);
+                elementColor = Color.red;
             }
         }
 
-        public class Ice : ElementType
+        public class Ice : Element
         {
-            public Ice()
+            public Ice ()
             {
                 weakness = typeof(Fire);
-                resistance1 = typeof(None);
-                resistance2 = typeof(None);
+                elementColor = Color.cyan;
             }
         }
 
-        public class Lightning : ElementType
+        public class Lightning : Element
         {
-            public Lightning()
+            public Lightning ()
             {
-                weakness = typeof(Stone);
-                resistance1 = typeof(Ice);
-                resistance2 = typeof(Mechanical);
+                weakness = typeof(Nature);
+                elementColor = Color.yellow;
             }
         }
 
-        public class Mechanical : ElementType
+        public class Nature : Element
         {
-            public Mechanical()
+            public Nature ()
             {
                 weakness = typeof(Lightning);
-                resistance1 = typeof(Stone);
-                resistance2 = typeof(None);
+                elementColor = Color.green;
             }
         }
 
-        public class None : ElementType
+        public class Silver : Element
         {
-            public None()
+            public Silver ()
             {
-                // Empty
-            }
-        }
-
-        public class Silver : ElementType
-        {
-            public Silver()
-            {
-                weakness = typeof(Blood);
-                resistance1 = typeof(Disease);
-                resistance2 = typeof(None);
-            }
-        }
-
-        public class Stone : ElementType
-        {
-            public Stone()
-            {
-                weakness = typeof(Mechanical);
-                resistance1 = typeof(Fire);
-                resistance2 = typeof(Lightning);
+                elementColor = Color.gray;
             }
         }
     }
