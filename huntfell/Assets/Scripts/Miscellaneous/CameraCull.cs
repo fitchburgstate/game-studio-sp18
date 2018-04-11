@@ -115,12 +115,9 @@ namespace Hunter
             if (rend)
             {
                 rend.material.shader = cachedShader;
-                if (rend.material.color != null)
-                {
-                    var tempColor = rend.material.color;
-                    tempColor.a = opaqueAmount;
-                    rend.material.color = tempColor;
-                }
+                var tempColor = rend.material.color;
+                tempColor.a = opaqueAmount;
+                rend.material.color = tempColor;
             }
         }
 
@@ -129,12 +126,9 @@ namespace Hunter
             if (rend)
             {
                 rend.material.shader = Shader.Find("Transparent/Diffuse");
-                if (rend.material.color != null)
-                {
-                    var tempColor = rend.material.color;
-                    tempColor.a = transparencyAmount;
-                    rend.material.color = tempColor;
-                }
+                var tempColor = rend.material.color;
+                tempColor.a = transparencyAmount;
+                rend.material.color = tempColor;
             }
         }
     }

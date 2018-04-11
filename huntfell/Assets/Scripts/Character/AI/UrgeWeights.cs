@@ -20,6 +20,6 @@ namespace Hunter.Character.AI
 
         public float distanceToPointMax = 2f;
 
-        public float attackRangeMin = 2f;
+        public float attackRangeMin = 2.5f;
     }
 }

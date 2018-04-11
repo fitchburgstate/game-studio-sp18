@@ -190,7 +190,7 @@ namespace Hunter
         {
             if (itemsToSpawn.Count == 0)
             {
-                Debug.Log("Nothing in this prop!");
+                //Debug.Log("Nothing in this prop!");
                 return;
             }
 

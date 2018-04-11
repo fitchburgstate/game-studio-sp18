@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4042962101753914}
   - component: {fileID: 65989575681499624}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: Interaction Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -935,7 +935,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1671442415911342
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
@@ -1537,6 +1537,7 @@ Transform:
   - {fileID: 4335954900991288}
   - {fileID: 4466119860154192}
   - {fileID: 4042962101753914}
+  - {fileID: 4219033539967030}
   m_Father: {fileID: 4512040980706586}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1837,12 +1838,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1671442415911342}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.604, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4512040980706586}
-  m_RootOrder: 1
+  m_Father: {fileID: 4016347807903170}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4220083255450180
 Transform:
@@ -2201,11 +2202,10 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1275573556108248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.03, y: 0.1, z: -5.24}
+  m_LocalPosition: {x: 6.65, y: 0.1, z: 22.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4016347807903170}
-  - {fileID: 4219033539967030}
   - {fileID: 4660554182852302}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -2406,7 +2406,7 @@ Transform:
   - {fileID: 224102848272660790}
   - {fileID: 4892743926623624}
   m_Father: {fileID: 4512040980706586}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4692683092651176
 Transform:
@@ -6177,7 +6177,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -13007,7 +13007,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -26559,7 +26559,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -43574,7 +43574,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -50398,7 +50398,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1

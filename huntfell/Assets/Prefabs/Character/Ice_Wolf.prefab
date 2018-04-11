@@ -1331,7 +1331,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1835349017066350
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
@@ -1731,16 +1731,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1720497567133960}
-  m_LocalRotation: {x: -0, y: 0.7285423, z: -0, w: 0.68500084}
-  m_LocalPosition: {x: -43.54, y: 0.29, z: 69.7}
+  m_LocalRotation: {x: -0, y: 0.6843263, z: -0, w: 0.729176}
+  m_LocalPosition: {x: 9.36, y: -0.81999993, z: 0.9700012}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4518743308142936}
-  - {fileID: 4951058185158324}
   - {fileID: 4796785745465564}
+  - {fileID: 4951058185158324}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 93.52901, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 86.365005, z: 0}
 --- !u!4 &4143216141855314
 Transform:
   m_ObjectHideFlags: 1
@@ -2313,12 +2312,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1835349017066350}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.372, z: 0.819}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.88799995, z: 0.81899965}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4135882425459558}
-  m_RootOrder: 0
+  m_Father: {fileID: 4796785745465564}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4521875198027856
 Transform:
@@ -2659,13 +2658,14 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1697524419723748}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.516, z: 0}
+  m_LocalPosition: {x: -0.002, y: -0.516, z: -0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4090347193206760}
   - {fileID: 4705235171381960}
+  - {fileID: 4518743308142936}
   m_Father: {fileID: 4135882425459558}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4801371190315060
 Transform:
@@ -3034,8 +3034,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.15039958, y: 0.12465064, z: 0.17328073}
-  m_Center: {x: -0.05519968, y: 0.012325294, z: -0.006576573}
+  m_Size: {x: 0.07479399, y: 0.073803894, z: 0.17328075}
+  m_Center: {x: -0.07611599, y: 0.037748754, z: -0.0065765455}
 --- !u!95 &95758073068790650
 Animator:
   serializedVersion: 3
@@ -3096,7 +3096,7 @@ MonoBehaviour:
   fieldOfViewRange: 90
   detectionLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 256
 --- !u!114 &114252411858806674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3206,11 +3206,12 @@ MonoBehaviour:
   displayName: Wolf
   eyeLine: {fileID: 4518743308142936}
   enemyElementOption: 2
-  runSpeed: 5
+  speed: 5
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114555488149255508}
   justFound: 0
   meleeWeapon: {fileID: 114302112681280164}
+  turnSpeed: 78.9
 --- !u!114 &114840683088862578
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3323,7 +3324,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 2
-  m_Radius: 0.75
+  m_Radius: 1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -3337,12 +3338,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 1720497567133960}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.75
+  m_Radius: 1
   m_Speed: 4
   m_Acceleration: 15
   avoidancePriority: 50
   m_AngularSpeed: 1500
-  m_StoppingDistance: 0.5
+  m_StoppingDistance: 1.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -5982,7 +5983,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -16122,7 +16123,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -29782,7 +29783,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -33194,7 +33195,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -43424,7 +43425,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1

@@ -43,6 +43,14 @@ namespace Hunter.Character.AI
                 return playerCharacter;
             }
         }
+
+        public bool InVisionCone
+        {
+            get
+            {
+                return inVisionCone;
+            }
+        }
         #endregion
 
         #region Variables
@@ -76,6 +84,8 @@ namespace Hunter.Character.AI
         /// </summary>
         private Transform aiCharacterEyeLine;
 
+        private Transform playerCharacterEyeLine;
+
         /// <summary>
         ///  The AI character itself.
         /// </summary>
@@ -85,13 +95,20 @@ namespace Hunter.Character.AI
         /// The player character that the AI will be interacting with.
         /// </summary>
         private Character playerCharacter;
+
+        /// <summary>
+        /// Is the target in the Conic field of View?
+        /// </summary>
+        private bool inVisionCone;
         #endregion
 
         private void Start()
         {
             aiCharacterEyeLine = AiCharacter.eyeLine;
+            playerCharacterEyeLine = PlayerCharacter.eyeLine;
         }
 
+        #region DetectPlayer Function
         /// <summary>
         /// The AI searches for a gameobject tagged "Player" and returns true when the player has been found.
         /// </summary>
@@ -99,23 +116,33 @@ namespace Hunter.Character.AI
         public bool DetectPlayer()
         {
             var rayHit = new RaycastHit();
-            var rayDirection = PlayerCharacter.eyeLine.position - aiCharacterEyeLine.position;
+            var rayDirection = PlayerCharacter.transform.position - AiCharacter.transform.position;
+            rayDirection.Normalize();
 
             var wolfComponent = AiCharacter.GetComponent<Wolf>();
-            // var playerComponent = PlayerCharacter.GetComponent<Player>();
+
+            Debug.Log($"Difference: {Vector3.Angle(rayDirection, aiCharacter.RotationTransform.forward)}, fov: {fieldOfViewRange * 0.5f}");
 
             if (Vector3.Angle(rayDirection, aiCharacter.RotationTransform.forward) <= fieldOfViewRange * 0.5f)
             {
-                // Debug.DrawRay(aiCharacterEyeLine.position, rayDirection, Color.red, 5);
                 if (Physics.Raycast(aiCharacterEyeLine.position, rayDirection, out rayHit, maxDetectionDistance, detectionLayers)) // Detects to see if the player is within the field of view
                 {
+                    inVisionCone = true;
                     if (wolfComponent != null && !wolfComponent.justFound)
                     {
-                        Fabric.EventManager.Instance.PostEvent("Wolf Aggro", gameObject);
+                        Fabric.EventManager.Instance?.PostEvent("Wolf Aggro", gameObject);
                         wolfComponent.justFound = true;
                     }
                     return true;
                 }
+                else
+                {
+                    inVisionCone = false;
+                }
+            }
+            else
+            {
+                inVisionCone = false;
             }
 
             var collidersInRadius = Physics.OverlapSphere(aiCharacterEyeLine.position, minDetectionDistance, detectionLayers);
@@ -123,18 +150,20 @@ namespace Hunter.Character.AI
             {
                 if (wolfComponent != null && !wolfComponent.justFound)
                 {
-                    Fabric.EventManager.Instance.PostEvent("Wolf Aggro", gameObject);
+                    Fabric.EventManager.Instance?.PostEvent("Wolf Aggro", gameObject);
                     wolfComponent.justFound = true;
                 }
                 return true;
             }
             return false;
         }
-        
+        #endregion
+
+        #region Editor Gizmos
         private void OnDrawGizmosSelected()
         {
-            if (!Application.isPlaying)
-            {
+            //if (!Application.isPlaying)
+            //{
                 Gizmos.color = Color.blue;
 
                 var lineHeight = 0f;
@@ -145,7 +174,7 @@ namespace Hunter.Character.AI
                 var newPos = pos;
                 var lastPos = pos;
 
-                var direction = AiCharacter.eyeLine.TransformDirection(Vector3.forward) * maxDetectionDistance;
+                var direction = aiCharacter.RotationTransform.forward * maxDetectionDistance;
                 var leftRayRotation = Quaternion.AngleAxis(-(fieldOfViewRange / 2), Vector3.up);
                 var leftRayDirection = leftRayRotation * AiCharacter.RotationTransform.forward;
                 var rightRayRotation = Quaternion.AngleAxis((fieldOfViewRange / 2), Vector3.up);
@@ -164,7 +193,8 @@ namespace Hunter.Character.AI
                     pos = newPos;
                 }
                 Gizmos.DrawLine(pos, lastPos);
-            }
+            //}
         }
+        #endregion
     }
 }

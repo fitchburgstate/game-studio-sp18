@@ -205,7 +205,7 @@ namespace Hunter
                 Debug.LogWarning("Tried to add the item to the Inventory but it was not a recognizable item or its already in the Inventory. Check that the Inventory is able to handle that type of item and that it already isnt in the Inventory.");
                 return false;
             }
-            Debug.Log($"Added the Item {item.itemName} to your inventory.");
+            //Debug.Log($"Added the Item {item.itemName} to your inventory.");
             if(HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(item.itemName, item.icon); }
             return true;
         }

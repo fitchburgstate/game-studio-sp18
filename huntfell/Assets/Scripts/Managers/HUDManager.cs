@@ -35,7 +35,7 @@ namespace Hunter {
 
         public GameObject damagePopUpPrefab;
         private GameObject promptParent;
-        private GameObject journalParent;
+        //private GameObject journalParent;
 
         private IEnumerator promptFadeCR;
         private IEnumerator journalFadeCR;
@@ -62,7 +62,7 @@ namespace Hunter {
             }
             if(journalText != null)
             {
-                journalParent = journalText.transform.parent.gameObject;
+                //journalParent = journalText.transform.parent.gameObject;
             }
         }
 

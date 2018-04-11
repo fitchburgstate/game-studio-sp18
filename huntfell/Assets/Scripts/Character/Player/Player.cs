@@ -130,7 +130,7 @@ namespace Hunter.Character
         {
             if (dashCR != null)
             {
-                Debug.LogWarning("Dash is still on cooldown.");
+                //Debug.LogWarning("Dash is still on cooldown.");
                 return;
             }
             dashCR = PlayDashAnimation();
@@ -199,12 +199,12 @@ namespace Hunter.Character
             anim.SetTrigger("DodgeRoll");
             StartCoroutine(SetStaminaBar(0, 0.3f));
             // PAUSE HERE FOR ANIMATION EVENT
-            Debug.Log("Pausing Dash Coroutine to wait for Animation Event...");
+            //Debug.Log("Pausing Dash Coroutine to wait for Animation Event...");
             StopCoroutine(dashCR);
             yield return null;
 
             // COROUTINE RESUMES HERE
-            Debug.Log("Animation Event has resumed the Coroutine.");
+            //Debug.Log("Animation Event has resumed the Coroutine.");
 
             var dashDistanceCheckMargin = 0.09f;
             var dashTime = 0f;
@@ -327,7 +327,7 @@ namespace Hunter.Character
             if (CurrentWeapon != null)
             {
                 CurrentWeapon?.gameObject.SetActive(true);
-                Debug.Log("Equipped the " + CurrentWeapon.name);
+                //Debug.Log("Equipped the " + CurrentWeapon.name);
             }
         }
 
@@ -338,7 +338,7 @@ namespace Hunter.Character
 
             if (CurrentWeapon != null)
             {
-                Debug.Log("Equipped the " + Utility.ElementToElementOption(CurrentWeapon.weaponElement) + " to the " + CurrentWeapon.name);
+                //Debug.Log("Equipped the " + Utility.ElementToElementOption(CurrentWeapon.weaponElement) + " to the " + CurrentWeapon.name);
             }
         }
 
@@ -408,7 +408,7 @@ namespace Hunter.Character
             if (NavMesh.SamplePosition(target, out hit, sampleRadius, NavMesh.AllAreas))
             {
                 target = hit.position;
-                Debug.Log("Hit Position of NavMesh Sample from RayCast: " + target);
+                //Debug.Log("Hit Position of NavMesh Sample from RayCast: " + target);
             }
             else if (NavMesh.SamplePosition(transform.position, out hit, sampleRadius, NavMesh.AllAreas))
             {
