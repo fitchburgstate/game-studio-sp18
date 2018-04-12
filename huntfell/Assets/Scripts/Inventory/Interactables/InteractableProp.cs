@@ -33,9 +33,6 @@ namespace Hunter
         [SerializeField]
         private bool giveItemsDirectly;
 
-        [SerializeField]
-        private bool requiresDamage;
-
         public string interactionSuccessMessage;
         public string interactionFailMessage;
 
@@ -76,7 +73,7 @@ namespace Hunter
         {
             if (currentlyInteracting || characterFromInteraction.tag != "Player") { return; }
 
-            if (!requiresDamage || elementTypeForInteraction == ElementOption.None || propType != PropType.Destructible)
+            if (elementTypeForInteraction == ElementOption.None || propType != PropType.Destructible)
             {
                 currentlyInteracting = true;
 
@@ -99,7 +96,6 @@ namespace Hunter
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
             {
-                if(requiresDamage && !wasDamaged) { return; }
                 currentlyInteracting = true;
                 ShowSuccessMessage();
 

@@ -441,6 +441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4512040980706586}
   - component: {fileID: 114549486219218100}
+  - component: {fileID: 114107445228951894}
   - component: {fileID: 114265102825011292}
   - component: {fileID: 95342551330136972}
   - component: {fileID: 143796428135121728}
@@ -2202,7 +2203,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1275573556108248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.65, y: 0.1, z: 22.9}
+  m_LocalPosition: {x: 14.11, y: 0.1, z: -5.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4016347807903170}
@@ -3247,6 +3248,20 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114107445228951894
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1275573556108248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce22da9e3a4f21f4cab8a0885b51845a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingItems:
+  - {fileID: 11400000, guid: aa9f88c9b4c13094daa1e8430dadf062, type: 2}
+  - {fileID: 11400000, guid: 47330a7e9ff4a5b49bec96c09a1990db, type: 2}
 --- !u!114 &114265102825011292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3258,7 +3273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 389798393a3ec434bb496be63e67c0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterInputEnabled: 1
+  inputEnabled: 1
 --- !u!114 &114375975836453656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3342,21 +3357,27 @@ MonoBehaviour:
   gunTrailLength: 1.5
   healthSubtractionTime: 1
   moveSpeed: 5
-  rotationMaxSpeed: 30
+  maxRotationSpeed: 60
   rotationSpeedCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.2962983
+      value: 0.68045956
+      inSlope: 1.8029317
+      outSlope: 1.8029317
       tangentMode: 0
     - serializedVersion: 2
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

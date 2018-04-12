@@ -236,8 +236,8 @@ namespace Hunter.Characters.AI
             }
 
             var currentState = FindNextState(distanceToTarget, distanceToPoint);
-            Debug.Log(currentState);
-            Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
+            //Debug.Log(currentState);
+            //Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
             currentState.Act();
 
             #region State Switchers

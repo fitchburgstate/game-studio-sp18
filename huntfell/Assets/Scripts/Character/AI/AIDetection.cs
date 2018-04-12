@@ -121,7 +121,7 @@ namespace Hunter.Characters.AI
 
             var wolfComponent = AiCharacter.GetComponent<Wolf>();
 
-            Debug.Log($"Difference: {Vector3.Angle(rayDirection, aiCharacter.RotationTransform.forward)}, fov: {fieldOfViewRange * 0.5f}");
+            //Debug.Log($"Difference: {Vector3.Angle(rayDirection, aiCharacter.RotationTransform.forward)}, fov: {fieldOfViewRange * 0.5f}");
 
             if (Vector3.Angle(rayDirection, aiCharacter.RotationTransform.forward) <= fieldOfViewRange * 0.5f)
             {

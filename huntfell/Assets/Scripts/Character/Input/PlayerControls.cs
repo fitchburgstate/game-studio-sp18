@@ -12,7 +12,7 @@ namespace Hunter {
         Keyboard_and_Mouse
     }
 
-    public class Controls
+    public class PlayerControls
     {
         #region Variables
         public const ControlsLayout DEFAULT_LAYOUT = ControlsLayout.Keyboard_and_Mouse;
@@ -269,12 +269,12 @@ namespace Hunter {
             }
         }
 
-        public Controls ()
+        public PlayerControls ()
         {
             SetBindingsAll(DEFAULT_LAYOUT);
         }
 
-        public Controls (ControlsLayout layout)
+        public PlayerControls (ControlsLayout layout)
         {
             SetBindingsAll(layout);
         }

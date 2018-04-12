@@ -10,7 +10,7 @@ namespace Hunter
     {
         #region Variables
         public static DeviceManager Instance { get; private set; }
-        private Controls controls;
+        private PlayerControls controls;
 
         public Vector2 Move { get; private set; } = new Vector2();
         public Vector2 Look { get; private set; } = new Vector2();
@@ -53,8 +53,8 @@ namespace Hunter
                 return;
             }
 
-            if (overrideLayout) { controls = new Controls(inspectorLayout); }
-            else { controls = new Controls(); }
+            if (overrideLayout) { controls = new PlayerControls(inspectorLayout); }
+            else { controls = new PlayerControls(); }
 
             InputManager.OnDeviceAttached += NewDeviceAttatched;
             InputManager.OnDeviceDetached += OldDeviceDetached;
@@ -82,11 +82,11 @@ namespace Hunter
 
             if (device != null && device.DeviceClass == InputDeviceClass.Controller)
             {
-                controls.SetBindingsAll(Controls.DEFAULT_CONTROLLER_LAYOUT);
+                controls.SetBindingsAll(PlayerControls.DEFAULT_CONTROLLER_LAYOUT);
             }
             else
             {
-                controls.SetBindingsAll(Controls.DEFAULT_LAYOUT);
+                controls.SetBindingsAll(PlayerControls.DEFAULT_LAYOUT);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Hunter
             {
                 controls.SetDeviceAll(null);
                 if (overrideLayout) { return; }
-                controls.SetBindingsAll(Controls.DEFAULT_LAYOUT);
+                controls.SetBindingsAll(PlayerControls.DEFAULT_LAYOUT);
             }
             else
             {

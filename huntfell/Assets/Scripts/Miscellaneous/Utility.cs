@@ -110,10 +110,4 @@ namespace Hunter
 
         bool IsImportant ();
     }
-
-    
-    public interface IInteractable
-    {
-        void Interact (Character.Character characterTriggeringInteraction);
-    }
 }

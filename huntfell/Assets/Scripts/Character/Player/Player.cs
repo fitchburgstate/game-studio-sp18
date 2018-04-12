@@ -43,7 +43,6 @@ namespace Hunter.Characters
 
         private IEnumerator attackCR;
         private IEnumerator dashCR;
-        private List<IInteractable> itemsPlayerIsStandingIn = new List<IInteractable>();
 
         public PlayerInventory Inventory { get; private set; }
 
@@ -102,26 +101,6 @@ namespace Hunter.Characters
                 CheckInteractImage();
             }
         }
-
-        private void OnTriggerEnter (Collider other)
-        {
-            var interactableItem = other.GetComponent<IInteractable>();
-            if (interactableItem != null && !itemsPlayerIsStandingIn.Contains(interactableItem))
-            {
-                itemsPlayerIsStandingIn.Add(interactableItem);
-                CheckInteractImage();
-            }
-        }
-
-        private void OnTriggerExit (Collider other)
-        {
-            var interactableItem = other.GetComponent<IInteractable>();
-            if (interactableItem != null && itemsPlayerIsStandingIn.Contains(interactableItem))
-            {
-                itemsPlayerIsStandingIn.Remove(interactableItem);
-                CheckInteractImage();
-            }
-        }        
         #endregion
 
         #region Player Movement
@@ -508,7 +487,7 @@ namespace Hunter.Characters
 
         public void CheckInteractImage ()
         {
-            if (ThereAnyNearbyImportantItems() && !interactPromptImage.enabled)
+            if (AnyNearbyImportantItems() && !interactPromptImage.enabled)
             {
                 interactPromptImage.enabled = true;
             }
@@ -518,7 +497,7 @@ namespace Hunter.Characters
             }
         }
 
-        private bool ThereAnyNearbyImportantItems ()
+        private bool AnyNearbyImportantItems ()
         {
             if(nearbyInteractables.Count == 0) { return false; }
             foreach(var item in nearbyInteractables)
