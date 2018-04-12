@@ -7,26 +7,6 @@ namespace Hunter.Characters
 {
     public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
-        #region Properties
-        public override float CurrentHealth
-        {
-            get
-            {
-                return health;
-            }
-            set
-            {
-                health = value;
-                if (health <= 0 && !isDying)
-                {
-                    // TODO Change this to reflect wether the death anim should be cinematic or not later
-                    StartCoroutine(KillWolf(true));
-                    isDying = true;
-                }
-            }
-        }
-        #endregion
-
         #region Variables
         /// <summary>
         /// Has the wolf just found the player?
@@ -47,6 +27,26 @@ namespace Hunter.Characters
 
         [Range(1, 250)]
         public float turnSpeed = 80f;
+        #endregion
+
+        #region Properties
+        public override float CurrentHealth
+        {
+            get
+            {
+                return health;
+            }
+            set
+            {
+                health = value;
+                if (health <= 0 && !isDying)
+                {
+                    // TODO Change this to reflect wether the death anim should be cinematic or not later
+                    StartCoroutine(KillWolf(true));
+                    isDying = true;
+                }
+            }
+        }
         #endregion
 
         protected override void Start()
@@ -150,7 +150,7 @@ namespace Hunter.Characters
                 {
                     Debug.LogError("There is no valid navmesh path that the AI can take to reach the destination.");
                     return;
-                } 
+                }
             }
             else
             {
@@ -186,7 +186,7 @@ namespace Hunter.Characters
             StartCoroutine(attackCR);
         }
 
-        public IEnumerator PlayAttackAnimation ()
+        public IEnumerator PlayAttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("combat");
@@ -210,23 +210,23 @@ namespace Hunter.Characters
             CurrentWeapon?.StartAttackFromAnimationEvent();
         }
 
-        public void Interact ()
+        public void Interact()
         {
             //Wolves cannot interact with stuff!
             return;
         }
 
-        public void CycleWeapons (bool cycleUp)
+        public void CycleWeapons(bool cycleUp)
         {
             return;
         }
 
-        public void CycleElements (bool cycleUp)
+        public void CycleElements(bool cycleUp)
         {
             return;
         }
 
-        public void SwitchWeaponType (bool switchToMelee)
+        public void SwitchWeaponType(bool switchToMelee)
         {
             return;
         }

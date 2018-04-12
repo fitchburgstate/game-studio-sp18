@@ -9,6 +9,71 @@ namespace Hunter.Characters.AI
 {
     public class AIInputModule : MonoBehaviour
     {
+        #region Variables
+        /// <summary>
+        /// Represents which direction the character should move in.
+        /// </summary>
+        private Vector3 moveDirection = Vector3.zero;
+
+        /// <summary>
+        /// Represents which direction the character should look in.
+        /// </summary>
+        private Vector3 lookDirection = Vector3.zero;
+
+        /// <summary>
+        /// The model's gameobject. This exists so the model can be turned independently of the parent.
+        /// </summary>
+        private GameObject enemyModel;
+
+        /// <summary>
+        /// This is the navmesh agent attached to the parent. The navmesh is used to find walkable area.
+        /// </summary>
+        private NavMeshAgent agent;
+
+        /// <summary>
+        /// The character controller that controls the character's movement.
+        /// </summary>
+        private CharacterController controller;
+
+        /// <summary>
+        /// The final direction that the character will face that's calculated.
+        /// </summary>
+        private Vector3 finalDirection;
+
+        /// <summary>
+        /// The target that the AI has acquired.
+        /// </summary>
+        private Transform target;
+
+        /// <summary>
+        /// The target point that the AI has acquired.
+        /// </summary>
+        private Vector3 pointTarget;
+
+        /// <summary>
+        /// The max distance that the wolf will move to during a Wander action.
+        /// </summary>
+        [Tooltip("The max distance that the wolf will move to during a Wander action.")]
+        [Range(0f, 25f)]
+        public float maxDistance = 5f;
+
+        private bool enemyInLOS = false;
+        private bool inCombat = false;
+        private bool enemyInVisionCone = false;
+
+        private AIDetection aiDetection;
+
+        private Attack attack;
+        private Idle idle;
+        private Wander wander;
+        private MoveTo moveTo;
+        private Retreat retreat;
+        private Character character;
+        private Turn turn;
+
+        public UrgeWeights urgeWeights;
+        #endregion
+
         #region Properties
         public Vector3 MoveDirection
         {
@@ -123,71 +188,6 @@ namespace Hunter.Characters.AI
                 return aiDetection;
             }
         }
-        #endregion
-
-        #region Variables
-        /// <summary>
-        /// Represents which direction the character should move in.
-        /// </summary>
-        private Vector3 moveDirection = Vector3.zero;
-
-        /// <summary>
-        /// Represents which direction the character should look in.
-        /// </summary>
-        private Vector3 lookDirection = Vector3.zero;
-
-        /// <summary>
-        /// The model's gameobject. This exists so the model can be turned independently of the parent.
-        /// </summary>
-        private GameObject enemyModel;
-
-        /// <summary>
-        /// This is the navmesh agent attached to the parent. The navmesh is used to find walkable area.
-        /// </summary>
-        private NavMeshAgent agent;
-
-        /// <summary>
-        /// The character controller that controls the character's movement.
-        /// </summary>
-        private CharacterController controller;
-
-        /// <summary>
-        /// The final direction that the character will face that's calculated.
-        /// </summary>
-        private Vector3 finalDirection;
-
-        /// <summary>
-        /// The target that the AI has acquired.
-        /// </summary>
-        private Transform target;
-
-        /// <summary>
-        /// The target point that the AI has acquired.
-        /// </summary>
-        private Vector3 pointTarget;
-
-        /// <summary>
-        /// The max distance that the wolf will move to during a Wander action.
-        /// </summary>
-        [Tooltip("The max distance that the wolf will move to during a Wander action.")]
-        [Range(0f, 25f)]
-        public float maxDistance = 5f;
-
-        private bool enemyInLOS = false;
-        private bool inCombat = false;
-        private bool enemyInVisionCone = false;
-
-        private AIDetection aiDetection;
-
-        private Attack attack;
-        private Idle idle;
-        private Wander wander;
-        private MoveTo moveTo;
-        private Retreat retreat;
-        private Character character;
-        private Turn turn;
-
-        public UrgeWeights urgeWeights;
         #endregion
 
         private void Start()
