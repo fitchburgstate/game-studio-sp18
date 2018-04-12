@@ -23,6 +23,8 @@ GameObject:
   - component: {fileID: 23285973431092154}
   - component: {fileID: 95756929419552296}
   - component: {fileID: 65103558355260934}
+  - component: {fileID: 65103290549558650}
+  - component: {fileID: 65267583471554452}
   m_Layer: 8
   m_Name: Tile_WallHalf_Doorway_BlueGold
   m_TagString: Untagged
@@ -51,14 +53,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1704647785479872}
-  m_LocalRotation: {x: 0.000000057719372, y: 0.4984295, z: -0.00000003318495, w: 0.86693025}
-  m_LocalPosition: {x: 21.489998, y: -0.09798999, z: 9.685632}
+  m_LocalRotation: {x: 0.000000047248832, y: 0.9649813, z: -0.00000004690751, w: 0.26231882}
+  m_LocalPosition: {x: 22.931404, y: -0.09800148, z: 14.6511345}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4479023559745448}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 105, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 89.79201, z: 0}
 --- !u!4 &4479023559745448
 Transform:
   m_ObjectHideFlags: 1
@@ -114,6 +116,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1555701070940566}
   m_Mesh: {fileID: 4300000, guid: 316a43a4cd30f5347b36f666c8313b57, type: 3}
+--- !u!65 &65103290549558650
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1555701070940566}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7, y: 3.4999933, z: 0.21000004}
+  m_Center: {x: -3.12, y: 1.7499983, z: 0.10499877}
 --- !u!65 &65103558355260934
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -126,6 +140,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: -3.46, y: 0.56, z: 0.21}
   m_Center: {x: -1.7849996, y: 3.26, z: 0.105001606}
+--- !u!65 &65267583471554452
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1555701070940566}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7, y: 3.4999933, z: 0.21000004}
+  m_Center: {x: -0.42, y: 1.7499983, z: 0.10499877}
 --- !u!95 &95756929419552296
 Animator:
   serializedVersion: 3
