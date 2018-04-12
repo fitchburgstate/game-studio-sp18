@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Character.AI;
+using Hunter.Characters.AI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     public class Gargoyle : Minion
     {
@@ -27,7 +27,7 @@ namespace Hunter.Character
 
         #region Variables
         [SerializeField]
-        private Range rangedWeapon;
+        private Ranged rangedWeapon;
 
         private AIDetection gargoyleDetection;
 

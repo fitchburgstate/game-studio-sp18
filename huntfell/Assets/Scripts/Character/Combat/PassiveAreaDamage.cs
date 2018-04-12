@@ -1,20 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Character;
+using Hunter.Characters;
 
 namespace Hunter.AI
 {
     public class PassiveAreaDamage : MonoBehaviour
     {
         #region Properties
-        public Character.Character AiCharacter
+        public Character AiCharacter
         {
             get
             {
                 if (aiCharacter == null)
                 {
-                    aiCharacter = transform.parent.GetComponent<Character.Character>();
+                    aiCharacter = transform.parent.GetComponent<Character>();
                 }
                 return aiCharacter;
             }
@@ -42,7 +42,7 @@ namespace Hunter.AI
         private float endWidth = 0.15f;
 
         private IEnumerator areaEffectDamageCR;
-        private Character.Character aiCharacter;
+        private Characters.Character aiCharacter;
         #endregion
 
         private void Start()

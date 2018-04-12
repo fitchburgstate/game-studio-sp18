@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     class HealthDrainDot : MonoBehaviour
     {

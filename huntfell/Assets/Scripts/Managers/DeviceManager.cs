@@ -8,331 +8,131 @@ namespace Hunter
 {
     public class DeviceManager : MonoBehaviour
     {
-        #region Properties
-        public float MoveAxis_Vertical
-        {
-            get
-            {
-                return moveAxis_Vertical;
-            }
-
-            set
-            {
-                moveAxis_Vertical = value;
-            }
-        }
-
-        public float MoveAxis_Horizontal
-        {
-            get
-            {
-                return moveAxis_Horizontal;
-            }
-
-            set
-            {
-                moveAxis_Horizontal = value;
-            }
-        }
-
-        public float LookAxis_Vertical
-        {
-            get
-            {
-                return lookAxis_Vertical;
-            }
-
-            set
-            {
-                lookAxis_Vertical = value;
-            }
-        }
-
-        public float LookAxis_Horizontal
-        {
-            get
-            {
-                return lookAxis_Horizontal;
-            }
-
-            set
-            {
-                lookAxis_Horizontal = value;
-            }
-        }
-
-        public float AltAxis_Horizontal
-        {
-            get
-            {
-                return altAxis_Horizontal;
-            }
-
-            set
-            {
-                altAxis_Horizontal = value;
-            }
-        }
-
-        public float AltAxis_Vertical
-        {
-            get
-            {
-                return altAxis_Vertical;
-            }
-
-            set
-            {
-                altAxis_Vertical = value;
-            }
-        }
-
-        public bool PressedConfirm
-        {
-            get
-            {
-                return pressedConfirm;
-            }
-
-            set
-            {
-                pressedConfirm = value;
-            }
-        }
-
-        public bool PressedCancel
-        {
-            get
-            {
-                return pressedCancel;
-            }
-
-            set
-            {
-                pressedCancel = value;
-            }
-        }
-
-        public bool PressedPause
-        {
-            get
-            {
-                return pressedPause;
-            }
-
-            set
-            {
-                pressedPause = value;
-            }
-        }
-
-        public bool PressedAttack
-        {
-            get
-            {
-                return pressedAttack;
-            }
-
-            set
-            {
-                pressedAttack = value;
-            }
-        }
-
-        public bool PressedAim
-        {
-            get
-            {
-                return pressedAim;
-            }
-
-            set
-            {
-                pressedAim = value;
-            }
-        }
-
-        public bool PressedDash
-        {
-            get
-            {
-                return pressedDash;
-            }
-
-            set
-            {
-                pressedDash = value;
-            }
-        }
-
-        public bool PressedInteract
-        {
-            get
-            {
-                return pressedInteract;
-            }
-
-            set
-            {
-                pressedInteract = value;
-            }
-        }
-
-        public bool PressedElementUp
-        {
-            get
-            {
-                return pressedElementUp;
-            }
-
-            set
-            {
-                pressedElementUp = value;
-            }
-        }
-
-        public bool PressedElementDown
-        {
-            get
-            {
-                return pressedElementDown;
-            }
-
-            set
-            {
-                pressedElementDown = value;
-            }
-        }
-
-        public bool PressedWeaponSwitchLeft
-        {
-            get
-            {
-                return pressedWeaponSwitchLeft;
-            }
-
-            set
-            {
-                pressedWeaponSwitchLeft = value;
-            }
-        }
-
-        public bool PressedWeaponSwitchRight
-        {
-            get
-            {
-                return pressedWeaponSwitchRight;
-            }
-
-            set
-            {
-                pressedWeaponSwitchRight = value;
-            }
-        }
-        #endregion
-
         #region Variables
-        private float moveAxis_Vertical;
-        private float moveAxis_Horizontal;
-        private float lookAxis_Vertical;
-        private float lookAxis_Horizontal;
+        public static DeviceManager Instance { get; private set; }
+        private Controls controls;
 
-        private float altAxis_Horizontal;
-        private float altAxis_Vertical;
+        public Vector2 Move { get; private set; } = new Vector2();
+        public Vector2 Look { get; private set; } = new Vector2();
 
-        private bool pressedConfirm;
-        private bool pressedCancel;
-        private bool pressedPause;
-        private bool pressedAttack;
-        private bool pressedAim;
-        private bool pressedDash;
-        private bool pressedInteract;
+        public bool PressedConfirm { get; private set; }
+        public bool PressedCancel { get; private set; }
+        public bool PressedMenu { get; private set; }
+        public bool PressedJournal { get; private set; }
+        public bool PressedPageLeft { get; private set; }
+        public bool PressedPageRight { get; private set; }
 
-        private bool pressedElementUp;
-        private bool pressedElementDown;
-        private bool pressedWeaponSwitchLeft;
-        private bool pressedWeaponSwitchRight;
+        public bool PressedElementUp { get; private set; }
+        public bool PressedElementDown { get; private set; }
+        public bool PressedWeaponUp { get; private set; }
+        public bool PressedWeaponDown { get; private set; }
+        public bool PressedSwitchRanged { get; private set; }
+        public bool PressedSwitchMelee { get; private set; }
 
-        [Tooltip("If true, the active device is a controller. If false, the active device is the keyboard / mouse.")]
-        public bool isController;
+        public bool PressedAttack { get; private set; }
+        public bool PressedDash { get; private set; }
+        public bool PressedInteract { get; private set; }
+        public bool PressedPotion { get; private set; }
 
-        public InputDevice Device { get; set; }
+        public bool overrideLayout;
+        public ControlsLayout inspectorLayout;
 
-        
+        private ControlsLayout currentLayout;
 
-        public Controls controls;
-
-        public static DeviceManager instance;
         #endregion
 
         private void Awake ()
         {
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = this;
+                Instance = this;
             }
             else
             {
                 Destroy(gameObject);
                 return;
             }
-            NewDeviceAttatched(InputManager.ActiveDevice);
+
+            if (overrideLayout) { controls = new Controls(inspectorLayout); }
+            else { controls = new Controls(); }
+
             InputManager.OnDeviceAttached += NewDeviceAttatched;
             InputManager.OnDeviceDetached += OldDeviceDetached;
+
+            //For initalization if you start the game with a controller already attatched
+            SeekNewDevice();
         }
 
-        private void NewDeviceAttatched(InputDevice device)
+        private void SeekNewDevice ()
         {
-            if (InputManager.Devices.Count == 0)
+            foreach (var device in InputManager.Devices)
             {
-                controls = Controls.KeyboardBindings();
-                isController = false;
+                if (device.DeviceClass == InputDeviceClass.Controller)
+                {
+                    NewDeviceAttatched(device);
+                    break;
+                }
             }
-            else if (InputManager.Devices.Count > 0)
-            {
-                controls = Controls.ControllerBindings();
-                isController = true;
-            }
+        }
 
-            Device = device;
+        private void NewDeviceAttatched (InputDevice device)
+        {
+            controls.SetDeviceAll(device);
+            if (overrideLayout) { return; }
+
+            if (device != null && device.DeviceClass == InputDeviceClass.Controller)
+            {
+                controls.SetBindingsAll(Controls.DEFAULT_CONTROLLER_LAYOUT);
+            }
+            else
+            {
+                controls.SetBindingsAll(Controls.DEFAULT_LAYOUT);
+            }
         }
 
         private void OldDeviceDetached (InputDevice device)
         {
             if (InputManager.Devices.Count == 0)
             {
-                controls = Controls.KeyboardBindings();
-                isController = false;
+                controls.SetDeviceAll(null);
+                if (overrideLayout) { return; }
+                controls.SetBindingsAll(Controls.DEFAULT_LAYOUT);
             }
-            else if (InputManager.Devices.Count > 0)
+            else
             {
-                controls = Controls.ControllerBindings();
-                isController = true;
+                SeekNewDevice();
             }
-
-            Device = InputManager.ActiveDevice;
         }
 
         private void Update ()
         {
-            MoveAxis_Horizontal = controls.move.X;
-            MoveAxis_Vertical = controls.move.Y;
-            LookAxis_Horizontal = controls.look.X;
-            LookAxis_Vertical = controls.look.Y;
+            //UI Inputs
+            PressedMenu = controls.UI.MenuButton.WasPressed;
+            PressedJournal = controls.UI.JournalsButton.WasPressed;
 
-            PressedPause = controls.pause.WasPressed;
-            PressedConfirm = controls.confirm.WasPressed;
-            PressedCancel = controls.cancel.WasPressed;
+            PressedConfirm = controls.UI.ConfirmButton.WasPressed;
+            PressedCancel = controls.UI.CancelButton.WasPressed;
 
-            PressedAttack = controls.attack.WasPressed;
-            PressedAim = controls.aim.WasPressed;
-            PressedDash = controls.dash.WasPressed;
-            PressedInteract = controls.interact.WasPressed;
+            PressedPageLeft = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value < 0;
+            PressedPageRight = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value > 0;
 
-            PressedElementUp = controls.altAxis_Up.WasPressed;
-            PressedElementDown = controls.altAxis_Down.WasPressed;
-            PressedWeaponSwitchLeft = controls.altAxis_Left.WasPressed;
-            PressedWeaponSwitchRight = controls.altAxis_Right.WasPressed;
+            //Game Inputs
+            Move = controls.Game.MoveAxes.Value;
+            Look = controls.Game.LookAxes.Value;
+
+            PressedElementDown = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value < 0;
+            PressedElementUp = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value > 0;
+
+            PressedWeaponDown = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value < 0;
+            PressedWeaponUp = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value > 0;
+
+            PressedSwitchRanged = controls.Game.WeaponTypeRangedButton.WasPressed;
+            PressedSwitchMelee = controls.Game.WeaponTypeMeleeButton.WasPressed;
+
+            PressedAttack = controls.Game.AttackButton.WasPressed;
+            PressedDash = controls.Game.DashButton.WasPressed;
+            PressedInteract = controls.Game.InteractButton.WasPressed;
+            PressedPotion = controls.Game.PotionButton.WasPressed;
         }
     }
 }

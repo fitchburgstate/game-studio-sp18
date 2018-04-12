@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     [RequireComponent(typeof(CharacterController), typeof(NavMeshAgent), typeof(Animator))]
     public abstract class Character : MonoBehaviour, IDamageable
@@ -111,8 +111,14 @@ namespace Hunter.Character
         {
             if (weapon != null)
             {
+                if (currentWeapon != null)
+                {
+                    currentWeapon.gameObject.SetActive(false);
+                }
+
                 currentWeapon = weapon;
                 currentWeapon.characterHoldingWeapon = this;
+                currentWeapon.gameObject.SetActive(true);
             }
         }
 

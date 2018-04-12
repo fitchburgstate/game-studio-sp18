@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
@@ -186,13 +186,7 @@ namespace Hunter.Character
             StartCoroutine(attackCR);
         }
 
-        public void SwitchWeapon(bool cycleRanged, bool cycleMelee)
-        {
-            //Wolf only has one weapon so we don't need to switch
-            return;
-        }
-
-        public IEnumerator PlayAttackAnimation()
+        public IEnumerator PlayAttackAnimation ()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("combat");
@@ -216,9 +210,24 @@ namespace Hunter.Character
             CurrentWeapon?.StartAttackFromAnimationEvent();
         }
 
-        public void SwitchElement(bool cycleUp, bool cycleDown)
+        public void Interact ()
         {
-            // This can be implemented later if we want elemental wolves
+            //Wolves cannot interact with stuff!
+            return;
+        }
+
+        public void CycleWeapons (bool cycleUp)
+        {
+            return;
+        }
+
+        public void CycleElements (bool cycleUp)
+        {
+            return;
+        }
+
+        public void SwitchWeaponType (bool switchToMelee)
+        {
             return;
         }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using Hunter.Character;
+using Hunter.Characters;
 
 namespace Hunter
 {
@@ -64,51 +64,45 @@ namespace Hunter
         private void Start ()
         {
             // anim = GetComponent<Animator>();
-
         }
 
         public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
-            Interact(weaponAttackedWith.characterHoldingWeapon, true);
+            FireInteraction(weaponAttackedWith.characterHoldingWeapon, weaponAttackedWith);
         }
 
         // What should the prop do when it is interacted with, also checks to see if there are any elemental constraints
-        public void Interact (Character.Character characterWhoAttacked)
+        public void FireInteraction (Character characterFromInteraction)
         {
-            if (currentlyInteracting || characterWhoAttacked.tag != "Player") { return; }
-            var weaponAttackedWith = characterWhoAttacked.CurrentWeapon;
-            var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
-            if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
+            if (currentlyInteracting || characterFromInteraction.tag != "Player") { return; }
+
+            if (!requiresDamage || elementTypeForInteraction == ElementOption.None || propType != PropType.Destructible)
             {
                 currentlyInteracting = true;
-                if(HUDManager.instance != null && !string.IsNullOrEmpty(interactionSuccessMessage)) { HUDManager.instance.ShowPrompt(interactionSuccessMessage); }
-                switch (propType)
-                {
-                    case PropType.Destructible:
-                        DestructProp(characterWhoAttacked.RotationTransform.forward);
-                        break;
-                    default:
-                        ShakeProp();
-                        break;
-                }
+
+                ShowSuccessMessage();
+                ShakeProp();
+                ExecutePropInteractions(characterFromInteraction);
             }
             else
             {
-                if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowPrompt(interactionFailMessage); }
+                ShowFailMessage();
             }
         }
 
-        public void Interact (Character.Character characterWhoAttacked, bool wasDamaged)
+        private void FireInteraction (Character characterWhoAttacked, Weapon weaponAttackedWith)
         {
             if (currentlyInteracting || characterWhoAttacked.tag != "Player") { return; }
+
             Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
-            var weaponAttackedWith = characterWhoAttacked.CurrentWeapon;
+
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
             {
                 if(requiresDamage && !wasDamaged) { return; }
                 currentlyInteracting = true;
-                if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionSuccessMessage)) { HUDManager.instance.ShowPrompt(interactionSuccessMessage); }
+                ShowSuccessMessage();
+
                 switch (propType)
                 {
                     case PropType.Destructible:
@@ -118,17 +112,17 @@ namespace Hunter
                         ShakeProp();
                         break;
                 }
+                ExecutePropInteractions(characterWhoAttacked);
             }
             else
             {
-                if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowPrompt(interactionFailMessage); }
+                ShowFailMessage();
             }
         }
 
         private void ShakeProp ()
         {
             StartCoroutine(ShakeGameObject(0.25f, 0.2f));
-            ExecutePropInteractions();
         }
 
         private IEnumerator ShakeGameObject (float duration, float magnitude)
@@ -163,30 +157,28 @@ namespace Hunter
             // GetComponent<Collider>().enabled = false;
             gameObject.SetActive(false);
             brokenPropPrefab = Instantiate(brokenPropPrefab, transform.position, transform.rotation);
-
-            ExecutePropInteractions();
             //SendBrokenPropFlying(brokenPropPrefab, forceDirection);
         }
 
         // Everything to do with Prop Interaction as far as items and firing events on other gameObjects
-        private void ExecutePropInteractions ()
+        private void ExecutePropInteractions (Character characterFromInteraction)
         {
             if (giveItemsDirectly)
             {
-                GiveItemsDirectly();
+                GiveItemsDirectly(characterFromInteraction);
             }
             else
             {
-                SpawnItems();
+                SpawnInteractableItems();
             }
 
             if (propEvent != null)
             {
-                StartEvent();
+                propEvent.Invoke();
             }
         }
 
-        private void SpawnItems ()
+        private void SpawnInteractableItems ()
         {
             if (itemsToSpawn.Count == 0)
             {
@@ -212,18 +204,14 @@ namespace Hunter
             itemsToSpawn.Clear();
         }
 
-        private void GiveItemsDirectly ()
+        private void GiveItemsDirectly (Character characterFromInteraction)
         {
+            if(!(characterFromInteraction is Player)) { return; }
+
             foreach (var item in itemsToSpawn)
             {
-                // item.transform.SetParent(Inventory.instance.transform);
-                InventoryManager.instance.TryAddItem(item);
+                (characterFromInteraction as Player).Inventory.TryAddItem(item);
             }
-        }
-
-        public void StartEvent ()
-        {
-            propEvent.Invoke();
         }
 
         // Destructible Prop Pieces Handeling, this should probably be moves to a seperate component that is put on the broken prop prefab
@@ -255,6 +243,22 @@ namespace Hunter
                 Destroy(pieces[i].gameObject);
             }
             gameObject.SetActive(false);
+        }
+
+        private void ShowSuccessMessage ()
+        {
+            if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionSuccessMessage)) { HUDManager.instance.ShowPrompt(interactionSuccessMessage); }
+        }
+
+        private void ShowFailMessage ()
+        {
+            if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowPrompt(interactionFailMessage); }
+        }
+
+        public bool IsImportant ()
+        {
+            // Important props are props that require elemental interactions or props that have items inside them
+            return itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Hunter.Character;
+using Hunter.Characters;
 
 namespace Hunter
 {
@@ -28,21 +28,9 @@ namespace Hunter
             interactableItemCollider = GetComponent<Collider>();
         }
 
-        public virtual void Interact (Character.Character characterTriggeringInteraction)
+        public virtual void FireInteraction (Character characterTriggeringInteraction)
         {
-            if(characterTriggeringInteraction is Player) { (characterTriggeringInteraction as Player).PlayPickupAnimation(transform); }
-            StartCoroutine(AddItemToInventory());
-        }
-
-        private IEnumerator AddItemToInventory()
-        {
-            yield return new WaitForSeconds(1.25f);
-            if (InventoryManager.instance.TryAddItem(itemData, this))
-            {
-                transform.SetParent(InventoryManager.instance.transform);
-                gameObject.SetActive(false);
-            }
-            yield return null;
+            (characterTriggeringInteraction as Player)?.Inventory.TryAddItem(itemData, this);
         }
 
         public void SpawnFromProp() // when object is spawned from an interactble prop
@@ -89,6 +77,12 @@ namespace Hunter
             var groundPosition = new Vector3(transform.position.x, targetPosition.y, targetPosition.z);
             transform.position = groundPosition;
             // change to give it small radius
+        }
+
+        public bool IsImportant ()
+        {
+            // Interactable Items are always important
+            return true;
         }
     }
 }

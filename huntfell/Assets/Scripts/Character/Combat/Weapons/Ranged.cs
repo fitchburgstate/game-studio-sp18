@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
-    public class Range : Weapon
+    public class Ranged : Weapon
     {
         /// <summary>
         /// Clip Size of the Weapon.
@@ -53,6 +53,7 @@ namespace Hunter.Character
         public Gradient weaponTrailColor;
 
         private LineRenderer weaponTrail;
+        //private IEnumerator weaponTrailCR;
 
         /// <summary>
         /// Performs a raycast to the range of the weapon and then calls the damage calculation method if an enemy is hit,
@@ -139,6 +140,7 @@ namespace Hunter.Character
             weaponTrail.useWorldSpace = true;
 
             yield return new WaitForSeconds(weaponTrailDuration);
+            //weaponTrailCR = null;
             weaponTrail.enabled = false;
         }
     }

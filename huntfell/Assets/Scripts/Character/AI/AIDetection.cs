@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Character;
+using Hunter.Characters;
 
-namespace Hunter.Character.AI
+namespace Hunter.Characters.AI
 {
     public class AIDetection : MonoBehaviour
     {
@@ -113,7 +113,7 @@ namespace Hunter.Character.AI
         /// The AI searches for a gameobject tagged "Player" and returns true when the player has been found.
         /// </summary>
         /// <returns></returns>
-        public bool DetectPlayer()
+        public bool DetectPlayer ()
         {
             var rayHit = new RaycastHit();
             var rayDirection = PlayerCharacter.transform.position - AiCharacter.transform.position;

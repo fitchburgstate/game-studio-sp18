@@ -112,7 +112,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 0d7e5c73b700ba34399fc8e3b6857a74, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!1 &1301817966
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,16 +217,26 @@ Prefab:
     - target: {fileID: 114294953398607558, guid: 7da005d3886945345afbd0f894bd068f,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114294953398607558, guid: 7da005d3886945345afbd0f894bd068f,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1844848287798884, guid: 7da005d3886945345afbd0f894bd068f, type: 2}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224913769228763430, guid: 7da005d3886945345afbd0f894bd068f,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 114656469446675480, guid: 7da005d3886945345afbd0f894bd068f,
+        type: 2}
+      propertyPath: m_PreserveAspect
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7da005d3886945345afbd0f894bd068f, type: 2}

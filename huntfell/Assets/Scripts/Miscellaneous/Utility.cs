@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Hunter.Character;
+using Hunter.Characters;
 
 namespace Hunter
 {
@@ -70,6 +70,8 @@ namespace Hunter
         void Move(Transform navMeshTarget);
 
         void Dash();
+
+        void Interact();
     }
 
     public interface IUtilityBasedAI
@@ -94,9 +96,19 @@ namespace Hunter
 
         void WeaponAnimationEvent();
 
-        void SwitchWeapon (bool cycleRanged, bool cycleMelee);
+        void CycleWeapons (bool cycleUp);
 
-        void SwitchElement (bool cycleUp, bool cycleDown);
+        void CycleElements (bool cycleUp);
+
+        void SwitchWeaponType (bool switchToMelee);
+    }
+
+    
+    public interface IInteractable
+    {
+        void FireInteraction (Character characterTriggeringInteraction);
+
+        bool IsImportant ();
     }
 
     

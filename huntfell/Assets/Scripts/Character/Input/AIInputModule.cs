@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using System.Linq;
 using UnityEditor;
 
-namespace Hunter.Character.AI
+namespace Hunter.Characters.AI
 {
     public class AIInputModule : MonoBehaviour
     {
