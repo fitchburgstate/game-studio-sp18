@@ -111,8 +111,14 @@ namespace Hunter.Characters
         {
             if (weapon != null)
             {
+                if (currentWeapon != null)
+                {
+                    currentWeapon.gameObject.SetActive(false);
+                }
+
                 currentWeapon = weapon;
                 currentWeapon.characterHoldingWeapon = this;
+                currentWeapon.gameObject.SetActive(true);
             }
         }
 

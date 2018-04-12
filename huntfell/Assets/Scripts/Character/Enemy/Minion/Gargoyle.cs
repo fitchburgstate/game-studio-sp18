@@ -27,7 +27,7 @@ namespace Hunter.Characters
 
         #region Variables
         [SerializeField]
-        private Range rangedWeapon;
+        private Ranged rangedWeapon;
 
         private AIDetection gargoyleDetection;
 

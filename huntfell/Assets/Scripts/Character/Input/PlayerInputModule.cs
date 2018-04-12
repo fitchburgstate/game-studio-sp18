@@ -7,20 +7,10 @@ namespace Hunter.Characters
     public class PlayerInputModule : MonoBehaviour
     {
         #region Variables
-        /// <summary>
-        /// Represents which direction the character should move in. Think of it as the input of the left stick.
-        /// </summary>
-        private Vector3 moveDirection = Vector3.zero;
+        private DeviceManager deviceManager;
 
-        /// <summary>
-        /// Represents which direction the character should look in. Think of it as the input of the right stick.
-        /// </summary>
-        private Vector3 lookDirection = Vector3.zero;
-        private Vector3 animLookDirection = Vector3.zero;
-
-        private DeviceManager myDeviceManager;
-
-        public bool characterInputEnabled = true;
+        public bool inputEnabled = true;
+        private bool inPauseMenu = false;
 
         private IAttack attackCharacter;
         private IMoveable moveCharacter;
@@ -30,10 +20,7 @@ namespace Hunter.Characters
         {
             //Whoever this script is on is being controlled by the Player, so naturally they should be tagged as such
             transform.tag = "Player";
-
-            var mainCamera = Camera.main;
-            transform.forward = mainCamera.transform.forward;
-            myDeviceManager = DeviceManager.instance;
+            deviceManager = DeviceManager.Instance;
 
             attackCharacter = GetComponent<IAttack>();
             moveCharacter = GetComponent<IMoveable>();
@@ -41,60 +28,49 @@ namespace Hunter.Characters
 
         private void Update ()
         {
-            if (PauseManager.instance == null || !PauseManager.instance.menuCanvas.gameObject.activeSelf)
+            if (!inputEnabled) { return; }
+
+            //Game Input Actions
+            if (!inPauseMenu)
             {
-                moveDirection = new Vector3(myDeviceManager.MoveAxis_Horizontal, 0, myDeviceManager.MoveAxis_Vertical);
+                var moveDirection = new Vector3(deviceManager.Move.x, 0, deviceManager.Move.y);
+                var lookDirection = moveDirection;
 
-                lookDirection = moveDirection;
+                var animLookDirection = lookDirection;
 
-                //lookDirection = new Vector3(myDeviceManager.LookAxis_Horizontal, 0, myDeviceManager.LookAxis_Vertical);
-                //// If the left axis is being used and the right axis is not, adjust the character body to align with the left 
-                //if (moveDirection != Vector3.zero && lookDirection == Vector3.zero)
-                //{
-                //    lookDirection = moveDirection;
-                //}
 
-                animLookDirection = lookDirection;
-
-                if (characterInputEnabled)
+                if (moveCharacter != null)
                 {
-                    if (moveCharacter != null)
-                    {
-                        moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
-                    }
-
-
-                    if (myDeviceManager.PressedAttack && attackCharacter != null)
-                    {
-                        attackCharacter.Attack();
-                    }
-                    else if (myDeviceManager.PressedWeaponSwitchLeft && attackCharacter != null)
-                    {
-                        attackCharacter.SwitchWeapon(myDeviceManager.PressedWeaponSwitchLeft, myDeviceManager.PressedWeaponSwitchRight);
-                    }
-                    else if (myDeviceManager.PressedWeaponSwitchRight && attackCharacter != null)
-                    {
-                        attackCharacter.SwitchWeapon(myDeviceManager.PressedWeaponSwitchLeft, myDeviceManager.PressedWeaponSwitchRight);
-                    }
-                    else if ((myDeviceManager.PressedElementDown || myDeviceManager.PressedElementUp) && attackCharacter != null)
-                    {
-                        attackCharacter.SwitchElement(myDeviceManager.PressedElementUp, myDeviceManager.PressedElementDown);
-                    }
-                    else if (myDeviceManager.PressedDash && moveCharacter != null)
-                    {
-                        moveCharacter.Dash();
-                    }
-                    else if (myDeviceManager.PressedInteract)
-                    {
-                        moveCharacter.Interact();
-                    }
+                    moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
                 }
-                //else if (myDeviceManager.PressedAim && attackCharacter != null)
-                //{
 
-                //}
+                if (deviceManager.PressedAttack && attackCharacter != null)
+                {
+                    attackCharacter.Attack();
+                }
+                else if (deviceManager.PressedDash && moveCharacter != null)
+                {
+                    moveCharacter.Dash();
+                }
+                else if (deviceManager.PressedInteract)
+                {
+                    moveCharacter.Interact();
+                }
+                else if (deviceManager.PressedSwitchRanged || deviceManager.PressedSwitchMelee && attackCharacter != null)
+                {
+                    attackCharacter.SwitchWeaponType(deviceManager.PressedSwitchMelee);
+                }
+                else if ((deviceManager.PressedElementDown || deviceManager.PressedElementUp) && attackCharacter != null)
+                {
+                    attackCharacter.CycleElements(deviceManager.PressedElementUp);
+                }
+                else if ((deviceManager.PressedWeaponDown || deviceManager.PressedWeaponUp) && attackCharacter != null)
+                {
+                    attackCharacter.CycleWeapons(deviceManager.PressedWeaponUp);
+                }
 
-                if (myDeviceManager.PressedPause)
+
+                if (deviceManager.PressedMenu || deviceManager.PressedJournal)
                 {
                     if (PauseManager.instance == null)
                     {
@@ -103,20 +79,23 @@ namespace Hunter.Characters
                     else
                     {
                         PauseManager.instance.PauseGame(GetComponent<Player>());
+                        inPauseMenu = true;
                     }
                 }
             }
-            else if (PauseManager.instance != null && PauseManager.instance.menuCanvas.gameObject.activeSelf)
+            //UI Input Actions
+            else
             {
-                if (myDeviceManager.PressedPause || myDeviceManager.PressedCancel)
+                if (deviceManager.PressedMenu || deviceManager.PressedJournal || deviceManager.PressedCancel)
                 {
                     PauseManager.instance.UnpauseGame();
+                    inPauseMenu = false;
                 }
-                else if (myDeviceManager.PressedAttack)
+                else if (deviceManager.PressedPageRight)
                 {
                     PauseManager.instance.DisplayDiaries();
                 }
-                else if (myDeviceManager.PressedAim)
+                else if (deviceManager.PressedPageLeft)
                 {
                     PauseManager.instance.DisplayJournals();
                 }

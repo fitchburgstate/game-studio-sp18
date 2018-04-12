@@ -16,10 +16,12 @@ namespace Hunter
         private Dictionary<JournalItem, InteractableInventoryItem> journalEntries = new Dictionary<JournalItem, InteractableInventoryItem>();
         private Dictionary<DiaryItem, InteractableInventoryItem> diaryEntries = new Dictionary<DiaryItem, InteractableInventoryItem>();
 
-        private int rangedWeaponIndex = 0;
-        private int meleeWeaponIndex = 0;
-        private int elementIndex = 0;
+        public int RangedWeaponIndex { get; private set; } = 0;
+        public int RangedElementIndex { get; private set; } = 0;
+        public int MeleeWeaponIndex { get; private set; } = 0;
+        public int MeleeElementIndex { get; private set; } = 0;
 
+        #region Unity Messages
         private void Awake()
         {
             if(startingItems != null && startingItems.Count > 0)
@@ -30,26 +32,116 @@ namespace Hunter
                 }
             }
         }
+        #endregion
 
-        public Range CycleRangedWeapons (Transform weaponContainer)
+        #region Weapons
+        public Weapon CycleWeaponsUp(Weapon currentWeapon, Transform weaponContainer)
         {
-            //Handles the iterator for cycling through the weapons
-            if(rangedWeapons.Count == 0)
+            var isMelee = currentWeapon is Melee;
+            var isRanged = currentWeapon is Ranged;
+            Weapon newWeapon = null;
+
+            //Dont cycle anything if there are no weapons or only 1 weapon in the inventory
+            if (isMelee && meleeWeapons.Count < 2)
             {
-                Debug.LogWarning("There are no ranged weapons in your inventory!");
+                Debug.LogWarning("Unable to cycle melee weapons.");
                 return null;
             }
-            rangedWeaponIndex++;
-            if(rangedWeaponIndex >= rangedWeapons.Count) { rangedWeaponIndex = 0; }
+            else if(isRanged && rangedWeapons.Count < 2)
+            {
+                Debug.LogWarning("Unable to cycle ranged weapons.");
+                return null;
+            }
 
-            //Checks to see if there is already an instance of the weapon underneath the player's weapon container and if so returns that weapon, otherwise spawn one
-            var existingWeapons = weaponContainer.GetComponentsInChildren<Range>(true);
-            var rangedItemData = rangedWeapons.Keys.ElementAt(rangedWeaponIndex);
-            var rangedWeaponPrefab = rangedItemData.RangedWeaponPrefab;
-            if(HUDManager.instance != null) { HUDManager.instance.UpdateWeaponImage(rangedItemData.icon); }
+            if (isMelee)
+            {
+                MeleeWeaponIndex++;
+                if (MeleeWeaponIndex >= meleeWeapons.Count) { MeleeWeaponIndex = 0; }
+                newWeapon = GetMeleeWeaponAtIndex(MeleeWeaponIndex, weaponContainer);
+            }
+            else if (isRanged)
+            {
+                RangedWeaponIndex++;
+                if (RangedWeaponIndex >= rangedWeapons.Count) { RangedWeaponIndex = 0; }
+                newWeapon = GetRangedWeaponAtIndex(RangedWeaponIndex, weaponContainer);
+            }
+            return newWeapon;
+        }
+
+        public Weapon CycleWeaponsDown (Weapon currentWeapon, Transform weaponContainer)
+        {
+            var isMelee = currentWeapon is Melee;
+            var isRanged = currentWeapon is Ranged;
+            Weapon newWeapon = null;
+            //Dont cycle anything if there are no weapons or only 1 weapon in the inventory
+            if (isMelee && meleeWeapons.Count < 2)
+            {
+                Debug.LogWarning("Unable to cycle melee weapons.");
+                return null;
+            }
+            else if (isRanged && rangedWeapons.Count < 2)
+            {
+                Debug.LogWarning("Unable to cycle ranged weapons.");
+                return null;
+            }
+
+            if (isMelee)
+            {
+                MeleeWeaponIndex--;
+                if (MeleeWeaponIndex < 0) { MeleeWeaponIndex = meleeWeapons.Count - 1; }
+                newWeapon = GetMeleeWeaponAtIndex(MeleeWeaponIndex, weaponContainer);
+            }
+            else if (isRanged)
+            {
+                RangedWeaponIndex--;
+                if (RangedWeaponIndex < 0) { RangedWeaponIndex = rangedWeapons.Count - 1; }
+                newWeapon = GetRangedWeaponAtIndex(RangedWeaponIndex, weaponContainer);
+            }
+            return newWeapon;
+        }
+
+        public Melee GetMeleeWeaponAtIndex (int index, Transform weaponContainer)
+        {
+            if (meleeWeapons.Count == 0 || meleeWeapons.Count <= index)
+            {
+                Debug.LogWarning("Unable get melee weapon at index " + index);
+                return null;
+            }
+            var existingWeapons = weaponContainer.GetComponentsInChildren<Melee>(true);
+            var meleeItemData = meleeWeapons.Keys.ElementAt(index);
+            var meleeWeaponPrefab = meleeItemData.MeleeWeaponPrefab;
+            if (HUDManager.instance != null) { HUDManager.instance.UpdateWeaponImage(meleeItemData.icon); }
+
             foreach (var weapon in existingWeapons)
             {
-                if(weapon.name == rangedWeaponPrefab.name) {
+                if (weapon.name == meleeWeaponPrefab.name)
+                {
+                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.weaponElement?.elementHUDSprite); }
+                    return weapon;
+                }
+            }
+
+            var newMelee = Instantiate(meleeWeaponPrefab, weaponContainer);
+            newMelee.name = meleeWeaponPrefab.name;
+            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newMelee?.weaponElement?.elementHUDSprite); }
+            return newMelee;
+        }
+
+        public Ranged GetRangedWeaponAtIndex (int index, Transform weaponContainer)
+        {
+            if (rangedWeapons.Count == 0 || rangedWeapons.Count <= index)
+            {
+                Debug.LogWarning("Unable get ranged weapon at index " + index);
+                return null;
+            }
+            var existingWeapons = weaponContainer.GetComponentsInChildren<Ranged>(true);
+            var rangedItemData = rangedWeapons.Keys.ElementAt(index);
+            var rangedWeaponPrefab = rangedItemData.RangedWeaponPrefab;
+            if (HUDManager.instance != null) { HUDManager.instance.UpdateWeaponImage(rangedItemData.icon); }
+            foreach (var weapon in existingWeapons)
+            {
+                if (weapon.name == rangedWeaponPrefab.name)
+                {
                     if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.weaponElement?.elementHUDSprite); }
                     return weapon;
                 }
@@ -60,51 +152,66 @@ namespace Hunter
             if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newRanged?.weaponElement?.elementHUDSprite); }
             return newRanged;
         }
+        #endregion
 
-        public Melee CycleMeleeWeapons (Transform weaponContainer)
+        #region Elements
+        public Element CycleElementsUp (Weapon currentWeapon)
         {
-            //Handles the iterator for cycling through the weapons
-            if (meleeWeapons.Count == 0)
+            if (elementMods.Count < 2)
             {
-                Debug.LogWarning("There are no melee weapons in your inventory!");
+                Debug.LogWarning("Unable to cycle through element mods.");
                 return null;
             }
-            meleeWeaponIndex++;
-            if (meleeWeaponIndex >= meleeWeapons.Count) { meleeWeaponIndex = 0; }
+            var isMelee = currentWeapon is Melee;
+            var isRanged = currentWeapon is Ranged;
+            Element newElement = null;
 
-            //Checks to see if there is already an instance of the weapon underneath the player's weapon container and if so returns that weapon, otherwise spawn one
-            var existingWeapons = weaponContainer.GetComponentsInChildren<Melee>(true);
-            var meleeItemData = meleeWeapons.Keys.ElementAt(meleeWeaponIndex);
-            var meleeWeaponPrefab = meleeItemData.MeleeWeaponPrefab;
-            if (HUDManager.instance != null) { HUDManager.instance.UpdateWeaponImage(meleeItemData.icon); }
-            foreach (var weapon in existingWeapons)
+            if (isMelee)
             {
-                if (weapon.name == meleeWeaponPrefab.name) {
-                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.weaponElement?.elementHUDSprite); }
-                    return weapon;
-                }
+                MeleeElementIndex++;
+                if (MeleeElementIndex >= elementMods.Count) { MeleeElementIndex = 0; }
+                if(MeleeElementIndex != 0 && MeleeElementIndex == RangedElementIndex) { MeleeElementIndex++; }
+                newElement = GetElementAtIndex(MeleeElementIndex);
             }
-
-            var newMelee = Instantiate(meleeWeapons.Keys.ElementAt(meleeWeaponIndex).MeleeWeaponPrefab, weaponContainer);
-            newMelee.name = meleeWeaponPrefab.name;
-            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newMelee?.weaponElement?.elementHUDSprite); }
-            return newMelee;
+            else if (isRanged)
+            {
+                RangedElementIndex++;
+                if (RangedElementIndex >= elementMods.Count) { RangedElementIndex = 0; }
+                //if (RangedElementIndex == MeleeElementIndex) { RangedElementIndex++; }
+                newElement = GetElementAtIndex(RangedElementIndex);
+            }
+            return newElement;
         }
 
-        public Element CycleElementsUp ()
+        public Element CycleElementsDown (Weapon currentWeapon)
         {
-            if (elementMods.Count == 0)
+            if (elementMods.Count < 2)
             {
-                Debug.LogWarning("There are no element mods in your inventory!");
+                Debug.LogWarning("Unable to cycle through element mods.");
                 return null;
             }
-            elementIndex++;
-            if (elementIndex >= elementMods.Count) { elementIndex = 0; }
+            var isMelee = currentWeapon is Melee;
+            var isRanged = currentWeapon is Ranged;
+            Element newElement = null;
 
-            return GetElementAtIndex(elementIndex);
+            if (isMelee)
+            {
+                MeleeElementIndex--;
+                if (MeleeElementIndex < 0) { MeleeElementIndex = elementMods.Count - 1; }
+                if (MeleeElementIndex != 0 && MeleeElementIndex == RangedElementIndex) { MeleeElementIndex--; }
+                newElement = GetElementAtIndex(MeleeElementIndex);
+            }
+            else if (isRanged)
+            {
+                RangedElementIndex--;
+                if (RangedElementIndex < 0) { RangedElementIndex = elementMods.Count - 1; }
+                //if (RangedElementIndex == MeleeElementIndex) { RangedElementIndex--; }
+                newElement = GetElementAtIndex(RangedElementIndex);
+            }
+            return newElement;
         }
 
-        private Element GetElementAtIndex (int elementIndex)
+        public Element GetElementAtIndex (int elementIndex)
         {
             var elementItemData = elementMods.Keys.ElementAt(elementIndex);
             var element = Utility.ElementOptionToElement(elementItemData.elementOption);
@@ -117,20 +224,9 @@ namespace Hunter
             Fabric.EventManager.Instance.PostEvent("UI Navigation Blip");
             return element;
         }
+        #endregion
 
-        public Element CycleElementsDown ()
-        {
-            if (elementMods.Count == 0)
-            {
-                Debug.LogWarning("There are no element mods in your inventory!");
-                return null;
-            }
-            elementIndex--;
-            if (elementIndex < 0) { elementIndex = elementMods.Count - 1; }
-
-            return GetElementAtIndex(elementIndex);
-        }
-
+        #region Books
         public List<JournalItem> GetAllJournals ()
         {
             return new List<JournalItem>(journalEntries.Keys);
@@ -140,6 +236,7 @@ namespace Hunter
         {
             return new List<DiaryItem>(diaryEntries.Keys);
         }
+        #endregion
 
         //Method for simply giving the player an instance of item data from which we spawn it's interactble prefab too
         public bool TryAddItem(InventoryItem item) 

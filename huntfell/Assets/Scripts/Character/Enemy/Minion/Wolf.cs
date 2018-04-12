@@ -93,12 +93,6 @@ namespace Hunter.Characters
             StartCoroutine(attackCR);
         }
 
-        public void SwitchWeapon (bool cycleRanged, bool cycleMelee)
-        {
-            //Wolf only has one weapon so we don't need to switch
-            return;
-        }
-
         public IEnumerator PlayAttackAnimation ()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
@@ -122,15 +116,24 @@ namespace Hunter.Characters
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public void SwitchElement (bool cycleUp, bool cycleDown)
-        {
-            //This can be implemented later if we want elemental wolves
-            return;
-        }
-
         public void Interact ()
         {
             //Wolves cannot interact with stuff!
+            return;
+        }
+
+        public void CycleWeapons (bool cycleUp)
+        {
+            return;
+        }
+
+        public void CycleElements (bool cycleUp)
+        {
+            return;
+        }
+
+        public void SwitchWeaponType (bool switchToMelee)
+        {
             return;
         }
     }

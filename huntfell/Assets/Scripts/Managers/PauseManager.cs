@@ -22,6 +22,14 @@ namespace Hunter
 
         public Canvas menuCanvas;
 
+        public bool IsGamePaused
+        {
+            get
+            {
+                return menuCanvas != null && menuCanvas.gameObject.activeSelf;
+            }
+        }
+
         private Player playerWhoPaused;
 
         private void Awake ()

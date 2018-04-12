@@ -98,9 +98,11 @@ namespace Hunter
 
         void WeaponAnimationEvent();
 
-        void SwitchWeapon (bool cycleRanged, bool cycleMelee);
+        void CycleWeapons (bool cycleUp);
 
-        void SwitchElement (bool cycleUp, bool cycleDown);
+        void CycleElements (bool cycleUp);
+
+        void SwitchWeaponType (bool switchToMelee);
     }
 
     

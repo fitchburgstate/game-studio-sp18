@@ -5,7 +5,7 @@ using System;
 
 namespace Hunter.Characters
 {
-    public class Range : Weapon
+    public class Ranged : Weapon
     {
         /// <summary>
         /// Clip Size of the Weapon.

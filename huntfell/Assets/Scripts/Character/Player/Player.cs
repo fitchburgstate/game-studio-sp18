@@ -75,7 +75,8 @@ namespace Hunter.Characters
         protected override void Start ()
         {
             base.Start();
-            EquipWeaponToCharacter(Inventory.CycleMeleeWeapons(weaponContainer));
+            transform.forward = Camera.main.transform.forward;
+            EquipWeaponToCharacter(Inventory.GetMeleeWeaponAtIndex(0, weaponContainer));
             CheckInteractImage();
         }
 
@@ -142,6 +143,11 @@ namespace Hunter.Characters
                 rotationCurvePosition = 0;
             }
 
+        }
+
+        public void FootstepSoundAnimationEvent ()
+        {
+            Fabric.EventManager.Instance.PostEvent("Footstep", gameObject);
         }
 
         public void Move (Transform target)
@@ -297,11 +303,6 @@ namespace Hunter.Characters
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public void FootstepSoundAnimationEvent ()
-        {
-            Fabric.EventManager.Instance.PostEvent("Footstep", gameObject);
-        }
-
         public void MeleeWeaponSwingAnimationEvent ()
         {
             Fabric.EventManager.Instance.PostEvent("Player Sword Swing", gameObject);
@@ -327,7 +328,7 @@ namespace Hunter.Characters
             {
                 anim.SetTrigger("melee");
             }
-            else if (CurrentWeapon is Range)
+            else if (CurrentWeapon is Ranged)
             {
                 anim.SetTrigger("ranged");
             }
@@ -335,41 +336,49 @@ namespace Hunter.Characters
             attackCR = null;
         }
 
-        public void SwitchWeapon (bool cycleRanged, bool cycleMelee)
+        public void CycleWeapons (bool cycleUp)
         {
-            if ((cycleMelee && CurrentWeapon is Range) || (cycleRanged && CurrentWeapon is Melee))
+            Weapon newWeapon = null;
+
+            if (cycleUp)
             {
+                newWeapon = Inventory.CycleWeaponsUp(CurrentWeapon, weaponContainer);
+            }
+            else
+            {
+                newWeapon = Inventory.CycleWeaponsDown(CurrentWeapon, weaponContainer);
+            }
+            if(newWeapon == null || newWeapon == CurrentWeapon) {
+                Debug.LogWarning("Cannot equip a null weapon or the weapon you are already holding.");
                 return;
             }
+            //TODO This should really be referencing a clip on the new weapon being equipped and playing that instead
+            if (newWeapon is Melee) { Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject); }
+            else if(newWeapon is Ranged) { Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject); }
+            EquipWeaponToCharacter(newWeapon);
+        }
 
-            CurrentWeapon?.gameObject.SetActive(false);
-
-            if (cycleMelee)
-            {
-                EquipWeaponToCharacter(Inventory.CycleRangedWeapons(weaponContainer));
-                Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject);
-            }
-            else if (cycleRanged)
-            {
-                EquipWeaponToCharacter(Inventory.CycleMeleeWeapons(weaponContainer));
-                Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject);
-            }
-
+        public void CycleElements (bool cycleUp)
+        {
+            Element newElement = null;
+            if (cycleUp) { newElement = Inventory.CycleElementsUp(CurrentWeapon); }
+            else { newElement = Inventory.CycleElementsDown(CurrentWeapon); }
             if (CurrentWeapon != null)
             {
-                CurrentWeapon?.gameObject.SetActive(true);
-                Debug.Log("Equipped the " + CurrentWeapon.name);
+                if(newElement == CurrentWeapon.weaponElement) { return; }
+                EquipElementToWeapon(newElement);
+                Debug.Log("Equipped the " + Utility.ElementToElementOption(CurrentWeapon.weaponElement) + " to the " + CurrentWeapon.name);
             }
         }
 
-        public void SwitchElement (bool cycleUp, bool cycleDown)
+        public void SwitchWeaponType (bool switchToMelee)
         {
-            if (cycleUp) { EquipElementToWeapon(Inventory.CycleElementsUp()); }
-            else if (cycleDown) { EquipElementToWeapon(Inventory.CycleElementsDown()); }
-
-            if (CurrentWeapon != null)
+            if(switchToMelee && !(CurrentWeapon is Melee)) {
+                EquipWeaponToCharacter(Inventory.GetMeleeWeaponAtIndex(Inventory.MeleeWeaponIndex, weaponContainer));
+            }
+            else if(!switchToMelee && !(CurrentWeapon is Ranged))
             {
-                Debug.Log("Equipped the " + Utility.ElementToElementOption(CurrentWeapon.weaponElement) + " to the " + CurrentWeapon.name);
+                EquipWeaponToCharacter(Inventory.GetRangedWeaponAtIndex(Inventory.RangedWeaponIndex, weaponContainer));
             }
         }
 

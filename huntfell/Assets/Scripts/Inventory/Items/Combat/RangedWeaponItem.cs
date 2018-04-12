@@ -8,8 +8,8 @@ namespace Hunter {
     public class RangedWeaponItem : WeaponItem {
 
         [SerializeField]
-        private Range rangedWeaponPrefab;
-        public Range RangedWeaponPrefab
+        private Ranged rangedWeaponPrefab;
+        public Ranged RangedWeaponPrefab
         {
             get
             {
