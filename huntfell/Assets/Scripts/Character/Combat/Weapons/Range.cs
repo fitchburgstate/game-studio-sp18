@@ -42,16 +42,17 @@ namespace Hunter.Character
         /// </summary>
         private float playerRange;
 
+        public ParticleSystem muzzleFlash;
+
+        public LayerMask rangedValidLayers;
         [Header("Weapon Trail Options")]
         public bool usesTrail;
-
+        public Material lineMaterial;
         public float weaponTrailDuration = .05f;
 
-        public Color weaponTrailColor;
+        public Gradient weaponTrailColor;
 
-        private Vector3 endOfRay = Vector3.zero;
-
-        private IEnumerator weaponTrailCR;
+        private LineRenderer weaponTrail;
 
         /// <summary>
         /// Performs a raycast to the range of the weapon and then calls the damage calculation method if an enemy is hit,
@@ -63,10 +64,11 @@ namespace Hunter.Character
             var hit = new RaycastHit();
             ray.origin = transform.position;
             ray.direction = characterHoldingWeapon.RotationTransform.forward;
+            var endOfRay = Vector3.zero;
 
             Debug.DrawRay(ray.origin, ray.direction * weaponRange, Color.green, 5);
 
-            if (Physics.Raycast(ray, out hit, weaponRange))
+            if (Physics.Raycast(ray, out hit, weaponRange, rangedValidLayers))
             {
                 var target = hit.transform;
                 var damageableObject = target.GetComponent<IDamageable>();
@@ -80,19 +82,20 @@ namespace Hunter.Character
                     var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
                     damageableObject.TakeDamage(totalDamage, isCritical, this);
                 }
-                //endOfRay = target.position;
+                endOfRay = hit.point;
             }
             else
             {
-                endOfRay = Vector3.zero;
+                endOfRay = ray.GetPoint(weaponRange);
             }
-
-            if (usesTrail && weaponTrailCR == null)
-            {
-                weaponTrailCR = MakeGunTrail();
-                StartCoroutine(weaponTrailCR);
-            }
-            CheckAmmo();
+            muzzleFlash?.Play();
+            //if (usesTrail && weaponTrailCR == null)
+            //{
+            //    var startPoint = (muzzleFlash != null) ? muzzleFlash.transform.position : transform.position;
+            //    weaponTrailCR = MakeGunTrail(startPoint, endOfRay);
+            //    StartCoroutine(weaponTrailCR);
+            //}
+            //CheckAmmo();
         }
 
         protected override int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
@@ -113,31 +116,22 @@ namespace Hunter.Character
             }
         }
 
-        private IEnumerator MakeGunTrail()
+        private IEnumerator MakeGunTrail(Vector3 startPoint, Vector3 endPoint)
         {
-            var weaponTrail = gameObject.AddComponent<LineRenderer>();
-            var width = 0.05f;
-            var initWeaponTrailPositions = new Vector3[2] { Vector3.zero, Vector3.zero };
-            weaponTrail.SetPositions(initWeaponTrailPositions);
-
-            var startPoint = transform.position;
-            var endPoint = Vector3.zero;
-
-            if (endOfRay != Vector3.zero)
+            if(weaponTrail == null)
             {
-                endPoint = endOfRay;
+                weaponTrail = gameObject.AddComponent<LineRenderer>();
             }
             else
             {
-                endPoint = startPoint + (weaponRange * transform.forward);
+                weaponTrail.enabled = true;
             }
+            var width = 0.05f;
+            var initWeaponTrailPositions = new Vector3[2] { startPoint, endPoint };
+            weaponTrail.SetPositions(initWeaponTrailPositions);
+            weaponTrail.colorGradient = weaponTrailColor;
 
-            weaponTrail.SetPosition(0, startPoint);
-            weaponTrail.SetPosition(1, endPoint);
-
-            weaponTrail.startColor = weaponTrailColor;
-            weaponTrail.endColor = weaponTrailColor;
-            weaponTrail.material = new Material(Shader.Find("Particles/Additive"));
+            weaponTrail.material = lineMaterial;
             weaponTrail.startWidth = width;
             weaponTrail.endWidth = width;
             weaponTrail.positionCount = 2;
@@ -145,14 +139,7 @@ namespace Hunter.Character
             weaponTrail.useWorldSpace = true;
 
             yield return new WaitForSeconds(weaponTrailDuration);
-            Destroy(weaponTrail);
-            weaponTrailCR = null;
-            endOfRay = Vector3.zero;
-
-            if (weaponTrailCR != null)
-            {
-                StopCoroutine(weaponTrailCR);
-            }
+            weaponTrail.enabled = false;
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Hunter {
         public void StartDamageEffects(int damage, bool isCritical, Element element)
         {
             if(popUpCanvas != null) { SpawnDamageText(damage, isCritical, element); }
-            Debug.Log("Playing hit effect...");
+            //Debug.Log("Playing hit effect...");
             switch (Utility.ElementToElementOption(element))
             {
                 case ElementOption.None:

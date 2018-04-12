@@ -12,16 +12,13 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -391,6 +388,7 @@
     <Compile Include="Assets\Scripts\Character\Input\PlayerInputModule.cs" />
     <Compile Include="Assets\Scripts\Character\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Elements\Elements.cs" />
+    <Compile Include="Assets\Scripts\Inventory\Interactables\CaseStudy.cs" />
     <Compile Include="Assets\Scripts\Inventory\Interactables\InteractableHealthRestore.cs" />
     <Compile Include="Assets\Scripts\Inventory\Interactables\InteractableInventoryItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\Interactables\InteractableProp.cs" />
@@ -406,10 +404,12 @@
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\HUDManager.cs" />
     <Compile Include="Assets\Scripts\Managers\InventoryManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\PauseManager.cs" />
     <Compile Include="Assets\Scripts\Managers\TitleManager.cs" />
     <Compile Include="Assets\Scripts\Miscellaneous\CameraCull.cs" />
     <Compile Include="Assets\Scripts\Miscellaneous\Controls.cs" />
     <Compile Include="Assets\Scripts\Miscellaneous\DestroyBarricade.cs" />
+    <Compile Include="Assets\Scripts\Miscellaneous\EndManager.cs" />
     <Compile Include="Assets\Scripts\Miscellaneous\Utility.cs" />
     <Compile Include="Assets\Scripts\UI\Damage Pop-Up\DestroyAnimEvent.cs" />
   </ItemGroup>
@@ -522,6 +522,13 @@
     <None Include="Assets\Plugins\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\Shaders\Test\ShadersForAlpha\OpacityCell.shader" />
     <None Include="Assets\Shaders\Test\ShadersForAlpha\Shader_CellShader.shader" />
+    <None Include="Assets\Shaders\Test\ShadersForAlpha\Shader_EdgyHardLightShader.shader" />
+    <None Include="Assets\Shaders\Test\ShadersForAlpha\Shader_EnergyCurrent.shader" />
+    <None Include="Assets\Shaders\Test\ShadersForAlpha\Shader_FrostEffect.shader" />
+    <None Include="Assets\Shaders\Test\ShadersForAlpha\Shader_OutlineShader_2.shader" />
+    <None Include="Assets\Shaders\Test\ShadersForAlpha\Shader_Quake.shader" />
+    <None Include="Assets\Shaders\Test\ShadersForAlpha\Shader_Thermal.shader" />
+    <None Include="Assets\Shaders\Test\ShadersForAlpha\Shader_ThermalEffect.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

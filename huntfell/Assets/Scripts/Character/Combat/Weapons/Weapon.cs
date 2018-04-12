@@ -52,10 +52,10 @@ namespace Hunter.Character
 
         protected virtual int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
-            var critMult = 1;
-            var elementMult = 1;
+            var critMult = isCritical ? 1.3f : 1.0f;
+            var elementMult = 1.0f;
 
-            if (enemyElementType != null)
+            if (enemyElementType != null && weaponElement != null)
             {
                 var weaponType = weaponElement.GetType();
                 var enemyType = enemyElementType.GetType();
@@ -67,17 +67,17 @@ namespace Hunter.Character
                 }
                 else if (weaponType.Equals(enemyWeaknessType))
                 {
-                    elementMult = 2;
+                    elementMult = 1.3f;
                 }
             }
+            var randomInt = UnityEngine.Random.Range(-1, 3);
 
-            return baseDamage * critMult * elementMult;
+            return (int)((baseDamage + randomInt) * critMult * elementMult);
         }
 
         /// <summary>
         /// Calculates whether or not the player crits based on crit percentage that is given to the function.
         /// </summary>
-        /// <param name="percent"></param>
         protected bool ShouldAttackBeCritical(int percent)
         {
             if (percent == 100) { return true; }
@@ -86,7 +86,7 @@ namespace Hunter.Character
 
             rng.GetBytes(buffer);
 
-            System.Random r = new System.Random();
+            var r = new System.Random();
             var num = r.Next(1, 100);
             return (num >= (100 - percent));
         }

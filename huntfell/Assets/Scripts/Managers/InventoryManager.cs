@@ -35,6 +35,7 @@ namespace Hunter
             else
             {
                 Destroy(gameObject);
+                return;
             }
 
             if(startingItems != null && startingItems.Count > 0)
@@ -129,6 +130,7 @@ namespace Hunter
                 element.elementHUDSprite = elementItemData.icon;
             }
             if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(element?.elementHUDSprite); }
+            Fabric.EventManager.Instance.PostEvent("UI Navigation Blip");
             return element;
         }
 
@@ -143,6 +145,16 @@ namespace Hunter
             if (elementIndex < 0) { elementIndex = elementMods.Count - 1; }
 
             return GetElementAtIndex(elementIndex);
+        }
+
+        public List<JournalItem> GetAllJournals ()
+        {
+            return new List<JournalItem>(journalEntries.Keys);
+        }
+
+        public List<DiaryItem> GetAllDiaries ()
+        {
+            return new List<DiaryItem>(diaryEntries.Keys);
         }
 
         //Method for simply giving the player an instance of item data from which we spawn it's interactble prefab too
@@ -181,17 +193,20 @@ namespace Hunter
             else if (item is JournalItem && !journalEntries.ContainsKey(item as JournalItem))
             {
                 journalEntries.Add(item as JournalItem, spawnedInteractableItem);
+                if (HUDManager.instance != null) { HUDManager.instance.ShowJournalPickup((item as JournalItem).bookContents); }
             }
             else if (item is DiaryItem && !diaryEntries.ContainsKey(item as DiaryItem))
             {
                 diaryEntries.Add(item as DiaryItem, spawnedInteractableItem);
+                if (HUDManager.instance != null) { HUDManager.instance.ShowJournalPickup((item as DiaryItem).bookContents); }
             }
             else
             {
                 Debug.LogWarning("Tried to add the item to the Inventory but it was not a recognizable item or its already in the Inventory. Check that the Inventory is able to handle that type of item and that it already isnt in the Inventory.");
                 return false;
             }
-            Debug.Log($"Added the Item {item.itemName} to your inventory.");
+            //Debug.Log($"Added the Item {item.itemName} to your inventory.");
+            if(HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(item.itemName, item.icon); }
             return true;
         }
     }

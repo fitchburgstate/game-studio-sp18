@@ -16,18 +16,7 @@ namespace Hunter
 {
     public class CameraCull : MonoBehaviour
     {
-        private List<GameObject> cachedList;
-
-        public LayerMask cullingMask;
-
-        [Tooltip("The amount the object will fade by.")]
-        [Range(0, 1)]
-        public float transparencyAmount = 0.3f;
-        [Tooltip("The amount the object will return to.")]
-        [Range(0, 1)]
-        public float opaqueAmount = 1f;
-
-        private Character.Character playerCharacter;
+        #region Properties
         public Character.Character PlayerCharacter
         {
             get
@@ -51,10 +40,27 @@ namespace Hunter
                 return playerCharacter;
             }
         }
+        #endregion
+
+        #region Variables
+        [Tooltip("The amount the object will fade by.")]
+        [Range(0, 1)]
+        public float transparencyAmount = 0.3f;
+        [Tooltip("The amount the object will return to.")]
+        [Range(0, 1)]
+        public float opaqueAmount = 1f;
+
+        public LayerMask cullingMask;
+
+        private List<GameObject> cachedList;
+        private Shader cachedShader;
+        private Character.Character playerCharacter;
+        #endregion
 
         private void Start()
         {
             cachedList = new List<GameObject>();
+            cachedShader = new Shader();
         }
 
         private void FixedUpdate()
@@ -67,7 +73,7 @@ namespace Hunter
                 if (hits.Length > 0)
                 {
                     var newList = new List<GameObject>();
-                    foreach(var hit in hits)
+                    foreach (var hit in hits)
                     {
                         newList.Add(hit.transform.gameObject);
                     }
@@ -78,14 +84,15 @@ namespace Hunter
                     for (var i = 0; i < makeTransparentList.Count; i++)
                     {
                         var objectToChange = makeTransparentList[i];
-                        var rend = objectToChange.transform.GetComponent<Renderer>();
+                        var rend = objectToChange.transform.GetComponentInChildren<Renderer>();
+                        cachedShader = rend.material.shader;
                         MakeTransparent(rend);
                     }
 
                     for (var i = 0; i < makeOpaqueList.Count; i++)
                     {
                         var objectToChange = makeOpaqueList[i];
-                        var rend = objectToChange.transform.GetComponent<Renderer>();
+                        var rend = objectToChange.transform.GetComponentInChildren<Renderer>();
                         MakeOpaque(rend);
                     }
                     cachedList = makeTransparentList;
@@ -96,7 +103,7 @@ namespace Hunter
                 for (var i = 0; i < cachedList.Count; i++)
                 {
                     var objectToChange = cachedList[i];
-                    var rend = objectToChange.transform.GetComponent<Renderer>();
+                    var rend = objectToChange.transform.GetComponentInChildren<Renderer>();
                     MakeOpaque(rend);
                 }
                 cachedList.Clear();
@@ -107,7 +114,7 @@ namespace Hunter
         {
             if (rend)
             {
-                rend.material.shader = Shader.Find("Standard");
+                rend.material.shader = cachedShader;
                 var tempColor = rend.material.color;
                 tempColor.a = opaqueAmount;
                 rend.material.color = tempColor;

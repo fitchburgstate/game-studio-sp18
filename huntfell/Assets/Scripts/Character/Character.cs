@@ -30,7 +30,7 @@ namespace Hunter.Character
             }
             set
             {
-                health = value;
+                health = Mathf.Clamp(value, 0 , totalHealth);
             }
         }
         [SerializeField]
@@ -138,6 +138,14 @@ namespace Hunter.Character
                     effectsController.StartDamageEffects(damage);
                 }
             }
+            if (tag == "Player")
+            {
+                Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
+            }
+            else if (tag == "Enemy")
+            {
+                Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
+            }
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
@@ -145,6 +153,12 @@ namespace Hunter.Character
         {
             CurrentHealth -= damage;
             yield return null;
+        }
+
+        public virtual void RestoreHealthToCharacter (int restoreAmount)
+        {
+            StopCoroutine("SubtractHealthFromCharacter");
+            CurrentHealth += restoreAmount;
         }
     }
 }

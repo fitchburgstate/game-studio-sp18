@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23283050104410388}
   - component: {fileID: 95939676342226192}
   - component: {fileID: 65492284859990924}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Prop_Bookcase_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 33885044239645712}
   - component: {fileID: 23962039215834294}
   - component: {fileID: 95543622636307788}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Prop_Book_Single (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 33451036263192102}
   - component: {fileID: 23733304798050276}
   - component: {fileID: 95106417943603446}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Prop_Book_Single (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4779940814274910}
-  m_Layer: 0
+  - component: {fileID: 95605757223151834}
+  - component: {fileID: 114445370215100948}
+  m_Layer: 13
   m_Name: Prop_Bookcase_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +94,7 @@ GameObject:
   - component: {fileID: 33466945241613500}
   - component: {fileID: 23450244611334898}
   - component: {fileID: 95967410666194852}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Prop_Book_Short (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,6 +380,23 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!95 &95605757223151834
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596866021949494}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!95 &95939676342226192
 Animator:
   serializedVersion: 3
@@ -412,3 +431,29 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114445370215100948
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596866021949494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToSpawn: []
+  elementTypeForInteraction: 0
+  animationName: 
+  giveItemsDirectly: 0
+  requiresDamage: 0
+  interactionSuccessMessage: 
+  interactionFailMessage: 
+  propType: 0
+  destructionForce: 50
+  brokenPropPrefab: {fileID: 0}
+  propEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
