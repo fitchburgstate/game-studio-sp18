@@ -14,7 +14,9 @@ namespace Hunter.Characters
         #region Variables
         [Header("Combat Options")]
         public Transform weaponContainer;
+
         public float gunTrailLength = 1.5f;
+
         [Tooltip("The total ammount of time it should take for the wound bar to catch up to the health bar."), Range(0.1f, 10f)]
         public float healthSubtractionTime = 1;
 
@@ -41,6 +43,7 @@ namespace Hunter.Characters
 
         private IEnumerator attackCR;
         private IEnumerator dashCR;
+        private List<IInteractable> itemsPlayerIsStandingIn = new List<IInteractable>();
 
         public PlayerInventory Inventory { get; private set; }
 
@@ -99,6 +102,26 @@ namespace Hunter.Characters
                 CheckInteractImage();
             }
         }
+
+        private void OnTriggerEnter (Collider other)
+        {
+            var interactableItem = other.GetComponent<IInteractable>();
+            if (interactableItem != null && !itemsPlayerIsStandingIn.Contains(interactableItem))
+            {
+                itemsPlayerIsStandingIn.Add(interactableItem);
+                CheckInteractImage();
+            }
+        }
+
+        private void OnTriggerExit (Collider other)
+        {
+            var interactableItem = other.GetComponent<IInteractable>();
+            if (interactableItem != null && itemsPlayerIsStandingIn.Contains(interactableItem))
+            {
+                itemsPlayerIsStandingIn.Remove(interactableItem);
+                CheckInteractImage();
+            }
+        }        
         #endregion
 
         #region Player Movement
@@ -164,7 +187,7 @@ namespace Hunter.Characters
         {
             if (dashCR != null)
             {
-                Debug.LogWarning("Dash is still on cooldown.");
+                //Debug.LogWarning("Dash is still on cooldown.");
                 return;
             }
             else if (PerformingAction) { return; }
@@ -193,7 +216,7 @@ namespace Hunter.Characters
             //No moving during the dash movement
             PerformingAction = true;
             var startPosition = eyeLine.position;
-            Debug.Log(startPosition);
+            //Debug.Log(startPosition);
             var characterForward = RotationTransform.forward;
             var dashDirectionTarget = new Vector3();
 
@@ -235,15 +258,15 @@ namespace Hunter.Characters
             anim.SetTrigger("DodgeRoll");
             StartCoroutine(SetStaminaBar(0, 0.3f));
             // PAUSE HERE FOR ANIMATION EVENT
-            Debug.Log("Pausing Dash Coroutine to wait for Animation Event...");
+            //Debug.Log("Pausing Dash Coroutine to wait for Animation Event...");
             StopCoroutine(dashCR);
             yield return null;
 
             // COROUTINE RESUMES HERE
-            Debug.Log("Animation Event has resumed the Coroutine.");
+            //Debug.Log("Animation Event has resumed the Coroutine.");
 
             var dashDistanceCheckMargin = 0.09f;
-            float dashTime = 0;
+            var dashTime = 0f;
 
             // Turn off the normal means of moving / constraining the player since we are doing that ourselves
             //characterController.enabled = false;
@@ -276,8 +299,8 @@ namespace Hunter.Characters
         {
             if (HUDManager.instance == null) { yield break; }
 
-            float startFill = HUDManager.instance.staminaBar.fillAmount;
-            float startTime = Time.time;
+            var startFill = HUDManager.instance.staminaBar.fillAmount;
+            var startTime = Time.time;
             var percentComplete = 0f;
             while (percentComplete < 1)
             {
@@ -520,7 +543,7 @@ namespace Hunter.Characters
             if (NavMesh.SamplePosition(target, out hit, sampleRadius, NavMesh.AllAreas))
             {
                 target = hit.position;
-                Debug.Log("Hit Position of NavMesh Sample from RayCast: " + target);
+                //Debug.Log("Hit Position of NavMesh Sample from RayCast: " + target);
             }
             else if (NavMesh.SamplePosition(transform.position, out hit, sampleRadius, NavMesh.AllAreas))
             {

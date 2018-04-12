@@ -54,7 +54,7 @@ namespace Hunter.Characters
         /// </summary>
         public override void StartAttackFromAnimationEvent ()
         {
-            Debug.Log("Swinging Melee Weapon.");
+            //Debug.Log("Swinging Melee Weapon.");
             StartCoroutine(OpenAndCloseHitBox());
         }
 

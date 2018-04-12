@@ -99,6 +99,7 @@ namespace Hunter
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
             {
+                if(requiresDamage && !wasDamaged) { return; }
                 currentlyInteracting = true;
                 ShowSuccessMessage();
 
@@ -181,7 +182,7 @@ namespace Hunter
         {
             if (itemsToSpawn.Count == 0)
             {
-                Debug.Log("Nothing in this prop!");
+                //Debug.Log("Nothing in this prop!");
                 return;
             }
 

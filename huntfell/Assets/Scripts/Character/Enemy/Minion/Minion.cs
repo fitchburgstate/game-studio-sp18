@@ -13,7 +13,7 @@ namespace Hunter.Characters
         /// </summary>
         [Range(0, 20)]
         [Tooltip("The running speed of the character when it is in combat.")]
-        public float runSpeed = 5f;
+        public float speed = 5f;
         public float invincibilityFrames = 5;
 
         public Image minionHealthBar;

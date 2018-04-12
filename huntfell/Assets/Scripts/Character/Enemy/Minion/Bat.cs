@@ -46,8 +46,13 @@ namespace Hunter.Characters
         public void Wander(Vector3 target)
         {
             if (isDying) { return; }
-            agent.speed = runSpeed / 2;
+            agent.speed = speed / 2;
             agent.destination = target;
+        }
+
+        public void Turn(Transform target)
+        {
+
         }
 
         private IEnumerator KillBat(bool isCinematic)

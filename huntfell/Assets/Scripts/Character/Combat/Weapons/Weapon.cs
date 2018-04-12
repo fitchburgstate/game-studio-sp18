@@ -78,7 +78,6 @@ namespace Hunter.Characters
         /// <summary>
         /// Calculates whether or not the player crits based on crit percentage that is given to the function.
         /// </summary>
-        /// <param name="percent"></param>
         protected bool ShouldAttackBeCritical(int percent)
         {
             if (percent == 100) { return true; }
@@ -87,7 +86,7 @@ namespace Hunter.Characters
 
             rng.GetBytes(buffer);
 
-            System.Random r = new System.Random();
+            var r = new System.Random();
             var num = r.Next(1, 100);
             return (num >= (100 - percent));
         }
