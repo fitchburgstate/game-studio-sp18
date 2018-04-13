@@ -2414,15 +2414,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1058027423640836}
-  m_LocalRotation: {x: -0, y: 0.8054081, z: -0, w: 0.59272075}
-  m_LocalPosition: {x: 11.336008, y: -1.0999999, z: 6.685837}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 34.870487, y: -1.086, z: -31.651402}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4750315558255530}
   - {fileID: 4134603962571564}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 107.299, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4650712720071430
 Transform:
   m_ObjectHideFlags: 1
@@ -3061,12 +3061,12 @@ MonoBehaviour:
   displayName: Wolf
   eyeLine: {fileID: 4792408177706122}
   enemyElementOption: 0
-  speed: 5
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114190814457826990}
-  justFound: 0
-  meleeWeapon: {fileID: 114910431859789410}
+  speed: 5
   turnSpeed: 175
+  meleeWeapon: {fileID: 114910431859789410}
+  justFound: 0
 --- !u!114 &114314628383857468
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3099,6 +3099,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54082744c3473f047aaaad4aa8c57dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attack: 1
+  turn: 1
+  moveTo: 1
+  idle: 1
+  wander: 0
+  retreat: 0
   maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
 --- !u!114 &114361328388092754

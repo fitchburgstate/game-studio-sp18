@@ -8,12 +8,13 @@ namespace Hunter
 {
     public static class Utility
     {
+        #region RandomNavMeshPoint Function
         /// <summary>
         /// Finds random point on navmesh based on a stating center position, a range/distance it can go, and a vector3 navposition
         /// </summary>
         public static bool RandomNavMeshPoint(Vector3 center, float range, out Vector3 result)
         {
-            for(var i = 0; i < 30; i++)
+            for (var i = 0; i < 30; i++)
             {
                 var randomPoint = center + UnityEngine.Random.insideUnitSphere * range;
                 NavMeshHit hit;
@@ -26,10 +27,12 @@ namespace Hunter
             result = Vector3.zero;
             return false;
         }
+        #endregion
 
+        #region ElementOptionToElement Function
         public static Element ElementOptionToElement(ElementOption elementOption)
         {
-            switch(elementOption)
+            switch (elementOption)
             {
                 case ElementOption.Fire:
                     return new Element.Fire();
@@ -49,19 +52,23 @@ namespace Hunter
             }
             return null;
         }
+        #endregion
 
+        #region ElementToElementOption Function
         //Yeah this breaks style guide lines, dont fucking touch it -Connor
         public static ElementOption ElementToElementOption(Element element)
         {
-                 if(element is Element.Fire)        { return ElementOption.Fire; }
-            else if(element is Element.Ice)         { return ElementOption.Ice; }
-            else if(element is Element.Lightning)   { return ElementOption.Lightning; }
-            else if(element is Element.Nature)      { return ElementOption.Nature; }
-            else if(element is Element.Silver)      { return ElementOption.Silver; }
-            else                                    { return ElementOption.None; }
+            if (element is Element.Fire) { return ElementOption.Fire; }
+            else if (element is Element.Ice) { return ElementOption.Ice; }
+            else if (element is Element.Lightning) { return ElementOption.Lightning; }
+            else if (element is Element.Nature) { return ElementOption.Nature; }
+            else if (element is Element.Silver) { return ElementOption.Silver; }
+            else { return ElementOption.None; }
         }
+        #endregion
     }
 
+    #region Interfaces
     //Interface behaviours for characters and interactables
     public interface IMoveable
     {
@@ -78,14 +85,14 @@ namespace Hunter
     {
         void Idle();
 
-        void Wander(Vector3 finalTarget);
+        void Wander(Vector3 point);
 
         void Turn(Transform target);
     }
 
     public interface IDamageable
     {
-        void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith);
+        void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith);
     }
 
     public interface IAttack
@@ -96,18 +103,19 @@ namespace Hunter
 
         void WeaponAnimationEvent();
 
-        void CycleWeapons (bool cycleUp);
+        void CycleWeapons(bool cycleUp);
 
-        void CycleElements (bool cycleUp);
+        void CycleElements(bool cycleUp);
 
-        void SwitchWeaponType (bool switchToMelee);
+        void SwitchWeaponType(bool switchToMelee);
     }
 
-    
+
     public interface IInteractable
     {
-        void FireInteraction (Character characterTriggeringInteraction);
+        void FireInteraction(Character characterTriggeringInteraction);
 
-        bool IsImportant ();
+        bool IsImportant();
     }
+    #endregion
 }

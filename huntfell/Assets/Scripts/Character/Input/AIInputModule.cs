@@ -10,6 +10,23 @@ namespace Hunter.Characters.AI
     public class AIInputModule : MonoBehaviour
     {
         #region Variables
+        [Header("Possible Actions")]
+        public bool attack = true;
+        public bool turn = true;
+        public bool moveTo = true;
+        public bool idle = true;
+        public bool wander = true;
+        public bool retreat = true;
+
+        [Header("Other Variables")]
+        /// <summary>
+        /// The max distance that the character will move to during a Wander action.
+        /// </summary>
+        [Range(0f, 25f), Tooltip("The max distance that the character will move to during a Wander action.")]
+        public float maxDistance = 10f;
+
+        public UrgeWeights urgeWeights;
+
         /// <summary>
         /// Represents which direction the character should move in.
         /// </summary>
@@ -43,35 +60,31 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// The target that the AI has acquired.
         /// </summary>
+        [SerializeField]
         private Transform target;
 
         /// <summary>
         /// The target point that the AI has acquired.
         /// </summary>
-        private Vector3 pointTarget;
+        [SerializeField]
+        private Vector3 randomPointTarget;
 
-        /// <summary>
-        /// The max distance that the wolf will move to during a Wander action.
-        /// </summary>
-        [Tooltip("The max distance that the wolf will move to during a Wander action.")]
-        [Range(0f, 25f)]
-        public float maxDistance = 5f;
+        private float tempHealth = 0f;
+
+        #region AI Actions
+        private AIDetection aiDetection;
+        private Attack attackAction;
+        private Turn turnAction;
+        private MoveTo moveToAction;
+        private Idle idleAction;
+        private Wander wanderAction;
+        private Retreat retreatAction;
+        private Enemy enemy;
+        #endregion
 
         private bool enemyInLOS = false;
         private bool inCombat = false;
         private bool enemyInVisionCone = false;
-
-        private AIDetection aiDetection;
-
-        private Attack attack;
-        private Idle idle;
-        private Wander wander;
-        private MoveTo moveTo;
-        private Retreat retreat;
-        private Character character;
-        private Turn turn;
-
-        public UrgeWeights urgeWeights;
         #endregion
 
         #region Properties
@@ -155,25 +168,22 @@ namespace Hunter.Characters.AI
         {
             get
             {
+                if (target == null) { target = FindNearestTargetWithString("Player"); }
                 return target;
-            }
-
-            set
-            {
-                target = value;
             }
         }
 
-        public Vector3 PointTarget
+        public Vector3 RandomPointTarget
         {
             get
             {
-                return pointTarget;
+                if (randomPointTarget == Vector3.zero) { randomPointTarget = FindPointOnNavmesh(); }
+                return randomPointTarget;
             }
 
             set
             {
-                pointTarget = value;
+                randomPointTarget = value;
             }
         }
 
@@ -192,26 +202,31 @@ namespace Hunter.Characters.AI
 
         private void Start()
         {
-            target = FindNearestTargetWithString("Player");
             urgeWeights = ScriptableObject.CreateInstance<UrgeWeights>();
-            character = GetComponent<Character>();
+            enemy = GetComponent<Enemy>();
 
             #region Classes
-            attack = new Attack(gameObject);
-            idle = new Idle(gameObject);
-            wander = new Wander(gameObject);
-            moveTo = new MoveTo(gameObject);
-            retreat = new Retreat(gameObject);
-            turn = new Turn(gameObject, target);
+            attackAction = new Attack(gameObject);
+            idleAction = new Idle(gameObject);
+            wanderAction = new Wander(gameObject);
+            moveToAction = new MoveTo(gameObject);
+            retreatAction = new Retreat(gameObject);
+            turnAction = new Turn(gameObject);
             #endregion
-
-            pointTarget = FindPointOnNavmesh();
         }
 
         private void FixedUpdate()
         {
-            var distanceToTarget = DistanceToTarget();
-            var distanceToPoint = DistanceToPoint();
+            if (!inCombat)
+            {
+                if (enemy.CurrentHealth < tempHealth)
+                {
+                    inCombat = true;
+                }
+            }
+
+            var distanceToPoint = DistanceToTarget(RandomPointTarget);
+            var distanceToTarget = DistanceToTarget(Target.position);
 
             if (AiDetection != null)
             {
@@ -222,7 +237,7 @@ namespace Hunter.Characters.AI
                 {
                     inCombat = true;
                 }
-                else if ((distanceToTarget > AiDetection.maxDetectionDistance) && (!enemyInLOS))
+                else if ((distanceToTarget > (AiDetection.maxDetectionDistance*2)) && (!enemyInLOS))
                 {
                     inCombat = false;
 
@@ -236,8 +251,12 @@ namespace Hunter.Characters.AI
             }
 
             var currentState = FindNextState(distanceToTarget, distanceToPoint);
+
+#if UNITY_EDITOR
             //Debug.Log(currentState);
             //Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
+#endif
+
             currentState.Act();
 
             #region State Switchers
@@ -266,6 +285,8 @@ namespace Hunter.Characters.AI
                 inCombat = false;
             }
             #endregion
+
+            tempHealth = enemy.CurrentHealth;
         }
 
         #region FindNextState Function
@@ -275,12 +296,19 @@ namespace Hunter.Characters.AI
         /// <returns></returns>
         public UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
         {
-            var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat);
-            var idleValue = idle.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
-            var wanderValue = wander.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
-            var turnValue = turn.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat);
-            var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat);
-            var retreatValue = retreat.CalculateRetreat(character.CurrentHealth, inCombat);
+            var attackValue = 0f;
+            var idleValue = 0f;
+            var wanderValue = 0f;
+            var turnValue = 0f;
+            var moveToValue = 0f;
+            var retreatValue = 0f;
+
+            if (attack) { attackValue = attackAction.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
+            if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
+            if (wander) { wanderValue = wanderAction.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
+            if (turn) { turnValue = turnAction.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
+            if (moveTo) { moveToValue = moveToAction.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
+            if (retreat) { retreatValue = retreatAction.CalculateRetreat(enemy.CurrentHealth, inCombat); }
 
             #region Debug Logs
 #if UNITY_EDITOR
@@ -298,12 +326,12 @@ namespace Hunter.Characters.AI
 
             var largestValue = new Dictionary<UtilityBasedAI, float>
             {
-                { attack, attackValue },
-                { idle, idleValue },
-                { wander, wanderValue },
-                { turn, turnValue },
-                { moveTo, moveToValue },
-                { retreat, retreatValue }
+                { attackAction, attackValue },
+                { idleAction, idleValue },
+                { wanderAction, wanderValue },
+                { turnAction, turnValue },
+                { moveToAction, moveToValue },
+                { retreatAction, retreatValue }
             };
             var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 
@@ -312,18 +340,9 @@ namespace Hunter.Characters.AI
         #endregion
 
         #region DistanceToTarget Function
-        private float DistanceToTarget()
+        private float DistanceToTarget(Vector3 targetPosition)
         {
-            var distance = Vector3.Distance(target.position, gameObject.transform.position);
-
-            return distance;
-        }
-        #endregion
-
-        #region DistanceToPoint Function
-        private float DistanceToPoint()
-        {
-            var distance = Vector3.Distance(pointTarget, gameObject.transform.position);
+            var distance = Vector3.Distance(targetPosition, gameObject.transform.position);
 
             return distance;
         }
@@ -362,10 +381,10 @@ namespace Hunter.Characters.AI
 
             if (Utility.RandomNavMeshPoint(transform.position, maxDistance, out targetPosition))
             {
-                pointTarget = targetPosition;
+                randomPointTarget = targetPosition;
             }
 
-            return pointTarget;
+            return randomPointTarget;
         }
         #endregion
     }

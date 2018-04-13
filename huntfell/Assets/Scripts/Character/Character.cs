@@ -8,6 +8,38 @@ namespace Hunter.Characters
     [RequireComponent(typeof(CharacterController), typeof(NavMeshAgent), typeof(Animator))]
     public abstract class Character : MonoBehaviour, IDamageable
     {
+        #region Variables
+        /// <summary>
+        /// How much health the character has
+        /// </summary>
+        //This needs to be a float for when we do the health bar
+        protected float health;
+
+        [SerializeField]
+        protected int totalHealth = 100;
+
+        /// <summary>
+        /// Name of the Player, to be set in the inspector
+        /// </summary>
+        [SerializeField]
+        private string displayName = "No Name";
+
+        private Weapon currentWeapon = null;
+
+        // Variables for handling character rotation
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
+
+        private Transform rotationTransform;
+
+        public Transform eyeLine;
+
+        protected CharacterController characterController;
+
+        protected NavMeshAgent agent;
+
+        protected Animator anim;
+        #endregion
+
         #region Properties
         public string DisplayName
         {
@@ -17,11 +49,6 @@ namespace Hunter.Characters
             }
         }
 
-        /// <summary>
-        /// How much health the character has
-        /// </summary>
-        //This needs to be a float for when we do the health bar
-        protected float health;
         public virtual float CurrentHealth
         {
             get
@@ -33,8 +60,6 @@ namespace Hunter.Characters
                 health = Mathf.Clamp(value, 0 , totalHealth);
             }
         }
-        [SerializeField]
-        protected int totalHealth = 100;
 
         public Weapon CurrentWeapon
         {
@@ -70,26 +95,6 @@ namespace Hunter.Characters
         public EffectsController effectsController;
         protected bool invinvible = false;
         protected bool isDying = false;
-        #endregion
-
-        #region Variables
-        /// <summary>
-        /// Name of the Player, to be set in the inspector
-        /// </summary>
-        [SerializeField]
-        private string displayName = "No Name";
-
-        private Weapon currentWeapon = null;
-
-        // Variables for handeling character rotation
-        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
-        private Transform rotationTransform;
-
-        public Transform eyeLine;
-
-        protected CharacterController characterController;
-        protected NavMeshAgent agent;
-        protected Animator anim;
         #endregion
 
         protected virtual void Awake ()

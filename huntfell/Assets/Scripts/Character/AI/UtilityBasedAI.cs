@@ -80,7 +80,7 @@ namespace Hunter.Characters.AI
         private AIInputModule aiInputModuleComponent;
         private IUtilityBasedAI aiIUtilityBasedAIComponent;
 
-        public Turn(GameObject aiGameObject, Transform target)
+        public Turn(GameObject aiGameObject)
         {
             this.aiGameObject = aiGameObject;
             aiInputModuleComponent = aiGameObject.GetComponent<AIInputModule>();
@@ -279,7 +279,7 @@ namespace Hunter.Characters.AI
         {
             if (aiInputModuleComponent != null)
             {
-                aiInputModuleComponent.PointTarget = aiInputModuleComponent.FindPointOnNavmesh();
+                aiInputModuleComponent.RandomPointTarget = aiInputModuleComponent.FindPointOnNavmesh();
             }
             else
             {
@@ -336,7 +336,7 @@ namespace Hunter.Characters.AI
             {
                 if (aiInputModuleComponent != null)
                 {
-                    aiUtilityBasedAIComponent.Wander(aiInputModuleComponent.PointTarget);
+                    aiUtilityBasedAIComponent.Wander(aiInputModuleComponent.RandomPointTarget);
                 }
                 else
                 {

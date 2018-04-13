@@ -3129,7 +3129,7 @@ MonoBehaviour:
   attackSpeed: 1
   recoverySpeed: 1.2
   baseDamage: 9
-  inspectorElementType: 0
+  inspectorElementType: 2
   critPercent: 10
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 5
@@ -3145,6 +3145,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54082744c3473f047aaaad4aa8c57dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attack: 1
+  turn: 1
+  moveTo: 1
+  idle: 1
+  wander: 0
+  retreat: 0
   maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
 --- !u!114 &114519196581505832
@@ -3206,12 +3212,12 @@ MonoBehaviour:
   displayName: Wolf
   eyeLine: {fileID: 4518743308142936}
   enemyElementOption: 2
-  speed: 5
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114555488149255508}
-  justFound: 0
-  meleeWeapon: {fileID: 114302112681280164}
+  speed: 5
   turnSpeed: 175
+  meleeWeapon: {fileID: 114302112681280164}
+  justFound: 0
 --- !u!114 &114840683088862578
 MonoBehaviour:
   m_ObjectHideFlags: 1
