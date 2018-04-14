@@ -11,7 +11,7 @@ namespace Hunter
         None,
         Fire,
         Ice,
-        Lightning,
+        Electric,
         Nature,
         Silver
     }
@@ -48,9 +48,9 @@ namespace Hunter
             }
         }
 
-        public class Lightning : Element
+        public class Electric : Element
         {
-            public Lightning ()
+            public Electric ()
             {
                 weakness = typeof(Nature);
                 elementColor = Color.yellow;
@@ -61,7 +61,7 @@ namespace Hunter
         {
             public Nature ()
             {
-                weakness = typeof(Lightning);
+                weakness = typeof(Electric);
                 elementColor = Color.green;
             }
         }

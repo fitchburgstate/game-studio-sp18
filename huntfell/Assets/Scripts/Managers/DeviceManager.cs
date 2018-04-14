@@ -37,8 +37,6 @@ namespace Hunter
         public bool overrideLayout;
         public ControlsLayout inspectorLayout;
 
-        private ControlsLayout currentLayout;
-
         #endregion
 
         private void Awake ()

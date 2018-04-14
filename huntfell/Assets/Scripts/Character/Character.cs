@@ -73,6 +73,7 @@ namespace Hunter.Characters
         #endregion
 
         #region Variables
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
         /// <summary>
         /// Name of the Player, to be set in the inspector
         /// </summary>
@@ -82,7 +83,6 @@ namespace Hunter.Characters
         private Weapon currentWeapon = null;
 
         // Variables for handeling character rotation
-        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
         private Transform rotationTransform;
 
         public Transform eyeLine;
@@ -126,7 +126,7 @@ namespace Hunter.Characters
         {
             if (CurrentWeapon != null)
             {
-                currentWeapon.weaponElement = element;
+                currentWeapon.WeaponElement = element;
             }
         }
 
@@ -137,7 +137,7 @@ namespace Hunter.Characters
                 //Dont apply hits particles for Dot Effects, kinda jank
                 if (damage > 3)
                 {
-                    effectsController.StartDamageEffects(damage, isCritical, weaponAttackedWith?.weaponElement);
+                    effectsController.StartDamageEffects(damage, isCritical, weaponAttackedWith?.WeaponElement);
                 }
                 else
                 {

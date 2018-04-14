@@ -590,6 +590,7 @@ GameObject:
   - component: {fileID: 223046615291400734}
   - component: {fileID: 114314628383857468}
   - component: {fileID: 114361328388092754}
+  - component: {fileID: 114851056144203040}
   m_Layer: 9
   m_Name: Damage Pop-Up Canvas
   m_TagString: Untagged
@@ -3152,6 +3153,17 @@ MonoBehaviour:
   detectionLayers:
     serializedVersion: 2
     m_Bits: 256
+--- !u!114 &114851056144203040
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1397000398474380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f71c3f27f5c904e865b075582a4828, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114910431859789410
 MonoBehaviour:
   m_ObjectHideFlags: 1

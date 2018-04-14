@@ -367,9 +367,9 @@ namespace Hunter.Characters
             else { newElement = Inventory.CycleElementsDown(CurrentWeapon); }
             if (CurrentWeapon != null)
             {
-                if(newElement == CurrentWeapon.weaponElement) { return; }
+                if(newElement == CurrentWeapon.WeaponElement) { return; }
                 EquipElementToWeapon(newElement);
-                Debug.Log("Equipped the " + Utility.ElementToElementOption(CurrentWeapon.weaponElement) + " to the " + CurrentWeapon.name);
+                Debug.Log("Equipped the " + Utility.ElementToElementOption(CurrentWeapon.WeaponElement) + " to the " + CurrentWeapon.name);
             }
         }
 

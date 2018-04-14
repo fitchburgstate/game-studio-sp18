@@ -10,6 +10,51 @@ namespace Hunter.Characters
         //public float windUpSpeed;
         public float hitBoxFrames = 5;
         public ParticleSystem swingParticleSystem;
+
+        public ParticleSystem fireParticles;
+        public ParticleSystem iceParticles;
+        public ParticleSystem electricParticles;
+        private ParticleSystem currentMeleeEffect;
+
+        public override Element WeaponElement
+        {
+            get
+            {
+                return weaponElement;
+            }
+
+            set
+            {
+                weaponElement = value;
+                ActivateMeleeEffect(Utility.ElementToElementOption(weaponElement));
+            }
+        }
+
+        private void ActivateMeleeEffect (ElementOption elementOption)
+        {
+            currentMeleeEffect?.Stop();
+            currentMeleeEffect?.gameObject.SetActive(false);
+
+            switch (elementOption)
+            {
+                case ElementOption.Fire:
+                    if (fireParticles != null) { currentMeleeEffect = fireParticles; }
+                    break;
+                case ElementOption.Ice:
+                    if (iceParticles != null) { currentMeleeEffect = iceParticles; }
+                    break;
+                case ElementOption.Electric:
+                    if (electricParticles != null) { currentMeleeEffect = electricParticles; }
+                    break;
+                default:
+                    currentMeleeEffect = null;
+                    break;
+            }
+
+            currentMeleeEffect?.gameObject.SetActive(true);
+            currentMeleeEffect?.Play();
+        }
+
         private Collider meleeHitBox;
         #endregion
 
@@ -43,7 +88,7 @@ namespace Hunter.Characters
             if (enemy != null) { enemyElementType = enemy.elementType; }
 
             var isCritical = ShouldAttackBeCritical(critPercent);
-            var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
+            var totalDamage = CalculateDamage(WeaponElement, enemyElementType, isCritical);
             damageableObject.TakeDamage(totalDamage, isCritical, this);
 
             

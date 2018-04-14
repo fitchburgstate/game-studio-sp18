@@ -84,7 +84,7 @@ namespace Hunter.Characters.AI
         /// </summary>
         private Transform aiCharacterEyeLine;
 
-        private Transform playerCharacterEyeLine;
+        //private Transform playerCharacterEyeLine;
 
         /// <summary>
         ///  The AI character itself.
@@ -105,7 +105,7 @@ namespace Hunter.Characters.AI
         private void Start()
         {
             aiCharacterEyeLine = AiCharacter.eyeLine;
-            playerCharacterEyeLine = PlayerCharacter.eyeLine;
+            //playerCharacterEyeLine = PlayerCharacter.eyeLine;
         }
 
         #region DetectPlayer Function

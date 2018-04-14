@@ -80,7 +80,7 @@ namespace Hunter.Characters
                     if (enemy != null) { enemyElementType = enemy.elementType; }
 
                     var isCritical = ShouldAttackBeCritical(critPercent);
-                    var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
+                    var totalDamage = CalculateDamage(WeaponElement, enemyElementType, isCritical);
                     damageableObject.TakeDamage(totalDamage, isCritical, this);
                 }
                 endOfRay = hit.point;

@@ -13,8 +13,8 @@ namespace Hunter
         public float propSpeed = 2;
         public float bounceSpeed = 1;
         public float bounceHeight = 3;
-        public float maxDistance = 10;   
-        
+        public float maxDistance = 10;
+
         [Tooltip("Animation the prop plays")]
         [SerializeField]
         private AnimationCurve propCurve;
@@ -23,7 +23,7 @@ namespace Hunter
         private float propHeightOffset; // half the height of the object
         private Vector3 targetPosition;
 
-        private void Awake()
+        private void Awake ()
         {
             interactableItemCollider = GetComponent<Collider>();
         }
@@ -33,8 +33,8 @@ namespace Hunter
             (characterTriggeringInteraction as Player)?.Inventory.TryAddItem(itemData, this);
         }
 
-        public void SpawnFromProp() // when object is spawned from an interactble prop
-        {         
+        public void SpawnFromProp () // when object is spawned from an interactble prop
+        {
             propHeightOffset = interactableItemCollider.bounds.extents.y; // get half the height of the object so it doesnt go in the ground
 
             //Making it so it always spawns somewhere near the player and not behind the prop it came from
@@ -47,7 +47,7 @@ namespace Hunter
             StartCoroutine(PlaySpawnAnimation()); // plays anination curve
         }
 
-        private IEnumerator PlaySpawnAnimation() // plays animation for object to move to point on navmesh
+        private IEnumerator PlaySpawnAnimation () // plays animation for object to move to point on navmesh
         {
             //TODO this whole thing needs to be refactored
             var inRange = 0.5f; // range for how close object has to get to destination
@@ -71,12 +71,13 @@ namespace Hunter
             interactableItemCollider.enabled = true; // enables collider when reaches current position
         }
 
-        public void SpawnOnGround()
+        public void SpawnOnGround (Vector3 propPosition)
         {
-            // spawn the interactable on the ground below
-            var groundPosition = new Vector3(transform.position.x, targetPosition.y, targetPosition.z);
-            transform.position = groundPosition;
-            // change to give it small radius
+            if (Utility.RandomNavMeshPoint(propPosition, 1, out targetPosition))
+            {
+                var groundPosition = new Vector3(propPosition.x, targetPosition.y, propPosition.z);
+                transform.position = groundPosition;
+            }
         }
 
         public bool IsImportant ()

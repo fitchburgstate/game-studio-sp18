@@ -105,7 +105,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4686342936862468}
   - component: {fileID: 114223916863215458}
-  - component: {fileID: 95367702264407216}
   - component: {fileID: 65509908135684898}
   m_Layer: 13
   m_Name: Prop_Barricade_Destroyed
@@ -1227,23 +1226,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10.11, y: 5, z: 4.77}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!95 &95367702264407216
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1215662906125862}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 6cc24869dd1788a499704939d574a8c4, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114223916863215458
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1255,6 +1237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activateOnStart: 1
+  destroyWaitTime: 3
 --- !u!198 &198002994276098130
 ParticleSystem:
   m_ObjectHideFlags: 1

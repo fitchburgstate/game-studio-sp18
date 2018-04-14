@@ -26,11 +26,6 @@ namespace Hunter {
             }
         }
 
-        private void FixedUpdate ()
-        {
-            popUpCanvas.transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
-        }
-
         public void StartDamageEffects(int damage, bool isCritical, Element element)
         {
             if(popUpCanvas != null) { SpawnDamageText(damage, isCritical, element); }

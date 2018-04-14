@@ -27,7 +27,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Element type of the weapon.
         /// </summary>
-        public Element weaponElement = null;
+        protected Element weaponElement = null;
 
         /// <summary>
         /// Options variable for Unity Inspector Dropdown.
@@ -41,11 +41,24 @@ namespace Hunter.Characters
 
         [HideInInspector]
         public Character characterHoldingWeapon;
+
+        public virtual Element WeaponElement
+        {
+            get
+            {
+                return weaponElement;
+            }
+
+            set
+            {
+                weaponElement = value;
+            }
+        }
         #endregion
 
         protected virtual void Start()
         {
-            weaponElement = Utility.ElementOptionToElement(inspectorElementType);
+            WeaponElement = Utility.ElementOptionToElement(inspectorElementType);
         }
 
         public abstract void StartAttackFromAnimationEvent();

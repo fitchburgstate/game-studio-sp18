@@ -37,8 +37,8 @@ namespace Hunter
                     return new Element.Ice();
                 case ElementOption.Silver:
                     return new Element.Silver();
-                case ElementOption.Lightning:
-                    return new Element.Lightning();
+                case ElementOption.Electric:
+                    return new Element.Electric();
                 case ElementOption.Nature:
                     return new Element.Nature();
                 case ElementOption.None:
@@ -55,7 +55,7 @@ namespace Hunter
         {
                  if(element is Element.Fire)        { return ElementOption.Fire; }
             else if(element is Element.Ice)         { return ElementOption.Ice; }
-            else if(element is Element.Lightning)   { return ElementOption.Lightning; }
+            else if(element is Element.Electric)    { return ElementOption.Electric; }
             else if(element is Element.Nature)      { return ElementOption.Nature; }
             else if(element is Element.Silver)      { return ElementOption.Silver; }
             else                                    { return ElementOption.None; }
