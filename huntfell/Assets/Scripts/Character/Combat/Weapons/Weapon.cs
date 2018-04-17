@@ -9,38 +9,21 @@ namespace Hunter.Characters
     public abstract class Weapon : MonoBehaviour
     {
         #region Variables
-        /// <summary>
-        /// Attack Speed of the Weapon.
-        /// </summary>
-        public float attackSpeed = 1;
-
-        /// <summary>
-        /// Recovery Speed of the Weapon a.k.a how fast before you can attack again.
-        /// </summary>
-        public float recoverySpeed = 0.5f;
-
-        /// <summary>
-        /// Base Damage number of the weapon.
-        /// </summary>
-        public int baseDamage = 10;
-
-        /// <summary>
-        /// Element type of the weapon.
-        /// </summary>
-        protected Element weaponElement = null;
-
-        /// <summary>
-        /// Options variable for Unity Inspector Dropdown.
-        /// </summary>
+        [Header("Debug")]
         public ElementOption inspectorElementType;
 
-        /// <summary>
-        /// Critical Percentage Given to the Weapon.
-        /// </summary>
-        public int critPercent = 10;
+        [Header("General Options")]
+        public int baseDamage = 10;
+
+        public int critPercent = 10; 
+
+        public float attackSpeed = 1;
+
+        public float recoverySpeed = 0.5f;
 
         [HideInInspector]
         public Character characterHoldingWeapon;
+        protected Element weaponElement = null;
 
         public virtual Element WeaponElement
         {

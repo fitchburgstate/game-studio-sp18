@@ -27,6 +27,7 @@ namespace Hunter
         [SerializeField]
         private ElementOption elementTypeForInteraction;
 
+        public bool overrideImportance;
         public string interactionSuccessMessage;
         public string interactionFailMessage;
 
@@ -64,11 +65,11 @@ namespace Hunter
         public void FireInteraction (Character characterFromInteraction)
         {
             if (currentlyInteracting || characterFromInteraction.tag != "Player") { return; }
-            currentlyInteracting = true;
-            ShakeProp();
             //If there is an element required you have to hit it with your weapon
             if (elementTypeForInteraction == ElementOption.None && propType == PropType.Interactable)
             {
+                currentlyInteracting = true;
+                ShakeProp();
                 ShowSuccessMessage();
                 ExecutePropInteractions(characterFromInteraction);
             }
@@ -225,8 +226,7 @@ namespace Hunter
 
         public bool IsImportant ()
         {
-            // Important props are props that require elemental interactions or props that have items inside them
-            return itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
+            return overrideImportance || itemsToSpawn.Count > 0;
         }
     }
 }

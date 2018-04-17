@@ -84,7 +84,7 @@ namespace Hunter {
 
         public void ShowItemPickupPrompt(string itemName, Sprite itemIcon)
         {
-            pickupText.text = "You have picked up " + itemName;
+            pickupText.text = "Obtained the " + itemName;
             pickupIcon.sprite = itemIcon;
             pickupIcon.enabled = true;
             var cg = promptParent.GetComponent<CanvasGroup>();

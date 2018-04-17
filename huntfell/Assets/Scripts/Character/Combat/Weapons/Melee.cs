@@ -1,20 +1,37 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System;
 
 namespace Hunter.Characters
 {
     [RequireComponent(typeof(BoxCollider))]
     public class Melee : Weapon
     {
+        [Serializable]
+        public struct EquipEffect
+        {
+            public ElementOption elementEffect;
+            public List<Material> equipMaterials;
+            public ParticleSystem equipParticleSystem;
+        }
+
         #region Variables
-        //public float windUpSpeed;
+        [Header("Melee Options")]
         public float hitBoxFrames = 5;
         public ParticleSystem swingParticleSystem;
 
-        public ParticleSystem fireParticles;
-        public ParticleSystem iceParticles;
-        public ParticleSystem electricParticles;
-        private ParticleSystem currentMeleeEffect;
+        [Space]
+        public List<EquipEffect> equipEffects = new List<EquipEffect>()
+        {
+            //new EquipEffect()
+            //{
+            //    elementEffect = ElementOption.None,
+            //    equipMaterials = null,
+            //    equipParticleSystem = null
+            //}
+        };
 
         public override Element WeaponElement
         {
@@ -30,36 +47,20 @@ namespace Hunter.Characters
             }
         }
 
-        private void ActivateMeleeEffect (ElementOption elementOption)
-        {
-            currentMeleeEffect?.Stop();
-            currentMeleeEffect?.gameObject.SetActive(false);
 
-            switch (elementOption)
-            {
-                case ElementOption.Fire:
-                    if (fireParticles != null) { currentMeleeEffect = fireParticles; }
-                    break;
-                case ElementOption.Ice:
-                    if (iceParticles != null) { currentMeleeEffect = iceParticles; }
-                    break;
-                case ElementOption.Electric:
-                    if (electricParticles != null) { currentMeleeEffect = electricParticles; }
-                    break;
-                default:
-                    currentMeleeEffect = null;
-                    break;
-            }
+        private EquipEffect currentMeleeEffect;
 
-            currentMeleeEffect?.gameObject.SetActive(true);
-            currentMeleeEffect?.Play();
-        }
+        private MeshRenderer weaponRenderer;
+        private List<Material> originalMaterials;
 
         private Collider meleeHitBox;
         #endregion
 
         protected void Awake ()
         {
+            weaponRenderer = GetComponentInChildren<MeshRenderer>();
+            originalMaterials = new List<Material>(weaponRenderer.materials);
+
             meleeHitBox = GetComponent<BoxCollider>();
             DisableHitbox();
         }
@@ -139,6 +140,31 @@ namespace Hunter.Characters
         public void DisableHitbox ()
         {
             meleeHitBox.enabled = false;
+        }
+
+        private void ActivateMeleeEffect (ElementOption elementOption)
+        {
+            //Stop the current effects before we start the new ones
+            if (currentMeleeEffect.equipParticleSystem != null) { currentMeleeEffect.equipParticleSystem.Stop(); }
+
+            //Get the effect that matches the newly equipped element
+            var newEquipEffect = equipEffects.FirstOrDefault(o => o.elementEffect == elementOption);
+            currentMeleeEffect = newEquipEffect;
+            
+            //Start the new effects
+            if(currentMeleeEffect.equipParticleSystem != null) { currentMeleeEffect.equipParticleSystem.Play(); }
+
+            //This is the long / way more readable form of the code below
+            //if(currentMeleeEffect.equipMaterials != null && currentMeleeEffect.equipMaterials.Count > 0)
+            //{
+            //    weaponRenderer.materials = currentMeleeEffect.equipMaterials.ToArray();
+            //}
+            //else
+            //{
+            //    weaponRenderer.materials = initialMaterials.ToArray();
+            //}
+            weaponRenderer.materials = (currentMeleeEffect.equipMaterials != null && currentMeleeEffect.equipMaterials.Count > 0) ? 
+                currentMeleeEffect.equipMaterials.ToArray() : originalMaterials.ToArray();
         }
     }
 }
