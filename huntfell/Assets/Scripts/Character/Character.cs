@@ -9,19 +9,12 @@ namespace Hunter.Characters
     public abstract class Character : MonoBehaviour, IDamageable
     {
         #region Variables
-        /// <summary>
-        /// How much health the character has
-        /// </summary>
         //This needs to be a float for when we do the health bar
         [SerializeField]
         protected float health;
 
-        [SerializeField]
         public int totalHealth = 100;
 
-        /// <summary>
-        /// Name of the Player, to be set in the inspector
-        /// </summary>
         [SerializeField]
         private string displayName = "No Name";
 
@@ -30,15 +23,26 @@ namespace Hunter.Characters
         // Variables for handling character rotation
         public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
 
-        private Transform rotationTransform;
+        [HideInInspector]
+        public Transform rotationTransform;
 
+        [HideInInspector]
         public Transform eyeLine;
 
+        [HideInInspector]
+        public NavMeshAgent agent;
+
+        [HideInInspector]
+        public Animator anim;
+
+        [HideInInspector]
+        public bool invincible = false;
+        [HideInInspector]
+        public bool isDying = false;
+
+        [HideInInspector]
+        public EffectsController effectsController;
         protected CharacterController characterController;
-
-        protected NavMeshAgent agent;
-
-        protected Animator anim;
         #endregion
 
         #region Properties
@@ -92,10 +96,6 @@ namespace Hunter.Characters
 
         }
         //Effects
-        [HideInInspector]
-        public EffectsController effectsController;
-        protected bool invinvible = false;
-        protected bool isDying = false;
         #endregion
 
         #region Unity Functions
@@ -141,7 +141,7 @@ namespace Hunter.Characters
 
         public void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith)
         {
-            if (invinvible || isDying) { return; }
+            if (invincible || isDying) { return; }
             if (effectsController != null)
             {
                 //Dont apply hits particles for Dot Effects, kinda jank
@@ -156,11 +156,11 @@ namespace Hunter.Characters
             }
             if (tag == "Player")
             {
-                Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
+                Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
             }
             else if (tag == "Enemy")
             {
-                Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
+                Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
             }
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }

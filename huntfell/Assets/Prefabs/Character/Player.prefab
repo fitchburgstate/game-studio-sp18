@@ -3349,13 +3349,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0258c29db346274c8ca9eaf0312c76f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
   totalHealth: 150
-  effectsController: {fileID: 0}
   displayName: Toothpick Timmy
+  rotationTransform: {fileID: 0}
   eyeLine: {fileID: 4219033539967030}
+  agent: {fileID: 0}
+  anim: {fileID: 0}
+  effectsController: {fileID: 0}
   weaponContainer: {fileID: 4859865527009212}
   gunTrailLength: 1.5
   healthSubtractionTime: 1
+  respawnTime: 4
   moveSpeed: 5
   maxRotationSpeed: 60
   rotationSpeedCurve:
@@ -3407,6 +3412,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294850760
   interactPromptImage: {fileID: 114466759864653546}
+  performingAction: 0
 --- !u!114 &114701405234032384
 MonoBehaviour:
   m_ObjectHideFlags: 1

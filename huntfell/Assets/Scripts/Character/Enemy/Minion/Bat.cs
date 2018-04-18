@@ -70,7 +70,7 @@ namespace Hunter.Characters
             agent.speed = 0;
             agent.destination = transform.position;
             anim.SetTrigger("death");
-            Fabric.EventManager.Instance.PostEvent("Bat Stop Wing Loop", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Bat Stop Wing Loop", gameObject);
             minionHealthBarParent?.gameObject.SetActive(false);
             //TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);

@@ -67,7 +67,7 @@ namespace Hunter.Characters
         private IEnumerator GargoyleAttack()
         {
             rangedWeapon.StartAttackFromAnimationEvent();
-            Fabric.EventManager.Instance.PostEvent("Gargoyle Attack", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Gargoyle Attack", gameObject);
 
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
             gargoyleAttackCR = null;

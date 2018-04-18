@@ -8,16 +8,14 @@ namespace Hunter.Characters
     public class SpawnPoint : MonoBehaviour
     {
         #region Variables
-        public bool activated;
-
-        public LayerMask validLayers;
-
-        [HideInInspector]
         public Vector3 respawnPosition;
+        public LayerMask validLayers;
+        public bool activated;
 
         private Player playerScript;
         #endregion
 
+        #region Unity Functions
         private void Start()
         {
             activated = false;
@@ -28,7 +26,6 @@ namespace Hunter.Characters
 
             if (Physics.Raycast(ray, out hit, validLayers))
             {
-                //Debug.DrawLine(transform.position, hit.point, Color.blue, 5);
                 respawnPosition = Utility.GetClosestPointOnNavMesh(hit.point, playerScript.gameObject.GetComponent<NavMeshAgent>(), transform);
             }
             else
@@ -44,6 +41,7 @@ namespace Hunter.Characters
                 activated = true;
             }
         }
+        #endregion
 
         #region Helper Functions
         private void OnDrawGizmos()
@@ -58,6 +56,13 @@ namespace Hunter.Characters
 
             Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
             Gizmos.DrawCube(Vector3.zero, size);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = new Color(0f, 1f, 1f, .5f);
+            Gizmos.DrawLine(transform.position, respawnPosition);
+            Gizmos.DrawWireSphere(respawnPosition, 1f);
         }
         #endregion
     }
