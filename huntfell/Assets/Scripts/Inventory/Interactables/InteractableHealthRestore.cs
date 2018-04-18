@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Character;
+using Hunter.Characters;
+using System.Collections;
 
 namespace Hunter
 {
@@ -9,13 +10,10 @@ namespace Hunter
     {
         public int healthAmount = 20;
 
-        protected override void OnTriggerEnter (Collider other)
+        public override void FireInteraction (Character characterTriggeringInteraction)
         {
-            if (other.gameObject.tag == "Player")
-            {
-                other.gameObject.GetComponent<Player>()?.RestoreHealth(healthAmount);
-                Destroy(gameObject);
-            }
+            characterTriggeringInteraction.RestoreHealthToCharacter(healthAmount);
+            gameObject.SetActive(false);
         }
     }
 }

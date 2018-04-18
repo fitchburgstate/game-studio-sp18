@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4302042469259364}
   - component: {fileID: 108967153615176998}
-  m_Layer: 9
+  m_Layer: 14
   m_Name: Directional Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 65408695137388978}
   - component: {fileID: 65863237984612372}
   - component: {fileID: 114005844713392718}
-  m_Layer: 9
+  m_Layer: 14
   m_Name: HallwayPP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,13 +53,13 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4223539036578270}
-  m_Layer: 9
+  m_Layer: 14
   m_Name: LightingFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1544216601099226
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 65354425775690430}
   - component: {fileID: 65205807182088060}
   - component: {fileID: 114937632459362804}
-  m_Layer: 9
+  m_Layer: 14
   m_Name: LibraryPP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4357041416583464}
   - component: {fileID: 114484951974884584}
-  m_Layer: 9
+  m_Layer: 14
   m_Name: MansionPP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207,7 +207,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1355465707334756}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 82.92, y: 11.52, z: 124.8}
@@ -219,7 +219,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1355465707334756}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 7.04, y: 5.93, z: 8.26}
@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 0}
+  sharedProfile: {fileID: 11400000, guid: d4d4cb07bdfe126469bbf5f6befc55d5, type: 2}
   isGlobal: 0
   blendDistance: 1.5
   weight: 1
@@ -287,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 0}
+  sharedProfile: {fileID: 11400000, guid: 8dd891d8a4148da4390c8452bf73bc59, type: 2}
   isGlobal: 1
   blendDistance: 0
   weight: 1
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 0}
+  sharedProfile: {fileID: 11400000, guid: 18eed33bd87de4f46850d5c0fe52a75b, type: 2}
   isGlobal: 0
   blendDistance: 1.5
   weight: 1

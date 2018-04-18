@@ -14,7 +14,7 @@ namespace Hunter
 
         private void Start ()
         {
-            myDeviceManager = DeviceManager.instance;
+            myDeviceManager = DeviceManager.Instance;
 
         }
 

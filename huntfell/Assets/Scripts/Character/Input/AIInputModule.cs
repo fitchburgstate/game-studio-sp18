@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using System.Linq;
+using UnityEditor;
 
-namespace Hunter.Character.AI
+namespace Hunter.Characters.AI
 {
     public class AIInputModule : MonoBehaviour
     {
@@ -42,12 +40,11 @@ namespace Hunter.Character.AI
         {
             get
             {
+                if (enemyModel == null)
+                {
+                    enemyModel = gameObject.transform.GetChild(0).gameObject;
+                }
                 return enemyModel;
-            }
-
-            set
-            {
-                enemyModel = value;
             }
         }
 
@@ -55,12 +52,11 @@ namespace Hunter.Character.AI
         {
             get
             {
+                if (agent == null)
+                {
+                    agent = GetComponent<NavMeshAgent>();
+                }
                 return agent;
-            }
-
-            set
-            {
-                agent = value;
             }
         }
 
@@ -115,6 +111,18 @@ namespace Hunter.Character.AI
                 pointTarget = value;
             }
         }
+
+        public AIDetection AiDetection
+        {
+            get
+            {
+                if (aiDetection == null)
+                {
+                    aiDetection = GetComponent<AIDetection>();
+                }
+                return aiDetection;
+            }
+        }
         #endregion
 
         #region Variables
@@ -167,6 +175,9 @@ namespace Hunter.Character.AI
 
         private bool enemyInLOS = false;
         private bool inCombat = false;
+        private bool enemyInVisionCone = false;
+
+        private AIDetection aiDetection;
 
         private Attack attack;
         private Idle idle;
@@ -174,29 +185,26 @@ namespace Hunter.Character.AI
         private MoveTo moveTo;
         private Retreat retreat;
         private Character character;
-        private AIDetection aiDetection;
+        private Turn turn;
 
         public UrgeWeights urgeWeights;
         #endregion
 
         private void Start()
         {
+            target = FindNearestTargetWithString("Player");
+            urgeWeights = ScriptableObject.CreateInstance<UrgeWeights>();
+            character = GetComponent<Character>();
+
             #region Classes
             attack = new Attack(gameObject);
             idle = new Idle(gameObject);
             wander = new Wander(gameObject);
             moveTo = new MoveTo(gameObject);
             retreat = new Retreat(gameObject);
-
-            urgeWeights = new UrgeWeights();
-            character = GetComponent<Character>();
-            aiDetection = GetComponent<AIDetection>();
+            turn = new Turn(gameObject, target);
             #endregion
 
-            EnemyModel = gameObject.transform.GetChild(0).gameObject;
-            Agent = GetComponent<NavMeshAgent>();
-
-            target = FindNearestTargetWithString("Player");
             pointTarget = FindPointOnNavmesh();
         }
 
@@ -205,22 +213,31 @@ namespace Hunter.Character.AI
             var distanceToTarget = DistanceToTarget();
             var distanceToPoint = DistanceToPoint();
 
-            if (aiDetection != null)
+            if (AiDetection != null)
             {
-                enemyInLOS = aiDetection.DetectPlayer();
+                enemyInLOS = AiDetection.DetectPlayer();
+                enemyInVisionCone = AiDetection.InVisionCone;
+
                 if (enemyInLOS)
                 {
                     inCombat = true;
                 }
-                else if ((distanceToTarget > aiDetection.maxDetectionDistance) && (!enemyInLOS))
+                else if ((distanceToTarget > AiDetection.maxDetectionDistance) && (!enemyInLOS))
                 {
                     inCombat = false;
-                    GetComponent<Wolf>().justFound = false;
+
+                    var wolfComponent = GetComponent<Wolf>();
+                    if (wolfComponent != null)
+                    {
+                        wolfComponent.justFound = false;
+                    }
+                    else { return; }
                 }
             }
 
             var currentState = FindNextState(distanceToTarget, distanceToPoint);
-
+            //Debug.Log(currentState);
+            //Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
             currentState.Act();
 
             #region State Switchers
@@ -229,6 +246,10 @@ namespace Hunter.Character.AI
                 inCombat = true;
             }
             else if (currentState is MoveTo)
+            {
+                inCombat = true;
+            }
+            else if (currentState is Turn)
             {
                 inCombat = true;
             }
@@ -247,53 +268,68 @@ namespace Hunter.Character.AI
             #endregion
         }
 
+        #region FindNextState Function
         /// <summary>
         /// This function performs various operations to determine what action has the highest urge value and then returns it.
         /// </summary>
         /// <returns></returns>
         public UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
         {
-            var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, inCombat);
+            var attackValue = attack.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat);
             var idleValue = idle.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
             var wanderValue = wander.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat);
+            var turnValue = turn.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat);
             var moveToValue = moveTo.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat);
             var retreatValue = retreat.CalculateRetreat(character.CurrentHealth, inCombat);
 
             #region Debug Logs
-            ////Debug.Log("Attack Value: " + attackValue);
-            ////Debug.Log("Idle Value: " + idleValue);
-            ////Debug.Log("Wander Value: " + wanderValue);
-            ////Debug.Log("MoveTo Value: " + moveToValue);
-            ////Debug.Log("Retreat Value: " + retreatValue);
+#if UNITY_EDITOR
+            if (Selection.Contains(gameObject))
+            {
+                //Debug.Log("Attack Value: " + attackValue);
+                // Debug.Log("Idle Value: " + idleValue);
+                // Debug.Log("Wander Value: " + wanderValue);
+                //Debug.Log("Turn Value: " + turnValue);
+                // Debug.Log("MoveTo Value: " + moveToValue);
+                // Debug.Log("Retreat Value: " + retreatValue);
+            }
+#endif
             #endregion
 
             var largestValue = new Dictionary<UtilityBasedAI, float>
-        {
-            { attack, attackValue },
-            { idle, idleValue },
-            { wander, wanderValue },
-            { moveTo, moveToValue },
-            { retreat, retreatValue }
-        };
+            {
+                { attack, attackValue },
+                { idle, idleValue },
+                { wander, wanderValue },
+                { turn, turnValue },
+                { moveTo, moveToValue },
+                { retreat, retreatValue }
+            };
             var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 
             return max;
         }
+        #endregion
 
+        #region DistanceToTarget Function
         private float DistanceToTarget()
         {
             var distance = Vector3.Distance(target.position, gameObject.transform.position);
 
             return distance;
         }
+        #endregion
 
+        #region DistanceToPoint Function
         private float DistanceToPoint()
         {
             var distance = Vector3.Distance(pointTarget, gameObject.transform.position);
 
             return distance;
         }
+        #endregion
 
+        #region FindNearestTargetWithString Function
         /// <summary>
         /// This function returns the nearest transform with the correct tag.
         /// </summary>
@@ -317,7 +353,9 @@ namespace Hunter.Character.AI
             }
             return bestTarget;
         }
+        #endregion
 
+        #region FindPointOnNavmesh Function
         public Vector3 FindPointOnNavmesh()
         {
             var targetPosition = new Vector3();
@@ -329,5 +367,6 @@ namespace Hunter.Character.AI
 
             return pointTarget;
         }
+        #endregion
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     class HealthDrainDot : MonoBehaviour
     {
@@ -25,12 +25,19 @@ namespace Hunter.Character
             dotCR = HealthDrain();
             GetComponent<Character>()?.effectsController?.poisonDamageSystem?.Play();
             StartCoroutine(dotCR);
+            StartCoroutine(DelayedDestroy());
         }
 
         private void OnDestroy()
         {
             StopCoroutine(dotCR);
             GetComponent<Character>()?.effectsController?.poisonDamageSystem?.Stop();
+        }
+
+        private IEnumerator DelayedDestroy ()
+        {
+            yield return new WaitForSeconds(5);
+            Destroy(this);
         }
 
         private IEnumerator HealthDrain()

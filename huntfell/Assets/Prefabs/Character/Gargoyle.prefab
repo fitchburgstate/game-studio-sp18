@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4941627396947648}
   - component: {fileID: 33817039970996628}
   - component: {fileID: 23859106586667328}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Rotation Root
   m_TagString: Rotation Transform
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4312636075889092}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Eyeline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 143292553611537912}
   - component: {fileID: 195502290114144206}
   - component: {fileID: 95356045037721216}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Gargoyle
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4477845659575632}
   - component: {fileID: 114038268432600584}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ranged_Weapon_Laser_Beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,9 +297,42 @@ MonoBehaviour:
   clipSize: 1
   reloadSpeed: 1
   weaponRange: 15
+  muzzleFlash: {fileID: 0}
+  rangedValidLayers:
+    serializedVersion: 2
+    m_Bits: 0
   usesTrail: 1
+  lineMaterial: {fileID: 0}
   weaponTrailDuration: 0.25
-  weaponTrailColor: {r: 0.9705882, g: 0, b: 0, a: 0.528}
+  weaponTrailColor:
+    serializedVersion: 2
+    key0: {r: 0, g: 0, b: 0, a: 0}
+    key1: {r: 0, g: 0, b: 0, a: 0}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
 --- !u!114 &114561802589401034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -314,6 +347,9 @@ MonoBehaviour:
   minDetectionDistance: 3
   maxDetectionDistance: 15
   fieldOfViewRange: 80
+  detectionLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &114928227506363688
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -325,11 +361,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59448263c4c3a61489e922ffc2af93d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  totalHealth: 100
+  effectsController: {fileID: 0}
   displayName: Gargoyle
-  health: 35
   eyeLine: {fileID: 4312636075889092}
-  inspectorElementType: 1
+  enemyElementOption: 0
   runSpeed: 0
+  invincibilityFrames: 5
+  minionHealthBar: {fileID: 0}
   rangedWeapon: {fileID: 114038268432600584}
 --- !u!143 &143292553611537912
 CharacterController:

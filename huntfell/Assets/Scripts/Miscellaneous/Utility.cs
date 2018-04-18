@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Hunter.Character;
+using Hunter.Characters;
 
 namespace Hunter
 {
@@ -11,10 +11,6 @@ namespace Hunter
         /// <summary>
         /// Finds random point on navmesh based on a stating center position, a range/distance it can go, and a vector3 navposition
         /// </summary>
-        /// <param name="center"></param>
-        /// <param name="range"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
         public static bool RandomNavMeshPoint(Vector3 center, float range, out Vector3 result)
         {
             for(var i = 0; i < 30; i++)
@@ -74,6 +70,8 @@ namespace Hunter
         void Move(Transform navMeshTarget);
 
         void Dash();
+
+        void Interact();
     }
 
     public interface IUtilityBasedAI
@@ -81,6 +79,8 @@ namespace Hunter
         void Idle();
 
         void Wander(Vector3 finalTarget);
+
+        void Turn(Transform target);
     }
 
     public interface IDamageable
@@ -96,8 +96,18 @@ namespace Hunter
 
         void WeaponAnimationEvent();
 
-        void SwitchWeapon (bool cycleRanged, bool cycleMelee);
+        void CycleWeapons (bool cycleUp);
 
-        void SwitchElement (bool cycleUp, bool cycleDown);
+        void CycleElements (bool cycleUp);
+
+        void SwitchWeaponType (bool switchToMelee);
+    }
+
+    
+    public interface IInteractable
+    {
+        void FireInteraction (Character characterTriggeringInteraction);
+
+        bool IsImportant ();
     }
 }

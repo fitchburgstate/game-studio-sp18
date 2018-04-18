@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     public abstract class Enemy : Character
     {
@@ -17,6 +17,11 @@ namespace Hunter.Character
         /// Options variable for Unity Inspector Dropdown
         /// </summary>
         public ElementOption enemyElementOption;
+
+        protected override void Start ()
+        {
+            elementType = Utility.ElementOptionToElement(enemyElementOption);
+        }
 
     }
 }

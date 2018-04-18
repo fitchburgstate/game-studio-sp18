@@ -22,7 +22,9 @@ GameObject:
   - component: {fileID: 33179804563655506}
   - component: {fileID: 23882009767143758}
   - component: {fileID: 65377234833890182}
-  m_Layer: 0
+  - component: {fileID: 95143006673567228}
+  - component: {fileID: 114075101344141534}
+  m_Layer: 13
   m_Name: Prop_Couch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,3 +99,46 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 106.40492, y: 188.1486, z: 371.10825}
   m_Center: {x: 0.0000038146977, y: 2.6318813e-13, z: 0.0000076293945}
+--- !u!95 &95143006673567228
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1431419087001668}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114075101344141534
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1431419087001668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToSpawn: []
+  elementTypeForInteraction: 0
+  animationName: 
+  giveItemsDirectly: 0
+  requiresDamage: 0
+  interactionSuccessMessage: 
+  interactionFailMessage: 
+  propType: 0
+  destructionForce: 50
+  brokenPropPrefab: {fileID: 0}
+  propEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null

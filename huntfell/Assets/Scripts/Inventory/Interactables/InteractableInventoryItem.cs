@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Hunter.Characters;
 
 namespace Hunter
 {
-    public class InteractableInventoryItem : MonoBehaviour
+    public class InteractableInventoryItem : MonoBehaviour, IInteractable
     {
         //All the relevent data about this item
         public InventoryItem itemData;
@@ -27,13 +28,9 @@ namespace Hunter
             interactableItemCollider = GetComponent<Collider>();
         }
 
-        public void AddItemToInventory()
+        public virtual void FireInteraction (Character characterTriggeringInteraction)
         {
-            if (InventoryManager.instance.TryAddItem(itemData, this))
-            {
-                transform.SetParent(InventoryManager.instance.transform);
-                gameObject.SetActive(false);
-            }
+            (characterTriggeringInteraction as Player)?.Inventory.TryAddItem(itemData, this);
         }
 
         public void SpawnFromProp() // when object is spawned from an interactble prop
@@ -82,13 +79,10 @@ namespace Hunter
             // change to give it small radius
         }
 
-        protected virtual void OnTriggerEnter(Collider other)
+        public bool IsImportant ()
         {
-            Debug.Log("Something is in the prop.");
-            if(other.gameObject.tag == "Player")
-            {
-                AddItemToInventory();
-            }
+            // Interactable Items are always important
+            return true;
         }
     }
 }

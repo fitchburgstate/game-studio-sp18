@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     [RequireComponent(typeof(CharacterController), typeof(NavMeshAgent), typeof(Animator))]
     public abstract class Character : MonoBehaviour, IDamageable
@@ -30,7 +30,7 @@ namespace Hunter.Character
             }
             set
             {
-                health = value;
+                health = Mathf.Clamp(value, 0 , totalHealth);
             }
         }
         [SerializeField]
@@ -111,8 +111,14 @@ namespace Hunter.Character
         {
             if (weapon != null)
             {
+                if (currentWeapon != null)
+                {
+                    currentWeapon.gameObject.SetActive(false);
+                }
+
                 currentWeapon = weapon;
                 currentWeapon.characterHoldingWeapon = this;
+                currentWeapon.gameObject.SetActive(true);
             }
         }
 
@@ -138,6 +144,14 @@ namespace Hunter.Character
                     effectsController.StartDamageEffects(damage);
                 }
             }
+            if (tag == "Player")
+            {
+                Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
+            }
+            else if (tag == "Enemy")
+            {
+                Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
+            }
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
@@ -145,6 +159,12 @@ namespace Hunter.Character
         {
             CurrentHealth -= damage;
             yield return null;
+        }
+
+        public virtual void RestoreHealthToCharacter (int restoreAmount)
+        {
+            StopCoroutine("SubtractHealthFromCharacter");
+            CurrentHealth += restoreAmount;
         }
     }
 }
