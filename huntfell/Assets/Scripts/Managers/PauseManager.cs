@@ -57,7 +57,7 @@ namespace Hunter
             Time.timeScale = 0;
             playerWhoPaused = player;
 
-            Fabric.EventManager.Instance.PostEvent("UI Start Game");
+            Fabric.EventManager.Instance?.PostEvent("UI Start Game");
             menuCanvas.gameObject.SetActive(true);
 
             DisplayJournals();
@@ -68,7 +68,7 @@ namespace Hunter
             Time.timeScale = 1;
             playerWhoPaused = null;
 
-            Fabric.EventManager.Instance.PostEvent("UI Navigation Back");
+            Fabric.EventManager.Instance?.PostEvent("UI Navigation Back");
             menuCanvas.gameObject.SetActive(false);
         }
 
@@ -78,7 +78,7 @@ namespace Hunter
             var journals = playerWhoPaused.Inventory.GetAllJournals();
             journalHeader.fontStyle = FontStyles.Bold;
             diaryHeader.fontStyle = FontStyles.Normal;
-            Fabric.EventManager.Instance.PostEvent("UI Page Flip");
+            //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
             //Only displaying two journals for now
             for (int i = 0; i < 2; i++)
             {
@@ -117,7 +117,7 @@ namespace Hunter
             var diaries = playerWhoPaused.Inventory.GetAllDiaries();
             diaryHeader.fontStyle = FontStyles.Bold;
             journalHeader.fontStyle = FontStyles.Normal;
-            Fabric.EventManager.Instance.PostEvent("UI Page Flip");
+            //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
             //Only displaying two diaries for now
             for (int i = 0; i < 2; i++)
             {

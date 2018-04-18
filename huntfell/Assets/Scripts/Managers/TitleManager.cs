@@ -31,7 +31,7 @@ namespace Hunter
 
         private IEnumerator StartGame ()
         {
-            Fabric.EventManager.Instance.PostEvent("UI Start Game");
+            Fabric.EventManager.Instance?.PostEvent("UI Start Game");
             yield return FadeCanvasGroup(titleCanvasGroup, 2, FadeType.Out);
             GameManager.instance.StartCoroutine(GameManager.instance.StartGame());
             yield return null;

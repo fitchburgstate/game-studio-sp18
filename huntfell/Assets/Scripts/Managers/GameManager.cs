@@ -19,22 +19,25 @@ namespace Hunter
         [HideInInspector]
         public static GameManager instance;
 
+        [Header("Player Respawn Settings")]
         /// <summary>
         /// The list of spawnpoints that the manager can see.
         /// </summary>
         public List<SpawnPoint> spawnPoints = new List<SpawnPoint>();
+
+        [SerializeField]
+        private Player playerScript;
+        private float respawnTime;
+        private IEnumerator respawnPlayerCR;
 
         [Header("Scene Change Settings")]
         public float fadeDuration;
         public AnimationCurve fadeCurve;
 
         private CanvasGroup canvasGroup;
-        private const string CANVASNAME = "FADECANVAS";
-        private const string IMAGENAME = "FADEIMAGE";
+        public const string CANVASNAME = "FADECANVAS";
+        public const string IMAGENAME = "FADEIMAGE";
         private PlayableDirector director;
-
-        private Player playerScript;
-        private float respawnTime;
         #endregion
 
         #region Properties
@@ -67,7 +70,7 @@ namespace Hunter
             if (instance == null)
             {
                 instance = this;
-                DontDestroyOnLoad(gameObject);
+                //DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -75,9 +78,9 @@ namespace Hunter
                 return;
             }
 
-            if (!Application.isEditor)
+            LoadNewScene("UI_Title_Menu", true);
+            if (GameObject.Find("Audio") == null)
             {
-                LoadNewScene("UI_Title_Menu", true);
                 LoadNewScene("Audio", true);
             }
             director = FindObjectOfType<PlayableDirector>();
@@ -87,7 +90,6 @@ namespace Hunter
         {
             spawnPoints = new List<SpawnPoint>(FindObjectsOfType<SpawnPoint>());
         }
-
         #endregion
 
         #region Scene Management
@@ -194,7 +196,7 @@ namespace Hunter
         #endregion
 
         #region Helper Functions
-        private Vector3 GetClosestSpawnPoint(List<SpawnPoint> potentialPoints)
+        public Vector3 GetClosestSpawnPoint(List<SpawnPoint> potentialPoints)
         {
             var bestSpawnPoint = new Vector3();
 
@@ -204,12 +206,15 @@ namespace Hunter
 
             foreach (var potentialTarget in potentialPoints)
             {
-                var directionToTarget = potentialTarget.transform.position - currentPosition;
-                var dSqrToTarget = directionToTarget.sqrMagnitude;
-                if (dSqrToTarget < closestDistanceSqr)
+                if (potentialTarget.activated == true)
                 {
-                    closestDistanceSqr = dSqrToTarget;
-                    bestGameObject = potentialTarget.gameObject;
+                    var directionToTarget = potentialTarget.transform.position - currentPosition;
+                    var dSqrToTarget = directionToTarget.sqrMagnitude;
+                    if (dSqrToTarget < closestDistanceSqr)
+                    {
+                        closestDistanceSqr = dSqrToTarget;
+                        bestGameObject = potentialTarget.gameObject;
+                    }
                 }
             }
             bestSpawnPoint = bestGameObject.GetComponent<SpawnPoint>().respawnPosition;
@@ -217,15 +222,36 @@ namespace Hunter
             return bestSpawnPoint;
         }
 
-        private IEnumerator RespawnPlayer(Vector3 bestSpawnPoint)
+        public void RespawnPlayer(Vector3 bestSpawnPoint)
         {
-            PlayerScript.KillPlayer(RespawnTime);
+            if (respawnPlayerCR != null) { return; }
+            respawnPlayerCR = RespawnAction(bestSpawnPoint);
+            StartCoroutine(respawnPlayerCR);
+        }
 
-            PlayerScript.CurrentHealth = PlayerScript.totalHealth;
+        private IEnumerator RespawnAction(Vector3 bestSpawnPoint)
+        {
+            PlayerScript.isDying = true;
+            PlayerScript.PerformingAction = true;
+            PlayerScript.invincible = true;
+            PlayerScript.anim.SetTrigger("isDead");
+
+            yield return InitiateFade(fadeDuration, Color.black, FadeType.Out);
+            yield return new WaitForSeconds(fadeDuration);
+
             PlayerScript.transform.position = bestSpawnPoint;
-            PlayerScript.PerformingAction = false;
 
+            yield return new WaitForSeconds(RespawnTime);
+            PlayerScript.RestoreHealthToCharacter(PlayerScript.totalHealth);
+
+            yield return InitiateFade(fadeDuration, Color.black, FadeType.In);
+            yield return new WaitForSeconds(fadeDuration / 2);
+
+            PlayerScript.isDying = false;
+            PlayerScript.PerformingAction = false;
+            PlayerScript.invincible = false;
             yield return null;
+            respawnPlayerCR = null;
         }
         #endregion
     }

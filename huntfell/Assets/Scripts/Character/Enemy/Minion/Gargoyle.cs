@@ -29,9 +29,10 @@ namespace Hunter.Characters
             set
             {
                 health = value;
-                if (health <= 0)
+                if (health <= 0 && !isDying)
                 {
-                    Destroy(gameObject);
+                    isDying = true;
+                    StartCoroutine(KillGarg(false));
                 }
             }
         }
@@ -48,6 +49,7 @@ namespace Hunter.Characters
 
         private void FixedUpdate()
         {
+            if (isDying) { return; }
             var enemyInLOS = gargoyleDetection.DetectPlayer();
 
             if (enemyInLOS)
@@ -59,6 +61,7 @@ namespace Hunter.Characters
 
         private void Attack()
         {
+            if (isDying) { return; }
             if (gargoyleAttackCR != null) { return; }
             gargoyleAttackCR = GargoyleAttack();
             StartCoroutine(gargoyleAttackCR);
@@ -67,10 +70,21 @@ namespace Hunter.Characters
         private IEnumerator GargoyleAttack()
         {
             rangedWeapon.StartAttackFromAnimationEvent();
-            Fabric.EventManager.Instance.PostEvent("Gargoyle Attack", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Gargoyle Attack", gameObject);
 
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
             gargoyleAttackCR = null;
+        }
+
+        private IEnumerator KillGarg (bool isCinematic)
+        {
+            agent.speed = 0;
+            agent.destination = transform.position;
+            agent.enabled = false;
+            minionHealthBarParent?.gameObject.SetActive(false);
+            //TODO Change this later to reflect the animation time
+            yield return new WaitForSeconds(3);
+            Destroy(RotationTransform.gameObject);
         }
     }
 }

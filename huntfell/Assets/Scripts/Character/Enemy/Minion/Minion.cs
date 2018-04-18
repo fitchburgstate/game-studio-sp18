@@ -38,12 +38,12 @@ namespace Hunter.Characters
             }
             else { Debug.LogWarning($"{name} does not have a health bar set in the inspector."); }
             CurrentHealth = targetHealth;
-            invinvible = true;
+            invincible = true;
             for (var i = 0; i < invincibilityFrames; i++)
             {
                 yield return null;
             }
-            invinvible = false;
+            invincible = false;
             yield return null;
         }
         #endregion

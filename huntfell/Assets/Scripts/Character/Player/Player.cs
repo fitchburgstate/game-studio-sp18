@@ -40,14 +40,15 @@ namespace Hunter.Characters
         [Header("World UI Options")]
         public Image interactPromptImage;
 
+        [SerializeField]
         private bool performingAction = false;
         private float rotationCurvePosition;
 
         private IEnumerator attackCR;
         private IEnumerator dashCR;
 
-        public PlayerInventory Inventory { get; private set; }
 
+        public PlayerInventory Inventory { get; private set; }
         private List<IInteractable> nearbyInteractables = new List<IInteractable>();
         private IInteractable itemToInteractWith;
         #endregion
@@ -65,6 +66,24 @@ namespace Hunter.Characters
                 performingAction = value;
                 if (performingAction) { interactPromptImage.enabled = false; }
                 else { CheckInteractImage(); }
+            }
+        }
+
+        public override float CurrentHealth
+        {
+            get
+            {
+                return health;
+            }
+            set
+            {
+                health = Mathf.Clamp(value, 0, totalHealth);
+                if (health <= 0)
+                {
+                    var gameManager = FindObjectOfType<GameManager>();
+                    var bestSpawnPoint = gameManager.GetClosestSpawnPoint(gameManager.spawnPoints);
+                    gameManager.RespawnPlayer(bestSpawnPoint);
+                }
             }
         }
         #endregion
@@ -117,6 +136,7 @@ namespace Hunter.Characters
         {
             // We do not want the player to be able to move during the dash or item pickup
             if (PerformingAction) { return; }
+            else if (isDying) { return; }
 
             //Setting animation params
             anim.SetFloat("dirX", moveDirection.x);
@@ -179,6 +199,7 @@ namespace Hunter.Characters
                 return;
             }
             else if (PerformingAction) { return; }
+            else if (isDying) { return; }
 
             dashCR = PlayDashAnimation();
             // STARTS DASH COROUTINE
@@ -305,6 +326,7 @@ namespace Hunter.Characters
         {
             if (attackCR != null) { return; }
             else if (PerformingAction) { return; }
+            else if (isDying) { return; }
             attackCR = PlayAttackAnimation();
             StartCoroutine(attackCR);
         }
@@ -349,6 +371,8 @@ namespace Hunter.Characters
 
         public void CycleWeapons(bool cycleUp)
         {
+            if (isDying) { return; }
+
             Weapon newWeapon = null;
 
             if (cycleUp)
@@ -372,6 +396,8 @@ namespace Hunter.Characters
 
         public void CycleElements(bool cycleUp)
         {
+            if (isDying) { return; }
+
             Element newElement = null;
             if (cycleUp) { newElement = Inventory.CycleElementsUp(CurrentWeapon); }
             else { newElement = Inventory.CycleElementsDown(CurrentWeapon); }
@@ -397,6 +423,8 @@ namespace Hunter.Characters
 
         protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
+            if (isDying) { yield break; }
+
             var startHealth = CurrentHealth;
             var targetHealth = startHealth - damage;
 
@@ -439,18 +467,14 @@ namespace Hunter.Characters
                 HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth;
             }
         }
-
-        public IEnumerator KillPlayer(float respawnTimer)
-        {
-            PerformingAction = true;
-            anim.SetTrigger("Death");
-            yield return new WaitForSeconds(respawnTimer);
-        }
         #endregion
 
         #region Player Interaction
         public void Interact()
         {
+            if (PerformingAction) { return; }
+            if (isDying) { return; }
+
             if (nearbyInteractables.Count == 0) { return; }
 
             // Always try to interact with Interactable Items first before Props

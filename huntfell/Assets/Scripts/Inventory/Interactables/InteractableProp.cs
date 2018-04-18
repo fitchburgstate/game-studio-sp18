@@ -79,7 +79,7 @@ namespace Hunter
         {
             if (currentlyInteracting || characterWhoAttacked.tag != "Player") { return; }
 
-            Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
 
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.WeaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
