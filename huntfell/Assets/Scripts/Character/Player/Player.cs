@@ -20,6 +20,8 @@ namespace Hunter.Characters
         [Tooltip("The total ammount of time it should take for the wound bar to catch up to the health bar."), Range(0.1f, 10f)]
         public float healthSubtractionTime = 1;
 
+        public float respawnTime = 3f;
+
         [Header("Movement and Rotation Options")]
         [Range(1, 20), Tooltip("Controls the speed at which the character is moving. Can be adjusted between a value of 0 and 20.")]
         public float moveSpeed = 5f;
@@ -48,7 +50,9 @@ namespace Hunter.Characters
 
         private List<IInteractable> nearbyInteractables = new List<IInteractable>();
         private IInteractable itemToInteractWith;
+        #endregion
 
+        #region Properties
         public bool PerformingAction
         {
             get
@@ -63,18 +67,16 @@ namespace Hunter.Characters
                 else { CheckInteractImage(); }
             }
         }
-
         #endregion
 
-        #region Unity Messages
-
-        protected override void Awake ()
+        #region Unity Functions
+        protected override void Awake()
         {
             base.Awake();
             Inventory = GetComponent<PlayerInventory>();
         }
 
-        protected override void Start ()
+        protected override void Start()
         {
             base.Start();
             transform.forward = Camera.main.transform.forward;
@@ -82,7 +84,7 @@ namespace Hunter.Characters
             CheckInteractImage();
         }
 
-        private void OnTriggerEnter (Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             var interactableItem = other.GetComponent<IInteractable>();
             if (interactableItem != null && !nearbyInteractables.Contains(interactableItem))
@@ -92,7 +94,7 @@ namespace Hunter.Characters
             }
         }
 
-        private void OnTriggerExit (Collider other)
+        private void OnTriggerExit(Collider other)
         {
             var interactableItem = other.GetComponent<IInteractable>();
             if (interactableItem != null && nearbyInteractables.Contains(interactableItem))
@@ -104,7 +106,7 @@ namespace Hunter.Characters
         #endregion
 
         #region Player Movement
-        public void Move (Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
         {
             // We do not want the player to be able to move during the dash or item pickup
             if (PerformingAction) { return; }
@@ -147,12 +149,12 @@ namespace Hunter.Characters
 
         }
 
-        public void FootstepSoundAnimationEvent ()
+        public void FootstepSoundAnimationEvent()
         {
-            Fabric.EventManager.Instance.PostEvent("Footstep", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Footstep", gameObject);
         }
 
-        public void Move (Transform target)
+        public void Move(Transform target)
         {
             // This should stay empty.
         }
@@ -162,7 +164,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Dashes the Player in the direction they are facing.
         /// </summary>
-        public void Dash ()
+        public void Dash()
         {
             if (dashCR != null)
             {
@@ -176,7 +178,7 @@ namespace Hunter.Characters
             StartCoroutine(dashCR);
         }
 
-        public void DashAnimationEvent ()
+        public void DashAnimationEvent()
         {
             if (dashCR == null)
             {
@@ -190,7 +192,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Lerps the Player from their current postion to the dodge target.
         /// </summary>
-        private IEnumerator PlayDashAnimation ()
+        private IEnumerator PlayDashAnimation()
         {
             //No moving during the dash movement
             PerformingAction = true;
@@ -230,7 +232,7 @@ namespace Hunter.Characters
                 yield break;
             }
 
-            var closestNavMeshPointToTarget = GetClosestPointOnNavMesh(floorPointFromDashTarget);
+            var closestNavMeshPointToTarget = Utility.GetClosestPointOnNavMesh(floorPointFromDashTarget, agent, transform);
             var dashTarget = closestNavMeshPointToTarget;
             //var dashTarget = new Vector3(closestNavMeshPointToTarget.x, closestNavMeshPointToTarget.y, closestNavMeshPointToTarget.z);
 
@@ -274,7 +276,7 @@ namespace Hunter.Characters
         }
 
         //TODO This needs to be moved into the HUD Manager
-        private IEnumerator SetStaminaBar (float targetFill, float totalTime)
+        private IEnumerator SetStaminaBar(float targetFill, float totalTime)
         {
             if (HUDManager.instance == null) { yield break; }
 
@@ -292,7 +294,7 @@ namespace Hunter.Characters
         #endregion
 
         #region Player Combat
-        public void Attack ()
+        public void Attack()
         {
             if (attackCR != null) { return; }
             else if (PerformingAction) { return; }
@@ -300,17 +302,17 @@ namespace Hunter.Characters
             StartCoroutine(attackCR);
         }
 
-        public void WeaponAnimationEvent ()
+        public void WeaponAnimationEvent()
         {
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public void MeleeWeaponSwingAnimationEvent ()
+        public void MeleeWeaponSwingAnimationEvent()
         {
-            Fabric.EventManager.Instance.PostEvent("Player Sword Swing", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Player Sword Swing", gameObject);
         }
 
-        public void SwordSwingParticleAnimationEvent ()
+        public void SwordSwingParticleAnimationEvent()
         {
             if (CurrentWeapon != null && CurrentWeapon is Melee)
             {
@@ -318,12 +320,12 @@ namespace Hunter.Characters
             }
         }
 
-        public void RangedWeaponFireAnimationEvent ()
+        public void RangedWeaponFireAnimationEvent()
         {
-            Fabric.EventManager.Instance.PostEvent("Player Luger Shot", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Player Luger Shot", gameObject);
         }
 
-        public IEnumerator PlayAttackAnimation ()
+        public IEnumerator PlayAttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             if (CurrentWeapon is Melee)
@@ -338,7 +340,7 @@ namespace Hunter.Characters
             attackCR = null;
         }
 
-        public void CycleWeapons (bool cycleUp)
+        public void CycleWeapons(bool cycleUp)
         {
             Weapon newWeapon = null;
 
@@ -350,41 +352,43 @@ namespace Hunter.Characters
             {
                 newWeapon = Inventory.CycleWeaponsDown(CurrentWeapon, weaponContainer);
             }
-            if(newWeapon == null || newWeapon == CurrentWeapon) {
+            if (newWeapon == null || newWeapon == CurrentWeapon)
+            {
                 Debug.LogWarning("Cannot equip a null weapon or the weapon you are already holding.");
                 return;
             }
             //TODO This should really be referencing a clip on the new weapon being equipped and playing that instead
-            if (newWeapon is Melee) { Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject); }
-            else if(newWeapon is Ranged) { Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject); }
+            if (newWeapon is Melee) { Fabric.EventManager.Instance?.PostEvent("Player Draw Sword", gameObject); }
+            else if (newWeapon is Ranged) { Fabric.EventManager.Instance?.PostEvent("Player Draw Luger", gameObject); }
             EquipWeaponToCharacter(newWeapon);
         }
 
-        public void CycleElements (bool cycleUp)
+        public void CycleElements(bool cycleUp)
         {
             Element newElement = null;
             if (cycleUp) { newElement = Inventory.CycleElementsUp(CurrentWeapon); }
             else { newElement = Inventory.CycleElementsDown(CurrentWeapon); }
             if (CurrentWeapon != null)
             {
-                if(newElement == CurrentWeapon.weaponElement) { return; }
+                if (newElement == CurrentWeapon.weaponElement) { return; }
                 EquipElementToWeapon(newElement);
                 Debug.Log("Equipped the " + Utility.ElementToElementOption(CurrentWeapon.weaponElement) + " to the " + CurrentWeapon.name);
             }
         }
 
-        public void SwitchWeaponType (bool switchToMelee)
+        public void SwitchWeaponType(bool switchToMelee)
         {
-            if(switchToMelee && !(CurrentWeapon is Melee)) {
+            if (switchToMelee && !(CurrentWeapon is Melee))
+            {
                 EquipWeaponToCharacter(Inventory.GetMeleeWeaponAtIndex(Inventory.MeleeWeaponIndex, weaponContainer));
             }
-            else if(!switchToMelee && !(CurrentWeapon is Ranged))
+            else if (!switchToMelee && !(CurrentWeapon is Ranged))
             {
                 EquipWeaponToCharacter(Inventory.GetRangedWeaponAtIndex(Inventory.RangedWeaponIndex, weaponContainer));
             }
         }
 
-        protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
             var startHealth = CurrentHealth;
             var targetHealth = startHealth - damage;
@@ -418,7 +422,7 @@ namespace Hunter.Characters
             }
         }
 
-        public override void RestoreHealthToCharacter (int amount)
+        public override void RestoreHealthToCharacter(int amount)
         {
             StopCoroutine("SubtractHealthFromCharacter");
             CurrentHealth += amount;
@@ -429,22 +433,22 @@ namespace Hunter.Characters
             }
         }
 
-        // TODO PostMaloned until after PAX East
-        //public void AimWeapon()
-        //{
-        //    canMove = false;
-        //}
+        public IEnumerator KillPlayer(float respawnTimer)
+        {
+            PerformingAction = true;
+            anim.SetTrigger("Death");
+            yield return new WaitForSeconds(respawnTimer);
+        }
         #endregion
 
         #region Player Interaction
-
-        public void Interact ()
+        public void Interact()
         {
-            if(nearbyInteractables.Count == 0) { return; }
-            
+            if (nearbyInteractables.Count == 0) { return; }
+
             // Always try to interact with Interactable Items first before Props
             var interactableItem = FirstNearbyInteractableItem();
-            if(interactableItem != null)
+            if (interactableItem != null)
             {
                 PlayPickupAnimation(interactableItem);
             }
@@ -459,12 +463,12 @@ namespace Hunter.Characters
             }
         }
 
-        private InteractableInventoryItem FirstNearbyInteractableItem ()
+        private InteractableInventoryItem FirstNearbyInteractableItem()
         {
             return nearbyInteractables.OfType<InteractableInventoryItem>().FirstOrDefault();
         }
 
-        private void PlayPickupAnimation (InteractableInventoryItem interactableItem)
+        private void PlayPickupAnimation(InteractableInventoryItem interactableItem)
         {
             itemToInteractWith = interactableItem;
 
@@ -478,14 +482,14 @@ namespace Hunter.Characters
             PerformingAction = true;
         }
 
-        public void PickupItemAnimationEvent ()
+        public void PickupItemAnimationEvent()
         {
-            if(itemToInteractWith != null) { itemToInteractWith.FireInteraction(this); }
+            if (itemToInteractWith != null) { itemToInteractWith.FireInteraction(this); }
             nearbyInteractables.Remove(itemToInteractWith);
             PerformingAction = false;
         }
 
-        public void CheckInteractImage ()
+        public void CheckInteractImage()
         {
             if (AnyNearbyImportantItems() && !interactPromptImage.enabled)
             {
@@ -497,10 +501,10 @@ namespace Hunter.Characters
             }
         }
 
-        private bool AnyNearbyImportantItems ()
+        private bool AnyNearbyImportantItems()
         {
-            if(nearbyInteractables.Count == 0) { return false; }
-            foreach(var item in nearbyInteractables)
+            if (nearbyInteractables.Count == 0) { return false; }
+            foreach (var item in nearbyInteractables)
             {
                 if (item.IsImportant()) { return true; }
             }
@@ -509,39 +513,10 @@ namespace Hunter.Characters
         #endregion
 
         #region Helper Functions
-        /// <summary>
-        /// Determines if the point the player wants to dash to is on the navmesh,
-        /// if not, the target point is changed to the point they can dash to.
-        /// </summary>
-        private Vector3 GetClosestPointOnNavMesh (Vector3 target)
-        {
-            var hit = new NavMeshHit();
-            // This gives us a sample radius for the NavMesh check relative to our NavMesh agent size, so given either scenerio where we are passed a floor point or the character's position, we should be able to find a point on the NavMesh
-            var sampleRadius = agent.height + agent.baseOffset;
-
-            if (NavMesh.SamplePosition(target, out hit, sampleRadius, NavMesh.AllAreas))
-            {
-                target = hit.position;
-                //Debug.Log("Hit Position of NavMesh Sample from RayCast: " + target);
-            }
-            else if (NavMesh.SamplePosition(transform.position, out hit, sampleRadius, NavMesh.AllAreas))
-            {
-                target = hit.position;
-                Debug.LogWarning("Could not find a NavMesh point with the given target. Falling back to the character's current position. Hit Position of NavMesh Sample from current position: " + target);
-            }
-            else
-            {
-                target = transform.position;
-                Debug.LogError("Could not find a closest point on the NavMesh from either the RayCast Hit Position or the character's current location. Are you sure the character is on the NavMesh?");
-            }
-            return target;
-        }
-
-        private float SignedAngle (Vector3 a, Vector3 b)
+        private float SignedAngle(Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
         }
-
         #endregion
     }
 }

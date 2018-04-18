@@ -13,10 +13,11 @@ namespace Hunter.Characters
         /// How much health the character has
         /// </summary>
         //This needs to be a float for when we do the health bar
+        [SerializeField]
         protected float health;
 
         [SerializeField]
-        protected int totalHealth = 100;
+        public int totalHealth = 100;
 
         /// <summary>
         /// Name of the Player, to be set in the inspector
@@ -57,7 +58,7 @@ namespace Hunter.Characters
             }
             set
             {
-                health = Mathf.Clamp(value, 0 , totalHealth);
+                health = Mathf.Clamp(value, 0, totalHealth);
             }
         }
 
@@ -97,22 +98,25 @@ namespace Hunter.Characters
         protected bool isDying = false;
         #endregion
 
-        protected virtual void Awake ()
+        #region Unity Functions
+        protected virtual void Awake()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
             effectsController = GetComponentInChildren<EffectsController>();
-            if(effectsController == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
+            if (effectsController == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
             CurrentHealth = totalHealth;
         }
 
-        protected virtual void Start ()
+        protected virtual void Start()
         {
 
         }
+        #endregion
 
-        public void EquipWeaponToCharacter (Weapon weapon)
+        #region Combat Related Functions
+        public void EquipWeaponToCharacter(Weapon weapon)
         {
             if (weapon != null)
             {
@@ -127,7 +131,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void EquipElementToWeapon (Element element)
+        public void EquipElementToWeapon(Element element)
         {
             if (CurrentWeapon != null)
             {
@@ -135,10 +139,11 @@ namespace Hunter.Characters
             }
         }
 
-        public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
+        public void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             if (invinvible || isDying) { return; }
-            if(effectsController != null) {
+            if (effectsController != null)
+            {
                 //Dont apply hits particles for Dot Effects, kinda jank
                 if (damage > 3)
                 {
@@ -160,16 +165,17 @@ namespace Hunter.Characters
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
-        protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected virtual IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
             CurrentHealth -= damage;
             yield return null;
         }
 
-        public virtual void RestoreHealthToCharacter (int restoreAmount)
+        public virtual void RestoreHealthToCharacter(int restoreAmount)
         {
             StopCoroutine("SubtractHealthFromCharacter");
             CurrentHealth += restoreAmount;
         }
+        #endregion
     }
 }

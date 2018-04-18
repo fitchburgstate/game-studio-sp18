@@ -66,6 +66,32 @@ namespace Hunter
             else { return ElementOption.None; }
         }
         #endregion
+
+        #region FindClosestPointOnNavmesh
+        public static Vector3 GetClosestPointOnNavMesh(Vector3 target, NavMeshAgent agent, Transform transform)
+        {
+            var hit = new NavMeshHit();
+            // This gives us a sample radius for the NavMesh check relative to our NavMesh agent size, so given either scenerio where we are passed a floor point or the character's position, we should be able to find a point on the NavMesh
+            var sampleRadius = agent.height + agent.baseOffset;
+
+            if (NavMesh.SamplePosition(target, out hit, sampleRadius, NavMesh.AllAreas))
+            {
+                target = hit.position;
+                //Debug.Log("Hit Position of NavMesh Sample from RayCast: " + target);
+            }
+            else if (NavMesh.SamplePosition(transform.position, out hit, sampleRadius, NavMesh.AllAreas))
+            {
+                target = hit.position;
+                Debug.LogWarning("Could not find a NavMesh point with the given target. Falling back to the character's current position. Hit Position of NavMesh Sample from current position: " + target);
+            }
+            else
+            {
+                target = transform.position;
+                Debug.LogError("Could not find a closest point on the NavMesh from either the RayCast Hit Position or the character's current location. Are you sure the character is on the NavMesh?");
+            }
+            return target;
+        }
+        #endregion
     }
 
     #region Interfaces
