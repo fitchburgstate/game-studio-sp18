@@ -59,7 +59,10 @@ namespace Hunter.Characters
         protected void Awake ()
         {
             weaponRenderer = GetComponentInChildren<MeshRenderer>();
-            originalMaterials = new List<Material>(weaponRenderer.materials);
+            if (weaponRenderer != null)
+            {
+                originalMaterials = new List<Material>(weaponRenderer.materials);
+            }
 
             meleeHitBox = GetComponent<BoxCollider>();
             DisableHitbox();
@@ -163,8 +166,11 @@ namespace Hunter.Characters
             //{
             //    weaponRenderer.materials = initialMaterials.ToArray();
             //}
-            weaponRenderer.materials = (currentMeleeEffect.equipMaterials != null && currentMeleeEffect.equipMaterials.Count > 0) ? 
-                currentMeleeEffect.equipMaterials.ToArray() : originalMaterials.ToArray();
+            if (weaponRenderer != null)
+            {
+                weaponRenderer.materials = (currentMeleeEffect.equipMaterials != null && currentMeleeEffect.equipMaterials.Count > 0) ?
+                    currentMeleeEffect.equipMaterials.ToArray() : originalMaterials.ToArray();
+            }
         }
     }
 }

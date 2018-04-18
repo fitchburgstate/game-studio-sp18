@@ -11,6 +11,7 @@ namespace Hunter
         #region Variables
         public static DeviceManager Instance { get; private set; }
         private PlayerControls controls;
+        private InputDevice currentDevice;
 
         public Vector2 Move { get; private set; } = new Vector2();
         public Vector2 Look { get; private set; } = new Vector2();
@@ -76,6 +77,8 @@ namespace Hunter
         private void NewDeviceAttatched (InputDevice device)
         {
             controls.SetDeviceAll(device);
+            currentDevice = device;
+
             if (overrideLayout) { return; }
 
             if (device != null && device.DeviceClass == InputDeviceClass.Controller)
@@ -88,11 +91,18 @@ namespace Hunter
             }
         }
 
+        public void SetDeviceVibration (float leftMotor, float rightMotor)
+        {
+            if (leftMotor == 0 && rightMotor == 0) { currentDevice.StopVibration(); }
+            else { currentDevice.Vibrate(leftMotor, rightMotor); }
+        }
+
         private void OldDeviceDetached (InputDevice device)
         {
             if (InputManager.Devices.Count == 0)
             {
-                controls.SetDeviceAll(null);
+                controls.SetDeviceAll(InputManager.ActiveDevice);
+                currentDevice = InputManager.ActiveDevice;
                 if (overrideLayout) { return; }
                 controls.SetBindingsAll(PlayerControls.DEFAULT_LAYOUT);
             }

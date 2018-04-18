@@ -51,11 +51,6 @@ namespace Hunter
 
         private bool currentlyInteracting = false;
 
-        private void Start ()
-        {
-            // anim = GetComponent<Animator>();
-        }
-
         public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             FireInteraction(weaponAttackedWith.characterHoldingWeapon, weaponAttackedWith);
@@ -226,7 +221,7 @@ namespace Hunter
 
         public bool IsImportant ()
         {
-            return overrideImportance || itemsToSpawn.Count > 0;
+            return overrideImportance || itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
         }
     }
 }
