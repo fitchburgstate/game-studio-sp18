@@ -56,6 +56,7 @@ namespace Hunter.Characters
         }
         #endregion
 
+        #region Unity Functions
         protected override void Start()
         {
             base.Start();
@@ -76,6 +77,7 @@ namespace Hunter.Characters
                 Debug.LogWarning("There is no animator controller; floats dirX and dirY as well as bool moving are not being set.");
             }
         }
+        #endregion
 
         #region Wolf Movement
         public void Move(Transform target)

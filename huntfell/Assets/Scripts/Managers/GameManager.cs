@@ -18,10 +18,16 @@ namespace Hunter
         [HideInInspector]
         public static GameManager instance;
 
+        [Header("Player Respawn Settings")]
         /// <summary>
         /// The list of spawnpoints that the manager can see.
         /// </summary>
         public List<SpawnPoint> spawnPoints = new List<SpawnPoint>();
+
+        [SerializeField]
+        private Player playerScript;
+        private float respawnTime;
+        private IEnumerator respawnPlayerCR;
 
         [Header("Scene Change Settings")]
         public float fadeDuration;
@@ -30,9 +36,6 @@ namespace Hunter
         private CanvasGroup canvasGroup;
         private const string CANVASNAME = "FADECANVAS";
         private const string IMAGENAME = "FADEIMAGE";
-
-        private Player playerScript;
-        private float respawnTime;
         #endregion
 
         #region Properties
@@ -81,15 +84,6 @@ namespace Hunter
         {
             spawnPoints = new List<SpawnPoint>(FindObjectsOfType<SpawnPoint>());
         }
-
-        private void Update()
-        {
-            if (PlayerScript.CurrentHealth <= 0)
-            {
-                var bestSpawnPoint = GetClosestSpawnPoint(spawnPoints);
-                RespawnPlayer(bestSpawnPoint);
-            }
-        }
         #endregion
 
         #region Scene Management
@@ -99,17 +93,12 @@ namespace Hunter
             {
                 SceneManager.LoadScene("UI_Hud", LoadSceneMode.Additive);
                 SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
-                if (Fabric.EventManager.Instance != null)
-                {
-                    Fabric.EventManager.Instance.PostEvent("Expo to Combat Music");
-                }
+
+                Fabric.EventManager.Instance?.PostEvent("Expo to Combat Music");
             }
             else if (newScene.buildIndex == 0)
             {
-                if (Fabric.EventManager.Instance != null)
-                {
-                    Fabric.EventManager.Instance.PostEvent("Combat to Expo Music");
-                }
+                Fabric.EventManager.Instance?.PostEvent("Combat to Expo Music");
             }
         }
 
@@ -194,7 +183,7 @@ namespace Hunter
         #endregion
 
         #region Helper Functions
-        private Vector3 GetClosestSpawnPoint(List<SpawnPoint> potentialPoints)
+        public Vector3 GetClosestSpawnPoint(List<SpawnPoint> potentialPoints)
         {
             var bestSpawnPoint = new Vector3();
 
@@ -204,12 +193,15 @@ namespace Hunter
 
             foreach (var potentialTarget in potentialPoints)
             {
-                var directionToTarget = potentialTarget.transform.position - currentPosition;
-                var dSqrToTarget = directionToTarget.sqrMagnitude;
-                if (dSqrToTarget < closestDistanceSqr)
+                if (potentialTarget.activated == true)
                 {
-                    closestDistanceSqr = dSqrToTarget;
-                    bestGameObject = potentialTarget.gameObject;
+                    var directionToTarget = potentialTarget.transform.position - currentPosition;
+                    var dSqrToTarget = directionToTarget.sqrMagnitude;
+                    if (dSqrToTarget < closestDistanceSqr)
+                    {
+                        closestDistanceSqr = dSqrToTarget;
+                        bestGameObject = potentialTarget.gameObject;
+                    }
                 }
             }
             bestSpawnPoint = bestGameObject.GetComponent<SpawnPoint>().respawnPosition;
@@ -217,15 +209,36 @@ namespace Hunter
             return bestSpawnPoint;
         }
 
-        private IEnumerator RespawnPlayer(Vector3 bestSpawnPoint)
+        public void RespawnPlayer(Vector3 bestSpawnPoint)
         {
-            PlayerScript.KillPlayer(RespawnTime);
+            if (respawnPlayerCR != null) { return; }
+            respawnPlayerCR = RespawnAction(bestSpawnPoint);
+            StartCoroutine(respawnPlayerCR);
+        }
 
-            PlayerScript.CurrentHealth = PlayerScript.totalHealth;
+        private IEnumerator RespawnAction(Vector3 bestSpawnPoint)
+        {
+            PlayerScript.isDying = true;
+            PlayerScript.PerformingAction = true;
+            PlayerScript.invincible = true;
+            PlayerScript.anim.SetTrigger("isDead");
+
+            yield return InitiateFade(fadeDuration, Color.black, FadeType.Out);
+            yield return new WaitForSeconds(fadeDuration);
+
             PlayerScript.transform.position = bestSpawnPoint;
-            PlayerScript.PerformingAction = false;
 
+            yield return new WaitForSeconds(RespawnTime);
+            PlayerScript.RestoreHealthToCharacter(PlayerScript.totalHealth);
+
+            yield return InitiateFade(fadeDuration, Color.black, FadeType.In);
+            yield return new WaitForSeconds(fadeDuration / 2);
+
+            PlayerScript.isDying = false;
+            PlayerScript.PerformingAction = false;
+            PlayerScript.invincible = false;
             yield return null;
+            respawnPlayerCR = null;
         }
         #endregion
     }

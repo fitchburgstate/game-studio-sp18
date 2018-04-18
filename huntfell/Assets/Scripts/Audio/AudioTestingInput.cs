@@ -175,20 +175,20 @@ public class AudioTestingInput : MonoBehaviour
     // Player footsteps
     void PlayFootsteps()
     {
-        Fabric.EventManager.Instance.PostEvent("Footstep", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Footstep", gameObject);
     }
 
     // For when the player gets hit
     // Later we will have different versions for the amount of damage the player takes
     void PlayPlayerHit()
     {
-        Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
     }
 
     // For when the player is hit by a Wolf
     void PlayPlayerHitByWolf()
     {
-        Fabric.EventManager.Instance.PostEvent("Player Hit By Wolf", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Player Hit By Wolf", gameObject);
     }
 
     /*** Sword Events ***/
@@ -196,19 +196,19 @@ public class AudioTestingInput : MonoBehaviour
     // For when the player draws their sword or change the modifier on their sword
     void PlayPlayerDrawSword()
     {
-        Fabric.EventManager.Instance.PostEvent("Player Draw Sword", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Player Draw Sword", gameObject);
     }
 
     // For *every time* the player swings their sword
     void PlayPlayerSwordSwing()
     {
-        Fabric.EventManager.Instance.PostEvent("Player Sword Swing", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Player Sword Swing", gameObject);
     }
 
     // When the player swings and *hits* something and does damage
     void PlayPlayerSwordHit()
     {
-        Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
     }
 
     /*** Ranged Weapon Events ***/
@@ -216,14 +216,14 @@ public class AudioTestingInput : MonoBehaviour
     // For when the player switches to the Luger weapon or change the modifier on their gun
     void PlayDrawLuger()
     {
-        Fabric.EventManager.Instance.PostEvent("Player Draw Luger", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Player Draw Luger", gameObject);
     }
 
     // Luger Shot (Triggers 3 different audio sources at once)
     void PlayLugerShot()
     {
         // Currently 1 shot pitch modulated, will fix later to be random container
-        Fabric.EventManager.Instance.PostEvent("Player Luger Shot", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Player Luger Shot", gameObject);
     }
 
     #endregion
@@ -237,20 +237,20 @@ public class AudioTestingInput : MonoBehaviour
     // Bat screech when it aggros the player
     void PlayBatAggro()
     {
-        Fabric.EventManager.Instance.PostEvent("Bat Aggro", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Bat Aggro", gameObject);
     }
 
     // When the bat starts moving towards the player begin the loop of its wings flapping
     void StartBatLoop()
     {
-        Fabric.EventManager.Instance.PostEvent("Bat Start Wing Loop", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Bat Start Wing Loop", gameObject);
     }
 
     // When the bat dies, stop the looping bat wing sound
     // Note to self: this event is set to override on the audiocomponent level, *not* event level
     void StopBatLoop()
     {
-        Fabric.EventManager.Instance.PostEvent("Bat Stop Wing Loop", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Bat Stop Wing Loop", gameObject);
     }
 
     /*** Gargoyle Events ***/
@@ -258,7 +258,7 @@ public class AudioTestingInput : MonoBehaviour
     // Temporary Gargoyle laser attack sound
     void PlayGargoyleAttack()
     {
-        Fabric.EventManager.Instance.PostEvent("Gargoyle Attack", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Gargoyle Attack", gameObject);
     }
 
     /*** Wolf Events ***/
@@ -266,19 +266,19 @@ public class AudioTestingInput : MonoBehaviour
     // Whe the player is detected by a Wolf
     void PlayWolfAggro()
     {
-        Fabric.EventManager.Instance.PostEvent("Wolf Aggro", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Wolf Aggro", gameObject);
     }
 
     // For when the wolf attacks
     void PlayWolfAttack()
     {
-        Fabric.EventManager.Instance.PostEvent("Wolf Attack", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Wolf Attack", gameObject);
     }
 
     // For the wolf's lunge attack
     void PlayWolfLungeAttack()
     {
-        Fabric.EventManager.Instance.PostEvent("Wolf Lunge Attack", gameObject);
+        Fabric.EventManager.Instance?.PostEvent("Wolf Lunge Attack", gameObject);
     }
 
     #endregion
@@ -290,13 +290,13 @@ public class AudioTestingInput : MonoBehaviour
     // Transitions music from Exploration to Combat
     void ExpotoCombatMusic()
     {
-        Fabric.EventManager.Instance.PostEvent("Expo to Combat Music");
+        Fabric.EventManager.Instance?.PostEvent("Expo to Combat Music");
     }
 
     //Transitions music from Combat to Exploration 
     void CombattoExpoMusic()
     {
-        Fabric.EventManager.Instance.PostEvent("Combat to Expo Music");
+        Fabric.EventManager.Instance?.PostEvent("Combat to Expo Music");
     }
     #endregion
 
@@ -307,25 +307,25 @@ public class AudioTestingInput : MonoBehaviour
     // For when the player hits the "start game" button
     void PlayStartGame()
     {
-        Fabric.EventManager.Instance.PostEvent("UI Start Game");
+        Fabric.EventManager.Instance?.PostEvent("UI Start Game");
     }
 
     // Every time the player navigates between *menu* items
     void PlayUINavigation()
     {
-        Fabric.EventManager.Instance.PostEvent("UI Navigation Blip");
+        Fabric.EventManager.Instance?.PostEvent("UI Navigation Blip");
     }
 
     // Every time the player goes *back* a UI layer
     void PlayUINavigationBack()
     {
-        Fabric.EventManager.Instance.PostEvent("UI Navigation Back");
+        Fabric.EventManager.Instance?.PostEvent("UI Navigation Back");
     }
 
     // When the player picks up a journal entry or changes the tab of their journal
     void PlayPageFlip()
     {
-        Fabric.EventManager.Instance.PostEvent("UI Page Flip");
+        Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
     }
 
     #endregion

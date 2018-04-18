@@ -2972,8 +2972,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.07479399, y: 0.073803894, z: 0.17328075}
-  m_Center: {x: -0.07611599, y: 0.037748754, z: -0.0065765455}
+  m_Size: {x: 0.077475, y: 0.09820026, z: 0.22793692}
+  m_Center: {x: -0.07745728, y: 0.039429393, z: 0.0018798863}
 --- !u!95 &95316165089855040
 Animator:
   serializedVersion: 3
@@ -3056,10 +3056,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9199cca3d76a8b34596514712ddc5423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
   totalHealth: 40
-  effectsController: {fileID: 0}
   displayName: Wolf
+  rotationTransform: {fileID: 4750315558255530}
   eyeLine: {fileID: 4792408177706122}
+  agent: {fileID: 0}
+  anim: {fileID: 0}
+  invincible: 0
+  isDying: 0
+  effectsController: {fileID: 0}
   enemyElementOption: 0
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114190814457826990}
@@ -3107,6 +3113,8 @@ MonoBehaviour:
   retreat: 0
   maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
+  target: {fileID: 0}
+  randomPointTarget: {x: 0, y: 0, z: 0}
 --- !u!114 &114361328388092754
 MonoBehaviour:
   m_ObjectHideFlags: 1
