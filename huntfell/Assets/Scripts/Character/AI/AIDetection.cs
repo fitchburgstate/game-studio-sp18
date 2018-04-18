@@ -7,6 +7,53 @@ namespace Hunter.Characters.AI
 {
     public class AIDetection : MonoBehaviour
     {
+        #region Variables
+        /// <summary>
+        /// Determines if a target is too close to the AI. If so, the target should be automatically found.
+        /// </summary>
+        public float minDetectionDistance = 3f;
+
+        /// <summary>
+        /// Determines the maximum distance that the AI can "see" the player. If the player is outside of this range they will be undetectable.
+        /// </summary>
+        public float maxDetectionDistance = 15f;
+
+        /// <summary>
+        /// Determines how wide the "arc" is of the AI's vision. This value represents one "eye" so it will be doubled later.
+        /// </summary>
+        public float fieldOfViewRange = 48f;
+
+        /// <summary>
+        /// Determines the layer(s) that the NPC can see through. For example, the "Floor" layer is not a layer that will return true if any raycasting is done on it.
+        /// </summary>
+        public LayerMask detectionLayers;
+
+        /// <summary>
+        /// The distance between the AI and the target.
+        /// </summary>
+        private float distanceToTarget;
+
+        /// <summary>
+        /// The transform of the AI character's EyeLine component.
+        /// </summary>
+        private Transform aiCharacterEyeLine;
+
+        /// <summary>
+        ///  The AI character itself.
+        /// </summary>
+        private Character aiCharacter;
+
+        /// <summary>
+        /// The player character that the AI will be interacting with.
+        /// </summary>
+        private Character playerCharacter;
+
+        /// <summary>
+        /// Is the target in the Conic field of View?
+        /// </summary>
+        private bool inVisionCone;
+        #endregion
+
         #region Properties
         public Character AiCharacter
         {
@@ -53,59 +100,9 @@ namespace Hunter.Characters.AI
         }
         #endregion
 
-        #region Variables
-        /// <summary>
-        /// Determines if a target is too close to the AI. If so, the target should be automatically found.
-        /// </summary>
-        public float minDetectionDistance = 3f;
-
-        /// <summary>
-        /// Determines the maximum distance that the AI can "see" the player. If the player is outside of this range they will be undetectable.
-        /// </summary>
-        public float maxDetectionDistance = 15f;
-
-        /// <summary>
-        /// Determines how wide the "arc" is of the AI's vision. This value represents one "eye" so it will be doubled later.
-        /// </summary>
-        public float fieldOfViewRange = 48f;
-
-        /// <summary>
-        /// Determines the layer(s) that the NPC can see through. For example, the "Floor" layer is not a layer that will return true if any raycasting is done on it.
-        /// </summary>
-        public LayerMask detectionLayers;
-
-        /// <summary>
-        /// The distance between the AI and the target.
-        /// </summary>
-        private float distanceToTarget;
-
-        /// <summary>
-        /// The transform of the AI character's EyeLine component.
-        /// </summary>
-        private Transform aiCharacterEyeLine;
-
-        private Transform playerCharacterEyeLine;
-
-        /// <summary>
-        ///  The AI character itself.
-        /// </summary>
-        private Character aiCharacter;
-
-        /// <summary>
-        /// The player character that the AI will be interacting with.
-        /// </summary>
-        private Character playerCharacter;
-
-        /// <summary>
-        /// Is the target in the Conic field of View?
-        /// </summary>
-        private bool inVisionCone;
-        #endregion
-
         private void Start()
         {
             aiCharacterEyeLine = AiCharacter.eyeLine;
-            playerCharacterEyeLine = PlayerCharacter.eyeLine;
         }
 
         #region DetectPlayer Function
@@ -113,7 +110,7 @@ namespace Hunter.Characters.AI
         /// The AI searches for a gameobject tagged "Player" and returns true when the player has been found.
         /// </summary>
         /// <returns></returns>
-        public bool DetectPlayer ()
+        public bool DetectPlayer()
         {
             var rayHit = new RaycastHit();
             var rayDirection = PlayerCharacter.transform.position - AiCharacter.transform.position;
@@ -164,35 +161,35 @@ namespace Hunter.Characters.AI
         {
             //if (!Application.isPlaying)
             //{
-                Gizmos.color = Color.blue;
+            Gizmos.color = Color.blue;
 
-                var lineHeight = 0f;
-                var theta = 0f;
-                var x = minDetectionDistance * Mathf.Cos(theta);
-                var z = minDetectionDistance * Mathf.Sin(theta);
-                var pos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
-                var newPos = pos;
-                var lastPos = pos;
+            var lineHeight = 0f;
+            var theta = 0f;
+            var x = minDetectionDistance * Mathf.Cos(theta);
+            var z = minDetectionDistance * Mathf.Sin(theta);
+            var pos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
+            var newPos = pos;
+            var lastPos = pos;
 
-                var direction = aiCharacter.RotationTransform.forward * maxDetectionDistance;
-                var leftRayRotation = Quaternion.AngleAxis(-(fieldOfViewRange / 2), Vector3.up);
-                var leftRayDirection = leftRayRotation * AiCharacter.RotationTransform.forward;
-                var rightRayRotation = Quaternion.AngleAxis((fieldOfViewRange / 2), Vector3.up);
-                var rightRayDirection = rightRayRotation * AiCharacter.RotationTransform.forward;
+            var direction = aiCharacter.RotationTransform.forward * maxDetectionDistance;
+            var leftRayRotation = Quaternion.AngleAxis(-(fieldOfViewRange / 2), Vector3.up);
+            var leftRayDirection = leftRayRotation * AiCharacter.RotationTransform.forward;
+            var rightRayRotation = Quaternion.AngleAxis((fieldOfViewRange / 2), Vector3.up);
+            var rightRayDirection = rightRayRotation * AiCharacter.RotationTransform.forward;
 
-                Gizmos.DrawRay(AiCharacter.eyeLine.position, direction);
-                Gizmos.DrawRay(AiCharacter.eyeLine.position, leftRayDirection * maxDetectionDistance);
-                Gizmos.DrawRay(AiCharacter.eyeLine.position, rightRayDirection * maxDetectionDistance);
+            Gizmos.DrawRay(AiCharacter.eyeLine.position, direction);
+            Gizmos.DrawRay(AiCharacter.eyeLine.position, leftRayDirection * maxDetectionDistance);
+            Gizmos.DrawRay(AiCharacter.eyeLine.position, rightRayDirection * maxDetectionDistance);
 
-                for (theta = 0.1f; theta < Mathf.PI * 2; theta += 0.1f)
-                {
-                    x = minDetectionDistance * Mathf.Cos(theta);
-                    z = minDetectionDistance * Mathf.Sin(theta);
-                    newPos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
-                    Gizmos.DrawLine(pos, newPos);
-                    pos = newPos;
-                }
-                Gizmos.DrawLine(pos, lastPos);
+            for (theta = 0.1f; theta < Mathf.PI * 2; theta += 0.1f)
+            {
+                x = minDetectionDistance * Mathf.Cos(theta);
+                z = minDetectionDistance * Mathf.Sin(theta);
+                newPos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
+                Gizmos.DrawLine(pos, newPos);
+                pos = newPos;
+            }
+            Gizmos.DrawLine(pos, lastPos);
             //}
         }
         #endregion

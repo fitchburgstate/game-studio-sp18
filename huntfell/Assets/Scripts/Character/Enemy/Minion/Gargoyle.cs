@@ -7,24 +7,6 @@ namespace Hunter.Characters
 {
     public class Gargoyle : Minion
     {
-        #region Properties
-        public override float CurrentHealth
-        {
-            get
-            {
-                return health;
-            }
-            set
-            {
-                if (health <= 0)
-                {
-                    Destroy(gameObject);
-                }
-                health = value;
-            }
-        }
-        #endregion
-
         #region Variables
         [SerializeField]
         private Ranged rangedWeapon;
@@ -35,6 +17,24 @@ namespace Hunter.Characters
         private Transform targetEyeline;
 
         private IEnumerator gargoyleAttackCR;
+        #endregion
+
+        #region Properties
+        public override float CurrentHealth
+        {
+            get
+            {
+                return health;
+            }
+            set
+            {
+                health = value;
+                if (health <= 0)
+                {
+                    Destroy(gameObject);
+                }
+            }
+        }
         #endregion
 
         protected override void Start()
@@ -72,9 +72,5 @@ namespace Hunter.Characters
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
             gargoyleAttackCR = null;
         }
-
-        #region Unused Functions
-
-        #endregion
     }
 }
