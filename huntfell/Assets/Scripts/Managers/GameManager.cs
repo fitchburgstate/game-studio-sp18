@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Playables;
+using Hunter.Characters;
 
 namespace Hunter
 {
@@ -23,6 +25,7 @@ namespace Hunter
         private CanvasGroup canvasGroup;
         private const string CANVASNAME = "FADECANVAS";
         private const string IMAGENAME = "FADEIMAGE";
+        private PlayableDirector director;
 
         private void Awake ()
         {
@@ -38,28 +41,50 @@ namespace Hunter
                 return;
             }
 
-            LoadNewScene("Audio", true);
-            SceneManager.activeSceneChanged += CheckMainSceneLoaded;
+            if (!Application.isEditor)
+            {
+                LoadNewScene("UI_Title_Menu", true);
+                LoadNewScene("Audio", true);
+            }
+
+            //SceneManager.activeSceneChanged += CheckMainSceneLoaded;
+            director = FindObjectOfType<PlayableDirector>();
         }
 
-        private void CheckMainSceneLoaded (Scene oldScene, Scene newScene)
+        public IEnumerator StartGame ()
         {
-            if (newScene.buildIndex == 1) {
-                SceneManager.LoadScene("UI_Hud", LoadSceneMode.Additive);
-                SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
-                if (Fabric.EventManager.Instance != null)
-                {
-                    Fabric.EventManager.Instance.PostEvent("Expo to Combat Music");
-                }
+            if(director == null) {
+                Debug.LogError("Could not start the game because there is no playable director to move the cameras.");
+                yield break;
             }
-            else if(newScene.buildIndex == 0)
-            {
-                if (Fabric.EventManager.Instance != null)
-                {
-                    Fabric.EventManager.Instance.PostEvent("Combat to Expo Music");
-                }
-            }
+
+            director.Play();
+            yield return new WaitForSeconds((float)director.duration);
+
+            SceneManager.LoadScene("UI_Hud", LoadSceneMode.Additive);
+            SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
+            DeviceManager.Instance.gameInputEnabled = true;
+
+            var player = FindObjectOfType<Player>();
+            player.transform.forward = Camera.main.transform.forward;
+
+            Fabric.EventManager.Instance.PostEvent("Expo to Combat Music");
         }
+
+        //private void CheckMainSceneLoaded (Scene oldScene, Scene newScene)
+        //{
+        //    if (newScene.buildIndex == 1) {
+        //        if (Fabric.EventManager.Instance != null)
+        //        {
+        //        }
+        //    }
+        //    else if(newScene.buildIndex == 0)
+        //    {
+        //        if (Fabric.EventManager.Instance != null)
+        //        {
+        //        }
+        //    }
+        //}
 
         public void LoadNewScene (string sceneName, bool loadAdditively)
         {

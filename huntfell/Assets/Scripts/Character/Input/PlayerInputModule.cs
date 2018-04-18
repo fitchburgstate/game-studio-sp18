@@ -9,7 +9,6 @@ namespace Hunter.Characters
         #region Variables
         private DeviceManager deviceManager;
 
-        public bool inputEnabled = true;
         private bool inPauseMenu = false;
 
         private IAttack attackCharacter;
@@ -28,8 +27,6 @@ namespace Hunter.Characters
 
         private void Update ()
         {
-            if (!inputEnabled) { return; }
-
             //Game Input Actions
             if (!inPauseMenu)
             {

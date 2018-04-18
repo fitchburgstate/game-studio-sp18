@@ -35,7 +35,7 @@ namespace Hunter.Characters
         protected override void Start()
         {
             base.Start();
-            Fabric.EventManager.Instance.PostEvent("Bat Start Wing Loop", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Bat Start Wing Loop", gameObject);
         }
 
         public void Idle()
@@ -61,6 +61,7 @@ namespace Hunter.Characters
             agent.destination = transform.position;
             anim.SetTrigger("death");
             Fabric.EventManager.Instance.PostEvent("Bat Stop Wing Loop", gameObject);
+            GetComponentInChildren<PassiveAreaDamage>().doDamage = false;
             minionHealthBarParent?.gameObject.SetActive(false);
             //TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);

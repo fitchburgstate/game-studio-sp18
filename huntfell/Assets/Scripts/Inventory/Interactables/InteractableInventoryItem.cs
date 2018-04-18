@@ -19,6 +19,9 @@ namespace Hunter
         [SerializeField]
         private AnimationCurve propCurve;
 
+        public string tutorialText;
+        public Sprite tutorialIcon;
+
         private Collider interactableItemCollider;
         private float propHeightOffset; // half the height of the object
         private Vector3 targetPosition;
@@ -30,7 +33,14 @@ namespace Hunter
 
         public virtual void FireInteraction (Character characterTriggeringInteraction)
         {
-            (characterTriggeringInteraction as Player)?.Inventory.TryAddItem(itemData, this);
+            var player = characterTriggeringInteraction as Player;
+            if (player != null && player.Inventory.TryAddItem(itemData, this))
+            {
+                if(!string.IsNullOrEmpty(tutorialText) && tutorialIcon != null)
+                {
+                    HUDManager.instance?.ShowTutorialPrompt(tutorialText, tutorialIcon);
+                }
+            }
         }
 
         public void SpawnFromProp () // when object is spawned from an interactble prop

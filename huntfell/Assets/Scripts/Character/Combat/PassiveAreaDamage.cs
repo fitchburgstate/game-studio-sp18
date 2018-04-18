@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Hunter.Characters;
 
-namespace Hunter.AI
+namespace Hunter
 {
     public class PassiveAreaDamage : MonoBehaviour
     {
@@ -19,6 +19,8 @@ namespace Hunter.AI
                 return aiCharacter;
             }
         }
+
+        public bool doDamage = true;
         #endregion
 
         #region Variables
@@ -55,6 +57,7 @@ namespace Hunter.AI
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!doDamage) { return; }
             var damageable = other.gameObject.GetComponent<IDamageable>();
             if ((other.tag == "Player") && (damageable != null))
             {
@@ -66,6 +69,7 @@ namespace Hunter.AI
 
         private void OnTriggerExit(Collider other)
         {
+            //if (!doDamage) { return; }
             var batDot = other.gameObject.GetComponent<HealthDrainDot>();
             if (batDot != null)
             {

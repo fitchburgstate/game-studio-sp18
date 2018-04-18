@@ -277,12 +277,10 @@ namespace Hunter
             else if (item is JournalItem && !journalEntries.ContainsKey(item as JournalItem))
             {
                 journalEntries.Add(item as JournalItem, spawnedInteractableItem);
-                if (HUDManager.instance != null) { HUDManager.instance.ShowJournalPickup((item as JournalItem).bookContents); }
             }
             else if (item is DiaryItem && !diaryEntries.ContainsKey(item as DiaryItem))
             {
                 diaryEntries.Add(item as DiaryItem, spawnedInteractableItem);
-                if (HUDManager.instance != null) { HUDManager.instance.ShowJournalPickup((item as DiaryItem).bookContents); }
             }
             else
             {

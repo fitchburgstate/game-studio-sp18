@@ -90,6 +90,13 @@ namespace Hunter.Characters
                 nearbyInteractables.Add(interactableItem);
                 CheckInteractImage();
             }
+
+            var tutorialTrigger = other.GetComponent<TutorialTrigger>();
+            if(tutorialTrigger != null && HUDManager.instance != null)
+            {
+                HUDManager.instance.ShowTutorialPrompt(tutorialTrigger.tutorialText, tutorialTrigger.controlSprite);
+                tutorialTrigger.gameObject.SetActive(false);
+            }
         }
 
         private void OnTriggerExit (Collider other)
@@ -120,7 +127,7 @@ namespace Hunter.Characters
             var characterRoot = RotationTransform;
 
             //Moving the Player
-            var turningSpeedSlow = Mathf.Clamp((moveDirection - lookDirection).magnitude, 1.0f, 1.5f);
+            //var turningSpeedSlow = Mathf.Clamp((moveDirection - lookDirection).magnitude, 1.0f, 1.5f);
 
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= moveSpeed;
@@ -128,7 +135,7 @@ namespace Hunter.Characters
             agent.destination = characterRoot.position;
             agent.updateRotation = false;
 
-            characterController.Move((moveDirection * Time.deltaTime) / turningSpeedSlow);
+            characterController.Move((moveDirection * Time.deltaTime));
 
             //Rotating the Player
             if (lookDirection.magnitude != 0)

@@ -38,6 +38,9 @@ namespace Hunter
         public bool overrideLayout;
         public ControlsLayout inspectorLayout;
 
+        public bool uiInputEnabled = true;
+        public bool gameInputEnabled = true;
+
         #endregion
 
         private void Awake ()
@@ -115,32 +118,38 @@ namespace Hunter
         private void Update ()
         {
             //UI Inputs
-            PressedMenu = controls.UI.MenuButton.WasPressed;
-            PressedJournal = controls.UI.JournalsButton.WasPressed;
+            if (uiInputEnabled)
+            {
+                PressedMenu = controls.UI.MenuButton.WasPressed;
+                PressedJournal = controls.UI.JournalsButton.WasPressed;
 
-            PressedConfirm = controls.UI.ConfirmButton.WasPressed;
-            PressedCancel = controls.UI.CancelButton.WasPressed;
+                PressedConfirm = controls.UI.ConfirmButton.WasPressed;
+                PressedCancel = controls.UI.CancelButton.WasPressed;
 
-            PressedPageLeft = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value < 0;
-            PressedPageRight = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value > 0;
+                PressedPageLeft = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value < 0;
+                PressedPageRight = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value > 0;
+            }
 
             //Game Inputs
-            Move = controls.Game.MoveAxes.Value;
-            Look = controls.Game.LookAxes.Value;
+            if (gameInputEnabled)
+            {
+                Move = controls.Game.MoveAxes.Value;
+                Look = controls.Game.LookAxes.Value;
 
-            PressedElementDown = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value < 0;
-            PressedElementUp = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value > 0;
+                PressedElementDown = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value < 0;
+                PressedElementUp = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value > 0;
 
-            PressedWeaponDown = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value < 0;
-            PressedWeaponUp = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value > 0;
+                PressedWeaponDown = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value < 0;
+                PressedWeaponUp = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value > 0;
 
-            PressedSwitchRanged = controls.Game.WeaponTypeRangedButton.WasPressed;
-            PressedSwitchMelee = controls.Game.WeaponTypeMeleeButton.WasPressed;
+                PressedSwitchRanged = controls.Game.WeaponTypeRangedButton.WasPressed;
+                PressedSwitchMelee = controls.Game.WeaponTypeMeleeButton.WasPressed;
 
-            PressedAttack = controls.Game.AttackButton.WasPressed;
-            PressedDash = controls.Game.DashButton.WasPressed;
-            PressedInteract = controls.Game.InteractButton.WasPressed;
-            PressedPotion = controls.Game.PotionButton.WasPressed;
+                PressedAttack = controls.Game.AttackButton.WasPressed;
+                PressedDash = controls.Game.DashButton.WasPressed;
+                PressedInteract = controls.Game.InteractButton.WasPressed;
+                PressedPotion = controls.Game.PotionButton.WasPressed;
+            }
         }
     }
 }

@@ -9,8 +9,8 @@ namespace Hunter {
 
         [HideInInspector]
         public static HUDManager instance;
-        [SerializeField]
-        private Canvas hudCanvas;
+        public Canvas hudCanvas;
+
         [SerializeField]
         public Image healthBar;
         [SerializeField]
@@ -24,21 +24,28 @@ namespace Hunter {
         [SerializeField]
         private Image activeElement;
         [SerializeField]
-        private TextMeshProUGUI pickupText;
+        private TextMeshProUGUI promptText;
         [SerializeField]
-        private Image pickupIcon;
+        private Image promptIcon;
         [SerializeField]
-        private TextMeshProUGUI journalText;
+        private TextMeshProUGUI tutorialText;
+        [SerializeField]
+        private Image tutorialIcon;
+
         public AnimationCurve fadeCurve;
         [SerializeField]
         private Sprite nullElementSprite;
+        [SerializeField]
+        private Sprite hintSprite;
 
         public GameObject damagePopUpPrefab;
-        private GameObject promptParent;
+        private CanvasGroup promptCanvasGroup;
+        private CanvasGroup tutorialCanvasGroup;
+
         //private GameObject journalParent;
 
         private IEnumerator promptFadeCR;
-        private IEnumerator journalFadeCR;
+        private IEnumerator tutorialFadeCR;
 
         public void Awake ()
         {
@@ -56,13 +63,13 @@ namespace Hunter {
                 Debug.LogWarning("There is no HUD Cavnas set in the HUD Manager inspector. Please make sure to set this field. Defaulting to finding any Canvas.");
                 hudCanvas = FindObjectOfType<Canvas>();
             }
-            if(pickupText != null)
+            if(promptText != null && promptIcon != null)
             {
-                promptParent = pickupText.transform.parent.gameObject;
+                promptCanvasGroup = promptText.transform.parent.GetComponent<CanvasGroup>();
             }
-            if(journalText != null)
+            if(tutorialText != null && tutorialIcon != null)
             {
-                //journalParent = journalText.transform.parent.gameObject;
+                tutorialCanvasGroup = tutorialText.transform.parent.GetComponent<CanvasGroup>();
             }
         }
 
@@ -84,41 +91,58 @@ namespace Hunter {
 
         public void ShowItemPickupPrompt(string itemName, Sprite itemIcon)
         {
-            pickupText.text = "Obtained the " + itemName;
-            pickupIcon.sprite = itemIcon;
-            pickupIcon.enabled = true;
-            var cg = promptParent.GetComponent<CanvasGroup>();
+            if (promptText == null || promptIcon == null)
+            {
+                Debug.LogWarning("Could not show the prompt because the elements haven't been set in the inspector.", gameObject);
+                return;
+            }
+
+            promptText.text = "Obtained the " + itemName;
+            promptIcon.sprite = itemIcon;
+
             if (promptFadeCR != null)
             {
                 StopCoroutine(promptFadeCR);
             }
-            promptFadeCR = FadeInAndOut(cg, 2, 3);
+            promptFadeCR = FadeInAndOut(promptCanvasGroup, 2, 3);
             StartCoroutine(promptFadeCR);
         }
 
-        public void ShowPrompt (string text)
+        public void ShowHintPrompt (string text)
         {
-            pickupText.text = text;
-            pickupIcon.enabled = false;
-            var cg = promptParent.GetComponent<CanvasGroup>();
+            if (promptText == null || promptIcon == null)
+            {
+                Debug.LogWarning("Could not show the prompt because the elements haven't been set in the inspector.", gameObject);
+                return;
+            }
+
+            promptText.text = text;
+            promptIcon.sprite = hintSprite;
+
             if(promptFadeCR != null)
             {
                 StopCoroutine(promptFadeCR);
             }
-            promptFadeCR = FadeInAndOut(cg, 2, 3);
+            promptFadeCR = FadeInAndOut(promptCanvasGroup, 2, 3);
             StartCoroutine(promptFadeCR);
         }
 
-        public void ShowJournalPickup(string bookText)
+        public void ShowTutorialPrompt (string text, Sprite controlIcon)
         {
-            //journalText.text = bookText;
-            //var cg = journalParent.GetComponent<CanvasGroup>();
-            //if (journalFadeCR != null)
-            //{
-            //    StopCoroutine(journalFadeCR);
-            //}
-            //journalFadeCR = FadeInAndOut(cg, 2, 3);
-            //StartCoroutine(journalFadeCR);
+            if(tutorialText == null || tutorialIcon == null) {
+                Debug.LogWarning("Could not show the tutorial prompt because the elements haven't been set in the inspector.", gameObject);
+                return;
+            }
+
+            tutorialText.text = text;
+            tutorialIcon.sprite = controlIcon;
+
+            if (tutorialFadeCR != null)
+            {
+                StopCoroutine(tutorialFadeCR);
+            }
+            tutorialFadeCR = FadeInAndOut(tutorialCanvasGroup, 2, 3);
+            StartCoroutine(tutorialFadeCR);
         }
 
         private IEnumerator FadeInAndOut(CanvasGroup canvasGroup, float fadeDuration, float stayDuration)
