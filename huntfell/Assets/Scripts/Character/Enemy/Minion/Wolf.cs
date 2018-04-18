@@ -7,6 +7,35 @@ namespace Hunter.Characters
 {
     public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
+        #region Variables
+        /// <summary>
+        /// This is the speed at which the character runs.
+        /// </summary>
+        [Range(0, 20), Tooltip("The running speed of the character when it is in combat.")]
+        public float speed = 5f;
+
+        [Range(1, 250)]
+        public float turnSpeed = 175f;
+
+        /// <summary>
+        /// The melee weapon that the wolf will use.
+        /// </summary>
+        [SerializeField]
+        private Melee meleeWeapon;
+
+        /// <summary>
+        /// The coroutine for the wolf's attack.
+        /// </summary>
+
+        private IEnumerator attackCR;
+
+        /// <summary>
+        /// Has the wolf just found the player?
+        /// </summary>
+        [HideInInspector]
+        public bool justFound = false;
+        #endregion
+
         #region Properties
         public override float CurrentHealth
         {
@@ -25,28 +54,6 @@ namespace Hunter.Characters
                 }
             }
         }
-        #endregion
-
-        #region Variables
-        /// <summary>
-        /// Has the wolf just found the player?
-        /// </summary>
-        [HideInInspector]
-        public bool justFound = false;
-
-        /// <summary>
-        /// The melee weapon that the wolf will use.
-        /// </summary>
-        [SerializeField]
-        private Melee meleeWeapon;
-
-        /// <summary>
-        /// The coroutine for the wolf's attack.
-        /// </summary>
-        private IEnumerator attackCR;
-
-        [Range(1, 250)]
-        public float turnSpeed = 80f;
         #endregion
 
         protected override void Start()
@@ -70,41 +77,20 @@ namespace Hunter.Characters
             }
         }
 
+        #region Wolf Movement
         public void Move(Transform target)
         {
+            Move(target, speed);
+        }
+
+        public void Move(Transform target, float finalSpeed)
+        {
             if (isDying) { return; }
+            var finalTarget = new Vector3(target.position.x, RotationTransform.localPosition.y, target.position.z);
 
             if (target != null)
             {
-                var finalTarget = new Vector3(target.transform.position.x, RotationTransform.localPosition.y, target.transform.position.z);
-                var navMeshPath = new NavMeshPath();
-
-                RotateTowardsTarget(agent.steeringTarget);
-
-                agent.CalculatePath(finalTarget, navMeshPath);
-                if (navMeshPath != null)
-                {
-                    if (navMeshPath.status == NavMeshPathStatus.PathComplete)
-                    {
-                        agent.speed = speed;
-                        agent.destination = finalTarget;
-                    }
-                    else if (navMeshPath.status == NavMeshPathStatus.PathPartial)
-                    {
-                        Debug.LogWarning("There is a navmesh path but the AI can't reach the destination.");
-                        // Put code here to perform something as a backup
-                        return;
-                    }
-                    else if (navMeshPath.status == NavMeshPathStatus.PathInvalid)
-                    {
-                        Debug.LogError("There is no valid navmesh path that the AI can take to reach the destination.");
-                        return;
-                    }
-                }
-                else
-                {
-                    Debug.LogError("The navmeshpath is null.");
-                }
+                MoveToCalculations(turnSpeed, finalSpeed, finalTarget);
             }
             else
             {
@@ -112,62 +98,31 @@ namespace Hunter.Characters
             }
         }
 
-        public void Turn(Transform target)
+        public void Move(Vector3 target, float finalSpeed)
         {
             if (isDying) { return; }
-            if (target != null)
-            {
-                RotateTowardsTarget(target.position);
-            }
-        }
+            var finalTarget = new Vector3(target.x, RotationTransform.localPosition.y, target.z);
 
-        public void Idle()
-        {
-            // This feature has not yet been implemented.
+            MoveToCalculations(turnSpeed, finalSpeed, finalTarget);
         }
 
         public void Wander(Vector3 target)
         {
             if (isDying) { return; }
+            Move(target, (speed / 2));
+        }
 
-            var navMeshPath = new NavMeshPath();
-
-            agent.CalculatePath(target, navMeshPath);
-            if (navMeshPath != null)
+        public void Turn(Transform target)
+        {
+            if (isDying) { return; }
+            if (target != null)
             {
-                if (navMeshPath.status == NavMeshPathStatus.PathComplete)
-                {
-                    agent.speed = speed / 2;
-                    agent.destination = target;
-                }
-                else if (navMeshPath.status == NavMeshPathStatus.PathPartial)
-                {
-                    Debug.LogWarning("There is a navmesh path but the AI can't reach the destination.");
-                    // Put code here to perform something as a backup
-                    return;
-                }
-                else if (navMeshPath.status == NavMeshPathStatus.PathInvalid)
-                {
-                    Debug.LogError("There is no valid navmesh path that the AI can take to reach the destination.");
-                    return;
-                } 
-            }
-            else
-            {
-                Debug.LogError("The navmeshpath is null.");
+                RotateTowardsTarget(target.position, turnSpeed);
             }
         }
+        #endregion
 
-        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
-        {
-            // This feature will not be implemented.
-        }
-
-        public void Dash()
-        {
-            // This feature will not be implemented.
-        }
-
+        #region Wolf Attack
         private IEnumerator KillWolf(bool isCinematic)
         {
             agent.speed = 0;
@@ -181,12 +136,13 @@ namespace Hunter.Characters
 
         public void Attack()
         {
+            if (isDying) { return; }
             if (attackCR != null) { return; }
             attackCR = PlayAttackAnimation();
             StartCoroutine(attackCR);
         }
 
-        public IEnumerator PlayAttackAnimation ()
+        public IEnumerator PlayAttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("combat");
@@ -194,7 +150,6 @@ namespace Hunter.Characters
             attackCR = null;
         }
 
-        #region Miscellaneous Functions
         public void WolfBiteSoundAnimationEvent()
         {
             Fabric.EventManager.Instance?.PostEvent("Wolf Attack", gameObject);
@@ -209,36 +164,46 @@ namespace Hunter.Characters
         {
             CurrentWeapon?.StartAttackFromAnimationEvent();
         }
+        #endregion
 
-        public void Interact ()
+        #region Unused Functions
+        public void Idle()
+        {
+            if (isDying) { return; }
+            // This feature has not yet been implemented.
+        }
+
+        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        {
+            if (isDying) { return; }
+            // This feature will not be implemented.
+        }
+
+        public void Dash()
+        {
+            if (isDying) { return; }
+            // This feature will not be implemented.
+        }
+
+        public void Interact()
         {
             //Wolves cannot interact with stuff!
             return;
         }
 
-        public void CycleWeapons (bool cycleUp)
+        public void CycleWeapons(bool cycleUp)
         {
             return;
         }
 
-        public void CycleElements (bool cycleUp)
+        public void CycleElements(bool cycleUp)
         {
             return;
         }
 
-        public void SwitchWeaponType (bool switchToMelee)
+        public void SwitchWeaponType(bool switchToMelee)
         {
             return;
-        }
-
-        private void RotateTowardsTarget(Vector3 targetPoint)
-        {
-            var characterRoot = RotationTransform;
-            var dir = targetPoint - transform.position;
-            dir.Normalize();
-
-            var yRotEuler = Quaternion.RotateTowards(characterRoot.localRotation, Quaternion.LookRotation(dir), turnSpeed * Time.deltaTime).eulerAngles.y;
-            characterRoot.localRotation = Quaternion.Euler(0, yRotEuler, 0);
         }
         #endregion
     }

@@ -12,7 +12,7 @@ namespace Hunter {
         private IEnumerator WaitThenLoad ()
         {
             yield return new WaitForSeconds(8);
-            GameManager.instance.LoadNewScene("UI_Title_Menu", false);
+            GameManager.instance.LoadNewScene("Main", false);
         }
     }
 }

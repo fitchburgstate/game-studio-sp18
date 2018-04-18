@@ -1034,7 +1034,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1636492534117518}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 42.89, y: 0, z: -18.170002}
+  m_LocalPosition: {x: -34.01954, y: -0.35999995, z: 6.0893707}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4769187278796580}
@@ -1716,14 +1716,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a849aa914e0a6c34caef4fc0a083ef3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
   totalHealth: 30
-  effectsController: {fileID: 0}
   displayName: Bat
   eyeLine: {fileID: 4316576856280374}
+  effectsController: {fileID: 0}
   enemyElementOption: 0
-  speed: 5
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114425785374631476}
+  speed: 2.5
+  turnSpeed: 175
 --- !u!114 &114300090557752546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1783,6 +1785,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92188624827a28e4db0ab9502d093b33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doDamage: 1
   damageRadius: 3
   damageAmount: 1
   damageInterval: 0.3
@@ -1855,8 +1858,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54082744c3473f047aaaad4aa8c57dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 2
+  attack: 0
+  turn: 0
+  moveTo: 0
+  idle: 1
+  wander: 1
+  retreat: 0
+  maxDistance: 3
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
+  target: {fileID: 0}
+  randomPointTarget: {x: 0, y: 0, z: 0}
 --- !u!114 &114698303465616330
 MonoBehaviour:
   m_ObjectHideFlags: 1

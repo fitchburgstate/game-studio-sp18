@@ -8,6 +8,39 @@ namespace Hunter.Characters
     [RequireComponent(typeof(CharacterController), typeof(NavMeshAgent), typeof(Animator))]
     public abstract class Character : MonoBehaviour, IDamageable
     {
+        #region Variables
+        /// <summary>
+        /// How much health the character has
+        /// </summary>
+        //This needs to be a float for when we do the health bar
+        [SerializeField]
+        protected float health;
+
+        [SerializeField]
+        public int totalHealth = 100;
+
+        /// <summary>
+        /// Name of the Player, to be set in the inspector
+        /// </summary>
+        [SerializeField]
+        private string displayName = "No Name";
+
+        private Weapon currentWeapon = null;
+
+        // Variables for handling character rotation
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
+
+        private Transform rotationTransform;
+
+        public Transform eyeLine;
+
+        protected CharacterController characterController;
+
+        protected NavMeshAgent agent;
+
+        protected Animator anim;
+        #endregion
+
         #region Properties
         public string DisplayName
         {
@@ -17,11 +50,6 @@ namespace Hunter.Characters
             }
         }
 
-        /// <summary>
-        /// How much health the character has
-        /// </summary>
-        //This needs to be a float for when we do the health bar
-        protected float health;
         public virtual float CurrentHealth
         {
             get
@@ -30,11 +58,9 @@ namespace Hunter.Characters
             }
             set
             {
-                health = Mathf.Clamp(value, 0 , totalHealth);
+                health = Mathf.Clamp(value, 0, totalHealth);
             }
         }
-        [SerializeField]
-        protected int totalHealth = 100;
 
         public Weapon CurrentWeapon
         {
@@ -72,42 +98,25 @@ namespace Hunter.Characters
         protected bool isDying = false;
         #endregion
 
-        #region Variables
-        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
-        /// <summary>
-        /// Name of the Player, to be set in the inspector
-        /// </summary>
-        [SerializeField]
-        private string displayName = "No Name";
-
-        private Weapon currentWeapon = null;
-
-        // Variables for handeling character rotation
-        private Transform rotationTransform;
-
-        public Transform eyeLine;
-
-        protected CharacterController characterController;
-        protected NavMeshAgent agent;
-        protected Animator anim;
-        #endregion
-
-        protected virtual void Awake ()
+        #region Unity Functions
+        protected virtual void Awake()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
             effectsController = GetComponentInChildren<EffectsController>();
-            if(effectsController == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
+            if (effectsController == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
             CurrentHealth = totalHealth;
         }
 
-        protected virtual void Start ()
+        protected virtual void Start()
         {
 
         }
+        #endregion
 
-        public void EquipWeaponToCharacter (Weapon weapon)
+        #region Combat Related Functions
+        public void EquipWeaponToCharacter(Weapon weapon)
         {
             if (weapon != null)
             {
@@ -122,7 +131,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void EquipElementToWeapon (Element element)
+        public void EquipElementToWeapon(Element element)
         {
             if (CurrentWeapon != null)
             {
@@ -130,10 +139,11 @@ namespace Hunter.Characters
             }
         }
 
-        public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
+        public void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             if (invinvible || isDying) { return; }
-            if(effectsController != null) {
+            if (effectsController != null)
+            {
                 //Dont apply hits particles for Dot Effects, kinda jank
                 if (damage > 3)
                 {
@@ -155,16 +165,17 @@ namespace Hunter.Characters
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
-        protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected virtual IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
             CurrentHealth -= damage;
             yield return null;
         }
 
-        public virtual void RestoreHealthToCharacter (int restoreAmount)
+        public virtual void RestoreHealthToCharacter(int restoreAmount)
         {
             StopCoroutine("SubtractHealthFromCharacter");
             CurrentHealth += restoreAmount;
         }
+        #endregion
     }
 }
