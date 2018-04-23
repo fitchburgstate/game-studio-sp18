@@ -10,6 +10,7 @@ namespace Hunter.Characters
     {
         #region Variables
         //This needs to be a float for when we do the health bar
+        [Header("Character Options")]
         [SerializeField]
         protected float health;
 
@@ -26,7 +27,6 @@ namespace Hunter.Characters
         [HideInInspector]
         public Transform rotationTransform;
 
-        [HideInInspector]
         public Transform eyeLine;
 
         [HideInInspector]

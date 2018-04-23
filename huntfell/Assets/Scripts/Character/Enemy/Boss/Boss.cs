@@ -5,23 +5,23 @@ using UnityEngine.UI;
 
 namespace Hunter.Characters
 {
-    public abstract class Minion : Enemy
+    public class Boss : Enemy
     {
         #region Variables
+        [Header("Health Bar Options")]
+        public Image bossHealthBar;
         public float invincibilityFrames = 5;
 
-        public Image minionHealthBar;
-
-        protected Transform minionHealthBarParent;
+        protected Transform bossHealthBarParent;
         #endregion
 
         protected override void Start()
         {
             base.Start();
-            if (minionHealthBar != null)
+            if (bossHealthBar != null)
             {
-                minionHealthBarParent = minionHealthBar.transform.parent;
-                minionHealthBarParent.gameObject.SetActive(false);
+                bossHealthBarParent = bossHealthBar.transform.parent;
+                bossHealthBarParent.gameObject.SetActive(false);
             }
         }
 
@@ -29,11 +29,11 @@ namespace Hunter.Characters
         //TODO Move this into Effects Controller as an optional parameter that only minions take
         protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
-            minionHealthBarParent?.gameObject.SetActive(true);
+            bossHealthBarParent?.gameObject.SetActive(true);
             var targetHealth = CurrentHealth - damage;
-            if (minionHealthBar != null)
+            if (bossHealthBar != null)
             {
-                minionHealthBar.fillAmount = targetHealth / totalHealth;
+                bossHealthBar.fillAmount = targetHealth / totalHealth;
             }
             else { Debug.LogWarning($"{name} does not have a health bar set in the inspector."); }
             CurrentHealth = targetHealth;

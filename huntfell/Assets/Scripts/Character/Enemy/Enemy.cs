@@ -54,10 +54,12 @@ namespace Hunter.Characters
                 else if (navMeshPath.status == NavMeshPathStatus.PathPartial)
                 {
                     // Put code here to perform something as a backup
+                    Debug.LogWarning("The path is partially invalid.", gameObject);
                     return;
                 }
                 else if (navMeshPath.status == NavMeshPathStatus.PathInvalid)
                 {
+                    Debug.LogWarning("The path is invalid.", gameObject);
                     return;
                 }
             }

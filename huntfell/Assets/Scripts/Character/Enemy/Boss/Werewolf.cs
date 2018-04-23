@@ -1,39 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+using Hunter.Characters.AI;
 
 namespace Hunter.Characters
 {
-    public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
+    public class Werewolf : Boss, IMoveable, IAttack, IUtilityBasedAI
     {
         #region Variables
-        /// <summary>
-        /// This is the speed at which the character runs.
-        /// </summary>
+        [Header("Movement Options")]
         [Range(0, 20), Tooltip("The running speed of the character when it is in combat.")]
         public float speed = 5f;
 
         [Range(1, 250)]
         public float turnSpeed = 175f;
 
-        /// <summary>
-        /// The melee weapon that the wolf will use.
-        /// </summary>
+        [Header("Combat Options")]
         [SerializeField]
-        private Melee meleeWeapon;
-
-        /// <summary>
-        /// The coroutine for the wolf's attack.
-        /// </summary>
+        private Melee leftClawWeapon;
+        [SerializeField]
+        private Melee rightClawWeapon;
+        [SerializeField]
+        private Melee doubleSwipeWeapon;
 
         private IEnumerator attackCR;
-
-        /// <summary>
-        /// Has the wolf just found the player?
-        /// </summary>
         [HideInInspector]
         public bool justFound = false;
+
+        // Phase related variables
+        [Range(1, 3)]
+        private int phase = 1;
+        private bool spawnMinions = false;
+
+        private BossInputModule bossInputModule;
         #endregion
 
         #region Properties
@@ -49,9 +48,18 @@ namespace Hunter.Characters
                 if (health <= 0 && !isDying)
                 {
                     // TODO Change this to reflect wether the death anim should be cinematic or not later
-                    StartCoroutine(KillWolf(true));
+                    StartCoroutine(KillWerewolf(true));
                     isDying = true;
                 }
+            }
+        }
+
+        public BossInputModule BossInputModule
+        {
+            get
+            {
+                if (bossInputModule == null) { GetComponent<BossInputModule>(); }
+                return bossInputModule;
             }
         }
         #endregion
@@ -60,7 +68,8 @@ namespace Hunter.Characters
         protected override void Start()
         {
             base.Start();
-            if (meleeWeapon != null) { EquipWeaponToCharacter(meleeWeapon); }
+            bossInputModule = GetComponent<BossInputModule>();
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
             agent.updateRotation = false;
         }
 
@@ -79,7 +88,7 @@ namespace Hunter.Characters
         }
         #endregion
 
-        #region Wolf Movement
+        #region Werewolf Movement
         public void Move(Transform target)
         {
             if (isDying) { return; }
@@ -104,15 +113,11 @@ namespace Hunter.Characters
         public void Move(Vector3 target, float finalSpeed)
         {
             if (isDying) { return; }
-            var finalTarget = new Vector3(target.x, RotationTransform.localPosition.y, target.z);
-
-            MoveToCalculations(turnSpeed, finalSpeed, finalTarget);
         }
 
         public void Wander(Vector3 target)
         {
             if (isDying) { return; }
-            Move(target, (speed / 2));
         }
 
         public void Turn(Transform target)
@@ -125,16 +130,13 @@ namespace Hunter.Characters
         }
         #endregion
 
-        #region Wolf Attack
-        private IEnumerator KillWolf(bool isCinematic)
+        #region Werewolf Attack
+        private IEnumerator KillWerewolf(bool isCinematic)
         {
             agent.speed = 0;
             agent.destination = transform.position;
-            anim.SetTrigger(isCinematic ? "cinDeath" : "death");
-            minionHealthBarParent?.gameObject.SetActive(false);
-            // TODO Change this later to reflect the animation time
-            yield return new WaitForSeconds(5);
-            Destroy(gameObject);
+            anim.SetTrigger("death");
+            yield return null;
         }
 
         public void Attack()
@@ -145,27 +147,72 @@ namespace Hunter.Characters
             StartCoroutine(attackCR);
         }
 
+        #region Deprecated Code
+        //public IEnumerator PlayFirstSwingAnimation()
+        //{
+        //    if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+        //    anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+        //    anim.SetTrigger("combat");
+        //    yield return new WaitForSeconds(.75f);
+        //    attackCR = PlaySecondSwingAnimation();
+        //    yield return StartCoroutine(attackCR);
+        //}
+
+        //public IEnumerator PlaySecondSwingAnimation()
+        //{
+        //    if (leftClawWeapon != null) EquipWeaponToCharacter(leftClawWeapon);
+        //    yield return new WaitForSeconds(.75f);
+        //    attackCR = PlayThirdSwingAnimation();
+        //    yield return StartCoroutine(attackCR);
+        //}
+
+        //public IEnumerator PlayThirdSwingAnimation()
+        //{
+        //    if (doubleSwipeWeapon != null) EquipWeaponToCharacter(doubleSwipeWeapon);
+        //    yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
+        //    attackCR = null;
+        //    if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+        //}
+        #endregion
+
         public IEnumerator PlayAttackAnimation()
         {
-            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-            anim.SetTrigger("combat");
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+            BossInputModule.isAttacking = true;
+            var swingCount = 1;
+            while (swingCount < 4)
+            {
+                switch (swingCount)
+                {
+                    case 1:
+                        if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+                        anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+                        anim.SetTrigger("combat");
+                        swingCount += 2;
+                        yield return new WaitForSeconds(.25f);
+                        break;
+                    case 2:
+                        if (leftClawWeapon != null) EquipWeaponToCharacter(leftClawWeapon);
+                        swingCount += 3;
+                        yield return new WaitForSeconds(.25f);
+                        break;
+                    case 3:
+                        if (doubleSwipeWeapon != null) EquipWeaponToCharacter(doubleSwipeWeapon);
+                        swingCount += 4;
+                        yield return new WaitForSeconds(.25f);
+                        break;
+                }
+            }
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+            BossInputModule.isAttacking = false;
             attackCR = null;
-        }
-
-        public void WolfBiteSoundAnimationEvent()
-        {
-            Fabric.EventManager.Instance?.PostEvent("Wolf Attack", gameObject);
-        }
-
-        public void WolfLungeSoundAnimationEvent()
-        {
-            Fabric.EventManager.Instance?.PostEvent("Wolf Lunge Attack", gameObject);
         }
 
         public void WeaponAnimationEvent()
         {
-            CurrentWeapon?.StartAttackFromAnimationEvent();
+            if (isDying) { return; }
+            CurrentWeapon.StartAttackFromAnimationEvent();
         }
         #endregion
 

@@ -30,61 +30,61 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// Represents which direction the character should move in.
         /// </summary>
-        private Vector3 moveDirection = Vector3.zero;
+        protected Vector3 moveDirection = Vector3.zero;
 
         /// <summary>
         /// Represents which direction the character should look in.
         /// </summary>
-        private Vector3 lookDirection = Vector3.zero;
+        protected Vector3 lookDirection = Vector3.zero;
 
         /// <summary>
         /// The model's gameobject. This exists so the model can be turned independently of the parent.
         /// </summary>
-        private GameObject enemyModel;
+        protected GameObject enemyModel;
 
         /// <summary>
         /// This is the navmesh agent attached to the parent. The navmesh is used to find walkable area.
         /// </summary>
-        private NavMeshAgent agent;
+        protected NavMeshAgent agent;
 
         /// <summary>
         /// The character controller that controls the character's movement.
         /// </summary>
-        private CharacterController controller;
+        protected CharacterController controller;
 
         /// <summary>
         /// The final direction that the character will face that's calculated.
         /// </summary>
-        private Vector3 finalDirection;
+        protected Vector3 finalDirection;
 
         /// <summary>
         /// The target that the AI has acquired.
         /// </summary>
         [SerializeField]
-        private Transform target;
+        protected Transform target;
 
         /// <summary>
         /// The target point that the AI has acquired.
         /// </summary>
         [SerializeField]
-        private Vector3 randomPointTarget;
+        protected Vector3 randomPointTarget;
 
-        private float tempHealth = 0f;
+        protected float tempHealth = 0f;
 
         #region AI Actions
-        private AIDetection aiDetection;
-        private Attack attackAction;
-        private Turn turnAction;
-        private MoveTo moveToAction;
-        private Idle idleAction;
-        private Wander wanderAction;
-        private Retreat retreatAction;
-        private Enemy enemy;
+        protected AIDetection aiDetection;
+        protected Attack attackAction;
+        protected Turn turnAction;
+        protected MoveTo moveToAction;
+        protected Idle idleAction;
+        protected Wander wanderAction;
+        protected Retreat retreatAction;
+        protected Enemy enemy;
         #endregion
 
-        private bool enemyInLOS = false;
-        private bool inCombat = false;
-        private bool enemyInVisionCone = false;
+        protected bool enemyInLOS = false;
+        protected bool inCombat = false;
+        protected bool enemyInVisionCone = false;
         #endregion
 
         #region Properties
@@ -200,7 +200,8 @@ namespace Hunter.Characters.AI
         }
         #endregion
 
-        private void Start()
+        #region Unity Functions
+        protected virtual void Start()
         {
             urgeWeights = ScriptableObject.CreateInstance<UrgeWeights>();
             enemy = GetComponent<Enemy>();
@@ -215,7 +216,7 @@ namespace Hunter.Characters.AI
             #endregion
         }
 
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             if (!inCombat)
             {
@@ -241,10 +242,16 @@ namespace Hunter.Characters.AI
                 {
                     inCombat = false;
 
+                    var werewolfComponent = GetComponent<Werewolf>();
                     var wolfComponent = GetComponent<Wolf>();
+
                     if (wolfComponent != null)
                     {
                         wolfComponent.justFound = false;
+                    }
+                    else if (werewolfComponent != null)
+                    {
+                        werewolfComponent.justFound = false;
                     }
                     else { return; }
                 }
@@ -253,7 +260,7 @@ namespace Hunter.Characters.AI
             var currentState = FindNextState(distanceToTarget, distanceToPoint);
 
 #if UNITY_EDITOR
-            //Debug.Log(currentState);
+            Debug.Log(currentState);
             //Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
 #endif
 
@@ -288,13 +295,14 @@ namespace Hunter.Characters.AI
 
             tempHealth = enemy.CurrentHealth;
         }
+        #endregion
 
         #region FindNextState Function
         /// <summary>
         /// This function performs various operations to determine what action has the highest urge value and then returns it.
         /// </summary>
         /// <returns></returns>
-        public UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
+        public virtual UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
         {
             var attackValue = 0f;
             var idleValue = 0f;
@@ -340,7 +348,7 @@ namespace Hunter.Characters.AI
         #endregion
 
         #region DistanceToTarget Function
-        private float DistanceToTarget(Vector3 targetPosition)
+        protected float DistanceToTarget(Vector3 targetPosition)
         {
             var distance = Vector3.Distance(targetPosition, gameObject.transform.position);
 
