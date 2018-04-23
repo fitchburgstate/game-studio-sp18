@@ -3,17 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
-        [HideInInspector]
-        public bool justFound = false;
+        #region Variables
+        /// <summary>
+        /// This is the speed at which the character runs.
+        /// </summary>
+        [Range(0, 20), Tooltip("The running speed of the character when it is in combat.")]
+        public float speed = 5f;
 
+        [Range(1, 250)]
+        public float turnSpeed = 175f;
+
+        /// <summary>
+        /// The melee weapon that the wolf will use.
+        /// </summary>
         [SerializeField]
         private Melee meleeWeapon;
+
+        /// <summary>
+        /// The coroutine for the wolf's attack.
+        /// </summary>
+
         private IEnumerator attackCR;
 
+        /// <summary>
+        /// Has the wolf just found the player?
+        /// </summary>
+        [HideInInspector]
+        public bool justFound = false;
+        #endregion
+
+        #region Properties
         public override float CurrentHealth
         {
             get
@@ -25,81 +48,103 @@ namespace Hunter.Character
                 health = value;
                 if (health <= 0 && !isDying)
                 {
-                    //TODO Change this to reflect wether the death anim should be cinematic or not later
+                    // TODO Change this to reflect wether the death anim should be cinematic or not later
                     StartCoroutine(KillWolf(true));
                     isDying = true;
                 }
             }
         }
+        #endregion
 
-        protected override void Start ()
+        #region Unity Functions
+        protected override void Start()
         {
             base.Start();
             if (meleeWeapon != null) { EquipWeaponToCharacter(meleeWeapon); }
+            agent.updateRotation = false;
         }
 
-        private void Update ()
+        private void Update()
         {
-            anim.SetFloat("dirX", agent.velocity.x / runSpeed);
-            anim.SetFloat("dirY", agent.velocity.z / runSpeed);
-            anim.SetBool("moving", Mathf.Abs(agent.velocity.magnitude) > 0.02f);
+            if (anim != null)
+            {
+                anim.SetFloat("dirX", agent.velocity.x / speed);
+                anim.SetFloat("dirY", agent.velocity.z / speed);
+                anim.SetBool("moving", Mathf.Abs(agent.velocity.magnitude) > 0.02f);
+            }
+            else
+            {
+                Debug.LogWarning("There is no animator controller; floats dirX and dirY as well as bool moving are not being set.");
+            }
         }
+        #endregion
 
+        #region Wolf Movement
         public void Move(Transform target)
         {
-            if (isDying) { return; }
-            var finalTarget = new Vector3(target.transform.position.x, RotationTransform.transform.localPosition.y, target.transform.position.z);
-            agent.speed = runSpeed;
-            agent.destination = finalTarget;
+            Move(target, speed);
         }
 
-        public void Idle()
+        public void Move(Transform target, float finalSpeed)
         {
-            // This feature has not yet been implemented.
+            if (isDying) { return; }
+            var finalTarget = new Vector3(target.position.x, RotationTransform.localPosition.y, target.position.z);
+
+            if (target != null)
+            {
+                MoveToCalculations(turnSpeed, finalSpeed, finalTarget);
+            }
+            else
+            {
+                Debug.LogError("The target is null.");
+            }
+        }
+
+        public void Move(Vector3 target, float finalSpeed)
+        {
+            if (isDying) { return; }
+            var finalTarget = new Vector3(target.x, RotationTransform.localPosition.y, target.z);
+
+            MoveToCalculations(turnSpeed, finalSpeed, finalTarget);
         }
 
         public void Wander(Vector3 target)
         {
             if (isDying) { return; }
-            agent.speed = runSpeed / 2;
-            agent.destination = target;
+            Move(target, (speed / 2));
         }
 
-        public void Move (Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        public void Turn(Transform target)
         {
-            //fuck you
+            if (isDying) { return; }
+            if (target != null)
+            {
+                RotateTowardsTarget(target.position, turnSpeed);
+            }
         }
+        #endregion
 
-        public void Dash ()
-        {
-            // no dash for wolfie boi
-        }
-
-        private IEnumerator KillWolf (bool isCinematic)
+        #region Wolf Attack
+        private IEnumerator KillWolf(bool isCinematic)
         {
             agent.speed = 0;
             agent.destination = transform.position;
             anim.SetTrigger(isCinematic ? "cinDeath" : "death");
             minionHealthBarParent?.gameObject.SetActive(false);
-            //TODO Change this later to reflect the animation time
+            // TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);
             Destroy(gameObject);
         }
 
-        public void Attack ()
+        public void Attack()
         {
+            if (isDying) { return; }
             if (attackCR != null) { return; }
             attackCR = PlayAttackAnimation();
             StartCoroutine(attackCR);
         }
 
-        public void SwitchWeapon (bool cycleRanged, bool cycleMelee)
-        {
-            //Wolf only has one weapon so we don't need to switch
-            return;
-        }
-
-        public IEnumerator PlayAttackAnimation ()
+        public IEnumerator PlayAttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("combat");
@@ -109,23 +154,59 @@ namespace Hunter.Character
 
         public void WolfBiteSoundAnimationEvent()
         {
-            Fabric.EventManager.Instance.PostEvent("Wolf Attack", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Wolf Attack", gameObject);
         }
 
         public void WolfLungeSoundAnimationEvent()
         {
-            Fabric.EventManager.Instance.PostEvent("Wolf Lunge Attack", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Wolf Lunge Attack", gameObject);
         }
 
-        public void WeaponAnimationEvent ()
+        public void WeaponAnimationEvent()
         {
-            CurrentWeapon.StartAttackFromAnimationEvent();
+            CurrentWeapon?.StartAttackFromAnimationEvent();
+        }
+        #endregion
+
+        #region Unused Functions
+        public void Idle()
+        {
+            if (isDying) { return; }
+            // This feature has not yet been implemented.
         }
 
-        public void SwitchElement (bool cycleUp, bool cycleDown)
+        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
         {
-            //This can be implemented later if we want elemental wolves
+            if (isDying) { return; }
+            // This feature will not be implemented.
+        }
+
+        public void Dash()
+        {
+            if (isDying) { return; }
+            // This feature will not be implemented.
+        }
+
+        public void Interact()
+        {
+            //Wolves cannot interact with stuff!
             return;
         }
+
+        public void CycleWeapons(bool cycleUp)
+        {
+            return;
+        }
+
+        public void CycleElements(bool cycleUp)
+        {
+            return;
+        }
+
+        public void SwitchWeaponType(bool switchToMelee)
+        {
+            return;
+        }
+        #endregion
     }
 }

@@ -1,12 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Character.AI;
+using Hunter.Characters.AI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     public class Gargoyle : Minion
     {
+        #region Variables
+        [SerializeField]
+        private Ranged rangedWeapon;
+
+        private AIDetection gargoyleDetection;
+
+        private GameObject target;
+        private Transform targetEyeline;
+
+        private IEnumerator gargoyleAttackCR;
+        #endregion
+
         #region Properties
         public override float CurrentHealth
         {
@@ -16,25 +28,13 @@ namespace Hunter.Character
             }
             set
             {
+                health = value;
                 if (health <= 0)
                 {
                     Destroy(gameObject);
                 }
-                health = value;
             }
         }
-        #endregion
-
-        #region Variables
-        [SerializeField]
-        private Range rangedWeapon;
-
-        private AIDetection gargoyleDetection;
-
-        private GameObject target;
-        private Transform targetEyeline;
-
-        private IEnumerator gargoyleAttackCR;
         #endregion
 
         protected override void Start()
@@ -67,14 +67,10 @@ namespace Hunter.Character
         private IEnumerator GargoyleAttack()
         {
             rangedWeapon.StartAttackFromAnimationEvent();
-            Fabric.EventManager.Instance.PostEvent("Gargoyle Attack", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Gargoyle Attack", gameObject);
 
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
             gargoyleAttackCR = null;
         }
-
-        #region Unused Functions
-
-        #endregion
     }
 }

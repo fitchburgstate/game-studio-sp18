@@ -2,22 +2,19 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Hunter.Character;
+using Hunter.Characters;
 
 namespace Hunter
 {
     public static class Utility
     {
+        #region RandomNavMeshPoint Function
         /// <summary>
         /// Finds random point on navmesh based on a stating center position, a range/distance it can go, and a vector3 navposition
         /// </summary>
-        /// <param name="center"></param>
-        /// <param name="range"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
         public static bool RandomNavMeshPoint(Vector3 center, float range, out Vector3 result)
         {
-            for(var i = 0; i < 30; i++)
+            for (var i = 0; i < 30; i++)
             {
                 var randomPoint = center + UnityEngine.Random.insideUnitSphere * range;
                 NavMeshHit hit;
@@ -30,10 +27,12 @@ namespace Hunter
             result = Vector3.zero;
             return false;
         }
+        #endregion
 
+        #region ElementOptionToElement Function
         public static Element ElementOptionToElement(ElementOption elementOption)
         {
-            switch(elementOption)
+            switch (elementOption)
             {
                 case ElementOption.Fire:
                     return new Element.Fire();
@@ -53,19 +52,49 @@ namespace Hunter
             }
             return null;
         }
+        #endregion
 
+        #region ElementToElementOption Function
         //Yeah this breaks style guide lines, dont fucking touch it -Connor
         public static ElementOption ElementToElementOption(Element element)
         {
-                 if(element is Element.Fire)        { return ElementOption.Fire; }
-            else if(element is Element.Ice)         { return ElementOption.Ice; }
-            else if(element is Element.Lightning)   { return ElementOption.Lightning; }
-            else if(element is Element.Nature)      { return ElementOption.Nature; }
-            else if(element is Element.Silver)      { return ElementOption.Silver; }
-            else                                    { return ElementOption.None; }
+            if (element is Element.Fire) { return ElementOption.Fire; }
+            else if (element is Element.Ice) { return ElementOption.Ice; }
+            else if (element is Element.Lightning) { return ElementOption.Lightning; }
+            else if (element is Element.Nature) { return ElementOption.Nature; }
+            else if (element is Element.Silver) { return ElementOption.Silver; }
+            else { return ElementOption.None; }
         }
+        #endregion
+
+        #region FindClosestPointOnNavmesh
+        public static Vector3 GetClosestPointOnNavMesh(Vector3 target, NavMeshAgent agent, Transform transform)
+        {
+            var hit = new NavMeshHit();
+            // This gives us a sample radius for the NavMesh check relative to our NavMesh agent size, so given either scenerio where we are passed a floor point or the character's position, we should be able to find a point on the NavMesh
+            var sampleRadius = agent.height + agent.baseOffset;
+
+            if (NavMesh.SamplePosition(target, out hit, sampleRadius, NavMesh.AllAreas))
+            {
+                target = hit.position;
+                //Debug.Log("Hit Position of NavMesh Sample from RayCast: " + target);
+            }
+            else if (NavMesh.SamplePosition(transform.position, out hit, sampleRadius, NavMesh.AllAreas))
+            {
+                target = hit.position;
+                Debug.LogWarning("Could not find a NavMesh point with the given target. Falling back to the character's current position. Hit Position of NavMesh Sample from current position: " + target);
+            }
+            else
+            {
+                target = transform.position;
+                Debug.LogError("Could not find a closest point on the NavMesh from either the RayCast Hit Position or the character's current location. Are you sure the character is on the NavMesh?");
+            }
+            return target;
+        }
+        #endregion
     }
 
+    #region Interfaces
     //Interface behaviours for characters and interactables
     public interface IMoveable
     {
@@ -74,18 +103,22 @@ namespace Hunter
         void Move(Transform navMeshTarget);
 
         void Dash();
+
+        void Interact();
     }
 
     public interface IUtilityBasedAI
     {
         void Idle();
 
-        void Wander(Vector3 finalTarget);
+        void Wander(Vector3 point);
+
+        void Turn(Transform target);
     }
 
     public interface IDamageable
     {
-        void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith);
+        void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith);
     }
 
     public interface IAttack
@@ -96,8 +129,19 @@ namespace Hunter
 
         void WeaponAnimationEvent();
 
-        void SwitchWeapon (bool cycleRanged, bool cycleMelee);
+        void CycleWeapons(bool cycleUp);
 
-        void SwitchElement (bool cycleUp, bool cycleDown);
+        void CycleElements(bool cycleUp);
+
+        void SwitchWeaponType(bool switchToMelee);
     }
+
+
+    public interface IInteractable
+    {
+        void FireInteraction(Character characterTriggeringInteraction);
+
+        bool IsImportant();
+    }
+    #endregion
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     [RequireComponent(typeof(BoxCollider))]
     public class Melee : Weapon
@@ -46,15 +46,7 @@ namespace Hunter.Character
             var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
             damageableObject.TakeDamage(totalDamage, isCritical, this);
 
-            if (characterHoldingWeapon.tag == "Player")
-            {
-                Fabric.EventManager.Instance.PostEvent("Player Sword Hit", gameObject);
-            }
-
-            if (characterHoldingWeapon.tag == "Enemy")
-            {
-                Fabric.EventManager.Instance.PostEvent("Player Hit", gameObject);
-            }
+            
         }
 
         /// <summary>
@@ -62,7 +54,7 @@ namespace Hunter.Character
         /// </summary>
         public override void StartAttackFromAnimationEvent ()
         {
-            Debug.Log("Swinging Melee Weapon.");
+            //Debug.Log("Swinging Melee Weapon.");
             StartCoroutine(OpenAndCloseHitBox());
         }
 

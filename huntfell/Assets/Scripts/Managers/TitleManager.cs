@@ -14,7 +14,7 @@ namespace Hunter
 
         private void Start ()
         {
-            myDeviceManager = DeviceManager.instance;
+            myDeviceManager = DeviceManager.Instance;
 
         }
 
@@ -24,13 +24,13 @@ namespace Hunter
             {
                 if (titlePanel.activeSelf)
                 {
-                    Fabric.EventManager.Instance.PostEvent("UI Navigation Blip");
+                    Fabric.EventManager.Instance?.PostEvent("UI Navigation Blip");
                     titlePanel.SetActive(false);
                     tutorialPanel.SetActive(true);
                 }
                 else
                 {
-                    Fabric.EventManager.Instance.PostEvent("UI Start Game");
+                    Fabric.EventManager.Instance?.PostEvent("UI Start Game");
                     GameManager.instance.LoadNewScene("PAXLevelScene", false);
                     acceptingInput = false;
                 }

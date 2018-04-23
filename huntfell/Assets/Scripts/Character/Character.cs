@@ -3,11 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Hunter.Character
+namespace Hunter.Characters
 {
     [RequireComponent(typeof(CharacterController), typeof(NavMeshAgent), typeof(Animator))]
     public abstract class Character : MonoBehaviour, IDamageable
     {
+        #region Variables
+        //This needs to be a float for when we do the health bar
+        [SerializeField]
+        protected float health;
+
+        public int totalHealth = 100;
+
+        [SerializeField]
+        private string displayName = "No Name";
+
+        private Weapon currentWeapon = null;
+
+        // Variables for handling character rotation
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
+
+        [HideInInspector]
+        public Transform rotationTransform;
+
+        [HideInInspector]
+        public Transform eyeLine;
+
+        [HideInInspector]
+        public NavMeshAgent agent;
+
+        [HideInInspector]
+        public Animator anim;
+
+        [HideInInspector]
+        public bool invincible = false;
+        [HideInInspector]
+        public bool isDying = false;
+
+        [HideInInspector]
+        public EffectsController effectsController;
+        protected CharacterController characterController;
+        #endregion
+
         #region Properties
         public string DisplayName
         {
@@ -17,11 +54,6 @@ namespace Hunter.Character
             }
         }
 
-        /// <summary>
-        /// How much health the character has
-        /// </summary>
-        //This needs to be a float for when we do the health bar
-        protected float health;
         public virtual float CurrentHealth
         {
             get
@@ -30,11 +62,9 @@ namespace Hunter.Character
             }
             set
             {
-                health = value;
+                health = Mathf.Clamp(value, 0, totalHealth);
             }
         }
-        [SerializeField]
-        protected int totalHealth = 100;
 
         public Weapon CurrentWeapon
         {
@@ -66,57 +96,42 @@ namespace Hunter.Character
 
         }
         //Effects
-        [HideInInspector]
-        public EffectsController effectsController;
-        protected bool invinvible = false;
-        protected bool isDying = false;
         #endregion
 
-        #region Variables
-        /// <summary>
-        /// Name of the Player, to be set in the inspector
-        /// </summary>
-        [SerializeField]
-        private string displayName = "No Name";
-
-        private Weapon currentWeapon = null;
-
-        // Variables for handeling character rotation
-        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
-        private Transform rotationTransform;
-
-        public Transform eyeLine;
-
-        protected CharacterController characterController;
-        protected NavMeshAgent agent;
-        protected Animator anim;
-        #endregion
-
-        protected virtual void Awake ()
+        #region Unity Functions
+        protected virtual void Awake()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
             effectsController = GetComponentInChildren<EffectsController>();
-            if(effectsController == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
+            if (effectsController == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
             CurrentHealth = totalHealth;
         }
 
-        protected virtual void Start ()
+        protected virtual void Start()
         {
 
         }
+        #endregion
 
-        public void EquipWeaponToCharacter (Weapon weapon)
+        #region Combat Related Functions
+        public void EquipWeaponToCharacter(Weapon weapon)
         {
             if (weapon != null)
             {
+                if (currentWeapon != null)
+                {
+                    currentWeapon.gameObject.SetActive(false);
+                }
+
                 currentWeapon = weapon;
                 currentWeapon.characterHoldingWeapon = this;
+                currentWeapon.gameObject.SetActive(true);
             }
         }
 
-        public void EquipElementToWeapon (Element element)
+        public void EquipElementToWeapon(Element element)
         {
             if (CurrentWeapon != null)
             {
@@ -124,10 +139,11 @@ namespace Hunter.Character
             }
         }
 
-        public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
+        public void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith)
         {
-            if (invinvible || isDying) { return; }
-            if(effectsController != null) {
+            if (invincible || isDying) { return; }
+            if (effectsController != null)
+            {
                 //Dont apply hits particles for Dot Effects, kinda jank
                 if (damage > 3)
                 {
@@ -138,13 +154,28 @@ namespace Hunter.Character
                     effectsController.StartDamageEffects(damage);
                 }
             }
+            if (tag == "Player")
+            {
+                Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
+            }
+            else if (tag == "Enemy")
+            {
+                Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
+            }
             StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
-        protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected virtual IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
             CurrentHealth -= damage;
             yield return null;
         }
+
+        public virtual void RestoreHealthToCharacter(int restoreAmount)
+        {
+            StopCoroutine("SubtractHealthFromCharacter");
+            CurrentHealth += restoreAmount;
+        }
+        #endregion
     }
 }

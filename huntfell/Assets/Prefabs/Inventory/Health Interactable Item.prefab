@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 135375526015686762}
   - component: {fileID: 114671893041570764}
   - component: {fileID: 54982994579791584}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Health Interactable Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 4045789516507670}
   - component: {fileID: 198676437056050542}
   - component: {fileID: 199492541675674058}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: CenterParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 4348944343976414}
   - component: {fileID: 33429123170701840}
   - component: {fileID: 23282013043066156}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: HealthPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 4613201269486678}
   - component: {fileID: 198214450628323596}
   - component: {fileID: 199209133768874328}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: RestoreParticles01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1034505535647770}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3, y: 0, z: 3.73}
+  m_LocalPosition: {x: -5.22, y: -0.29, z: 37.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4348944343976414}
@@ -232,7 +232,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  healthAmount: 20
+  healthAmount: 30
 --- !u!135 &135375526015686762
 SphereCollider:
   m_ObjectHideFlags: 1

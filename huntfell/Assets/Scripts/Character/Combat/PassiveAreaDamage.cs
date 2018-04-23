@@ -1,20 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Character;
+using Hunter.Characters;
 
 namespace Hunter.AI
 {
     public class PassiveAreaDamage : MonoBehaviour
     {
         #region Properties
-        public Character.Character AiCharacter
+        public Character AiCharacter
         {
             get
             {
                 if (aiCharacter == null)
                 {
-                    aiCharacter = transform.parent.GetComponent<Character.Character>();
+                    aiCharacter = transform.parent.GetComponent<Character>();
                 }
                 return aiCharacter;
             }
@@ -22,9 +22,7 @@ namespace Hunter.AI
         #endregion
 
         #region Variables
-        [Header("Damage Radius Variables")]
-        [Range(0.1f, 100f)]
-        [Tooltip("The size of the circle.")]
+        [Header("Damage Radius Variables"), Range(0.1f, 100f), Tooltip("The size of the circle.")]
         public float damageRadius = 1.0f;
 
         [Tooltip("The amount of damage the enemy should do to the player every tick.")]
@@ -33,9 +31,7 @@ namespace Hunter.AI
         [Tooltip("How often the enemy should deal damage to the player.")]
         public float damageInterval = 1;
 
-        [Header("Line Renderer Variables")]
-        [Range(3, 256)]
-        [Tooltip("The number of segments the circle has, for a circle make at least 100.")]
+        [Header("Line Renderer Variables"), Range(3, 256), Tooltip("The number of segments the circle has, for a circle make at least 100.")]
         public int numSegments = 100;
 
         [Tooltip("The height of the circle")]
@@ -46,7 +42,7 @@ namespace Hunter.AI
         private float endWidth = 0.15f;
 
         private IEnumerator areaEffectDamageCR;
-        private Character.Character aiCharacter;
+        private Characters.Character aiCharacter;
         #endregion
 
         private void Start()
@@ -64,7 +60,7 @@ namespace Hunter.AI
             {
                 var dotComponent = other.transform.gameObject.AddComponent<HealthDrainDot>();
                 dotComponent.InitializeDot(damageAmount, damageInterval, damageable);
-                Fabric.EventManager.Instance.PostEvent("Bat Aggro", gameObject);
+                Fabric.EventManager.Instance?.PostEvent("Bat Aggro", gameObject);
             }
         }
 

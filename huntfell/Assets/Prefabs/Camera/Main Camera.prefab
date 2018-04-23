@@ -19,10 +19,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4632817325375960}
+  - component: {fileID: 114154287319113128}
   - component: {fileID: 20193395952728568}
   - component: {fileID: 124531288222755838}
   - component: {fileID: 81094422719547300}
-  - component: {fileID: 114369112436023898}
   - component: {fileID: 114926294957223480}
   - component: {fileID: 114214618201701056}
   m_Layer: 0
@@ -88,6 +88,22 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1444891238450166}
   m_Enabled: 1
+--- !u!114 &114154287319113128
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1444891238450166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b927c32eb326d614dace8e8ba3d57cd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transparencyAmount: 0.3
+  opaqueAmount: 1
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &114214618201701056
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -102,7 +118,7 @@ MonoBehaviour:
   volumeTrigger: {fileID: 0}
   volumeLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   stopNaNPropagation: 1
   antialiasingMode: 0
   temporalAntialiasing:
@@ -143,18 +159,6 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
---- !u!114 &114369112436023898
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1444891238450166}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c8d6dd3563c8be4b97d18691acf2fec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isController: 1
 --- !u!114 &114926294957223480
 MonoBehaviour:
   m_ObjectHideFlags: 1
