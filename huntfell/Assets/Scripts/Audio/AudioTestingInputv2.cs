@@ -27,6 +27,7 @@ public class AudioTestingInputv2 : MonoBehaviour {
 
 			Button choice = Instantiate (buttonPrefab) as Button;
 			choice.transform.SetParent (canvas.transform);
+            choice.name = eventString + " | Soundboard Button";
 			Text choiceText = choice.GetComponentInChildren<Text> ();
 			choiceText.text = eventString;
 
