@@ -21,8 +21,10 @@ GameObject:
   - component: {fileID: 4609060017368296}
   - component: {fileID: 33337180690288696}
   - component: {fileID: 23065808627924596}
+  - component: {fileID: 114727652645099272}
   - component: {fileID: 95846765962943164}
-  m_Layer: 0
+  - component: {fileID: 65575748752524690}
+  m_Layer: 13
   m_Name: Prop_Clock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,8 +37,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1401853866066730}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -19.288715, y: -4.724206, z: 10.248762}
+  m_LocalRotation: {x: -0, y: 0.4984295, z: -0, w: 0.86693025}
+  m_LocalPosition: {x: -0.39124584, y: 1.9689343, z: 6.7283864}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,6 +85,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1401853866066730}
   m_Mesh: {fileID: 4300000, guid: 368daddf2eea6f948907cc500b2171bf, type: 3}
+--- !u!65 &65575748752524690
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1401853866066730}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5688379, y: 2.7849612, z: 0.7033386}
+  m_Center: {x: -0.0000018775463, y: -0.1443134, z: -0.0000001937151}
 --- !u!95 &95846765962943164
 Animator:
   serializedVersion: 3
@@ -100,3 +114,28 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114727652645099272
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1401853866066730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToSpawn: []
+  elementTypeForInteraction: 0
+  animationName: 
+  giveItemsDirectly: 0
+  interactionSuccessMessage: 
+  interactionFailMessage: 
+  propType: 0
+  destructionForce: 50
+  brokenPropPrefab: {fileID: 0}
+  propEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null

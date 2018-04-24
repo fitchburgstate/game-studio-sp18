@@ -22,8 +22,9 @@ GameObject:
   - component: {fileID: 33264144372803446}
   - component: {fileID: 23118265128603324}
   - component: {fileID: 95426473157922704}
+  - component: {fileID: 114985964223674710}
   - component: {fileID: 65783074879638162}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Prop_CrateLarge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,8 +37,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1457485620852076}
-  m_LocalRotation: {x: 0.000000018947366, y: 0.4984295, z: -0.000000010893522, w: 0.86693025}
-  m_LocalPosition: {x: 39.475746, y: -0.021001816, z: 19.112928}
+  m_LocalRotation: {x: -0, y: 0.4984295, z: -0, w: 0.86693025}
+  m_LocalPosition: {x: 5.200667, y: -0.05435562, z: -0.110278204}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -113,3 +114,28 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114985964223674710
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1457485620852076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToSpawn: []
+  elementTypeForInteraction: 0
+  animationName: 
+  giveItemsDirectly: 0
+  interactionSuccessMessage: 
+  interactionFailMessage: 
+  propType: 0
+  destructionForce: 50
+  brokenPropPrefab: {fileID: 0}
+  propEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
