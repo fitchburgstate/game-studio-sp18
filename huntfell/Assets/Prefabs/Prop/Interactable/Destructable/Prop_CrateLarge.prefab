@@ -22,8 +22,8 @@ GameObject:
   - component: {fileID: 33264144372803446}
   - component: {fileID: 23118265128603324}
   - component: {fileID: 95426473157922704}
-  - component: {fileID: 114985964223674710}
   - component: {fileID: 65783074879638162}
+  - component: {fileID: 114762290686382878}
   m_Layer: 13
   m_Name: Prop_CrateLarge
   m_TagString: Untagged
@@ -43,7 +43,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -1.6070001, z: 0}
 --- !u!23 &23118265128603324
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -114,7 +114,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114985964223674710
+--- !u!114 &114762290686382878
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -131,9 +131,10 @@ MonoBehaviour:
   giveItemsDirectly: 0
   interactionSuccessMessage: 
   interactionFailMessage: 
-  propType: 0
-  destructionForce: 50
-  brokenPropPrefab: {fileID: 0}
+  propType: 1
+  destructionForce: 7
+  brokenPropPrefab: {fileID: 1037065989599474, guid: 3e9525236cc0d98468eb2d0a4503b8a6,
+    type: 2}
   propEvent:
     m_PersistentCalls:
       m_Calls: []

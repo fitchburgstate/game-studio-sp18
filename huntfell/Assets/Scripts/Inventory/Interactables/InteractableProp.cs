@@ -153,7 +153,7 @@ namespace Hunter
             // GetComponent<Collider>().enabled = false;
             gameObject.SetActive(false);
             brokenPropPrefab = Instantiate(brokenPropPrefab, transform.position, transform.rotation);
-            //SendBrokenPropFlying(brokenPropPrefab, forceDirection);
+            SendBrokenPropFlying(brokenPropPrefab, forceDirection);
         }
 
         // Everything to do with Prop Interaction as far as items and firing events on other gameObjects
