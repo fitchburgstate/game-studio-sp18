@@ -46,7 +46,7 @@ namespace Hunter.Characters
 
         public abstract void StartAttackFromAnimationEvent();
 
-        protected virtual int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
+        protected virtual string CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var critMult = isCritical ? 1.5f : 1.0f;
             var elementMult = 1.0f;
@@ -59,7 +59,7 @@ namespace Hunter.Characters
 
                 if (weaponType.Equals(enemyType))
                 {
-                    elementMult = 0;
+                    return "Immune";
                 }
                 else if (weaponType.Equals(enemyWeaknessType))
                 {
@@ -68,7 +68,7 @@ namespace Hunter.Characters
             }
             var randomInt = UnityEngine.Random.Range(-1, 2);
 
-            return (int)((baseDamage + randomInt) * critMult * elementMult);
+            return ((int)((baseDamage + randomInt) * critMult * elementMult)).ToString();
         }
 
         /// <summary>

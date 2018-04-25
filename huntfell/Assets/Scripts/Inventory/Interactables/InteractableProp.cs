@@ -51,9 +51,14 @@ namespace Hunter
 
         private bool currentlyInteracting = false;
 
-        public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
+        public void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
         {
             FireInteraction(weaponAttackedWith.characterHoldingWeapon, weaponAttackedWith);
+        }
+
+        public void TakeDamage (string damage, bool isCritical, Element damageElement)
+        {
+            return;
         }
 
         // What should the prop do when it is interacted with through the interact input
@@ -91,6 +96,8 @@ namespace Hunter
                 {
                     case PropType.Destructible:
                         DestructProp(characterWhoAttacked.RotationTransform.forward);
+                        //With destructible objects, on trigger exit doesnt get called when you swap out the prop for its destroyed counterpart so we have to manually remove it from the players nearby items list
+                        if(characterWhoAttacked is Player) { (characterWhoAttacked as Player).RemoveNearbyInteractable(this); }
                         break;
                     default:
                         ShakeProp();

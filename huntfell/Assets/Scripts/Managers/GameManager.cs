@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Playables;
 using Hunter.Characters;
+using Cinemachine;
 
 namespace Hunter
 {
@@ -13,11 +14,14 @@ namespace Hunter
         Out,
         In
     }
+
+    [RequireComponent(typeof(DeviceManager))]
     public class GameManager : MonoBehaviour
     {
         #region Variables
         [HideInInspector]
         public static GameManager instance;
+        public DeviceManager DeviceManager { get; private set; }
 
         [Header("Player Respawn Settings")]
         /// <summary>
@@ -25,42 +29,18 @@ namespace Hunter
         /// </summary>
         public List<SpawnPoint> spawnPoints = new List<SpawnPoint>();
 
-        [SerializeField]
-        private Player playerScript;
-        private float respawnTime;
-        private IEnumerator respawnPlayerCR;
-
         [Header("Scene Change Settings")]
         public float fadeDuration;
         public AnimationCurve fadeCurve;
 
-        private CanvasGroup canvasGroup;
+        [Header("Game Start Settings")]
+        public bool loadTitleScreen = false;
+
         public const string CANVASNAME = "FADECANVAS";
         public const string IMAGENAME = "FADEIMAGE";
         private PlayableDirector director;
-        #endregion
-
-        #region Properties
-        public Player PlayerScript
-        {
-            get
-            {
-                if (playerScript == null) { playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); }
-                return playerScript;
-            }
-        }
-
-        public float RespawnTime
-        {
-            get
-            {
-                if (respawnTime != PlayerScript.respawnTime)
-                {
-                    respawnTime = PlayerScript.respawnTime;
-                }
-                return respawnTime;
-            }
-        }
+        public CinemachineVirtualCamera isometricFollowCM;
+        public CinemachineVirtualCamera titleScreenCM;
         #endregion
 
         #region Unity Functions
@@ -70,7 +50,6 @@ namespace Hunter
             if (instance == null)
             {
                 instance = this;
-                //DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -78,39 +57,45 @@ namespace Hunter
                 return;
             }
 
-            LoadNewScene("UI_Title_Menu", true);
-            if (GameObject.Find("Audio") == null)
+            if (!Application.isEditor || loadTitleScreen)
             {
-                LoadNewScene("Audio", true);
+                LoadNewScene("UI_Title_Menu", true);
+                titleScreenCM.Priority = 2;
+                if (GameObject.Find("Audio") == null)
+                {
+                    LoadNewScene("Audio", true);
+                }
             }
-            director = FindObjectOfType<PlayableDirector>();
-        }
 
-        private void Start()
-        {
+            DeviceManager = GetComponent<DeviceManager>();
+            director = GetComponentInChildren<PlayableDirector>();
             spawnPoints = new List<SpawnPoint>(FindObjectsOfType<SpawnPoint>());
         }
+
         #endregion
 
         #region Scene Management
         
-
-        public IEnumerator StartGame ()
+        public IEnumerator StartGame (CanvasGroup titleScreenCanvasGroup)
         {
-            if(director == null) {
-                Debug.LogError("Could not start the game because there is no playable director to move the cameras.");
-                yield break;
-            }
+            Fabric.EventManager.Instance?.PostEvent("UI Start Game");
+            yield return FadeCanvasGroup(titleScreenCanvasGroup, 2, FadeType.In);
 
-            director.Play();
-            yield return new WaitForSeconds((float)director.duration);
+            SceneManager.UnloadSceneAsync("UI_Title_Menu");
+            if (director == null)
+            {
+                Debug.LogWarning("Could not play the opening cutscene because there is no playable director to move the cameras.");
+                titleScreenCM.gameObject.SetActive(false);
+            }
+            else
+            {
+                director.Play();
+                yield return new WaitForSeconds((float)director.duration);
+            }
 
             SceneManager.LoadScene("UI_Hud", LoadSceneMode.Additive);
             SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
-            DeviceManager.Instance.gameInputEnabled = true;
-
-            var player = FindObjectOfType<Player>();
-            player.transform.forward = Camera.main.transform.forward;
+            DeviceManager.gameInputEnabled = true;
 
             Fabric.EventManager.Instance.PostEvent("Expo to Combat Music");
         }
@@ -129,13 +114,21 @@ namespace Hunter
 
         private IEnumerator ChangeActiveScene(string sceneName)
         {
-            yield return InitiateFade(fadeDuration, Color.black, FadeType.Out);
+            yield return FadeScreen(fadeDuration, Color.black, FadeType.Out);
             SceneManager.LoadScene(sceneName);
-            yield return InitiateFade(fadeDuration, Color.black, FadeType.In);
-            yield return null;
+            yield return FadeScreen(fadeDuration, Color.black, FadeType.In);
         }
 
-        private IEnumerator InitiateFade(float fadeDuration, Color fadeColor, FadeType fadeType)
+        #endregion
+
+        #region Helper Functions
+
+        public IEnumerator FadeScreen (Color fadeColor, FadeType fadeType)
+        {
+            yield return FadeScreen(fadeDuration, fadeColor, fadeType);
+        }
+
+        public IEnumerator FadeScreen(float fadeDuration, Color fadeColor, FadeType fadeType)
         {
             var canvas = GameObject.Find(CANVASNAME);
             GameObject fadeImage = null;
@@ -156,15 +149,15 @@ namespace Hunter
                 rectComponent.anchorMin = Vector2.zero;
                 rectComponent.anchoredPosition = Vector2.zero;
             }
-            canvasGroup = canvas.GetComponent<CanvasGroup>();
+            var canvasGroup = canvas.GetComponent<CanvasGroup>();
             var imageComponent = fadeImage.GetComponent<RawImage>();
             imageComponent.color = fadeColor;
             DontDestroyOnLoad(canvas);
 
-            yield return StartCoroutine(FadeCanvasGroup(fadeDuration, fadeType));
+            yield return StartCoroutine(FadeCanvasGroup(canvasGroup, fadeDuration, fadeType));
         }
 
-        private IEnumerator FadeCanvasGroup(float fadeDuration, FadeType fadeType)
+        private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float fadeDuration, FadeType fadeType)
         {
             canvasGroup.alpha = (float)fadeType;
             if (fadeDuration == 0)
@@ -188,70 +181,27 @@ namespace Hunter
                     yield return new WaitForEndOfFrame();
                 }
             }
-            if (fadeType == FadeType.In)
-            {
-                Destroy(canvasGroup.gameObject);
-            }
         }
-        #endregion
 
-        #region Helper Functions
-        public Vector3 GetClosestSpawnPoint(List<SpawnPoint> potentialPoints)
+        public SpawnPoint GetClosestSpawnPoint(Vector3 currentPosition)
         {
-            var bestSpawnPoint = new Vector3();
-
-            GameObject bestGameObject = null;
+            SpawnPoint bestSpawnPoint = null;
             var closestDistanceSqr = Mathf.Infinity;
-            var currentPosition = PlayerScript.gameObject.transform.position;
 
-            foreach (var potentialTarget in potentialPoints)
+            foreach (var spawnPoint in spawnPoints)
             {
-                if (potentialTarget.activated == true)
+                if (!spawnPoint.activated) { continue; }
+
+                var directionToTarget = spawnPoint.transform.position - currentPosition;
+                var dSqrToTarget = directionToTarget.sqrMagnitude;
+                if (dSqrToTarget < closestDistanceSqr)
                 {
-                    var directionToTarget = potentialTarget.transform.position - currentPosition;
-                    var dSqrToTarget = directionToTarget.sqrMagnitude;
-                    if (dSqrToTarget < closestDistanceSqr)
-                    {
-                        closestDistanceSqr = dSqrToTarget;
-                        bestGameObject = potentialTarget.gameObject;
-                    }
+                    closestDistanceSqr = dSqrToTarget;
+                    bestSpawnPoint = spawnPoint;
                 }
             }
-            bestSpawnPoint = bestGameObject.GetComponent<SpawnPoint>().respawnPosition;
 
             return bestSpawnPoint;
-        }
-
-        public void RespawnPlayer(Vector3 bestSpawnPoint)
-        {
-            if (respawnPlayerCR != null) { return; }
-            respawnPlayerCR = RespawnAction(bestSpawnPoint);
-            StartCoroutine(respawnPlayerCR);
-        }
-
-        private IEnumerator RespawnAction(Vector3 bestSpawnPoint)
-        {
-            PlayerScript.isDying = true;
-            PlayerScript.PerformingAction = true;
-            PlayerScript.invincible = true;
-            PlayerScript.anim.SetTrigger("isDead");
-
-            yield return InitiateFade(fadeDuration, Color.black, FadeType.Out);
-            yield return new WaitForSeconds(fadeDuration);
-
-            PlayerScript.transform.position = bestSpawnPoint;
-
-            yield return new WaitForSeconds(RespawnTime);
-            PlayerScript.RestoreHealthToCharacter(PlayerScript.totalHealth);
-
-            yield return InitiateFade(fadeDuration, Color.black, FadeType.In);
-            yield return new WaitForSeconds(fadeDuration / 2);
-
-            PlayerScript.isDying = false;
-            PlayerScript.PerformingAction = false;
-            PlayerScript.invincible = false;
-            yield return null;
-            respawnPlayerCR = null;
         }
         #endregion
     }

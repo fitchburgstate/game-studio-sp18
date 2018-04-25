@@ -19,8 +19,8 @@ namespace Hunter.Characters
         {
             //Whoever this script is on is being controlled by the Player, so naturally they should be tagged as such
             transform.tag = "Player";
-            deviceManager = DeviceManager.Instance;
 
+            deviceManager = GameManager.instance?.DeviceManager;
             attackCharacter = GetComponent<IAttack>();
             moveCharacter = GetComponent<IMoveable>();
         }
@@ -33,12 +33,9 @@ namespace Hunter.Characters
                 var moveDirection = new Vector3(deviceManager.Move.x, 0, deviceManager.Move.y);
                 var lookDirection = moveDirection;
 
-                var animLookDirection = lookDirection;
-
-
                 if (moveCharacter != null)
                 {
-                    moveCharacter.Move(moveDirection, lookDirection, animLookDirection);
+                    moveCharacter.Move(moveDirection, lookDirection);
                 }
 
                 if (deviceManager.PressedAttack && attackCharacter != null)

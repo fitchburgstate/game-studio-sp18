@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 4312636075889092}
   m_Layer: 9
   m_Name: Eyeline
-  m_TagString: Untagged
+  m_TagString: EyeLine Transform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -345,6 +345,7 @@ GameObject:
   - component: {fileID: 223908351156520882}
   - component: {fileID: 114227552372739478}
   - component: {fileID: 114089795225876960}
+  - component: {fileID: 114859396386213298}
   m_Layer: 9
   m_Name: Damage Pop-Up Canvas
   m_TagString: Untagged
@@ -451,7 +452,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4941627396947648}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4414639404837212
 Transform:
@@ -459,13 +460,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1273927876518962}
-  m_LocalRotation: {x: -0, y: 0.9996322, z: -0, w: -0.027121631}
+  m_LocalRotation: {x: -0, y: 0.69524336, z: -0, w: -0.71877444}
   m_LocalPosition: {x: -0.0021516166, y: -0.783, z: -0.02793036}
   m_LocalScale: {x: 0.7686445, y: 1.0601857, z: 0.6231443}
   m_Children: []
   m_Father: {fileID: 4605033541194180}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 143.878, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 271.90698, z: 0}
 --- !u!4 &4477845659575632
 Transform:
   m_ObjectHideFlags: 1
@@ -478,7 +479,7 @@ Transform:
   m_Children:
   - {fileID: 4077326482161316}
   m_Father: {fileID: 4941627396947648}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4537388824757510
 Transform:
@@ -499,16 +500,16 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1520231755773054}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.152, y: -0.217, z: -64.916}
-  m_LocalScale: {x: 1.0001299, y: 1, z: 1.00013}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -21.2, y: 1.61, z: 69.52}
+  m_LocalScale: {x: 1.4662023, y: 1.4660115, z: 1.4662021}
   m_Children:
   - {fileID: 4941627396947648}
   - {fileID: 4796801696899510}
   - {fileID: 4414639404837212}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!4 &4626037064612550
 Transform:
   m_ObjectHideFlags: 1
@@ -628,12 +629,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1090920396625898}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4477845659575632}
   - {fileID: 4312636075889092}
+  - {fileID: 4477845659575632}
   m_Father: {fileID: 4605033541194180}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -772,11 +773,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9825eca023984c489ae25013ad0e5a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inspectorElementType: 0
+  baseDamage: 10
+  critPercent: 0
   attackSpeed: 1
   recoverySpeed: 1
-  baseDamage: 5
-  inspectorElementType: 0
-  critPercent: 0
   characterHoldingWeapon: {fileID: 0}
   clipSize: 1
   reloadSpeed: 1
@@ -784,7 +785,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 198473184517811326}
   rangedValidLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 12544
   usesTrail: 1
   weaponTrailDuration: 0.25
   gunTrailMaterial: {fileID: 0}
@@ -920,7 +921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minDetectionDistance: 4
-  maxDetectionDistance: 15
+  maxDetectionDistance: 9
   fieldOfViewRange: 80
   detectionLayers:
     serializedVersion: 2
@@ -943,6 +944,17 @@ MonoBehaviour:
   nullHitSystem: {fileID: 198447669591441392}
   fireHitSystem: {fileID: 198561493057781908}
   poisonDamageSystem: {fileID: 0}
+--- !u!114 &114859396386213298
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1816224383769112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f71c3f27f5c904e865b075582a4828, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114928227506363688
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -954,12 +966,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59448263c4c3a61489e922ffc2af93d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalHealth: 25
-  effectsController: {fileID: 0}
+  health: 0
+  totalHealth: 10
   displayName: Gargoyle
-  eyeLine: {fileID: 4312636075889092}
   enemyElementOption: 0
-  speed: 0
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114448168467726048}
   rangedWeapon: {fileID: 114038268432600584}

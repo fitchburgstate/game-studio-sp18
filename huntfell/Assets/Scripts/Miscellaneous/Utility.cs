@@ -98,7 +98,7 @@ namespace Hunter
     //Interface behaviours for characters and interactables
     public interface IMoveable
     {
-        void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection);
+        void Move(Vector3 moveDirection, Vector3 lookDirection);
 
         void Move(Transform navMeshTarget);
 
@@ -118,7 +118,9 @@ namespace Hunter
 
     public interface IDamageable
     {
-        void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith);
+        void TakeDamage(string damage, bool isCritical, Weapon weaponAttackedWith);
+
+        void TakeDamage (string damage, bool isCritical, Element damageElement);
     }
 
     public interface IAttack
@@ -127,7 +129,7 @@ namespace Hunter
 
         IEnumerator PlayAttackAnimation();
 
-        void WeaponAnimationEvent();
+        void AttackAnimationEvent();
 
         void CycleWeapons(bool cycleUp);
 

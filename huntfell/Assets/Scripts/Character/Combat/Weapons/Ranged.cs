@@ -119,7 +119,7 @@ namespace Hunter.Characters
         #endregion
 
         #region CalculateDamage Function
-        protected override int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
+        protected override string CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var normalDamage = base.CalculateDamage(weaponElement, enemyElementType, isCritical);
             return normalDamage;

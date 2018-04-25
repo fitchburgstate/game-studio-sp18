@@ -817,7 +817,7 @@ GameObject:
   - component: {fileID: 4458333657835572}
   m_Layer: 9
   m_Name: Eyeline
-  m_TagString: Untagged
+  m_TagString: EyeLine Transform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1327,6 +1327,7 @@ GameObject:
   - component: {fileID: 223813510179649324}
   - component: {fileID: 114508405901366698}
   - component: {fileID: 114525433914827778}
+  - component: {fileID: 114744913400471972}
   m_Layer: 9
   m_Name: Damage Pop-Up Canvas
   m_TagString: Untagged
@@ -1691,7 +1692,7 @@ Transform:
   m_LocalScale: {x: 500, y: 500, z: 500}
   m_Children: []
   m_Father: {fileID: 4676229820568530}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4095876237545822
 Transform:
@@ -2114,15 +2115,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1640528691489282}
-  m_LocalRotation: {x: -0, y: -0.7988788, z: -0, w: 0.6014921}
-  m_LocalPosition: {x: -57.15, y: 0.21, z: 71.99}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.52, y: 0.21, z: 69.67}
   m_LocalScale: {x: 1.4681255, y: 1.4681257, z: 1.4681257}
   m_Children:
   - {fileID: 4676229820568530}
   - {fileID: 4212749497114416}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -106.046005, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4379138990334198
 Transform:
   m_ObjectHideFlags: 1
@@ -2188,7 +2189,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4676229820568530}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4492213340321262
 Transform:
@@ -2293,7 +2294,7 @@ Transform:
   - {fileID: 4910831557868404}
   - {fileID: 4821798561090718}
   m_Father: {fileID: 4676229820568530}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4522196393146670
 Transform:
@@ -2518,17 +2519,17 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1774490222937972}
-  m_LocalRotation: {x: -0, y: -0.9659256, z: -0, w: 0.25882024}
+  m_LocalRotation: {x: -0, y: -0.7495338, z: 0, w: -0.66196615}
   m_LocalPosition: {x: 0.075, y: -0.553, z: 0.075}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 4458333657835572}
   - {fileID: 4521804010982912}
   - {fileID: 4090063932357344}
-  - {fileID: 4458333657835572}
   - {fileID: 4818720765133388}
   m_Father: {fileID: 4378048470915818}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -150, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -262.9, z: 0}
 --- !u!4 &4701543109099796
 Transform:
   m_ObjectHideFlags: 1
@@ -2709,7 +2710,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1531993130891316}
   m_LocalRotation: {x: 0.7080331, y: -0.051453523, z: 0.021533145, w: -0.7039731}
-  m_LocalPosition: {x: -0.071645826, y: 1.191, z: 0.9920944}
+  m_LocalPosition: {x: -0.101, y: 1.064, z: 1.11}
   m_LocalScale: {x: 0.38766092, y: 0.38766065, z: 0.3876604}
   m_Children: []
   m_Father: {fileID: 4676229820568530}
@@ -3127,13 +3128,6 @@ MonoBehaviour:
   health: 0
   totalHealth: 140
   displayName: Fire Wolf
-  rotationTransform: {fileID: 4676229820568530}
-  eyeLine: {fileID: 4458333657835572}
-  agent: {fileID: 0}
-  anim: {fileID: 0}
-  invincible: 0
-  isDying: 0
-  effectsController: {fileID: 0}
   enemyElementOption: 1
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114032578286099136}
@@ -3196,6 +3190,17 @@ MonoBehaviour:
   nullHitSystem: {fileID: 198365137161642100}
   fireHitSystem: {fileID: 198809111008712096}
   poisonDamageSystem: {fileID: 0}
+--- !u!114 &114744913400471972
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1841092323514618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f71c3f27f5c904e865b075582a4828, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114843737777903188
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10377,7 +10382,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3.5
+      scalar: 4
       minScalar: 1
       maxCurve:
         serializedVersion: 2

@@ -1340,7 +1340,7 @@ GameObject:
   - component: {fileID: 4518743308142936}
   m_Layer: 9
   m_Name: Eyeline
-  m_TagString: Untagged
+  m_TagString: EyeLine Transform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1691,7 +1691,7 @@ Transform:
   - {fileID: 4625172308218864}
   - {fileID: 4615811726410716}
   m_Father: {fileID: 4796785745465564}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4110926608538162
 Transform:
@@ -1733,8 +1733,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1720497567133960}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -24.570002, y: -1.01, z: 3.4799957}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -56.32, y: 0.41, z: 72.43}
+  m_LocalScale: {x: 1.3487048, y: 1.3487043, z: 1.3487043}
   m_Children:
   - {fileID: 4796785745465564}
   - {fileID: 4951058185158324}
@@ -2318,7 +2318,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4796785745465564}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4521875198027856
 Transform:
@@ -2608,7 +2608,7 @@ Transform:
   m_LocalScale: {x: 500, y: 500, z: 500}
   m_Children: []
   m_Father: {fileID: 4796785745465564}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4721630866115834
 Transform:
@@ -2658,16 +2658,16 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1697524419723748}
-  m_LocalRotation: {x: -0, y: -0.92387867, z: -0, w: 0.38268548}
+  m_LocalRotation: {x: -0, y: 0.7390641, z: -0, w: 0.6736351}
   m_LocalPosition: {x: 0.07465744, y: -0.5159999, z: 0.5092583}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 4518743308142936}
   - {fileID: 4090347193206760}
   - {fileID: 4705235171381960}
-  - {fileID: 4518743308142936}
   m_Father: {fileID: 4135882425459558}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -135, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 95.304, z: 0}
 --- !u!4 &4801371190315060
 Transform:
   m_ObjectHideFlags: 1
@@ -3127,14 +3127,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inspectorElementType: 2
+  baseDamage: 9
+  critPercent: 10
   attackSpeed: 1
   recoverySpeed: 1.2
-  baseDamage: 9
-  inspectorElementType: 2
-  critPercent: 10
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 5
   swingParticleSystem: {fileID: 0}
+  equipEffects: []
 --- !u!114 &114500430186664092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3224,13 +3225,6 @@ MonoBehaviour:
   health: 0
   totalHealth: 140
   displayName: Wolf
-  rotationTransform: {fileID: 4796785745465564}
-  eyeLine: {fileID: 4518743308142936}
-  agent: {fileID: 0}
-  anim: {fileID: 0}
-  invincible: 0
-  isDying: 0
-  effectsController: {fileID: 0}
   enemyElementOption: 2
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114555488149255508}

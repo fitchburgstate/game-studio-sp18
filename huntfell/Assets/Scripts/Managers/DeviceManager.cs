@@ -9,7 +9,6 @@ namespace Hunter
     public class DeviceManager : MonoBehaviour
     {
         #region Variables
-        public static DeviceManager Instance { get; private set; }
         private PlayerControls controls;
         private InputDevice currentDevice;
 
@@ -45,16 +44,6 @@ namespace Hunter
 
         private void Awake ()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-                return;
-            }
-
             if (overrideLayout) { controls = new PlayerControls(inspectorLayout); }
             else { controls = new PlayerControls(); }
 

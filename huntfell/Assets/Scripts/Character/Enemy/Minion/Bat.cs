@@ -17,14 +17,15 @@ namespace Hunter.Characters
             set
             {
                 health = value;
-                if (health <= 0 && !isDying)
+                if (health <= 0 && !IsDying)
                 {
                     //TODO Change this to reflect wether the death anim should be cinematic or not later
-                    StartCoroutine(KillBat(true));
-                    isDying = true;
+                    deathAction = KillBat(true);
+                    StartCoroutine(deathAction);
                 }
             }
         }
+
         #endregion
 
         #region Variables
@@ -48,7 +49,7 @@ namespace Hunter.Characters
         #region Bat Movement
         public void Move(Vector3 target, float finalSpeed)
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             var finalTarget = new Vector3(target.x, RotationTransform.localPosition.y, target.z);
 
             MoveToCalculations(turnSpeed, finalSpeed, finalTarget);
@@ -56,7 +57,7 @@ namespace Hunter.Characters
 
         public void Wander(Vector3 target)
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             if (target != Vector3.zero)
             {
                 Move(target, speed);
@@ -72,7 +73,8 @@ namespace Hunter.Characters
             anim.SetTrigger("death");
             Fabric.EventManager.Instance?.PostEvent("Bat Stop Wing Loop", gameObject);
             agent.enabled = false;
-            GetComponentInChildren<PassiveAreaDamage>().doDamage = false;
+            characterController.enabled = false;
+            GetComponentInChildren<PassiveAreaDamage>().DisableAreaDamage();
             minionHealthBarParent?.gameObject.SetActive(false);
             //TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);
@@ -83,38 +85,32 @@ namespace Hunter.Characters
         #region Unused Functions
         public void Idle()
         {
-            if (isDying) { return; }
-            // This should stay empty.
+
         }
 
         public void Move(Transform target)
         {
-            if (isDying) { return; }
-            // This feature will not be implemented.
+
         }
 
         public void Turn(Transform target)
         {
-            if (isDying) { return; }
-            // This feature will not be implemented.
+
         }
 
-        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        public void Move(Vector3 moveDirection, Vector3 lookDirection)
         {
-            if (isDying) { return; }
-            // This feature will not be implemented.
+
         }
 
         public void Dash()
         {
-            if (isDying) { return; }
-            // This feature will not be implemented.
+
         }
 
         public void Interact()
         {
-            //Wolves cannot interact with stuff!
-            return;
+
         }
         #endregion
     }

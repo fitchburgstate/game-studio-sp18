@@ -6,48 +6,29 @@ namespace Hunter.Characters
 {
     class HealthDrainDot : MonoBehaviour
     {
-        private int damageAmount = 1;
-        private float damageInterval = 1;
-
-        private IDamageable characterToDamage;
         private IEnumerator dotCR;
 
-        public void InitializeDot(int damageAmount, float damageInterval, IDamageable characterToDamage)
+        public void InitializeDot(int damageAmount, float damageInterval, Element damageElement, IDamageable characterToDamage)
         {
-            this.characterToDamage = characterToDamage;
-            this.damageInterval = damageInterval;
-            this.damageAmount = damageAmount;
-
             if (dotCR != null)
             {
                 return;
             }
-            dotCR = HealthDrain();
-            GetComponent<Character>()?.effectsController?.poisonDamageSystem?.Play();
+            dotCR = HealthDrain(damageAmount, damageInterval, damageElement, characterToDamage);
             StartCoroutine(dotCR);
-            StartCoroutine(DelayedDestroy());
         }
 
         private void OnDestroy()
         {
             StopCoroutine(dotCR);
-            GetComponent<Character>()?.effectsController?.poisonDamageSystem?.Stop();
         }
 
-        private IEnumerator DelayedDestroy ()
+        private IEnumerator HealthDrain(int damageAmount, float damageInterval, Element damageElement, IDamageable characterToDamage)
         {
-            yield return new WaitForSeconds(5);
-            Destroy(this);
-        }
-
-        private IEnumerator HealthDrain()
-        {
+            if(characterToDamage == null) { yield break; }
             while (true)
             {
-                if (characterToDamage != null)
-                {
-                    characterToDamage.TakeDamage(damageAmount, false, null);
-                }
+                characterToDamage.TakeDamage(damageAmount.ToString(), false, damageElement);
                 yield return new WaitForSeconds(damageInterval);
             }
         }

@@ -29,10 +29,10 @@ namespace Hunter.Characters
             set
             {
                 health = value;
-                if (health <= 0 && !isDying)
+                if (health <= 0 && !IsDying)
                 {
-                    isDying = true;
-                    StartCoroutine(KillGarg(false));
+                    deathAction = KillGarg(false);
+                    StartCoroutine(deathAction);
                 }
             }
         }
@@ -44,12 +44,12 @@ namespace Hunter.Characters
             gargoyleDetection = GetComponent<AIDetection>();
             EquipWeaponToCharacter(rangedWeapon);
             target = GameObject.FindGameObjectWithTag("Player");
-            targetEyeline = target.GetComponent<Character>().eyeLine;
+            targetEyeline = target.GetComponent<Character>().EyeLineTransform;
         }
 
         private void FixedUpdate()
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             var enemyInLOS = gargoyleDetection.DetectPlayer();
 
             if (enemyInLOS)
@@ -61,7 +61,7 @@ namespace Hunter.Characters
 
         private void Attack()
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             if (gargoyleAttackCR != null) { return; }
             gargoyleAttackCR = GargoyleAttack();
             StartCoroutine(gargoyleAttackCR);

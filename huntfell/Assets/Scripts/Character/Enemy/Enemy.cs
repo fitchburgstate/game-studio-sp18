@@ -23,10 +23,15 @@ namespace Hunter.Characters
             elementType = Utility.ElementOptionToElement(enemyElementOption);
         }
 
-        #region RotateTowardsTarget Function
+        public override void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
+        {
+            base.TakeDamage(damage, isCritical, weaponAttackedWith);
+            Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
+        }
+
         public void RotateTowardsTarget(Vector3 targetPoint, float turnSpeed)
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             var characterRoot = RotationTransform;
             var dir = targetPoint - transform.position;
             dir.Normalize();
@@ -34,9 +39,7 @@ namespace Hunter.Characters
             var yRotEuler = Quaternion.RotateTowards(characterRoot.localRotation, Quaternion.LookRotation(dir), turnSpeed * Time.deltaTime).eulerAngles.y;
             characterRoot.localRotation = Quaternion.Euler(0, yRotEuler, 0);
         }
-        #endregion
 
-        #region MoveToCalculations Function
         public void MoveToCalculations(float turnSpeed, float finalSpeed, Vector3 finalTarget)
         {
             var navMeshPath = new NavMeshPath();
@@ -66,6 +69,5 @@ namespace Hunter.Characters
                 Debug.LogError("The navmeshpath is null.", gameObject);
             }
         }
-        #endregion
     }
 }
