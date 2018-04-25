@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Characters;
 
 namespace Hunter.Characters.AI
 {
@@ -27,6 +26,11 @@ namespace Hunter.Characters.AI
         /// Determines the layer(s) that the NPC can see through. For example, the "Floor" layer is not a layer that will return true if any raycasting is done on it.
         /// </summary>
         public LayerMask detectionLayers;
+
+        /// <summary>
+        /// Determines whether the editor should display the vision based gizmos or not.
+        /// </summary>
+        public bool showGizmos = true;
 
         /// <summary>
         /// The distance between the AI and the target.
@@ -100,10 +104,12 @@ namespace Hunter.Characters.AI
         }
         #endregion
 
+        #region Unity Functions
         private void Start()
         {
             aiCharacterEyeLine = AiCharacter.eyeLine;
         }
+        #endregion
 
         #region DetectPlayer Function
         /// <summary>
@@ -159,38 +165,38 @@ namespace Hunter.Characters.AI
         #region Editor Gizmos
         private void OnDrawGizmosSelected()
         {
-            //if (!Application.isPlaying)
-            //{
-            Gizmos.color = Color.blue;
-
-            var lineHeight = 0f;
-            var theta = 0f;
-            var x = minDetectionDistance * Mathf.Cos(theta);
-            var z = minDetectionDistance * Mathf.Sin(theta);
-            var pos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
-            var newPos = pos;
-            var lastPos = pos;
-
-            var direction = aiCharacter.RotationTransform.forward * maxDetectionDistance;
-            var leftRayRotation = Quaternion.AngleAxis(-(fieldOfViewRange / 2), Vector3.up);
-            var leftRayDirection = leftRayRotation * AiCharacter.RotationTransform.forward;
-            var rightRayRotation = Quaternion.AngleAxis((fieldOfViewRange / 2), Vector3.up);
-            var rightRayDirection = rightRayRotation * AiCharacter.RotationTransform.forward;
-
-            Gizmos.DrawRay(AiCharacter.eyeLine.position, direction);
-            Gizmos.DrawRay(AiCharacter.eyeLine.position, leftRayDirection * maxDetectionDistance);
-            Gizmos.DrawRay(AiCharacter.eyeLine.position, rightRayDirection * maxDetectionDistance);
-
-            for (theta = 0.1f; theta < Mathf.PI * 2; theta += 0.1f)
+            if (showGizmos)
             {
-                x = minDetectionDistance * Mathf.Cos(theta);
-                z = minDetectionDistance * Mathf.Sin(theta);
-                newPos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
-                Gizmos.DrawLine(pos, newPos);
-                pos = newPos;
+                Gizmos.color = Color.blue;
+
+                var lineHeight = 0f;
+                var theta = 0f;
+                var x = minDetectionDistance * Mathf.Cos(theta);
+                var z = minDetectionDistance * Mathf.Sin(theta);
+                var pos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
+                var newPos = pos;
+                var lastPos = pos;
+
+                var direction = aiCharacter.RotationTransform.forward * maxDetectionDistance;
+                var leftRayRotation = Quaternion.AngleAxis(-(fieldOfViewRange / 2), Vector3.up);
+                var leftRayDirection = leftRayRotation * AiCharacter.RotationTransform.forward;
+                var rightRayRotation = Quaternion.AngleAxis((fieldOfViewRange / 2), Vector3.up);
+                var rightRayDirection = rightRayRotation * AiCharacter.RotationTransform.forward;
+
+                Gizmos.DrawRay(AiCharacter.eyeLine.position, direction);
+                Gizmos.DrawRay(AiCharacter.eyeLine.position, leftRayDirection * maxDetectionDistance);
+                Gizmos.DrawRay(AiCharacter.eyeLine.position, rightRayDirection * maxDetectionDistance);
+
+                for (theta = 0.1f; theta < Mathf.PI * 2; theta += 0.1f)
+                {
+                    x = minDetectionDistance * Mathf.Cos(theta);
+                    z = minDetectionDistance * Mathf.Sin(theta);
+                    newPos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
+                    Gizmos.DrawLine(pos, newPos);
+                    pos = newPos;
+                }
+                Gizmos.DrawLine(pos, lastPos);
             }
-            Gizmos.DrawLine(pos, lastPos);
-            //}
         }
         #endregion
     }

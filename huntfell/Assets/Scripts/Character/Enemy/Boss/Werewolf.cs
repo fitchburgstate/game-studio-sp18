@@ -2,37 +2,79 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Hunter.Characters.AI;
+using System;
 
 namespace Hunter.Characters
 {
     public class Werewolf : Boss, IMoveable, IAttack, IUtilityBasedAI
     {
         #region Variables
+        /// <summary>
+        /// Determines the movement speed of the boss.
+        /// </summary>
         [Header("Movement Options")]
         [Range(0, 20), Tooltip("The running speed of the character when it is in combat.")]
         public float speed = 5f;
 
+        /// <summary>
+        /// Determines the speed at which the boss turns.
+        /// </summary>
         [Range(1, 250)]
         public float turnSpeed = 175f;
 
+        /// <summary>
+        /// The weapon that belongs in the left hand of the boss.
+        /// </summary>
         [Header("Combat Options")]
         [SerializeField]
         private Melee leftClawWeapon;
+
+        /// <summary>
+        /// The weapon that belongs in the right hand of the boss.
+        /// </summary>
         [SerializeField]
         private Melee rightClawWeapon;
+
+        /// <summary>
+        /// The weapon that will be used during the bosses heavy attack.
+        /// </summary>
         [SerializeField]
         private Melee doubleSwipeWeapon;
 
-        private IEnumerator attackCR;
+        /// <summary>
+        /// Determines whether or not the boss has just found the player.
+        /// </summary>
         [HideInInspector]
         public bool justFound = false;
 
-        // Phase related variables
-        [Range(1, 3)]
-        private int phase = 1;
-        private bool spawnMinions = false;
+        /// <summary>
+        /// Determines whether the Attack Coroutine can be played or not.
+        /// </summary>
+        private IEnumerator attackCR;
 
+        /// <summary>
+        /// Used to reference the BossInputModule attached to the boss.
+        /// </summary>
         private BossInputModule bossInputModule;
+
+        /// <summary>
+        /// Determines whether debug logs relating to the boss will appear in the console window.
+        /// </summary>
+        [Header("Special Options")]
+        public bool showDebugLogs = false;
+
+        /// <summary>
+        /// Determines the phase that the boss is in, currently there are a maximum of 3 phases.
+        /// </summary>
+        // Phase related variables
+        [Range(1, 3), SerializeField]
+        private int phase = 1;
+
+        /// <summary>
+        /// Determines whether the boss should spawn minions or not.
+        /// </summary>
+        [SerializeField]
+        private bool spawnMinions = false;
         #endregion
 
         #region Properties
@@ -48,7 +90,7 @@ namespace Hunter.Characters
                 if (health <= 0 && !isDying)
                 {
                     // TODO Change this to reflect wether the death anim should be cinematic or not later
-                    StartCoroutine(KillWerewolf(true));
+                    StartCoroutine(KillWerewolf());
                     isDying = true;
                 }
             }
@@ -68,8 +110,13 @@ namespace Hunter.Characters
         protected override void Start()
         {
             base.Start();
-            bossInputModule = GetComponent<BossInputModule>();
+
+            rightClawWeapon.gameObject.SetActive(false);
+            leftClawWeapon.gameObject.SetActive(false);
+            doubleSwipeWeapon.gameObject.SetActive(false);
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+
+            bossInputModule = GetComponent<BossInputModule>();
             agent.updateRotation = false;
         }
 
@@ -83,7 +130,7 @@ namespace Hunter.Characters
             }
             else
             {
-                Debug.LogWarning("There is no animator controller; floats dirX and dirY as well as bool moving are not being set.");
+                Debug.LogWarning("There is no animator controller; floats dirX and dirY, and bool moving are not being set.");
             }
         }
         #endregion
@@ -92,6 +139,7 @@ namespace Hunter.Characters
         public void Move(Transform target)
         {
             if (isDying) { return; }
+            BossInputModule.isAttacking = false;
             Move(target, speed);
         }
 
@@ -123,6 +171,7 @@ namespace Hunter.Characters
         public void Turn(Transform target)
         {
             if (isDying) { return; }
+            BossInputModule.isAttacking = false;
             if (target != null)
             {
                 RotateTowardsTarget(target.position, turnSpeed);
@@ -131,88 +180,115 @@ namespace Hunter.Characters
         #endregion
 
         #region Werewolf Attack
-        private IEnumerator KillWerewolf(bool isCinematic)
+        /// <summary>
+        /// Function used to kill the boss once it's health reaches 0.
+        /// </summary>
+        private IEnumerator KillWerewolf()
         {
             agent.speed = 0;
             agent.destination = transform.position;
+            agent.enabled = false;
+            characterController.enabled = false;
+
+            if (attackCR != null)
+            {
+                StopCoroutine(attackCR);
+                attackCR = null;
+            }
+
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+            rightClawWeapon.baseDamage = 60;
+            rightClawWeapon.critPercent = 50;
+            rightClawWeapon.hitBoxFrames = 50;
             anim.SetTrigger("death");
+
             yield return null;
         }
 
+        /// <summary>
+        /// Begins the attack coroutine.
+        /// </summary>
         public void Attack()
         {
-            if (isDying) { return; }
             if (attackCR != null) { return; }
+            if (isDying) { return; }
+
             attackCR = PlayAttackAnimation();
+            // STARTS ATTACK COROUTINE
             StartCoroutine(attackCR);
         }
 
-        #region Deprecated Code
-        //public IEnumerator PlayFirstSwingAnimation()
-        //{
-        //    if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
-        //    anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-        //    anim.SetTrigger("combat");
-        //    yield return new WaitForSeconds(.75f);
-        //    attackCR = PlaySecondSwingAnimation();
-        //    yield return StartCoroutine(attackCR);
-        //}
-
-        //public IEnumerator PlaySecondSwingAnimation()
-        //{
-        //    if (leftClawWeapon != null) EquipWeaponToCharacter(leftClawWeapon);
-        //    yield return new WaitForSeconds(.75f);
-        //    attackCR = PlayThirdSwingAnimation();
-        //    yield return StartCoroutine(attackCR);
-        //}
-
-        //public IEnumerator PlayThirdSwingAnimation()
-        //{
-        //    if (doubleSwipeWeapon != null) EquipWeaponToCharacter(doubleSwipeWeapon);
-        //    yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
-        //    attackCR = null;
-        //    if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
-        //}
-        #endregion
-
-        public IEnumerator PlayAttackAnimation()
-        {
-            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
-            BossInputModule.isAttacking = true;
-            var swingCount = 1;
-            while (swingCount < 4)
-            {
-                switch (swingCount)
-                {
-                    case 1:
-                        if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
-                        anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-                        anim.SetTrigger("combat");
-                        swingCount += 2;
-                        yield return new WaitForSeconds(.25f);
-                        break;
-                    case 2:
-                        if (leftClawWeapon != null) EquipWeaponToCharacter(leftClawWeapon);
-                        swingCount += 3;
-                        yield return new WaitForSeconds(.25f);
-                        break;
-                    case 3:
-                        if (doubleSwipeWeapon != null) EquipWeaponToCharacter(doubleSwipeWeapon);
-                        swingCount += 4;
-                        yield return new WaitForSeconds(.25f);
-                        break;
-                }
-            }
-            yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
-            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
-            BossInputModule.isAttacking = false;
-            attackCR = null;
-        }
-
+        /// <summary>
+        /// Usually activated within the animation itself, this activates the hitbox of the current weapon.
+        /// </summary>
         public void WeaponAnimationEvent()
         {
-            if (isDying) { return; }
-            CurrentWeapon.StartAttackFromAnimationEvent();
+            CurrentWeapon?.StartAttackFromAnimationEvent();
+        }
+
+        /// <summary>
+        /// Usually activated within the animation itself, this resumes the attack coroutine.
+        /// </summary>
+        public void ResumeAttackAnimationEvent()
+        {
+            if (attackCR == null)
+            {
+                Debug.LogError("The Attack Coroutine reference is null despite the animation event being called. This reference should have been set when the werewolf began his attack.", gameObject);
+                return;
+            }
+
+            // RESUMES ATTACK COROUTINE
+            StartCoroutine(attackCR);
+        }
+
+        /// <summary>
+        /// The main logic for the bosses' chain attack. As long as attackCR is not reset, then the coroutine should resume from where it left off.
+        /// </summary>
+        public IEnumerator PlayAttackAnimation()
+        {
+            BossInputModule.isAttacking = true;
+
+            // First attack in the combo swing
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+
+            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+            anim.SetTrigger("firstAttack");
+
+            // PAUSING FOR ANIMATION EVENT
+            StopCoroutine(attackCR);
+            if (showDebugLogs) { Debug.Log("Pausing the coroutine to wait for first attack to finsh.", gameObject); }
+            yield return null;
+
+            // Second attack in the combo swing
+            if (leftClawWeapon != null) { EquipWeaponToCharacter(leftClawWeapon); }
+
+            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+            anim.SetTrigger("secondAttack");
+
+            // PAUSING FOR ANIMATION EVENT
+            StopCoroutine(attackCR);
+            if (showDebugLogs) { Debug.Log("Pausing the coroutine to wait for second attack to finsh.", gameObject); }
+            yield return null;
+
+            // Third attack in the combo swing
+            if (doubleSwipeWeapon != null) { EquipWeaponToCharacter(doubleSwipeWeapon); }
+
+            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+            anim.SetTrigger("thirdAttack");
+
+            // PAUSING FOR ANIMATION EVENT
+            StopCoroutine(attackCR);
+            if (showDebugLogs) { Debug.Log("Pausing the coroutine to wait for third attack to finsh.", gameObject); }
+            yield return null;
+
+            // Wait for the third swing to finish, and then reset everything
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+
+            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+            BossInputModule.isAttacking = false;
+
+            if (showDebugLogs) { Debug.Log("Ending the coroutine, attack combo is finished.", gameObject); }
+            attackCR = null;
         }
         #endregion
 
@@ -237,23 +313,23 @@ namespace Hunter.Characters
 
         public void Interact()
         {
-            //Wolves cannot interact with stuff!
-            return;
+            if (isDying) { return; }
+            // This feature will not be implemented.
         }
 
         public void CycleWeapons(bool cycleUp)
         {
-            return;
+            if (isDying) { return; }
         }
 
         public void CycleElements(bool cycleUp)
         {
-            return;
+            if (isDying) { return; }
         }
 
         public void SwitchWeaponType(bool switchToMelee)
         {
-            return;
+            if (isDying) { return; }
         }
         #endregion
     }

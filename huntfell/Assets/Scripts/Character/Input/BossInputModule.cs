@@ -9,38 +9,112 @@ namespace Hunter.Characters.AI
 {
     public class BossInputModule : AIInputModule
     {
-        [HideInInspector]
+        #region Variables
+        /// <summary>
+        /// Determines whether the boss is already attacking or not.
+        /// </summary>
         public bool isAttacking = false;
+        #endregion
 
         #region Unity Functions
-        protected override void Start()
-        {
-            base.Start();
-        }
-
         protected override void FixedUpdate()
         {
-            base.FixedUpdate();
+            if (!inCombat)
+            {
+                if (enemy.CurrentHealth < tempHealth)
+                {
+                    inCombat = true;
+                }
+            }
+
+            var distanceToPoint = DistanceToTarget(RandomPointTarget);
+            var distanceToTarget = DistanceToTarget(Target.position);
+
+            if (AiDetection != null)
+            {
+                enemyInLOS = AiDetection.DetectPlayer();
+                enemyInVisionCone = AiDetection.InVisionCone;
+
+                if (enemyInLOS)
+                {
+                    inCombat = true;
+                }
+                else if ((distanceToTarget > (AiDetection.maxDetectionDistance * 2)) && (!enemyInLOS))
+                {
+                    inCombat = false;
+
+                    var werewolfComponent = GetComponent<Werewolf>();
+                    var wolfComponent = GetComponent<Wolf>();
+
+                    if (wolfComponent != null)
+                    {
+                        wolfComponent.justFound = false;
+                    }
+                    else if (werewolfComponent != null)
+                    {
+                        werewolfComponent.justFound = false;
+                    }
+                    else { return; }
+                }
+            }
+
+            var currentState = FindNextState(distanceToTarget, distanceToPoint);
+
+#if UNITY_EDITOR
+            Debug.Log(currentState);
+            //Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
+#endif
+
+            currentState.Act();
+
+            #region State Switchers
+            if (currentState is Attack)
+            {
+                inCombat = true;
+            }
+            else if (currentState is MoveTo)
+            {
+                inCombat = true;
+            }
+            else if (currentState is Turn)
+            {
+                inCombat = true;
+            }
+            else if (currentState is Retreat)
+            {
+                inCombat = true;
+            }
+            else if (currentState is Idle)
+            {
+                inCombat = false;
+            }
+            else if (currentState is Wander)
+            {
+                inCombat = false;
+            }
+            #endregion
+
+            tempHealth = enemy.CurrentHealth;
         }
         #endregion
 
+        #region FindNextState Function
+        /// <summary>
+        /// Finds the next most desired state by determining multiple factors present within the environment.
+        /// </summary>
         public override UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
         {
             var attackValue = 0f;
             var idleValue = 0f;
-            var wanderValue = 0f;
             var turnValue = 0f;
             var moveToValue = 0f;
-            var retreatValue = 0f;
 
             if (attack) { attackValue = attackAction.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
             if (!isAttacking)
             {
-                if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
-                if (wander) { wanderValue = wanderAction.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
                 if (turn) { turnValue = turnAction.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
+                if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
                 if (moveTo) { moveToValue = moveToAction.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
-                if (retreat) { retreatValue = retreatAction.CalculateRetreat(enemy.CurrentHealth, inCombat); }
             }
 
             #region Debug Logs
@@ -61,14 +135,13 @@ namespace Hunter.Characters.AI
             {
                 { attackAction, attackValue },
                 { idleAction, idleValue },
-                { wanderAction, wanderValue },
                 { turnAction, turnValue },
-                { moveToAction, moveToValue },
-                { retreatAction, retreatValue }
+                { moveToAction, moveToValue }
             };
             var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 
             return max;
         }
+        #endregion
     }
 }

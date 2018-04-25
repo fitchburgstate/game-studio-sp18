@@ -238,7 +238,7 @@ namespace Hunter.Characters.AI
                 {
                     inCombat = true;
                 }
-                else if ((distanceToTarget > (AiDetection.maxDetectionDistance*2)) && (!enemyInLOS))
+                else if ((distanceToTarget > (AiDetection.maxDetectionDistance * 2)) && (!enemyInLOS))
                 {
                     inCombat = false;
 
