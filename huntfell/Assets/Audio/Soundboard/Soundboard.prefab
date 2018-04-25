@@ -57,7 +57,6 @@ GameObject:
   - component: {fileID: 4880494414146890}
   - component: {fileID: 20433283172040388}
   - component: {fileID: 81614705935709836}
-  - component: {fileID: 114383317847643310}
   - component: {fileID: 114751236149168024}
   m_Layer: 0
   m_Name: AudioTestingInputListener
@@ -185,7 +184,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 1
-  m_CellSize: {x: 200, y: 50}
+  m_CellSize: {x: 150, y: 38}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -221,33 +220,6 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
---- !u!114 &114383317847643310
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1673622568912582}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af6e2c417b9da014e9e8f004b0ec7a71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MusicStop: 113
-  Footstep: 102
-  PlayerHit: 104
-  PlayerHitByWolf: 106
-  PlayerDrawSword: 116
-  PlayerSwordSwing: 115
-  PlayerSwordHit: 97
-  PlayerDrawLuger: 100
-  PlayerLugerShot: 108
-  BatAggro: 117
-  BatWingLoop: 105
-  GargoyleAttack: 103
-  WolfAggro: 101
-  WolfAttack: 119
-  WolfLunge: 114
-  UIEvent: 109
 --- !u!114 &114751236149168024
 MonoBehaviour:
   m_ObjectHideFlags: 1
