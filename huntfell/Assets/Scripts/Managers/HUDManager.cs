@@ -9,7 +9,7 @@ namespace Hunter {
 
         [HideInInspector]
         public static HUDManager instance;
-        public Canvas hudCanvas;
+        public CanvasGroup hudCanvasGroup;
 
         [SerializeField]
         public Image healthBar;
@@ -58,11 +58,6 @@ namespace Hunter {
                 Destroy(gameObject);
             }
 
-            if(hudCanvas == null)
-            {
-                Debug.LogWarning("There is no HUD Cavnas set in the HUD Manager inspector. Please make sure to set this field. Defaulting to finding any Canvas.");
-                hudCanvas = FindObjectOfType<Canvas>();
-            }
             if(promptText != null && promptIcon != null)
             {
                 promptCanvasGroup = promptText.transform.parent.GetComponent<CanvasGroup>();
@@ -70,6 +65,11 @@ namespace Hunter {
             if(tutorialText != null && tutorialIcon != null)
             {
                 tutorialCanvasGroup = tutorialText.transform.parent.GetComponent<CanvasGroup>();
+            }
+            if(hudCanvasGroup != null)
+            {
+                hudCanvasGroup.alpha = 0;
+                StartCoroutine(Utility.FadeCanvasGroup(hudCanvasGroup, fadeCurve, 1, FadeType.Out));
             }
         }
 
@@ -104,7 +104,7 @@ namespace Hunter {
             {
                 StopCoroutine(promptFadeCR);
             }
-            promptFadeCR = FadeInAndOut(promptCanvasGroup, 2, 3);
+            promptFadeCR = FadePromptInAndOut(promptCanvasGroup, 2, 3);
             StartCoroutine(promptFadeCR);
         }
 
@@ -123,7 +123,7 @@ namespace Hunter {
             {
                 StopCoroutine(promptFadeCR);
             }
-            promptFadeCR = FadeInAndOut(promptCanvasGroup, 2, 3);
+            promptFadeCR = FadePromptInAndOut(promptCanvasGroup, 2, 3);
             StartCoroutine(promptFadeCR);
         }
 
@@ -141,43 +141,17 @@ namespace Hunter {
             {
                 StopCoroutine(tutorialFadeCR);
             }
-            tutorialFadeCR = FadeInAndOut(tutorialCanvasGroup, 2, 3);
+            tutorialFadeCR = FadePromptInAndOut(tutorialCanvasGroup, 2, 3);
             StartCoroutine(tutorialFadeCR);
         }
 
-        private IEnumerator FadeInAndOut(CanvasGroup canvasGroup, float fadeDuration, float stayDuration)
+        private IEnumerator FadePromptInAndOut(CanvasGroup canvasGroup, float fadeDuration, float stayDuration)
         {
             canvasGroup.gameObject.SetActive(true);
-            yield return FadeCanvasGroup(canvasGroup, fadeDuration, FadeType.Out);
+            yield return Utility.FadeCanvasGroup(canvasGroup, fadeCurve, fadeDuration, FadeType.Out);
             yield return new WaitForSeconds(stayDuration);
-            yield return FadeCanvasGroup(canvasGroup, fadeDuration, FadeType.In);
+            yield return Utility.FadeCanvasGroup(canvasGroup, fadeCurve, fadeDuration, FadeType.In);
             canvasGroup.gameObject.SetActive(false);
-        }
-
-        private IEnumerator FadeCanvasGroup (CanvasGroup canvasGroup, float fadeDuration, FadeType fadeType)
-        {
-            canvasGroup.alpha = (float)fadeType;
-            if (fadeDuration == 0)
-            {
-                canvasGroup.alpha = Mathf.Abs(canvasGroup.alpha - 1);
-            }
-            else
-            {
-                float curvePos = 0;
-                while (curvePos < 1)
-                {
-                    curvePos += (Time.deltaTime / fadeDuration);
-                    if (fadeType == FadeType.In)
-                    {
-                        canvasGroup.alpha = fadeCurve.Evaluate(1 - curvePos);
-                    }
-                    else
-                    {
-                        canvasGroup.alpha = fadeCurve.Evaluate(curvePos);
-                    }
-                    yield return new WaitForEndOfFrame();
-                }
-            }
         }
     }
 }

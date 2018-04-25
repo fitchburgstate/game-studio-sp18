@@ -15,7 +15,7 @@ namespace Hunter {
         [Header("Hit Particle Options")]
         public ParticleSystem nullHitSystem;
         public ParticleSystem fireHitSystem;
-        public ParticleSystem poisonDamageSystem;
+        public ParticleSystem iceHitSystem;
 
         private void Awake ()
         {
@@ -38,6 +38,9 @@ namespace Hunter {
                     break;
                 case ElementOption.Fire:
                     fireHitSystem?.Play();
+                    break;
+                case ElementOption.Ice:
+                    iceHitSystem?.Play();
                     break;
                 default:
                     Debug.LogWarning("Looks like you got hit with an element that doesnt have a hit effect yet. Defaulting to null.");

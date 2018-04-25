@@ -8,13 +8,20 @@ namespace Hunter.Characters
     public class Gargoyle : Minion
     {
         #region Variables
+        [Header("Combat Options")]
+        [Range(1, 250)]
+        public float turnSpeed = 175f;
+
         [SerializeField]
         private Ranged rangedWeapon;
 
-        private AIDetection gargoyleDetection;
+        [Header("Death Options")]
+        [SerializeField]
+        private ParticleSystem deathParticle;
 
+
+        private AIDetection gargoyleDetection;
         private GameObject target;
-        private Transform targetEyeline;
 
         private IEnumerator gargoyleAttackCR;
         #endregion
@@ -29,39 +36,39 @@ namespace Hunter.Characters
             set
             {
                 health = value;
-                if (health <= 0 && !IsDying)
+                if (health <= 0)
                 {
-                    deathAction = KillGarg(false);
-                    StartCoroutine(deathAction);
+                    var killGargoyleCR = KillGargoyle();
+                    StartCoroutine(killGargoyleCR);
                 }
             }
         }
         #endregion
 
+        #region Unity Functions
         protected override void Start()
         {
             base.Start();
             gargoyleDetection = GetComponent<AIDetection>();
             EquipWeaponToCharacter(rangedWeapon);
             target = GameObject.FindGameObjectWithTag("Player");
-            targetEyeline = target.GetComponent<Character>().EyeLineTransform;
         }
 
         private void FixedUpdate()
         {
-            if (IsDying) { return; }
             var enemyInLOS = gargoyleDetection.DetectPlayer();
 
             if (enemyInLOS)
             {
-                transform.LookAt(targetEyeline.transform.position);
+                RotateTowardsTarget(target.transform.position, turnSpeed);
                 Attack();
             }
         }
+        #endregion
 
+        #region Gargoyle Combat
         private void Attack()
         {
-            if (IsDying) { return; }
             if (gargoyleAttackCR != null) { return; }
             gargoyleAttackCR = GargoyleAttack();
             StartCoroutine(gargoyleAttackCR);
@@ -76,15 +83,12 @@ namespace Hunter.Characters
             gargoyleAttackCR = null;
         }
 
-        private IEnumerator KillGarg (bool isCinematic)
+        private IEnumerator KillGargoyle()
         {
-            agent.speed = 0;
-            agent.destination = transform.position;
-            agent.enabled = false;
-            minionHealthBarParent?.gameObject.SetActive(false);
-            //TODO Change this later to reflect the animation time
-            yield return new WaitForSeconds(3);
-            Destroy(RotationTransform.gameObject);
+            deathParticle?.Play();
+            yield return new WaitForSeconds(.75f);
+            Destroy(gameObject);
         }
+        #endregion
     }
 }

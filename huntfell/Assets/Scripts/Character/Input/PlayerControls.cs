@@ -208,7 +208,7 @@ namespace Hunter {
                     // Main Bindings
                     if (layout == ControlsLayout.Controller_Face)
                     {
-                        AttackButton.AddDefaultBinding(InputControlType.Action1);
+                        AttackButton.AddDefaultBinding(InputControlType.Action3);
 
                         DashButton.AddDefaultBinding(InputControlType.Action2);
                     }
@@ -219,7 +219,7 @@ namespace Hunter {
                         DashButton.AddDefaultBinding(InputControlType.Action1);
                     }
 
-                    InteractButton.AddDefaultBinding(InputControlType.Action3);
+                    InteractButton.AddDefaultBinding(InputControlType.Action1);
 
                     PotionButton.AddDefaultBinding(InputControlType.Action4);
                 }

@@ -79,7 +79,7 @@ namespace Hunter
         public IEnumerator StartGame (CanvasGroup titleScreenCanvasGroup)
         {
             Fabric.EventManager.Instance?.PostEvent("UI Start Game");
-            yield return FadeCanvasGroup(titleScreenCanvasGroup, 2, FadeType.In);
+            yield return Utility.FadeCanvasGroup(titleScreenCanvasGroup, fadeCurve, 2, FadeType.In);
 
             SceneManager.UnloadSceneAsync("UI_Title_Menu");
             if (director == null)
@@ -154,33 +154,7 @@ namespace Hunter
             imageComponent.color = fadeColor;
             DontDestroyOnLoad(canvas);
 
-            yield return StartCoroutine(FadeCanvasGroup(canvasGroup, fadeDuration, fadeType));
-        }
-
-        private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float fadeDuration, FadeType fadeType)
-        {
-            canvasGroup.alpha = (float)fadeType;
-            if (fadeDuration == 0)
-            {
-                canvasGroup.alpha = Mathf.Abs(canvasGroup.alpha - 1);
-            }
-            else
-            {
-                float curvePos = 0;
-                while (curvePos < 1)
-                {
-                    curvePos += (Time.deltaTime / fadeDuration);
-                    if (fadeType == FadeType.In)
-                    {
-                        canvasGroup.alpha = fadeCurve.Evaluate(1 - curvePos);
-                    }
-                    else
-                    {
-                        canvasGroup.alpha = fadeCurve.Evaluate(curvePos);
-                    }
-                    yield return new WaitForEndOfFrame();
-                }
-            }
+            yield return StartCoroutine(Utility.FadeCanvasGroup(canvasGroup, fadeCurve, fadeDuration, fadeType));
         }
 
         public SpawnPoint GetClosestSpawnPoint(Vector3 currentPosition)

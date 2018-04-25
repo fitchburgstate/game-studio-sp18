@@ -276,6 +276,27 @@ Prefab:
       value: 
       objectReference: {fileID: 21300010, guid: 1b79cb32f900a5a439753b2df1ffb69b,
         type: 3}
+    - target: {fileID: 114709796762046416, guid: 7da005d3886945345afbd0f894bd068f,
+        type: 2}
+      propertyPath: hudCanvasGroup
+      value: 
+      objectReference: {fileID: 1363991026}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7da005d3886945345afbd0f894bd068f, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1363991025 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1002114809265486, guid: 7da005d3886945345afbd0f894bd068f,
+    type: 2}
+  m_PrefabInternal: {fileID: 1363991024}
+--- !u!225 &1363991026
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1363991025}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

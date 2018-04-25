@@ -268,9 +268,9 @@ namespace Hunter.Characters
             }
 
             var dashTarget = Utility.GetClosestPointOnNavMesh(floorPointFromDashTarget, agent, transform);
-            if (Physics.Linecast(startPosition, dashTarget, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxHorizontalDistance)
+            if (Physics.Linecast(startPosition, dashTarget, out hit, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxHorizontalDistance)
             {
-                Debug.LogWarning("Your dash would have brought you somewhere you weren't supposed to go!");
+                Debug.LogWarning($"Your dash would have brought you somewhere you weren't supposed to go! {hit.transform.name}");
                 dashAction = null;
                 yield break;
             }
@@ -512,6 +512,11 @@ namespace Hunter.Characters
             transform.position = Utility.GetClosestPointOnNavMesh(spawnPosition, agent, transform);
 
             yield return new WaitForSeconds(respawnTime);
+            var dots = GetComponents<HealthDrainDot>();
+            for (var i = 0; i < dots.Length; i++)
+            {
+                Destroy(dots[i]);
+            }
             RestoreHealthToCharacter(totalHealth);
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.In);
