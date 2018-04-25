@@ -989,7 +989,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1829495707129776}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.057, y: 0.45, z: 0.177}
+  m_LocalPosition: {x: 0, y: 0.542, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4263129515748952}
@@ -1017,7 +1017,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1840781645732888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.94, y: -0.05, z: -19.54}
+  m_LocalPosition: {x: -4.75, y: 0, z: -16.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4898874713604180}
@@ -1790,7 +1790,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  totalHealth: 25
+  totalHealth: 100
   displayName: Werewolf
   rotationTransform: {fileID: 4898874713604180}
   eyeLine: {fileID: 4068385627400054}
@@ -1807,7 +1807,10 @@ MonoBehaviour:
   leftClawWeapon: {fileID: 114439244766452288}
   rightClawWeapon: {fileID: 114566108801214396}
   doubleSwipeWeapon: {fileID: 114367483855498478}
-  justFound: 0
+  firstAttackClip: {fileID: 7400000, guid: c2ed874608f6dfc41aece0bb372c45a5, type: 2}
+  secondAttackClip: {fileID: 7400000, guid: 0b3d2e0fa9ecf714ebf34ac940102797, type: 2}
+  thirdAttackClip: {fileID: 7400000, guid: 7126d35225a41ee4182fcf29ede92b07, type: 2}
+  howlClip: {fileID: 7400000, guid: f8b7e1a7264a8364fa0ed42aaf6fc565, type: 2}
   showDebugLogs: 1
   phase: 1
   spawnMinions: 0
@@ -1866,7 +1869,7 @@ MonoBehaviour:
   detectionLayers:
     serializedVersion: 2
     m_Bits: 256
-  showGizmos: 1
+  showGizmos: 0
 --- !u!114 &114566108801214396
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1902,12 +1905,12 @@ MonoBehaviour:
   moveTo: 1
   idle: 1
   wander: 0
-  retreat: 0
   maxDistance: 1
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
   randomPointTarget: {x: 0, y: 0, z: 0}
   isAttacking: 0
+  isHowling: 0
 --- !u!114 &114705499274962700
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2014,7 +2017,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 2.05, z: 0}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!195 &195764231298104408
 NavMeshAgent:
   m_ObjectHideFlags: 1
@@ -2024,7 +2027,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1
-  m_Speed: 4
+  m_Speed: 5
   m_Acceleration: 15
   avoidancePriority: 50
   m_AngularSpeed: 1500
@@ -2033,7 +2036,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 3.2
-  m_BaseOffset: -0.05
+  m_BaseOffset: 0
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!198 &198116166520802286

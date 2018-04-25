@@ -42,15 +42,44 @@ namespace Hunter.Characters
         private Melee doubleSwipeWeapon;
 
         /// <summary>
-        /// Determines whether or not the boss has just found the player.
+        /// Determines whether the wolf should perform a third swing or not.
         /// </summary>
-        [HideInInspector]
-        public bool justFound = false;
+        private bool performThirdSwing = false;
+
+        /// <summary>
+        /// The animation clip for the first attack.
+        /// </summary>
+        [Header("Animation Clips Library")]
+        [SerializeField]
+        private AnimationClip firstAttackClip;
+
+        /// <summary>
+        /// The animation clip for the second attack.
+        /// </summary>
+        [SerializeField]
+        private AnimationClip secondAttackClip;
+
+        /// <summary>
+        /// The animation clip for the third attack.
+        /// </summary>
+        [SerializeField]
+        private AnimationClip thirdAttackClip;
+
+        /// <summary>
+        /// The animation clip for the third attack.
+        /// </summary>
+        [SerializeField]
+        private AnimationClip howlClip;
 
         /// <summary>
         /// Determines whether the Attack Coroutine can be played or not.
         /// </summary>
         private IEnumerator attackCR;
+
+        /// <summary>
+        /// Determines whether the Howl Coroutine can be played or not.
+        /// </summary>
+        private IEnumerator howlCR;
 
         /// <summary>
         /// Used to reference the BossInputModule attached to the boss.
@@ -93,6 +122,21 @@ namespace Hunter.Characters
                     StartCoroutine(KillWerewolf());
                     isDying = true;
                 }
+                // This checks to see if the werewolf has entered phase 2 yet
+                else if ((health / totalHealth < .66f) && phase < 2)
+                {
+                    anim.SetBool("performThirdSwing", true);
+                    performThirdSwing = true;
+                    phase = 2;
+                    invincible = true;
+                    InitiateHowl();
+                }
+                else if ((health / totalHealth < .33f) && phase < 3)
+                {
+                    phase = 3;
+                    invincible = true;
+                    InitiateHowl();
+                }
             }
         }
 
@@ -110,6 +154,7 @@ namespace Hunter.Characters
         protected override void Start()
         {
             base.Start();
+            agent.speed = speed;
 
             rightClawWeapon.gameObject.SetActive(false);
             leftClawWeapon.gameObject.SetActive(false);
@@ -179,7 +224,7 @@ namespace Hunter.Characters
         }
         #endregion
 
-        #region Werewolf Attack
+        #region Werewolf Combat
         /// <summary>
         /// Function used to kill the boss once it's health reaches 0.
         /// </summary>
@@ -196,11 +241,13 @@ namespace Hunter.Characters
                 attackCR = null;
             }
 
+            #region Don't worry about this
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
-            rightClawWeapon.baseDamage = 60;
-            rightClawWeapon.critPercent = 50;
-            rightClawWeapon.hitBoxFrames = 50;
+            rightClawWeapon.baseDamage = 65;
+            rightClawWeapon.critPercent = 75;
+            rightClawWeapon.hitBoxFrames = 80;
             anim.SetTrigger("death");
+            #endregion
 
             yield return null;
         }
@@ -213,7 +260,7 @@ namespace Hunter.Characters
             if (attackCR != null) { return; }
             if (isDying) { return; }
 
-            attackCR = PlayAttackAnimation();
+            attackCR = ComboAttackAnimation();
             // STARTS ATTACK COROUTINE
             StartCoroutine(attackCR);
         }
@@ -226,25 +273,19 @@ namespace Hunter.Characters
             CurrentWeapon?.StartAttackFromAnimationEvent();
         }
 
-        /// <summary>
-        /// Usually activated within the animation itself, this resumes the attack coroutine.
-        /// </summary>
-        public void ResumeAttackAnimationEvent()
+        public void InitiateHowl()
         {
-            if (attackCR == null)
-            {
-                Debug.LogError("The Attack Coroutine reference is null despite the animation event being called. This reference should have been set when the werewolf began his attack.", gameObject);
-                return;
-            }
+            if (howlCR != null) { return; }
+            if (isDying) { return; }
 
-            // RESUMES ATTACK COROUTINE
-            StartCoroutine(attackCR);
+            howlCR = HowlAnimation();
+            StartCoroutine(howlCR);
         }
 
         /// <summary>
         /// The main logic for the bosses' chain attack. As long as attackCR is not reset, then the coroutine should resume from where it left off.
         /// </summary>
-        public IEnumerator PlayAttackAnimation()
+        public IEnumerator ComboAttackAnimation()
         {
             BossInputModule.isAttacking = true;
 
@@ -254,10 +295,7 @@ namespace Hunter.Characters
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("firstAttack");
 
-            // PAUSING FOR ANIMATION EVENT
-            StopCoroutine(attackCR);
-            if (showDebugLogs) { Debug.Log("Pausing the coroutine to wait for first attack to finsh.", gameObject); }
-            yield return null;
+            yield return new WaitForSeconds(firstAttackClip.length);
 
             // Second attack in the combo swing
             if (leftClawWeapon != null) { EquipWeaponToCharacter(leftClawWeapon); }
@@ -265,30 +303,51 @@ namespace Hunter.Characters
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("secondAttack");
 
-            // PAUSING FOR ANIMATION EVENT
-            StopCoroutine(attackCR);
-            if (showDebugLogs) { Debug.Log("Pausing the coroutine to wait for second attack to finsh.", gameObject); }
-            yield return null;
+            yield return new WaitForSeconds(secondAttackClip.length);
 
-            // Third attack in the combo swing
-            if (doubleSwipeWeapon != null) { EquipWeaponToCharacter(doubleSwipeWeapon); }
+            if (performThirdSwing)
+            {
+                // Third attack in the combo swing
+                if (doubleSwipeWeapon != null) { EquipWeaponToCharacter(doubleSwipeWeapon); }
 
-            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-            anim.SetTrigger("thirdAttack");
+                anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+                anim.SetTrigger("thirdAttack");
 
-            // PAUSING FOR ANIMATION EVENT
-            StopCoroutine(attackCR);
-            if (showDebugLogs) { Debug.Log("Pausing the coroutine to wait for third attack to finsh.", gameObject); }
-            yield return null;
+                yield return new WaitForSeconds(thirdAttackClip.length);
+            }
 
-            // Wait for the third swing to finish, and then reset everything
+            // Wait for the last swing to finish, and then resetting everything
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
 
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             BossInputModule.isAttacking = false;
 
-            if (showDebugLogs) { Debug.Log("Ending the coroutine, attack combo is finished.", gameObject); }
             attackCR = null;
+        }
+
+        private IEnumerator HowlAnimation()
+        {
+            while (BossInputModule.isAttacking)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            anim.SetTrigger("howl");
+            isDying = true;
+            yield return new WaitForSeconds(howlClip.length);
+
+            if (phase == 2)
+            {
+                // Perform phase 2 actions here
+            }
+            else if (phase == 3)
+            {
+                // Perform phase 3 actions here
+            }
+
+            invincible = false;
+            isDying = false;
+            howlCR = null;
         }
         #endregion
 

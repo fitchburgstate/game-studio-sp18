@@ -320,7 +320,7 @@ namespace Hunter.Characters
             if (attackCR != null) { return; }
             else if (PerformingAction) { return; }
             else if (isDying) { return; }
-            attackCR = PlayAttackAnimation();
+            attackCR = ComboAttackAnimation();
             StartCoroutine(attackCR);
         }
 
@@ -347,7 +347,7 @@ namespace Hunter.Characters
             Fabric.EventManager.Instance?.PostEvent("Player Luger Shot", gameObject);
         }
 
-        public IEnumerator PlayAttackAnimation()
+        public IEnumerator ComboAttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             if (CurrentWeapon is Melee)

@@ -42,19 +42,6 @@ namespace Hunter.Characters.AI
                 else if ((distanceToTarget > (AiDetection.maxDetectionDistance * 2)) && (!enemyInLOS))
                 {
                     inCombat = false;
-
-                    var werewolfComponent = GetComponent<Werewolf>();
-                    var wolfComponent = GetComponent<Wolf>();
-
-                    if (wolfComponent != null)
-                    {
-                        wolfComponent.justFound = false;
-                    }
-                    else if (werewolfComponent != null)
-                    {
-                        werewolfComponent.justFound = false;
-                    }
-                    else { return; }
                 }
             }
 
@@ -106,16 +93,15 @@ namespace Hunter.Characters.AI
         {
             var attackValue = 0f;
             var idleValue = 0f;
+            var wanderValue = 0f;
             var turnValue = 0f;
             var moveToValue = 0f;
 
+            if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
             if (attack) { attackValue = attackAction.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
-            if (!isAttacking)
-            {
-                if (turn) { turnValue = turnAction.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
-                if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
-                if (moveTo) { moveToValue = moveToAction.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
-            }
+            if (wander) { wanderValue = wanderAction.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
+            if (turn) { turnValue = turnAction.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
+            if (moveTo) { moveToValue = moveToAction.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
 
             #region Debug Logs
 #if UNITY_EDITOR
@@ -135,8 +121,9 @@ namespace Hunter.Characters.AI
             {
                 { attackAction, attackValue },
                 { idleAction, idleValue },
+                { wanderAction, wanderValue },
                 { turnAction, turnValue },
-                { moveToAction, moveToValue }
+                { moveToAction, moveToValue },
             };
             var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 

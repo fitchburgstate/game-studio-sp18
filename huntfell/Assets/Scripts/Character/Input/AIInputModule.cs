@@ -16,7 +16,6 @@ namespace Hunter.Characters.AI
         public bool moveTo = true;
         public bool idle = true;
         public bool wander = true;
-        public bool retreat = true;
 
         [Header("Other Variables")]
         /// <summary>
@@ -249,10 +248,6 @@ namespace Hunter.Characters.AI
                     {
                         wolfComponent.justFound = false;
                     }
-                    else if (werewolfComponent != null)
-                    {
-                        werewolfComponent.justFound = false;
-                    }
                     else { return; }
                 }
             }
@@ -309,14 +304,12 @@ namespace Hunter.Characters.AI
             var wanderValue = 0f;
             var turnValue = 0f;
             var moveToValue = 0f;
-            var retreatValue = 0f;
 
             if (attack) { attackValue = attackAction.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
             if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
             if (wander) { wanderValue = wanderAction.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
             if (turn) { turnValue = turnAction.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
             if (moveTo) { moveToValue = moveToAction.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
-            if (retreat) { retreatValue = retreatAction.CalculateRetreat(enemy.CurrentHealth, inCombat); }
 
             #region Debug Logs
 #if UNITY_EDITOR
@@ -339,7 +332,6 @@ namespace Hunter.Characters.AI
                 { wanderAction, wanderValue },
                 { turnAction, turnValue },
                 { moveToAction, moveToValue },
-                { retreatAction, retreatValue }
             };
             var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 
