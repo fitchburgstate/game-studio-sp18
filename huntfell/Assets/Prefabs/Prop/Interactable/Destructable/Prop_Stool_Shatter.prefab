@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 4359583743266078}
   - component: {fileID: 33799693435641646}
   - component: {fileID: 23503384224565624}
-  - component: {fileID: 64039897778741878}
   - component: {fileID: 54686137079903824}
-  - component: {fileID: 114590521403888396}
+  - component: {fileID: 64463179455475228}
+  - component: {fileID: 114844703463414336}
   m_Layer: 17
   m_Name: Prop_Stool2
   m_TagString: Untagged
@@ -57,9 +57,9 @@ GameObject:
   - component: {fileID: 4146658133408900}
   - component: {fileID: 33892164227258654}
   - component: {fileID: 23395614427619018}
-  - component: {fileID: 64959046084419394}
   - component: {fileID: 54766115269414474}
-  - component: {fileID: 114191708958869864}
+  - component: {fileID: 64474969216419436}
+  - component: {fileID: 114334885177959770}
   m_Layer: 17
   m_Name: Prop_Stool3
   m_TagString: Untagged
@@ -77,9 +77,9 @@ GameObject:
   - component: {fileID: 4148057173310270}
   - component: {fileID: 33332334507773480}
   - component: {fileID: 23279103969642030}
-  - component: {fileID: 64429937924740172}
   - component: {fileID: 54585951985213414}
-  - component: {fileID: 114569360637037288}
+  - component: {fileID: 64613485471122920}
+  - component: {fileID: 114106475375924210}
   m_Layer: 17
   m_Name: Prop_Stool1
   m_TagString: Untagged
@@ -310,7 +310,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &64039897778741878
+--- !u!64 &64463179455475228
 MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -323,22 +323,8 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 0}
---- !u!64 &64429937924740172
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1532217460819268}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 0}
---- !u!64 &64959046084419394
+  m_Mesh: {fileID: 4300000, guid: 5ad377d71c4d98345b61944cb918d823, type: 3}
+--- !u!64 &64474969216419436
 MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -351,7 +337,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 4300002, guid: 5ad377d71c4d98345b61944cb918d823, type: 3}
+--- !u!64 &64613485471122920
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1532217460819268}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300004, guid: 5ad377d71c4d98345b61944cb918d823, type: 3}
 --- !u!95 &95885672666501054
 Animator:
   serializedVersion: 3
@@ -369,20 +369,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114191708958869864
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1478807059266370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0795d3d9e4168b140a2f62947f854ee1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  activateOnStart: 1
-  destroyWaitTime: 3
---- !u!114 &114569360637037288
+--- !u!114 &114106475375924210
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -390,12 +377,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 1532217460819268}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0795d3d9e4168b140a2f62947f854ee1, type: 3}
+  m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   activateOnStart: 1
   destroyWaitTime: 3
---- !u!114 &114590521403888396
+--- !u!114 &114334885177959770
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1478807059266370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activateOnStart: 1
+  destroyWaitTime: 3
+--- !u!114 &114844703463414336
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -403,7 +403,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1058894219156822}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0795d3d9e4168b140a2f62947f854ee1, type: 3}
+  m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   activateOnStart: 1
