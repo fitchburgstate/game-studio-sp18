@@ -141,11 +141,11 @@ namespace Hunter.Characters
         {
             if (isDying) { return; }
             if (attackCR != null) { return; }
-            attackCR = ComboAttackAnimation();
+            attackCR = AttackAnimation();
             StartCoroutine(attackCR);
         }
 
-        public IEnumerator ComboAttackAnimation()
+        public IEnumerator AttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("combat");

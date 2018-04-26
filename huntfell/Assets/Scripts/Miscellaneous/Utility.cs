@@ -125,7 +125,7 @@ namespace Hunter
     {
         void Attack();
 
-        IEnumerator ComboAttackAnimation();
+        IEnumerator AttackAnimation();
 
         void WeaponAnimationEvent();
 

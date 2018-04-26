@@ -241,7 +241,6 @@ namespace Hunter.Characters.AI
                 {
                     inCombat = false;
 
-                    var werewolfComponent = GetComponent<Werewolf>();
                     var wolfComponent = GetComponent<Wolf>();
 
                     if (wolfComponent != null)

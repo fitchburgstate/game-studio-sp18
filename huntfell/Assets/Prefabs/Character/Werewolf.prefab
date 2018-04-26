@@ -1017,7 +1017,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1840781645732888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.75, y: 0, z: -16.24}
+  m_LocalPosition: {x: -5.2, y: 0, z: -20.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4898874713604180}
@@ -1790,7 +1790,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  totalHealth: 100
+  totalHealth: 300
   displayName: Werewolf
   rotationTransform: {fileID: 4898874713604180}
   eyeLine: {fileID: 4068385627400054}
@@ -1802,8 +1802,24 @@ MonoBehaviour:
   enemyElementOption: 0
   bossHealthBar: {fileID: 0}
   invincibilityFrames: 5
+  showDebugLogs: 0
   speed: 5
-  turnSpeed: 175
+  turnSpeed: 200
+  spawnPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  phaseTwoMobs:
+  - {fileID: 1640528691489282, guid: 99ada6c4f4af5a442bdc332c7943ddca, type: 2}
+  - {fileID: 1720497567133960, guid: 5273fa473021f42499021b5b2e26d4c5, type: 2}
+  - {fileID: 1640528691489282, guid: 99ada6c4f4af5a442bdc332c7943ddca, type: 2}
+  - {fileID: 1720497567133960, guid: 5273fa473021f42499021b5b2e26d4c5, type: 2}
+  phaseThreeMobs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 1874876194440790, guid: 43a5d36c439b73949a576c57baa7511d, type: 2}
+  - {fileID: 0}
   leftClawWeapon: {fileID: 114439244766452288}
   rightClawWeapon: {fileID: 114566108801214396}
   doubleSwipeWeapon: {fileID: 114367483855498478}
@@ -1811,9 +1827,8 @@ MonoBehaviour:
   secondAttackClip: {fileID: 7400000, guid: 0b3d2e0fa9ecf714ebf34ac940102797, type: 2}
   thirdAttackClip: {fileID: 7400000, guid: 7126d35225a41ee4182fcf29ede92b07, type: 2}
   howlClip: {fileID: 7400000, guid: f8b7e1a7264a8364fa0ed42aaf6fc565, type: 2}
-  showDebugLogs: 1
-  phase: 1
-  spawnMinions: 0
+  lungeAscend: {fileID: 7400000, guid: 393dc058ce9589d428796fb3c449503d, type: 2}
+  lungeDescend: {fileID: 7400000, guid: a6500f6a6be6e5544b26a9c003e01b43, type: 2}
 --- !u!114 &114367483855498478
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1910,7 +1925,6 @@ MonoBehaviour:
   target: {fileID: 0}
   randomPointTarget: {x: 0, y: 0, z: 0}
   isAttacking: 0
-  isHowling: 0
 --- !u!114 &114705499274962700
 MonoBehaviour:
   m_ObjectHideFlags: 1

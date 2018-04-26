@@ -10,6 +10,12 @@ namespace Hunter.Characters
     {
         #region Variables
         /// <summary>
+        /// Determines whether debug logs relating to the boss will appear in the console window.
+        /// </summary>
+        [Header("Debug")]
+        public bool showDebugLogs = false;
+
+        /// <summary>
         /// Determines the movement speed of the boss.
         /// </summary>
         [Header("Movement Options")]
@@ -23,53 +29,73 @@ namespace Hunter.Characters
         public float turnSpeed = 175f;
 
         /// <summary>
+        /// The number of spawnpoint gameobjects that are in the fight. This should be set in the inspector.
+        /// </summary>
+        [Header("Phases Options")]
+        public List<GameObject> spawnPositions = new List<GameObject>();
+
+        /// <summary>
+        /// The mobs that will spawn in phase 2. This should be set in the inspector.
+        /// </summary>
+        public List<GameObject> phaseTwoMobs = new List<GameObject>();
+
+        /// <summary>
+        /// The mobs that will spawn in phase 3. This should be set in the inspector.
+        /// </summary>
+        public List<GameObject> phaseThreeMobs = new List<GameObject>();
+
+        /// <summary>
         /// The weapon that belongs in the left hand of the boss.
         /// </summary>
         [Header("Combat Options")]
-        [SerializeField]
-        private Melee leftClawWeapon;
+        public Melee leftClawWeapon;
 
         /// <summary>
         /// The weapon that belongs in the right hand of the boss.
         /// </summary>
-        [SerializeField]
-        private Melee rightClawWeapon;
+        public Melee rightClawWeapon;
 
         /// <summary>
         /// The weapon that will be used during the bosses heavy attack.
         /// </summary>
-        [SerializeField]
-        private Melee doubleSwipeWeapon;
-
-        /// <summary>
-        /// Determines whether the wolf should perform a third swing or not.
-        /// </summary>
-        private bool performThirdSwing = false;
+        public Melee doubleSwipeWeapon;
 
         /// <summary>
         /// The animation clip for the first attack.
         /// </summary>
-        [Header("Animation Clips Library")]
-        [SerializeField]
-        private AnimationClip firstAttackClip;
+        public AnimationClip firstAttackClip;
 
         /// <summary>
         /// The animation clip for the second attack.
         /// </summary>
-        [SerializeField]
-        private AnimationClip secondAttackClip;
+        public AnimationClip secondAttackClip;
 
         /// <summary>
         /// The animation clip for the third attack.
         /// </summary>
-        [SerializeField]
-        private AnimationClip thirdAttackClip;
+        public AnimationClip thirdAttackClip;
 
         /// <summary>
-        /// The animation clip for the third attack.
+        /// The animation clip for the howl.
         /// </summary>
-        [SerializeField]
-        private AnimationClip howlClip;
+        public AnimationClip howlClip;
+
+        /// <summary>
+        /// The animation clip for the lunge ascend.
+        /// </summary>
+        public AnimationClip lungeAscend;
+
+        /// <summary>
+        /// The animation clip for the lunge descend.
+        /// </summary>
+        public AnimationClip lungeDescend;
+
+        // Variables not shown in the inspector
+        /// <summary>
+        /// Determines the phase that the boss is in, currently there are a maximum of 3 phases.
+        /// </summary>
+        [Range(1, 3)]
+        private int phase = 1;
 
         /// <summary>
         /// Determines whether the Attack Coroutine can be played or not.
@@ -85,25 +111,6 @@ namespace Hunter.Characters
         /// Used to reference the BossInputModule attached to the boss.
         /// </summary>
         private BossInputModule bossInputModule;
-
-        /// <summary>
-        /// Determines whether debug logs relating to the boss will appear in the console window.
-        /// </summary>
-        [Header("Special Options")]
-        public bool showDebugLogs = false;
-
-        /// <summary>
-        /// Determines the phase that the boss is in, currently there are a maximum of 3 phases.
-        /// </summary>
-        // Phase related variables
-        [Range(1, 3), SerializeField]
-        private int phase = 1;
-
-        /// <summary>
-        /// Determines whether the boss should spawn minions or not.
-        /// </summary>
-        [SerializeField]
-        private bool spawnMinions = false;
         #endregion
 
         #region Properties
@@ -118,23 +125,25 @@ namespace Hunter.Characters
                 health = value;
                 if (health <= 0 && !isDying)
                 {
-                    // TODO Change this to reflect wether the death anim should be cinematic or not later
                     StartCoroutine(KillWerewolf());
                     isDying = true;
                 }
+
                 // This checks to see if the werewolf has entered phase 2 yet
                 else if ((health / totalHealth < .66f) && phase < 2)
                 {
                     anim.SetBool("performThirdSwing", true);
-                    performThirdSwing = true;
                     phase = 2;
                     invincible = true;
+
                     InitiateHowl();
                 }
+                // This checks to see if the werewolf has entered phase 3 yet
                 else if ((health / totalHealth < .33f) && phase < 3)
                 {
                     phase = 3;
                     invincible = true;
+
                     InitiateHowl();
                 }
             }
@@ -177,6 +186,20 @@ namespace Hunter.Characters
             {
                 Debug.LogWarning("There is no animator controller; floats dirX and dirY, and bool moving are not being set.");
             }
+
+            #region Debug Logs
+            if (showDebugLogs)
+            {
+                if (attackCR != null)
+                {
+                    Debug.Log("attackCR is not null, performing attack combo.");
+                }
+                else if (howlCR != null)
+                {
+                    Debug.Log("howlCR is not null, performing howl.");
+                }
+            }
+            #endregion
         }
         #endregion
 
@@ -226,33 +249,6 @@ namespace Hunter.Characters
 
         #region Werewolf Combat
         /// <summary>
-        /// Function used to kill the boss once it's health reaches 0.
-        /// </summary>
-        private IEnumerator KillWerewolf()
-        {
-            agent.speed = 0;
-            agent.destination = transform.position;
-            agent.enabled = false;
-            characterController.enabled = false;
-
-            if (attackCR != null)
-            {
-                StopCoroutine(attackCR);
-                attackCR = null;
-            }
-
-            #region Don't worry about this
-            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
-            rightClawWeapon.baseDamage = 65;
-            rightClawWeapon.critPercent = 75;
-            rightClawWeapon.hitBoxFrames = 80;
-            anim.SetTrigger("death");
-            #endregion
-
-            yield return null;
-        }
-
-        /// <summary>
         /// Begins the attack coroutine.
         /// </summary>
         public void Attack()
@@ -260,7 +256,7 @@ namespace Hunter.Characters
             if (attackCR != null) { return; }
             if (isDying) { return; }
 
-            attackCR = ComboAttackAnimation();
+            attackCR = AttackAnimation();
             // STARTS ATTACK COROUTINE
             StartCoroutine(attackCR);
         }
@@ -273,19 +269,13 @@ namespace Hunter.Characters
             CurrentWeapon?.StartAttackFromAnimationEvent();
         }
 
-        public void InitiateHowl()
-        {
-            if (howlCR != null) { return; }
-            if (isDying) { return; }
-
-            howlCR = HowlAnimation();
-            StartCoroutine(howlCR);
-        }
-
         /// <summary>
-        /// The main logic for the bosses' chain attack. As long as attackCR is not reset, then the coroutine should resume from where it left off.
+        /// The main logic for the bosses' chain attack.
+        /// The reason that we are using WaitForSeconds instead of an animation event is because with the 
+        /// animation blending that's occurring during the animations, sometimes the animation events are 
+        /// getting cut off before they can be completed.
         /// </summary>
-        public IEnumerator ComboAttackAnimation()
+        public IEnumerator AttackAnimation()
         {
             BossInputModule.isAttacking = true;
 
@@ -305,7 +295,7 @@ namespace Hunter.Characters
 
             yield return new WaitForSeconds(secondAttackClip.length);
 
-            if (performThirdSwing)
+            if (anim.GetBool("performThirdSwing"))
             {
                 // Third attack in the combo swing
                 if (doubleSwipeWeapon != null) { EquipWeaponToCharacter(doubleSwipeWeapon); }
@@ -325,29 +315,109 @@ namespace Hunter.Characters
             attackCR = null;
         }
 
+        /// <summary>
+        /// Function used to kill the boss once it's health reaches 0.
+        /// </summary>
+        private IEnumerator KillWerewolf()
+        {
+            agent.speed = 0;
+            agent.destination = transform.position;
+            agent.enabled = false;
+            characterController.enabled = false;
+
+            if (attackCR != null)
+            {
+                StopCoroutine(attackCR);
+                attackCR = null;
+            }
+
+            #region Not Important
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+            rightClawWeapon.baseDamage = 65;
+            rightClawWeapon.critPercent = 75;
+            rightClawWeapon.hitBoxFrames = 80;
+            anim.SetTrigger("death");
+            #endregion
+
+            yield return null;
+        }
+        #endregion
+
+        #region Phase Related Functions
+        /// <summary>
+        /// Initiates the Howl coroutine once the werewolf enters the second and third phases.
+        /// </summary>
+        public void InitiateHowl()
+        {
+            if (howlCR != null) { return; }
+            if (isDying) { return; }
+
+            howlCR = HowlAnimation();
+            StartCoroutine(howlCR);
+        }
+
+        /// <summary>
+        /// The main logic for the bosses' howl.
+        /// </summary>
         private IEnumerator HowlAnimation()
         {
-            while (BossInputModule.isAttacking)
-            {
-                yield return new WaitForEndOfFrame();
-            }
+            yield return new WaitUntil(IsWerewolfAttacking);
 
-            anim.SetTrigger("howl");
             isDying = true;
+            anim.SetTrigger("howl");
+
             yield return new WaitForSeconds(howlClip.length);
 
+            #region Phase 2 Transitional Mechanics
             if (phase == 2)
             {
-                // Perform phase 2 actions here
+                var spawnpoints = new List<Vector3>();
+
+                for (var i = 0; i < spawnPositions.Count; i++)
+                {
+                    spawnpoints.Add(spawnPositions[i].transform.position);
+                }
+
+                if (phaseTwoMobs.Count <= spawnpoints.Count)
+                {
+                    for (var i = 0; i < phaseTwoMobs.Count; i++)
+                    {
+                        Instantiate(phaseTwoMobs[i], spawnpoints[i], Quaternion.identity);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("You have more mobs than spawn points! Not summoning any mobs.");
+                }
+                yield return new WaitForEndOfFrame();
+
+                anim.SetTrigger("lungeAscend");
+                yield return new WaitForSeconds(lungeAscend.length);
+                gameObject.SetActive(false);
             }
+            #endregion
+
+            #region Phase 3 Transitional Mechanics
             else if (phase == 3)
             {
-                // Perform phase 3 actions here
+                // Phase 3 will go here
             }
+            #endregion
 
             invincible = false;
             isDying = false;
             howlCR = null;
+        }
+
+        /// <summary>
+        /// A boolean function to determine whether the werewolf is still attacking or not. 
+        /// This exists so once the Howl coroutine begins, it will wait until the Attack coroutine is finished
+        /// before continuing.
+        /// </summary>
+        private bool IsWerewolfAttacking()
+        {
+            if (!BossInputModule.isAttacking) { return true; }
+            else { return false; }
         }
         #endregion
 
