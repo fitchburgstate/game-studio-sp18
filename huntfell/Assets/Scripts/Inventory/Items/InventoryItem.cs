@@ -2,15 +2,13 @@
 
 namespace Hunter
 {
-    public abstract class InventoryItem : ScriptableObject
+    [CreateAssetMenu(fileName = "NewItem", menuName = "Generic Item", order = 0)]
+    public class InventoryItem : ScriptableObject
     {
         [Header("Name of the item")]
         public string itemName;
         [Header("Inventory item sprite")]
         public Sprite icon;
-        [Header("Description of item")]
-        [TextArea]
-        public string itemDescription;
         [SerializeField]
         private InteractableInventoryItem interactableItemPrefab;
         public InteractableInventoryItem InteractableItemPrefab

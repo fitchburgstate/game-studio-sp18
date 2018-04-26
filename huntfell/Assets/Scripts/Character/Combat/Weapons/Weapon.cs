@@ -9,50 +9,46 @@ namespace Hunter.Characters
     public abstract class Weapon : MonoBehaviour
     {
         #region Variables
-        /// <summary>
-        /// Attack Speed of the Weapon.
-        /// </summary>
-        public float attackSpeed = 1;
-
-        /// <summary>
-        /// Recovery Speed of the Weapon a.k.a how fast before you can attack again.
-        /// </summary>
-        public float recoverySpeed = 0.5f;
-
-        /// <summary>
-        /// Base Damage number of the weapon.
-        /// </summary>
-        public int baseDamage = 10;
-
-        /// <summary>
-        /// Element type of the weapon.
-        /// </summary>
-        public Element weaponElement = null;
-
-        /// <summary>
-        /// Options variable for Unity Inspector Dropdown.
-        /// </summary>
+        [Header("Debug")]
         public ElementOption inspectorElementType;
 
-        /// <summary>
-        /// Critical Percentage Given to the Weapon.
-        /// </summary>
-        public int critPercent = 10;
+        [Header("General Options")]
+        public int baseDamage = 10;
+
+        public int critPercent = 10; 
+
+        public float attackSpeed = 1;
+
+        public float recoverySpeed = 0.5f;
 
         [HideInInspector]
         public Character characterHoldingWeapon;
+        protected Element weaponElement = null;
+
+        public virtual Element WeaponElement
+        {
+            get
+            {
+                return weaponElement;
+            }
+
+            set
+            {
+                weaponElement = value;
+            }
+        }
         #endregion
 
         protected virtual void Start()
         {
-            weaponElement = Utility.ElementOptionToElement(inspectorElementType);
+            WeaponElement = Utility.ElementOptionToElement(inspectorElementType);
         }
 
         public abstract void StartAttackFromAnimationEvent();
 
-        protected virtual int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
+        protected virtual string CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
-            var critMult = isCritical ? 1.3f : 1.0f;
+            var critMult = isCritical ? 1.5f : 1.0f;
             var elementMult = 1.0f;
 
             if (enemyElementType != null && weaponElement != null)
@@ -63,16 +59,16 @@ namespace Hunter.Characters
 
                 if (weaponType.Equals(enemyType))
                 {
-                    elementMult = 0;
+                    return "Immune";
                 }
                 else if (weaponType.Equals(enemyWeaknessType))
                 {
-                    elementMult = 1.3f;
+                    elementMult = 1.5f;
                 }
             }
-            var randomInt = UnityEngine.Random.Range(-1, 3);
+            var randomInt = UnityEngine.Random.Range(-1, 2);
 
-            return (int)((baseDamage + randomInt) * critMult * elementMult);
+            return ((int)((baseDamage + randomInt) * critMult * elementMult)).ToString();
         }
 
         /// <summary>

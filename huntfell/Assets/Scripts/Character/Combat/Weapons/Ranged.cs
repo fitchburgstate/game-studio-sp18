@@ -97,7 +97,7 @@ namespace Hunter.Characters
                     if (enemy != null) { enemyElementType = enemy.elementType; }
 
                     var isCritical = ShouldAttackBeCritical(critPercent);
-                    var totalDamage = CalculateDamage(weaponElement, enemyElementType, isCritical);
+                    var totalDamage = CalculateDamage(WeaponElement, enemyElementType, isCritical);
                     damageableObject.TakeDamage(totalDamage, isCritical, this);
                 }
                 endOfRay = hit.point;
@@ -119,7 +119,7 @@ namespace Hunter.Characters
         #endregion
 
         #region CalculateDamage Function
-        protected override int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
+        protected override string CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var normalDamage = base.CalculateDamage(weaponElement, enemyElementType, isCritical);
             return normalDamage;

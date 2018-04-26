@@ -12,7 +12,6 @@ namespace Hunter
         Destructible
     }
 
-    [RequireComponent(typeof(Animator))]
     public class InteractableProp : MonoBehaviour, IDamageable, IInteractable
     {
         [Header("Interaction Options")]
@@ -20,19 +19,15 @@ namespace Hunter
         [SerializeField]
         private List<InventoryItem> itemsToSpawn = new List<InventoryItem>();
 
+        [Tooltip("Instead of the item being dropped on the ground, should this item be automatically given to the player instead?")]
+        [SerializeField]
+        private bool giveItemsDirectly;
 
         [Tooltip("Type of element it needs to be triggered. If this is set to None any kind of interaction will trigger this prop.")]
         [SerializeField]
         private ElementOption elementTypeForInteraction;
 
-        [Tooltip("Name of the animation clip that the prop should play when it is interacted with.")]
-        [SerializeField]
-        private string animationName;
-
-        [Tooltip("Instead of the item being dropped on the ground, should this item be automatically given to the player instead?")]
-        [SerializeField]
-        private bool giveItemsDirectly;
-
+        public bool overrideImportance;
         public string interactionSuccessMessage;
         public string interactionFailMessage;
 
@@ -42,8 +37,8 @@ namespace Hunter
         private PropType propType = 0;
 
         [Tooltip("If the object is destructable, how much force should be applied to the broken pieces.")]
-        [SerializeField]
-        private float destructionForce = 50;
+        [SerializeField, Range(0, 50)]
+        private float destructionForce = 10;
 
         [Tooltip("The prefab to instant")]
         [SerializeField]
@@ -56,29 +51,26 @@ namespace Hunter
 
         private bool currentlyInteracting = false;
 
-        // private Animator anim;
-
-        private void Start ()
-        {
-            // anim = GetComponent<Animator>();
-        }
-
-        public void TakeDamage (int damage, bool isCritical, Weapon weaponAttackedWith)
+        public void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
         {
             FireInteraction(weaponAttackedWith.characterHoldingWeapon, weaponAttackedWith);
         }
 
-        // What should the prop do when it is interacted with, also checks to see if there are any elemental constraints
+        public void TakeDamage (string damage, bool isCritical, Element damageElement)
+        {
+            return;
+        }
+
+        // What should the prop do when it is interacted with through the interact input
         public void FireInteraction (Character characterFromInteraction)
         {
             if (currentlyInteracting || characterFromInteraction.tag != "Player") { return; }
-
-            if (elementTypeForInteraction == ElementOption.None || propType != PropType.Destructible)
+            //If there is an element required you have to hit it with your weapon
+            if (elementTypeForInteraction == ElementOption.None && propType == PropType.Interactable)
             {
                 currentlyInteracting = true;
-
-                ShowSuccessMessage();
                 ShakeProp();
+                ShowSuccessMessage();
                 ExecutePropInteractions(characterFromInteraction);
             }
             else
@@ -87,13 +79,14 @@ namespace Hunter
             }
         }
 
+        // What should the prop do when it is attacked, considering elemental types as well since elements are equipped to weapons
         private void FireInteraction (Character characterWhoAttacked, Weapon weaponAttackedWith)
         {
             if (currentlyInteracting || characterWhoAttacked.tag != "Player") { return; }
 
             Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
 
-            var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.weaponElement);
+            var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.WeaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
             {
                 currentlyInteracting = true;
@@ -103,6 +96,8 @@ namespace Hunter
                 {
                     case PropType.Destructible:
                         DestructProp(characterWhoAttacked.RotationTransform.forward);
+                        //With destructible objects, on trigger exit doesnt get called when you swap out the prop for its destroyed counterpart so we have to manually remove it from the players nearby items list
+                        if(characterWhoAttacked is Player) { (characterWhoAttacked as Player).RemoveNearbyInteractable(this); }
                         break;
                     default:
                         ShakeProp();
@@ -152,8 +147,8 @@ namespace Hunter
             // GetComponent<MeshRenderer>().enabled = false;
             // GetComponent<Collider>().enabled = false;
             gameObject.SetActive(false);
-            brokenPropPrefab = Instantiate(brokenPropPrefab, transform.position, transform.rotation);
-            SendBrokenPropFlying(brokenPropPrefab, forceDirection);
+            var spawnedBrokenProp = Instantiate(brokenPropPrefab, transform.position, transform.rotation);
+            SendBrokenPropFlying(spawnedBrokenProp, forceDirection);
         }
 
         // Everything to do with Prop Interaction as far as items and firing events on other gameObjects
@@ -192,7 +187,7 @@ namespace Hunter
                         spawnedItem.SpawnFromProp();
                         break;
                     default:
-                        spawnedItem.SpawnOnGround();
+                        spawnedItem.SpawnOnGround(transform.position);
                         break;
                 }
             }
@@ -214,47 +209,26 @@ namespace Hunter
         private void SendBrokenPropFlying (GameObject brokenProp, Vector3 forceDirection)
         {
             var pieces = brokenProp.GetComponentsInChildren<Rigidbody>();
-
-            for (var i = 0; i < pieces.Length; i++)
+            foreach(var piece in pieces)
             {
-                pieces[i].isKinematic = false;
+                piece.isKinematic = false;
+                piece.AddForce(forceDirection * destructionForce, ForceMode.VelocityChange);
             }
-
-            for (var i = 0; i < pieces.Length; i++)
-            {
-                pieces[i].AddForce(forceDirection * destructionForce);
-                // might change to general explosion
-                // have object destroy the direct the player facing
-            }
-
-            StartCoroutine(DestroyPieces(pieces));
-        }
-
-        private IEnumerator DestroyPieces (Rigidbody[] pieces)
-        {
-            yield return new WaitForSeconds(4f);
-
-            for (var i = 0; i < pieces.Length; i++)
-            {
-                Destroy(pieces[i].gameObject);
-            }
-            gameObject.SetActive(false);
         }
 
         private void ShowSuccessMessage ()
         {
-            if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionSuccessMessage)) { HUDManager.instance.ShowPrompt(interactionSuccessMessage); }
+            if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionSuccessMessage)) { HUDManager.instance.ShowHintPrompt(interactionSuccessMessage); }
         }
 
         private void ShowFailMessage ()
         {
-            if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowPrompt(interactionFailMessage); }
+            if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowHintPrompt(interactionFailMessage); }
         }
 
         public bool IsImportant ()
         {
-            // Important props are props that require elemental interactions or props that have items inside them
-            return itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
+            return overrideImportance || itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
         }
     }
 }

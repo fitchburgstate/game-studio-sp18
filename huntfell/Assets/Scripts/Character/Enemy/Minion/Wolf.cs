@@ -46,11 +46,11 @@ namespace Hunter.Characters
             set
             {
                 health = value;
-                if (health <= 0 && !isDying)
+                if (health <= 0 && !IsDying)
                 {
                     // TODO Change this to reflect wether the death anim should be cinematic or not later
-                    StartCoroutine(KillWolf(true));
-                    isDying = true;
+                    deathAction = KillWolf(true);
+                    StartCoroutine(deathAction);
                 }
             }
         }
@@ -87,7 +87,7 @@ namespace Hunter.Characters
 
         public void Move(Transform target, float finalSpeed)
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             var finalTarget = new Vector3(target.position.x, RotationTransform.localPosition.y, target.position.z);
 
             if (target != null)
@@ -102,7 +102,7 @@ namespace Hunter.Characters
 
         public void Move(Vector3 target, float finalSpeed)
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             var finalTarget = new Vector3(target.x, RotationTransform.localPosition.y, target.z);
 
             MoveToCalculations(turnSpeed, finalSpeed, finalTarget);
@@ -110,13 +110,13 @@ namespace Hunter.Characters
 
         public void Wander(Vector3 target)
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             Move(target, (speed / 2));
         }
 
         public void Turn(Transform target)
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             if (target != null)
             {
                 RotateTowardsTarget(target.position, turnSpeed);
@@ -124,13 +124,15 @@ namespace Hunter.Characters
         }
         #endregion
 
-        #region Wolf Attack
+        #region Wolf Combat
         private IEnumerator KillWolf(bool isCinematic)
         {
             agent.speed = 0;
             agent.destination = transform.position;
             anim.SetTrigger(isCinematic ? "cinDeath" : "death");
             minionHealthBarParent?.gameObject.SetActive(false);
+            characterController.enabled = false;
+            agent.enabled = false;
             // TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);
             Destroy(gameObject);
@@ -138,7 +140,7 @@ namespace Hunter.Characters
 
         public void Attack()
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             if (attackCR != null) { return; }
             attackCR = PlayAttackAnimation();
             StartCoroutine(attackCR);
@@ -162,7 +164,7 @@ namespace Hunter.Characters
             Fabric.EventManager.Instance?.PostEvent("Wolf Lunge Attack", gameObject);
         }
 
-        public void WeaponAnimationEvent()
+        public void AttackAnimationEvent()
         {
             CurrentWeapon?.StartAttackFromAnimationEvent();
         }
@@ -171,41 +173,37 @@ namespace Hunter.Characters
         #region Unused Functions
         public void Idle()
         {
-            if (isDying) { return; }
-            // This feature has not yet been implemented.
+
         }
 
-        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        public void Move(Vector3 moveDirection, Vector3 lookDirection)
         {
-            if (isDying) { return; }
-            // This feature will not be implemented.
+
         }
 
         public void Dash()
         {
-            if (isDying) { return; }
-            // This feature will not be implemented.
+
         }
 
         public void Interact()
         {
-            //Wolves cannot interact with stuff!
-            return;
+
         }
 
         public void CycleWeapons(bool cycleUp)
         {
-            return;
+
         }
 
         public void CycleElements(bool cycleUp)
         {
-            return;
+
         }
 
         public void SwitchWeaponType(bool switchToMelee)
         {
-            return;
+
         }
         #endregion
     }

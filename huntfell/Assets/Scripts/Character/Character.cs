@@ -9,10 +9,12 @@ namespace Hunter.Characters
     public abstract class Character : MonoBehaviour, IDamageable
     {
         #region Variables
-        //This needs to be a float for when we do the health bar
+        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
+        public const string EYELINE_TRANSFORM_TAG = "EyeLine Transform";
+
+        // Super General Character Traits
         [SerializeField]
         protected float health;
-
         public int totalHealth = 100;
 
         [SerializeField]
@@ -20,29 +22,18 @@ namespace Hunter.Characters
 
         private Weapon currentWeapon = null;
 
-        // Variables for handling character rotation
-        public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
+        // Class specific vars
+        private Transform rotationTransform, eyeLineTransform;
 
-        [HideInInspector]
-        public Transform rotationTransform;
-
-        [HideInInspector]
-        public Transform eyeLine;
-
-        [HideInInspector]
-        public NavMeshAgent agent;
-
-        [HideInInspector]
-        public Animator anim;
-
-        [HideInInspector]
-        public bool invincible = false;
-        [HideInInspector]
-        public bool isDying = false;
-
-        [HideInInspector]
-        public EffectsController effectsController;
+        protected NavMeshAgent agent;
+        protected Animator anim;
+        protected EffectsModule effectsModule;
         protected CharacterController characterController;
+        protected bool invincible = false;
+
+        // Actions
+        protected IEnumerator deathAction;
+
         #endregion
 
         #region Properties
@@ -93,9 +84,53 @@ namespace Hunter.Characters
                 }
                 return rotationTransform;
             }
-
         }
-        //Effects
+
+        public Transform EyeLineTransform
+        {
+            get
+            {
+                if (eyeLineTransform == null)
+                {
+                    foreach (Transform child in RotationTransform)
+                    {
+                        if (child.tag == EYELINE_TRANSFORM_TAG) { eyeLineTransform = child; }
+                    }
+                    // Fallback for if the tag isn't set
+                    if (eyeLineTransform == null)
+                    {
+                        Debug.LogWarning("GameObject: " + gameObject.name + " has no eyeline transform set. Check the tag of the first childed GameObject underneath the rotation root.", gameObject);
+                        eyeLineTransform = RotationTransform.GetChild(0);
+                    }
+                }
+                return eyeLineTransform;
+            }
+        }
+
+        public virtual bool PerformingMajorAction
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public virtual bool PerformingMinorAction
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool IsDying
+        {
+            get
+            {
+                return deathAction != null;
+            }
+        }
+
         #endregion
 
         #region Unity Functions
@@ -104,8 +139,8 @@ namespace Hunter.Characters
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
-            effectsController = GetComponentInChildren<EffectsController>();
-            if (effectsController == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
+            effectsModule = GetComponentInChildren<EffectsModule>();
+            if (effectsModule == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
             CurrentHealth = totalHealth;
         }
 
@@ -135,34 +170,30 @@ namespace Hunter.Characters
         {
             if (CurrentWeapon != null)
             {
-                currentWeapon.weaponElement = element;
+                currentWeapon.WeaponElement = element;
             }
         }
 
-        public void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith)
+        public virtual void TakeDamage(string damage, bool isCritical, Weapon weaponAttackedWith)
         {
-            if (invincible || isDying) { return; }
-            if (effectsController != null)
+            TakeDamage(damage, isCritical, weaponAttackedWith.WeaponElement);
+        }
+
+        public virtual void TakeDamage (string damage, bool isCritical, Element damageElement)
+        {
+            if (invincible || IsDying) { return; }
+
+            int parseDamage = -1;
+            if (int.TryParse(damage, out parseDamage))
             {
-                //Dont apply hits particles for Dot Effects, kinda jank
-                if (damage > 3)
-                {
-                    effectsController.StartDamageEffects(damage, isCritical, weaponAttackedWith?.weaponElement);
-                }
-                else
-                {
-                    effectsController.StartDamageEffects(damage);
-                }
+                StartCoroutine(SubtractHealthFromCharacter(parseDamage, isCritical));
             }
-            if (tag == "Player")
+
+            if (effectsModule != null)
             {
-                Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
+                //Dont apply hits particles for dot effects or minor damage
+                effectsModule.StartDamageEffects(damage, isCritical, damageElement, (parseDamage > 3));
             }
-            else if (tag == "Enemy")
-            {
-                Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
-            }
-            StartCoroutine(SubtractHealthFromCharacter(damage, isCritical));
         }
 
         protected virtual IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)

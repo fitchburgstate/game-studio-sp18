@@ -116,14 +116,14 @@ namespace Hunter
             {
                 if (weapon.name == meleeWeaponPrefab.name)
                 {
-                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.weaponElement?.elementHUDSprite); }
+                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.WeaponElement?.elementHUDSprite); }
                     return weapon;
                 }
             }
 
             var newMelee = Instantiate(meleeWeaponPrefab, weaponContainer);
             newMelee.name = meleeWeaponPrefab.name;
-            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newMelee?.weaponElement?.elementHUDSprite); }
+            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newMelee?.WeaponElement?.elementHUDSprite); }
             return newMelee;
         }
 
@@ -142,14 +142,14 @@ namespace Hunter
             {
                 if (weapon.name == rangedWeaponPrefab.name)
                 {
-                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.weaponElement?.elementHUDSprite); }
+                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.WeaponElement?.elementHUDSprite); }
                     return weapon;
                 }
             }
 
             var newRanged = Instantiate(rangedWeaponPrefab, weaponContainer);
             newRanged.name = rangedWeaponPrefab.name;
-            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newRanged?.weaponElement?.elementHUDSprite); }
+            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newRanged?.WeaponElement?.elementHUDSprite); }
             return newRanged;
         }
         #endregion
@@ -242,14 +242,19 @@ namespace Hunter
         public bool TryAddItem(InventoryItem item) 
         {
             var spawnedItem = SpawnInteractableItem(item);
-            return TryAddItem(item, spawnedItem);
+            if(!TryAddItem(item, spawnedItem))
+            {
+                Destroy(spawnedItem);
+                return false;
+            }
+            return true;
         }
 
         private InteractableInventoryItem SpawnInteractableItem (InventoryItem item)
         {
             if(item == null || item.InteractableItemPrefab == null)
             {
-                Debug.LogWarning("Couldn't spawn an interactble object from the inventory item data provided. Make sure a prefab reference is set in the scriptable object.");
+                Debug.LogWarning($"Couldn't spawn an interactble object from the inventory item ({item.itemName} / {item.name}) provided. Make sure a prefab reference is set in the scriptable object.");
                 return null;
             }
             return Instantiate(item.InteractableItemPrefab);
@@ -272,24 +277,22 @@ namespace Hunter
             else if (item is JournalItem && !journalEntries.ContainsKey(item as JournalItem))
             {
                 journalEntries.Add(item as JournalItem, spawnedInteractableItem);
-                if (HUDManager.instance != null) { HUDManager.instance.ShowJournalPickup((item as JournalItem).bookContents); }
             }
             else if (item is DiaryItem && !diaryEntries.ContainsKey(item as DiaryItem))
             {
                 diaryEntries.Add(item as DiaryItem, spawnedInteractableItem);
-                if (HUDManager.instance != null) { HUDManager.instance.ShowJournalPickup((item as DiaryItem).bookContents); }
             }
             else
             {
-                Debug.LogWarning("Tried to add the item to the Inventory but it was not a recognizable item or its already in the Inventory. Check that the Inventory is able to handle that type of item and that it already isnt in the Inventory.");
+                Debug.LogWarning($"Tried to add the item ({item.itemName} / {item.name}) to the Inventory but it was not a an item that can be kept in the inventory or it already exists in the inventory.");
                 return false;
             }
 
-            Debug.Log($"Added the Item {item.itemName} to your inventory.");
+            Debug.Log($"Added the item ({item.itemName} / {item.name}) to your inventory.");
             if(HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(item.itemName, item.icon); }
 
-            spawnedInteractableItem.transform.SetParent(transform);
-            spawnedInteractableItem.gameObject.SetActive(false);
+            spawnedInteractableItem?.transform.SetParent(transform);
+            spawnedInteractableItem?.gameObject.SetActive(false);
 
             return true;
         }

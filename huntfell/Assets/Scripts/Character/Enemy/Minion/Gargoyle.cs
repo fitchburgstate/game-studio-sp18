@@ -8,13 +8,20 @@ namespace Hunter.Characters
     public class Gargoyle : Minion
     {
         #region Variables
+        [Header("Combat Options")]
+        [Range(1, 250)]
+        public float turnSpeed = 175f;
+
         [SerializeField]
         private Ranged rangedWeapon;
 
-        private AIDetection gargoyleDetection;
+        [Header("Death Options")]
+        [SerializeField]
+        private ParticleSystem deathParticle;
 
+
+        private AIDetection gargoyleDetection;
         private GameObject target;
-        private Transform targetEyeline;
 
         private IEnumerator gargoyleAttackCR;
         #endregion
@@ -31,19 +38,20 @@ namespace Hunter.Characters
                 health = value;
                 if (health <= 0)
                 {
-                    Destroy(gameObject);
+                    var killGargoyleCR = KillGargoyle();
+                    StartCoroutine(killGargoyleCR);
                 }
             }
         }
         #endregion
 
+        #region Unity Functions
         protected override void Start()
         {
             base.Start();
             gargoyleDetection = GetComponent<AIDetection>();
             EquipWeaponToCharacter(rangedWeapon);
             target = GameObject.FindGameObjectWithTag("Player");
-            targetEyeline = target.GetComponent<Character>().eyeLine;
         }
 
         private void FixedUpdate()
@@ -52,11 +60,13 @@ namespace Hunter.Characters
 
             if (enemyInLOS)
             {
-                transform.LookAt(targetEyeline.transform.position);
+                RotateTowardsTarget(target.transform.position, turnSpeed);
                 Attack();
             }
         }
+        #endregion
 
+        #region Gargoyle Combat
         private void Attack()
         {
             if (gargoyleAttackCR != null) { return; }
@@ -72,5 +82,13 @@ namespace Hunter.Characters
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
             gargoyleAttackCR = null;
         }
+
+        private IEnumerator KillGargoyle()
+        {
+            deathParticle?.Play();
+            yield return new WaitForSeconds(.75f);
+            Destroy(gameObject);
+        }
+        #endregion
     }
 }

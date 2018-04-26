@@ -102,7 +102,7 @@ namespace Hunter.Characters.AI
 
         private void Start()
         {
-            aiCharacterEyeLine = AiCharacter.eyeLine;
+            aiCharacterEyeLine = AiCharacter.EyeLineTransform;
         }
 
         #region DetectPlayer Function
@@ -125,6 +125,7 @@ namespace Hunter.Characters.AI
                 if (Physics.Raycast(aiCharacterEyeLine.position, rayDirection, out rayHit, maxDetectionDistance, detectionLayers)) // Detects to see if the player is within the field of view
                 {
                     inVisionCone = true;
+                    //Debug.Log(rayHit.transform.name, rayHit.transform.gameObject);
                     if (wolfComponent != null && !wolfComponent.justFound)
                     {
                         Fabric.EventManager.Instance?.PostEvent("Wolf Aggro", gameObject);
@@ -167,7 +168,7 @@ namespace Hunter.Characters.AI
             var theta = 0f;
             var x = minDetectionDistance * Mathf.Cos(theta);
             var z = minDetectionDistance * Mathf.Sin(theta);
-            var pos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
+            var pos = AiCharacter.EyeLineTransform.position + new Vector3(x, lineHeight, z);
             var newPos = pos;
             var lastPos = pos;
 
@@ -177,15 +178,15 @@ namespace Hunter.Characters.AI
             var rightRayRotation = Quaternion.AngleAxis((fieldOfViewRange / 2), Vector3.up);
             var rightRayDirection = rightRayRotation * AiCharacter.RotationTransform.forward;
 
-            Gizmos.DrawRay(AiCharacter.eyeLine.position, direction);
-            Gizmos.DrawRay(AiCharacter.eyeLine.position, leftRayDirection * maxDetectionDistance);
-            Gizmos.DrawRay(AiCharacter.eyeLine.position, rightRayDirection * maxDetectionDistance);
+            Gizmos.DrawRay(AiCharacter.EyeLineTransform.position, direction);
+            Gizmos.DrawRay(AiCharacter.EyeLineTransform.position, leftRayDirection * maxDetectionDistance);
+            Gizmos.DrawRay(AiCharacter.EyeLineTransform.position, rightRayDirection * maxDetectionDistance);
 
             for (theta = 0.1f; theta < Mathf.PI * 2; theta += 0.1f)
             {
                 x = minDetectionDistance * Mathf.Cos(theta);
                 z = minDetectionDistance * Mathf.Sin(theta);
-                newPos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
+                newPos = AiCharacter.EyeLineTransform.position + new Vector3(x, lineHeight, z);
                 Gizmos.DrawLine(pos, newPos);
                 pos = newPos;
             }
