@@ -19,12 +19,20 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: e9c480b817911ab4fb3048d9a5a1b07f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 47b33e4d419fe6840b2754db9d97953a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: e74afee280cefb84387186c3962117de, type: 3}
         m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CellBase:
+        m_Texture: {fileID: 2800000, guid: a65fdabb80940b647ba5e69ef5538613, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CellRamp:
+        m_Texture: {fileID: 2800000, guid: af39bf2605278314c8acdd65ee751289, type: 3}
+        m_Scale: {x: 0.99, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Celltexture:
         m_Texture: {fileID: 2800000, guid: a65fdabb80940b647ba5e69ef5538613, type: 3}
@@ -32,7 +40,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _Celltexture_copy:
         m_Texture: {fileID: 2800000, guid: af39bf2605278314c8acdd65ee751289, type: 3}
-        m_Scale: {x: 1, y: 0.99}
+        m_Scale: {x: 0.99, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
@@ -59,7 +67,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: e74afee280cefb84387186c3962117de, type: 3}
+        m_Texture: {fileID: 2800000, guid: c654a80a6882c1f44ab650ee9590d547, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Occlusion:
+        m_Texture: {fileID: 2800000, guid: 245bb344c44dfd444b92403116ce7f70, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -75,7 +87,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Specular:
-        m_Texture: {fileID: 2800000, guid: 925719ce4bce56841a7ab9a28ecf2bd8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 11880e491ecb66d4b82cf47fef6837be, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -90,7 +102,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0.001
+    - _OutlineWidth: 0.01
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

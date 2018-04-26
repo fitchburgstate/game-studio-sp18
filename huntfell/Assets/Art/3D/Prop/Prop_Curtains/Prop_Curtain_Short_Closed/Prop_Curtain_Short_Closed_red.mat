@@ -26,12 +26,20 @@ Material:
         m_Texture: {fileID: 2800000, guid: 302bfd3d88d871a4a87ea9dcf5b8b9c6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _CellBase:
+        m_Texture: {fileID: 2800000, guid: a65fdabb80940b647ba5e69ef5538613, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CellRamp:
+        m_Texture: {fileID: 2800000, guid: af39bf2605278314c8acdd65ee751289, type: 3}
+        m_Scale: {x: 0.99, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Celltexture:
         m_Texture: {fileID: 2800000, guid: a65fdabb80940b647ba5e69ef5538613, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Celltexture_copy:
-        m_Texture: {fileID: 2800000, guid: af39bf2605278314c8acdd65ee751289, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -62,6 +70,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 302bfd3d88d871a4a87ea9dcf5b8b9c6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Occlusion:
+        m_Texture: {fileID: 2800000, guid: a3594b1fe54310d4f8c929117a827572, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 2800000, guid: a3594b1fe54310d4f8c929117a827572, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -75,7 +87,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Specular:
-        m_Texture: {fileID: 2800000, guid: 60338f455efd4cc4bbd5fa26454c8f7d, type: 3}
+        m_Texture: {fileID: 2800000, guid: af39bf2605278314c8acdd65ee751289, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -90,7 +102,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0.05
+    - _OutlineWidth: 0.01
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
