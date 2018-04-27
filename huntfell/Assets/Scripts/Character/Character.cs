@@ -33,6 +33,8 @@ namespace Hunter.Characters
 
         // Actions
         protected IEnumerator deathAction;
+        protected IEnumerator damageAction;
+        protected IEnumerator restoreAction;
 
         #endregion
 
@@ -186,7 +188,12 @@ namespace Hunter.Characters
             int parseDamage = -1;
             if (int.TryParse(damage, out parseDamage))
             {
-                StartCoroutine(SubtractHealthFromCharacter(parseDamage, isCritical));
+                if(damageAction != null)
+                {
+                    StopCoroutine(damageAction);
+                }
+                damageAction = SubtractHealthFromCharacter(parseDamage, isCritical);
+                StartCoroutine(damageAction);
             }
 
             if (effectsModule != null)
@@ -202,10 +209,14 @@ namespace Hunter.Characters
             yield return null;
         }
 
-        public virtual void RestoreHealthToCharacter(int restoreAmount)
+        public virtual IEnumerator RestoreHealthToCharacter(int restoreAmount, bool isCritical)
         {
-            StopCoroutine("SubtractHealthFromCharacter");
+            if (isCritical)
+            {
+                StopCoroutine("SubtractHealthFromCharacter");
+            }
             CurrentHealth += restoreAmount;
+            yield return null;
         }
         #endregion
     }

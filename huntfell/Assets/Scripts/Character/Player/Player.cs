@@ -17,8 +17,9 @@ namespace Hunter.Characters
 
         public float gunTrailLength = 1.5f;
 
-        [Tooltip("The total ammount of time it should take for the wound bar to catch up to the health bar."), Range(0.1f, 10f)]
-        public float healthSubtractionTime = 1;
+        [Tooltip("The multiplier for how fast the wound bar should subtract health from the Player."), Range(0.1f, 10f)]
+        public float healthSubtractionSpeed = 1;
+        private float targetHealth;
 
         public float respawnTime = 3f;
 
@@ -93,12 +94,29 @@ namespace Hunter.Characters
             }
             set
             {
-                health = Mathf.Clamp(value, 0, totalHealth);
+                if (IsDying) { return; }
                 if (health <= 0)
                 {
                     var closestSpawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
                     Respawn(closestSpawnPoint);
                 }
+                else
+                {
+                    health = Mathf.Clamp(value, 0, totalHealth);
+                }
+            }
+        }
+
+        public float TargetHealth
+        {
+            get
+            {
+                return targetHealth;
+            }
+            set
+            {
+                if (IsDying) { return; }
+                targetHealth = Mathf.Clamp(value, 0, totalHealth);
             }
         }
         #endregion
@@ -441,42 +459,37 @@ namespace Hunter.Characters
 
         protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            var startHealth = CurrentHealth;
-            var targetHealth = startHealth - damage;
+            var targetHealth = CurrentHealth - damage;
 
-            if (!isCritical || healthSubtractionTime == 0)
+            if (!isCritical && healthSubtractionSpeed != 0)
             {
-                var startTime = Time.time;
-                var percentComplete = 0f;
-                if (HUDManager.instance != null) { HUDManager.instance.healthBar.fillAmount = targetHealth / totalHealth; }
+                HUDManager.instance?.SetHealthBar(targetHealth / totalHealth);
 
-                while (percentComplete < 1)
+                while (CurrentHealth > targetHealth)
                 {
-                    var elapsedTime = Time.time - startTime;
-                    percentComplete = Mathf.Clamp01(elapsedTime / healthSubtractionTime);
+                    var step = Time.deltaTime * healthSubtractionSpeed;
+                    CurrentHealth = Mathf.Clamp(CurrentHealth - step, targetHealth, totalHealth);
 
-                    CurrentHealth = Mathf.Lerp(startHealth, targetHealth, percentComplete);
-                    if (HUDManager.instance != null) { HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth; }
-
+                    HUDManager.instance?.SetWoundBar(CurrentHealth / totalHealth);
                     yield return null;
                 }
             }
             else
             {
                 CurrentHealth = targetHealth;
-                if (HUDManager.instance != null)
-                {
-                    HUDManager.instance.healthBar.fillAmount = CurrentHealth / totalHealth;
-                    HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth;
-                }
-
+                HUDManager.instance?.SetWoundBar(targetHealth / totalHealth);
+                HUDManager.instance?.SetHealthBar(targetHealth / totalHealth);
             }
         }
 
-        public override void RestoreHealthToCharacter (int amount)
+        public override IEnumerator RestoreHealthToCharacter (int amount, bool isCritical)
         {
-            StopCoroutine("SubtractHealthFromCharacter");
+            if (!isCritical && healthSubtractionSpeed != 0)
+            {
+                yield return null;
+            }
             CurrentHealth += amount;
+            StopCoroutine("SubtractHealthFromCharacter");
             if (HUDManager.instance != null)
             {
                 HUDManager.instance.healthBar.fillAmount = CurrentHealth / totalHealth;
@@ -517,7 +530,7 @@ namespace Hunter.Characters
             {
                 Destroy(dots[i]);
             }
-            RestoreHealthToCharacter(totalHealth);
+            RestoreHealthToCharacter(totalHealth, true);
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.In);
 
