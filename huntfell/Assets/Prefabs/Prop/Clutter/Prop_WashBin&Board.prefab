@@ -22,7 +22,8 @@ GameObject:
   - component: {fileID: 33267605519239830}
   - component: {fileID: 23942651087555328}
   - component: {fileID: 95567452735076224}
-  m_Layer: 0
+  - component: {fileID: 65873974582583176}
+  m_Layer: 13
   m_Name: Prop_WashBin&Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,13 +36,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1218514806365082}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -36.914, y: -15.498, z: -13.175421}
+  m_LocalRotation: {x: -0, y: -0.38377273, z: -0, w: 0.92342764}
+  m_LocalPosition: {x: -77.301, y: 0.42999554, z: 42.946}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -45.135002, z: 0}
 --- !u!23 &23942651087555328
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -83,6 +84,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1218514806365082}
   m_Mesh: {fileID: 4300000, guid: ac42cd349e0fb464b92acc40165ac0aa, type: 3}
+--- !u!65 &65873974582583176
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1218514806365082}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.2802297, y: 1.01, z: 1.2802296}
+  m_Center: {x: -0.00000014901163, y: 0.33, z: 0}
 --- !u!95 &95567452735076224
 Animator:
   serializedVersion: 3

@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 33989568293048396}
   - component: {fileID: 23433140740994018}
   - component: {fileID: 95688657398761540}
+  - component: {fileID: 65242903771435846}
+  - component: {fileID: 114189561697925254}
   m_Layer: 13
   m_Name: Prop_Bathroom_TowelRack
   m_TagString: Untagged
@@ -35,13 +37,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1437005768018478}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.9654549, z: -0, w: 0.2605704}
+  m_LocalPosition: {x: -0.363, y: 0.57099915, z: 1.328}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90.00001, z: 0}
 --- !u!23 &23433140740994018
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -83,6 +85,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1437005768018478}
   m_Mesh: {fileID: 4300000, guid: 03543ad5e37805946aa6b761fccf7461, type: 3}
+--- !u!65 &65242903771435846
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1437005768018478}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7018603, y: 1.3675393, z: 0.21671936}
+  m_Center: {x: -0.0000023841858, y: 0, z: 0.0000009536743}
 --- !u!95 &95688657398761540
 Animator:
   serializedVersion: 3
@@ -100,3 +114,28 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114189561697925254
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1437005768018478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToSpawn: []
+  giveItemsDirectly: 0
+  elementTypeForInteraction: 0
+  overrideImportance: 0
+  interactionSuccessMessage: 
+  interactionFailMessage: 
+  propType: 0
+  destructionForce: 50
+  brokenPropPrefab: {fileID: 0}
+  propEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null

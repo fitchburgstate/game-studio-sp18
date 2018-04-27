@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 33803688937956154}
   - component: {fileID: 23353078543216412}
   - component: {fileID: 95962388235732652}
+  - component: {fileID: 65781930665517628}
+  - component: {fileID: 114835556960404004}
   m_Layer: 13
   m_Name: Prop_Bathroom_Toilet
   m_TagString: Untagged
@@ -35,8 +37,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1168362458902790}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.4984295, z: -0, w: 0.86693025}
+  m_LocalPosition: {x: -1.4729624, y: 1.216999, z: -0.67835426}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,6 +85,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1168362458902790}
   m_Mesh: {fileID: 4300000, guid: 6313f394a2386054492e438fd14a555c, type: 3}
+--- !u!65 &65781930665517628
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1168362458902790}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.59702146, y: 2.3681655, z: 1.0566418}
+  m_Center: {x: -0.0000019073486, y: 0, z: 0}
 --- !u!95 &95962388235732652
 Animator:
   serializedVersion: 3
@@ -100,3 +114,28 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114835556960404004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1168362458902790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToSpawn: []
+  giveItemsDirectly: 0
+  elementTypeForInteraction: 0
+  overrideImportance: 0
+  interactionSuccessMessage: 
+  interactionFailMessage: 
+  propType: 0
+  destructionForce: 50
+  brokenPropPrefab: {fileID: 0}
+  propEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
