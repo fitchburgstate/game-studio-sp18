@@ -1,0 +1,34 @@
+<Project MapDefines="Default" PhysicsLookup="Default" IDMapper="Default" Mesh="C:\Users\mduprey1\Desktop\PH_Furniture\assets\Rugs\Prop_Carpet_Sq1.obj" PreviewResolution="1.0" FlipY="false" HQCurvature="True" SeamTermination="false" Version="2.3.2">
+  <Materials>
+    <Prop_Carpet_Sq1 BitDepth="8" Resolution="100" Width="1024" Height="1024" TexelDensity="1024" Preset="C:\Users\mduprey1\AppData\Roaming\Quixel SUITE\presets\ID Preset\None (Default).xml">
+      <ExportSettings>
+        <Calibration>Unity 5</Calibration>
+        <BitDepth>8 bit</BitDepth>
+        <Resolution>100%</Resolution>
+        <SuffixType>_map</SuffixType>
+        <FileType>.tga</FileType>
+        <Path>C:/Users/mduprey1/Desktop/Rugs/Carpet_Sq2</Path>
+        <Name>Prop_Carpet_Sq2</Name>
+      </ExportSettings>
+      <Inputs>
+        <Input Name="AO" Path="C:\Users\mduprey1\Desktop\Carpet_Sq1_occlusion.tga"/>
+        <Input Name="Curvature" Path="C:\Users\mduprey1\Desktop\Rugs\Carpet_Sq1\\bakes\Prop_Carpet_Sq1_Curvature.png"/>
+        <Input Name="Gradient" Path="C:\Users\mduprey1\Desktop\Rugs\Carpet_Sq1\\bakes\Prop_Carpet_Sq1_Gradient.png"/>
+        <Input Name="ObjectSpaceNormal" Path="C:\Users\mduprey1\Desktop\Rugs\Carpet_Sq1\\bakes\Prop_Carpet_Sq1_ObjectSpaceNormal.png"/>
+      </Inputs>
+      <Contents>
+        <Layers>
+          <qv-ooyf-pQ MaterialID="Custom/Rug 2" PhysicalID="" Name="Rug 3" TexelDensityOffset="0" Rotation="0" OffsetX="0" OffsetY="0">
+            <Maps>
+              <Albedo Reflectance="808080" FillOpacity="100" Opacity="100" Blend="normal" MaterialIntensity="50" MaterialBlend="linearLight"/>
+              <Specular Reflectance="313131" FillOpacity="100" Opacity="100" Blend="normal" MaterialIntensity="50" MaterialBlend="linearLight"/>
+              <Gloss Reflectance="808080" FillOpacity="100" Opacity="100" Blend="normal" MaterialIntensity="50" MaterialBlend="linearLight"/>
+              <Normal Reflectance="808080" FillOpacity="100" Opacity="100" Blend="overlay" MaterialIntensity="50" MaterialBlend="linearLight"/>
+            </Maps>
+          </qv-ooyf-pQ>
+        </Layers>
+        <Groups/>
+      </Contents>
+    </Prop_Carpet_Sq1>
+  </Materials>
+</Project>
