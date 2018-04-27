@@ -74,7 +74,7 @@ namespace Hunter.Characters
             Fabric.EventManager.Instance?.PostEvent("Bat Stop Wing Loop", gameObject);
             agent.enabled = false;
             characterController.enabled = false;
-            GetComponentInChildren<PassiveAreaDamage>().DisableAreaDamage();
+            GetComponentInChildren<Aura>().DisableAura();
             minionHealthBarParent?.gameObject.SetActive(false);
             //TODO Change this later to reflect the animation time
             yield return new WaitForSeconds(5);

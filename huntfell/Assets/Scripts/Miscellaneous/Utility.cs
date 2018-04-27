@@ -39,8 +39,8 @@ namespace Hunter
                     return new Element.Silver();
                 case ElementOption.Electric:
                     return new Element.Electric();
-                case ElementOption.Nature:
-                    return new Element.Nature();
+                //case ElementOption.Nature:
+                //    return new Element.Nature();
                 case ElementOption.None:
                     return null;
                 default:
@@ -56,7 +56,7 @@ namespace Hunter
                  if (element is Element.Fire)       { return ElementOption.Fire; }
             else if (element is Element.Ice)        { return ElementOption.Ice; }
             else if (element is Element.Electric)   { return ElementOption.Electric; }
-            else if (element is Element.Nature)     { return ElementOption.Nature; }
+          //else if (element is Element.Nature)     { return ElementOption.Nature; }
             else if (element is Element.Silver)     { return ElementOption.Silver; }
             else                                    { return ElementOption.None; }
         }
@@ -136,9 +136,11 @@ namespace Hunter
 
     public interface IDamageable
     {
-        void TakeDamage(string damage, bool isCritical, Weapon weaponAttackedWith);
+        void Damage(int damage, bool isCritical, Weapon weaponAttackedWith);
 
-        void TakeDamage (string damage, bool isCritical, Element damageElement);
+        void Damage (int damage, bool isCritical, Element damageElement);
+
+        void Heal (int restore, bool isCritical);
     }
 
     public interface IAttack
@@ -161,7 +163,7 @@ namespace Hunter
     {
         void FireInteraction(Character characterTriggeringInteraction);
 
-        bool IsImportant();
+        bool IsImportant { get; }
     }
     #endregion
 }

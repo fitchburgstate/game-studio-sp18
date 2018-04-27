@@ -20,7 +20,7 @@ namespace Hunter.Characters
         public float gunTrailLength = 1.5f;
 
         [Tooltip("The multiplier for how fast the wound bar should subtract health from the Player."), Range(0.1f, 10f)]
-        public float healthSubtractionSpeed = 1;
+        public float healthModificationSpeed = 1;
 
         public float respawnTime = 3f;
 
@@ -144,6 +144,7 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
+            targetHealth = currentHealth;
             EquipWeaponToCharacter(Inventory.GetMeleeWeaponAtIndex(0, weaponContainer));
             CheckInteractImage();
         }
@@ -172,7 +173,6 @@ namespace Hunter.Characters
                 RemoveNearbyInteractable(interactableItem);
             }
         }
-
         
         #endregion
 
@@ -454,27 +454,13 @@ namespace Hunter.Characters
         #endregion
 
         #region Player Health
-        public override void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
-        {
-            if (invincible || IsDying) { return; }
-            base.TakeDamage(damage, isCritical, weaponAttackedWith);
-            Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
-        }
-
-        protected override void DamageCharacter (int damage, bool isCritical)
-        {
-            TargetHealth -= damage;
-            base.DamageCharacter(damage, isCritical);
-        }
-
-        public void HealCharacter ()
-        {
-
-        }
 
         protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            if(isCritical || healthSubtractionSpeed == 0)
+            TargetHealth -= damage;
+            Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
+
+            if (isCritical || healthModificationSpeed == 0)
             {
                 CurrentHealth = TargetHealth;
                 yield break;
@@ -482,23 +468,26 @@ namespace Hunter.Characters
 
             while (CurrentHealth > TargetHealth)
             {
-                CurrentHealth -= Time.deltaTime * healthSubtractionSpeed;
+                CurrentHealth -= Time.deltaTime * healthModificationSpeed;
                 yield return null;
             }
         }
 
-        public override IEnumerator RestoreHealthToCharacter (int amount, bool isCritical)
+        protected override IEnumerator AddHealthToCharacter (int amount, bool isCritical)
         {
-            if (!isCritical && healthSubtractionSpeed != 0)
+            var healTarget = amount + TargetHealth;
+
+            if (isCritical || healthModificationSpeed == 0)
             {
-                yield return null;
+                TargetHealth = healTarget;
+                CurrentHealth = TargetHealth;
+                yield break;
             }
-            CurrentHealth += amount;
-            StopCoroutine("SubtractHealthFromCharacter");
-            if (HUDManager.instance != null)
+
+            while (TargetHealth < healTarget)
             {
-                HUDManager.instance.healthBar.fillAmount = CurrentHealth / totalHealth;
-                HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth;
+                TargetHealth += Time.deltaTime * healthModificationSpeed;
+                yield return null;
             }
         }
 
@@ -535,7 +524,7 @@ namespace Hunter.Characters
             {
                 Destroy(dots[i]);
             }
-            RestoreHealthToCharacter(totalHealth, true);
+            AddHealthToCharacter(totalHealth, true);
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.In);
 
@@ -632,7 +621,7 @@ namespace Hunter.Characters
             if (nearbyInteractables.Count == 0) { return false; }
             foreach (var item in nearbyInteractables)
             {
-                if (item.IsImportant()) { return true; }
+                if (item.IsImportant) { return true; }
             }
             return false;
         }

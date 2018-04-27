@@ -28,7 +28,7 @@ namespace Hunter.Characters
             if(characterToDamage == null) { yield break; }
             while (true)
             {
-                characterToDamage.TakeDamage(damageAmount.ToString(), false, damageElement);
+                characterToDamage.Damage(damageAmount, false, damageElement);
                 yield return new WaitForSeconds(damageInterval);
             }
         }

@@ -26,9 +26,13 @@ namespace Hunter {
             }
         }
 
-        public void StartDamageEffects(string damage, bool isCritical, Element element, bool playHitEffect)
+        public void StartDamageEffects(int damage, bool isCritical, Element element, bool playHitEffect)
         {
-            if(popUpCanvas != null) { SpawnDamageText(damage, isCritical, element); }
+            if(popUpCanvas != null) {
+                var damageDisplay = damage.ToString();
+                if (damage < 1) { damageDisplay = "Immune"; }
+                SpawnPopUpText(damageDisplay, isCritical, element.elementColor);
+            }
             if (!playHitEffect) { return; }
 
             switch (Utility.ElementToElementOption(element))
@@ -49,15 +53,23 @@ namespace Hunter {
             }
         }
 
-        private void SpawnDamageText (string damage, bool isCritical, Element element)
+        public void StartHealEffects (int restore, bool isCritical)
+        {
+            if (popUpCanvas != null) {
+                var restoreDisplay = "+" + restore.ToString();
+                SpawnPopUpText(restoreDisplay, isCritical, Color.green);
+            }
+        }
+
+        private void SpawnPopUpText (string textDisplay, bool isCritical, Color textColor)
         {
             //Create the text pop-up from a prefab
             var damageTextRoot = Instantiate(damagePopUpRootPrefab, popUpCanvas.transform);
-
             //Set the text to the proper color and damage amount
             var damageText = damageTextRoot.GetComponentInChildren<TextMeshProUGUI>();
-            damageText.SetText(damage);
-            if (element != null) { damageText.color = element.elementColor; }
+
+            damageText.SetText(textDisplay);
+            damageText.color = textColor; 
             if (isCritical)
             {
                 damageText.fontSize = damageText.fontSize * criticalFontSizeMultiplier;

@@ -11,7 +11,7 @@ namespace Hunter {
         private void OnTriggerEnter (Collider other)
         {
             var interactable = other.GetComponent<IInteractable>();
-            if (interactable != null && interactable.IsImportant() && interactableInRadiusTransform == null)
+            if (interactable != null && interactable.IsImportant && interactableInRadiusTransform == null)
             {
                 interactableInRadiusTransform.Add(other.transform);
             }

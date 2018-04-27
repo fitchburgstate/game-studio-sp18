@@ -23,10 +23,10 @@ namespace Hunter.Characters
             elementType = Utility.ElementOptionToElement(enemyElementOption);
         }
 
-        public override void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
+        protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            base.TakeDamage(damage, isCritical, weaponAttackedWith);
             Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
+            return base.SubtractHealthFromCharacter(damage, isCritical);
         }
 
         public void RotateTowardsTarget(Vector3 targetPoint, float turnSpeed)

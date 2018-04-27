@@ -135,24 +135,24 @@ namespace Hunter.Characters
         #endregion
 
         #region Unity Functions
-        protected virtual void Awake()
+        protected virtual void Awake ()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
             effectsModule = GetComponentInChildren<EffectsModule>();
             if (effectsModule == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
-            CurrentHealth = totalHealth;
+            currentHealth = totalHealth;
         }
 
-        protected virtual void Start()
+        protected virtual void Start ()
         {
 
         }
         #endregion
 
         #region Combat Related Functions
-        public void EquipWeaponToCharacter(Weapon weapon)
+        public void EquipWeaponToCharacter (Weapon weapon)
         {
             if (weapon != null)
             {
@@ -167,7 +167,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void EquipElementToWeapon(Element element)
+        public void EquipElementToWeapon (Element element)
         {
             if (CurrentWeapon != null)
             {
@@ -175,50 +175,65 @@ namespace Hunter.Characters
             }
         }
 
-        public virtual void TakeDamage(string damage, bool isCritical, Weapon weaponAttackedWith)
+        public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
-            TakeDamage(damage, isCritical, weaponAttackedWith.WeaponElement);
+            Damage(damage, isCritical, weaponAttackedWith.WeaponElement);
         }
 
-        public virtual void TakeDamage (string damage, bool isCritical, Element damageElement)
+        public void Damage (int damage, bool isCritical, Element damageElement)
         {
             if (invincible || IsDying) { return; }
 
-            int parseDamage = -1;
-            if (int.TryParse(damage, out parseDamage))
+            if (damage > 0)
             {
-                DamageCharacter(parseDamage, isCritical);
+                if (damageAction != null)
+                {
+                    StopCoroutine(damageAction);
+                }
+
+                damageAction = SubtractHealthFromCharacter(damage, isCritical);
+                StartCoroutine(damageAction);
             }
 
             if (effectsModule != null)
             {
                 //Dont apply hits particles for dot effects or immunity
-                effectsModule.StartDamageEffects(damage, isCritical, damageElement, (parseDamage > 3));
+                effectsModule.StartDamageEffects(damage, isCritical, damageElement, (damage > 3));
             }
         }
 
-        protected virtual void DamageCharacter(int damage, bool isCritical)
-        {
-            if (damageAction != null)
-            {
-                StopCoroutine(damageAction);
-            }
-            damageAction = SubtractHealthFromCharacter(damage, isCritical);
-            StartCoroutine(damageAction);
-        }
-
-        protected virtual IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
+        protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
             CurrentHealth -= damage;
             yield return null;
         }
 
-        public virtual IEnumerator RestoreHealthToCharacter(int restoreAmount, bool isCritical)
+        public void Heal (int restore, bool isCritical)
         {
-            if (isCritical)
+            if (invincible || IsDying) { return; }
+
+            if (isCritical && damageAction != null)
             {
-                StopCoroutine("SubtractHealthFromCharacter");
+                StopCoroutine(damageAction);
             }
+
+            if (restoreAction != null)
+            {
+                StopCoroutine(restoreAction);
+            }
+
+            restoreAction = AddHealthToCharacter(restore, isCritical);
+            StartCoroutine(restoreAction);
+
+            if (effectsModule != null)
+            {
+                effectsModule.StartHealEffects(restore, isCritical);
+            }
+
+        }
+
+        protected virtual IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
+        {
             CurrentHealth += restoreAmount;
             yield return null;
         }

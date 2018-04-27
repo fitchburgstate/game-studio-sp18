@@ -26,6 +26,14 @@ namespace Hunter
         private float propHeightOffset; // half the height of the object
         private Vector3 targetPosition;
 
+        public bool IsImportant
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         private void Awake ()
         {
             interactableItemCollider = GetComponent<Collider>();
@@ -88,12 +96,6 @@ namespace Hunter
                 var groundPosition = new Vector3(propPosition.x, targetPosition.y, propPosition.z);
                 transform.position = groundPosition;
             }
-        }
-
-        public bool IsImportant ()
-        {
-            // Interactable Items are always important
-            return true;
         }
     }
 }

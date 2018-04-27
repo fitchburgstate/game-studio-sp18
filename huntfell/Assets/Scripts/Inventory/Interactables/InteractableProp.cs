@@ -51,13 +51,28 @@ namespace Hunter
 
         private bool currentlyInteracting = false;
 
-        public void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
+        public bool IsImportant
+        {
+            get
+            {
+                return overrideImportance || itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
+            }
+        }
+
+        public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             FireInteraction(weaponAttackedWith.characterHoldingWeapon, weaponAttackedWith);
         }
 
-        public void TakeDamage (string damage, bool isCritical, Element damageElement)
+        public void Damage (int damage, bool isCritical, Element damageElement)
         {
+            // We dont want interactions to trigger when hit by non-weapon damage such as AOE effects
+            return;
+        }
+
+        public void Heal (int restore, bool isCritical)
+        {
+            // We dont want props to heal lol
             return;
         }
 
@@ -224,11 +239,6 @@ namespace Hunter
         private void ShowFailMessage ()
         {
             if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowHintPrompt(interactionFailMessage); }
-        }
-
-        public bool IsImportant ()
-        {
-            return overrideImportance || itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
         }
     }
 }
