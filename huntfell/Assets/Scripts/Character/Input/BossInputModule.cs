@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using System.Linq;
 using UnityEditor;
 
@@ -11,12 +10,75 @@ namespace Hunter.Characters.AI
     {
         #region Variables
         /// <summary>
-        /// Determines whether the boss is already attacking or not.
+        /// A possible action for the boss.
         /// </summary>
-        public bool isAttacking = false;
+        [Header("Possible Boss Actions")]
+        public bool lunge = false;
+
+        protected Lunge lungeAction;
+
+        [Header("Animation Clips")]
+        /// <summary>
+        /// The animation clip for the first attack.
+        /// </summary>
+        public AnimationClip firstAttackClip;
+
+        /// <summary>
+        /// The animation clip for the second attack.
+        /// </summary>
+        public AnimationClip secondAttackClip;
+
+        /// <summary>
+        /// The animation clip for the third attack.
+        /// </summary>
+        public AnimationClip thirdAttackClip;
+
+        /// <summary>
+        /// The animation clip for the howl.
+        /// </summary>
+        public AnimationClip howlClip;
+
+        /// <summary>
+        /// The animation clip for the lunge ascend.
+        /// </summary>
+        public AnimationClip lungeAscend;
+
+        /// <summary>
+        /// The animation clip for the lunge descend.
+        /// </summary>
+        public AnimationClip lungeDescend;
+
+        private Werewolf werewolfInstance;
+        #endregion
+
+        #region Properties
+        public Werewolf WerewolfInstance
+        {
+            get
+            {
+                if (werewolfInstance == null) { werewolfInstance = GetComponent<Werewolf>(); }
+                return werewolfInstance;
+            }
+        }
         #endregion
 
         #region Unity Functions
+        protected override void Start()
+        {
+            urgeWeights = ScriptableObject.CreateInstance<UrgeWeights>();
+            enemy = GetComponent<Enemy>();
+
+            #region Classes
+            attackAction = new Attack(gameObject);
+            idleAction = new Idle(gameObject);
+            wanderAction = new Wander(gameObject);
+            moveToAction = new MoveTo(gameObject);
+            retreatAction = new Retreat(gameObject);
+            turnAction = new Turn(gameObject);
+            lungeAction = new Lunge(gameObject);
+            #endregion
+        }
+
         protected override void FixedUpdate()
         {
             if (!inCombat)
@@ -69,6 +131,10 @@ namespace Hunter.Characters.AI
             {
                 inCombat = true;
             }
+            else if (currentState is Lunge)
+            {
+                inCombat = true;
+            }
             else if (currentState is Retreat)
             {
                 inCombat = true;
@@ -98,12 +164,14 @@ namespace Hunter.Characters.AI
             var wanderValue = 0f;
             var turnValue = 0f;
             var moveToValue = 0f;
+            var lungeValue = 0f;
 
             if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
             if (attack) { attackValue = attackAction.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
             if (wander) { wanderValue = wanderAction.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
             if (turn) { turnValue = turnAction.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
             if (moveTo) { moveToValue = moveToAction.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
+            if (lunge) { lungeValue = lungeAction.CalculateLunge(WerewolfInstance.lungeMaxDistance, distanceToTarget, WerewolfInstance.canlunge, WerewolfInstance.phase, inCombat); }
 
             #region Debug Logs
 #if UNITY_EDITOR
@@ -115,6 +183,7 @@ namespace Hunter.Characters.AI
                 //Debug.Log("Turn Value: " + turnValue);
                 //Debug.Log("MoveTo Value: " + moveToValue);
                 //Debug.Log("Retreat Value: " + retreatValue);
+                //Debug.Log("Lunge Value: " + lungeValue);
             }
 #endif
             #endregion
@@ -126,6 +195,7 @@ namespace Hunter.Characters.AI
                 { wanderAction, wanderValue },
                 { turnAction, turnValue },
                 { moveToAction, moveToValue },
+                { lungeAction, lungeValue }
             };
             var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 

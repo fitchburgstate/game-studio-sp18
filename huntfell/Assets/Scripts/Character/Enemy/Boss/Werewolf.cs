@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Hunter.Characters.AI;
-using System;
 
 namespace Hunter.Characters
 {
@@ -12,42 +11,49 @@ namespace Hunter.Characters
         /// <summary>
         /// Determines whether debug logs relating to the boss will appear in the console window.
         /// </summary>
-        [Header("Debug")]
+        [Header("Debug"), Tooltip("Determines whether debug logs relating to the boss will appear in the console window.")]
         public bool showDebugLogs = false;
 
         /// <summary>
         /// Determines the movement speed of the boss.
         /// </summary>
         [Header("Movement Options")]
-        [Range(0, 20), Tooltip("The running speed of the character when it is in combat.")]
+        [Range(0, 20), Tooltip("The running speed of the boss when it is in combat.")]
         public float speed = 5f;
 
         /// <summary>
         /// Determines the speed at which the boss turns.
         /// </summary>
-        [Range(1, 250)]
-        public float turnSpeed = 175f;
-
-        /// <summary>
-        /// The number of spawnpoint gameobjects that are in the fight. This should be set in the inspector.
-        /// </summary>
-        [Header("Phases Options")]
-        public List<GameObject> spawnPositions = new List<GameObject>();
+        [Range(1, 250), Tooltip("The speed at which the boss will turn.")]
+        public float turnSpeed = 200f;
 
         /// <summary>
         /// The mobs that will spawn in phase 2. This should be set in the inspector.
         /// </summary>
+        [Header("Phases Options"), Tooltip("The mobs that will spawn when the boss enters phase 2.")]
         public List<GameObject> phaseTwoMobs = new List<GameObject>();
 
         /// <summary>
         /// The mobs that will spawn in phase 3. This should be set in the inspector.
         /// </summary>
+        [Tooltip("The mobs that will spawn when the boss enters phase 3.")]
         public List<GameObject> phaseThreeMobs = new List<GameObject>();
+
+        /// <summary>
+        /// The mobs that will spawn in phase 4. This should be set in the inspector.
+        /// </summary>
+        [Tooltip("The mobs that will spawn when the boss enters phase 4.")]
+        public List<GameObject> phaseFourMobs = new List<GameObject>();
+
+        /// <summary>
+        /// A boolean to determine whether the boss can apply elements to himself during every phase change.
+        /// </summary>
+        [Tooltip("Determines whether the wereweolf can change elements throughout the fight.")]
+        public bool canChangeElements = true;
 
         /// <summary>
         /// The weapon that belongs in the left hand of the boss.
         /// </summary>
-        [Header("Combat Options")]
         public Melee leftClawWeapon;
 
         /// <summary>
@@ -61,41 +67,60 @@ namespace Hunter.Characters
         public Melee doubleSwipeWeapon;
 
         /// <summary>
-        /// The animation clip for the first attack.
+        /// The max distance that the boss can lunge.
         /// </summary>
-        public AnimationClip firstAttackClip;
+        [Header("Lunge Options")]
+        public float lungeMaxDistance = 3f;
 
         /// <summary>
-        /// The animation clip for the second attack.
+        /// The cooldown time before the boss can lunge again.
         /// </summary>
-        public AnimationClip secondAttackClip;
+        public float lungeCoolDown = 5f;
 
         /// <summary>
-        /// The animation clip for the third attack.
+        /// The max speed that the boss can lunge at.
         /// </summary>
-        public AnimationClip thirdAttackClip;
+        public float lungeMaxSpeed = 3f;
 
         /// <summary>
-        /// The animation clip for the howl.
+        /// The animation curve that the boss will follow while lunging.
         /// </summary>
-        public AnimationClip howlClip;
+        public AnimationCurve lungeSpeedCurve;
 
         /// <summary>
-        /// The animation clip for the lunge ascend.
+        /// The valid layers that the lunge can raycast to.
         /// </summary>
-        public AnimationClip lungeAscend;
+        public LayerMask lungeValidLayers;
+
+        #region Variables not shown in the Inspector
+        /// <summary>
+        /// A boolean to determine whether the boss can lunge or not.
+        /// </summary>
+        [HideInInspector]
+        public bool canlunge = true;
 
         /// <summary>
-        /// The animation clip for the lunge descend.
+        /// Determines whether the boss is already attacking or not.
         /// </summary>
-        public AnimationClip lungeDescend;
+        private bool isAttacking = false;
 
-        // Variables not shown in the inspector
+        /// <summary>
+        /// Determines whether the boss is already howling or not.
+        /// </summary>
+        private bool isHowling = false;
+
+        /// <summary>
+        /// Determines whether the boss is already lunging or not.
+        /// </summary>
+        private bool isLunging = false;
+
         /// <summary>
         /// Determines the phase that the boss is in, currently there are a maximum of 3 phases.
         /// </summary>
-        [Range(1, 3)]
-        private int phase = 1;
+        [Range(1, 3), HideInInspector]
+        public int phase = 1;
+
+        private List<Element> randomElementsList = new List<Element>();
 
         /// <summary>
         /// Determines whether the Attack Coroutine can be played or not.
@@ -108,9 +133,21 @@ namespace Hunter.Characters
         private IEnumerator howlCR;
 
         /// <summary>
+        /// Determines whether the Lunge Coroutine can be played or not.
+        /// </summary>
+        private IEnumerator lungeCR;
+
+        /// <summary>
         /// Used to reference the BossInputModule attached to the boss.
         /// </summary>
-        private BossInputModule bossInputModule;
+        private BossInputModule bossInputModuleInstance;
+
+        /// <summary>
+        /// Used to reference the Player script attached to the player in the scene.
+        /// </summary>
+        private Player playerInstance;
+        #endregion
+
         #endregion
 
         #region Properties
@@ -129,16 +166,15 @@ namespace Hunter.Characters
                     isDying = true;
                 }
 
-                // This checks to see if the werewolf has entered phase 2 yet
+                // This checks to see if the werewolf has entered phase 2 yet.
                 else if ((health / totalHealth < .66f) && phase < 2)
                 {
-                    anim.SetBool("performThirdSwing", true);
                     phase = 2;
                     invincible = true;
 
                     InitiateHowl();
                 }
-                // This checks to see if the werewolf has entered phase 3 yet
+                // This checks to see if the werewolf has entered phase 3 yet.
                 else if ((health / totalHealth < .33f) && phase < 3)
                 {
                     phase = 3;
@@ -149,12 +185,21 @@ namespace Hunter.Characters
             }
         }
 
-        public BossInputModule BossInputModule
+        public BossInputModule BossInputModuleInstance
         {
             get
             {
-                if (bossInputModule == null) { GetComponent<BossInputModule>(); }
-                return bossInputModule;
+                if (bossInputModuleInstance == null) { GetComponent<BossInputModule>(); }
+                return bossInputModuleInstance;
+            }
+        }
+
+        public Player PlayerInstance
+        {
+            get
+            {
+                if (playerInstance == null) { playerInstance = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); }
+                return playerInstance;
             }
         }
         #endregion
@@ -164,14 +209,19 @@ namespace Hunter.Characters
         {
             base.Start();
             agent.speed = speed;
+            agent.updateRotation = false;
 
             rightClawWeapon.gameObject.SetActive(false);
             leftClawWeapon.gameObject.SetActive(false);
             doubleSwipeWeapon.gameObject.SetActive(false);
-            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
 
-            bossInputModule = GetComponent<BossInputModule>();
-            agent.updateRotation = false;
+            randomElementsList.Add(Utility.ElementOptionToElement(ElementOption.Fire));
+            randomElementsList.Add(Utility.ElementOptionToElement(ElementOption.Ice));
+            randomElementsList.Add(Utility.ElementOptionToElement(ElementOption.Lightning));
+
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+            if (canChangeElements) { ChangeWeaponElements(phase); }
+            bossInputModuleInstance = GetComponent<BossInputModule>();
         }
 
         private void Update()
@@ -198,6 +248,10 @@ namespace Hunter.Characters
                 {
                     Debug.Log("howlCR is not null, performing howl.");
                 }
+                else if (lungeCR != null)
+                {
+                    Debug.Log("lungeCR is not null, performing lunge.");
+                }
             }
             #endregion
         }
@@ -207,7 +261,7 @@ namespace Hunter.Characters
         public void Move(Transform target)
         {
             if (isDying) { return; }
-            BossInputModule.isAttacking = false;
+            isAttacking = false;
             Move(target, speed);
         }
 
@@ -239,7 +293,7 @@ namespace Hunter.Characters
         public void Turn(Transform target)
         {
             if (isDying) { return; }
-            BossInputModule.isAttacking = false;
+            isAttacking = false;
             if (target != null)
             {
                 RotateTowardsTarget(target.position, turnSpeed);
@@ -254,10 +308,9 @@ namespace Hunter.Characters
         public void Attack()
         {
             if (attackCR != null) { return; }
-            if (isDying) { return; }
+            else if (isDying) { return; }
 
             attackCR = AttackAnimation();
-            // STARTS ATTACK COROUTINE
             StartCoroutine(attackCR);
         }
 
@@ -277,7 +330,10 @@ namespace Hunter.Characters
         /// </summary>
         public IEnumerator AttackAnimation()
         {
-            BossInputModule.isAttacking = true;
+            yield return new WaitUntil(WerewolfAttackingCheck);
+            yield return new WaitUntil(WerewolfLungingCheck);
+
+            isAttacking = true;
 
             // First attack in the combo swing
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
@@ -285,7 +341,7 @@ namespace Hunter.Characters
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("firstAttack");
 
-            yield return new WaitForSeconds(firstAttackClip.length);
+            yield return new WaitForSeconds(BossInputModuleInstance.firstAttackClip.length);
 
             // Second attack in the combo swing
             if (leftClawWeapon != null) { EquipWeaponToCharacter(leftClawWeapon); }
@@ -293,25 +349,23 @@ namespace Hunter.Characters
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("secondAttack");
 
-            yield return new WaitForSeconds(secondAttackClip.length);
+            yield return new WaitForSeconds(BossInputModuleInstance.secondAttackClip.length);
 
-            if (anim.GetBool("performThirdSwing"))
-            {
-                // Third attack in the combo swing
-                if (doubleSwipeWeapon != null) { EquipWeaponToCharacter(doubleSwipeWeapon); }
+            // Third attack in the combo swing
+            if (doubleSwipeWeapon != null) { EquipWeaponToCharacter(doubleSwipeWeapon); }
 
-                anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-                anim.SetTrigger("thirdAttack");
+            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+            anim.SetTrigger("thirdAttack");
 
-                yield return new WaitForSeconds(thirdAttackClip.length);
-            }
+            yield return new WaitForSeconds(BossInputModuleInstance.thirdAttackClip.length);
 
             // Wait for the last swing to finish, and then resetting everything
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
 
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-            BossInputModule.isAttacking = false;
+            yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
 
+            isAttacking = false;
             attackCR = null;
         }
 
@@ -343,6 +397,139 @@ namespace Hunter.Characters
         }
         #endregion
 
+        #region Werewolf lunge
+        /// <summary>
+        /// Begins the lunge coroutine.
+        /// </summary>
+        public void Lunge()
+        {
+            if (lungeCR != null) { return; }
+            else if (isDying) { return; }
+
+            lungeCR = LungeAnimation();
+            StartCoroutine(lungeCR);
+        }
+
+        /// <summary>
+        /// Usually activated within the animation itself, this continues the Lunge coroutine.
+        /// </summary>
+        public void LungeAnimationEvent()
+        {
+            if (lungeCR == null)
+            {
+                Debug.LogError("The Lunge Coroutine reference is null despite the animation event being called. This reference should have been set when you gave the lunge input.");
+                return;
+            }
+            StartCoroutine(lungeCR);
+        }
+
+        /// <summary>
+        /// The main logic for the bosses' lunge action. The coroutine should be paused part way through
+        /// and resumed by an animation event.
+        /// </summary>
+        private IEnumerator LungeAnimation()
+        {
+            yield return new WaitUntil(WerewolfAttackingCheck);
+            yield return new WaitUntil(WerewolfHowlingCheck);
+
+            // No movement during the lunge
+            isLunging = true;
+            isDying = true;
+            canlunge = false;
+            invincible = true;
+
+            var startPosition = eyeLine.position;
+            var bossForward = RotationTransform.forward;
+            var lungeDirectionTarget = new Vector3();
+
+            var hit = new RaycastHit();
+            var ray = new Ray(startPosition, bossForward);
+
+            // Raycast to determine target point for lunge destination on the X and Z axis
+            if (Physics.Raycast(ray, out hit, lungeMaxDistance, lungeValidLayers))
+            {
+                lungeDirectionTarget = hit.point;
+            }
+            else
+            {
+                lungeDirectionTarget = ray.GetPoint(lungeMaxDistance);
+            }
+            Debug.DrawLine(startPosition, lungeDirectionTarget, Color.green, 5);
+
+            // Raycast to determine target point for dodge destination on the Y axis.
+            hit = new RaycastHit();
+            ray = new Ray(lungeDirectionTarget, Vector3.down);
+
+            // Setting this to the start position because if we RayCast down and dont get a hit, that means you casted off the map. If you do we cancel the dash.
+            var floorPointFromLungeTarget = startPosition;
+            if (Physics.Raycast(ray, out hit, lungeMaxDistance, lungeValidLayers))
+            {
+                floorPointFromLungeTarget = hit.point;
+                Debug.DrawLine(lungeDirectionTarget, floorPointFromLungeTarget, Color.magenta, 5);
+            }
+            else
+            {
+                Debug.LogWarning("You tried to lunge into the void. Canceling the lunge.");
+                isLunging = false;
+                isDying = false;
+                lungeCR = null;
+                invincible = false;
+                yield break;
+            }
+
+            var closestNavMeshPointToTarget = Utility.GetClosestPointOnNavMesh(floorPointFromLungeTarget, agent, transform);
+            var lungeTarget = closestNavMeshPointToTarget;
+
+            anim.SetTrigger("lungeAscend");
+
+            // PAUSE HERE FOR ANIMATION EVENT
+            StopCoroutine(lungeCR);
+            yield return null;
+
+            // COROUTINE RESUMES HERE
+            var lungeDistanceCheckMargin = 0.09f;
+            //var lungeTime = 0f;
+            var startTime = Time.time;
+            var percentComplete = 0f;
+            var lungeAmount = 0f;
+            agent.enabled = false;
+
+            //This is where the actual movement happens
+            while (Vector3.Distance(transform.position, lungeTarget) > lungeDistanceCheckMargin)
+            {
+                var elapsedTime = Time.time - startTime;
+                percentComplete = Mathf.Clamp01(elapsedTime / lungeCoolDown);
+                lungeAmount = lungeSpeedCurve.Evaluate(percentComplete);
+                transform.position = Vector3.Lerp(transform.position, lungeTarget, lungeAmount);
+                yield return null;
+            }
+
+            anim.SetTrigger("lungeDescend");
+            yield return new WaitForSeconds(BossInputModuleInstance.lungeDescend.length);
+
+            Debug.Log("Lunge Amount: " + lungeAmount);
+            Debug.Log("Percent Complete: " + percentComplete);
+
+            //while (Vector3.Distance(transform.position, lungeTarget) > lungeDistanceCheckMargin)
+            //{
+            //    lungeTime += lungeMaxSpeed * Time.deltaTime;
+            //    var lungeAmount = lungeSpeedCurve.Evaluate(lungeTime);
+            //    transform.position = Vector3.Lerp(transform.position, lungeTarget, lungeAmount);
+            //    yield return null;
+            //}
+
+            agent.enabled = true;
+            yield return null;
+
+            isLunging = false;
+            isDying = false;
+            invincible = false;
+
+            yield return new WaitForSeconds(lungeCoolDown);
+            lungeCR = null;
+        }
+        #endregion
+
         #region Phase Related Functions
         /// <summary>
         /// Initiates the Howl coroutine once the werewolf enters the second and third phases.
@@ -361,62 +548,110 @@ namespace Hunter.Characters
         /// </summary>
         private IEnumerator HowlAnimation()
         {
-            yield return new WaitUntil(IsWerewolfAttacking);
+            yield return new WaitUntil(WerewolfAttackingCheck);
+            yield return new WaitUntil(WerewolfLungingCheck);
+
+            isHowling = true;
 
             isDying = true;
             anim.SetTrigger("howl");
 
-            yield return new WaitForSeconds(howlClip.length);
+            yield return new WaitForSeconds(BossInputModuleInstance.howlClip.length);
 
-            #region Phase 2 Transitional Mechanics
-            if (phase == 2)
+            switch (phase)
             {
-                var spawnpoints = new List<Vector3>();
-
-                for (var i = 0; i < spawnPositions.Count; i++)
-                {
-                    spawnpoints.Add(spawnPositions[i].transform.position);
-                }
-
-                if (phaseTwoMobs.Count <= spawnpoints.Count)
-                {
+                case 2:
                     for (var i = 0; i < phaseTwoMobs.Count; i++)
                     {
-                        Instantiate(phaseTwoMobs[i], spawnpoints[i], Quaternion.identity);
+                        if (phaseTwoMobs[i] != null) { phaseTwoMobs[i].SetActive(true); }
                     }
-                }
-                else
-                {
-                    Debug.LogWarning("You have more mobs than spawn points! Not summoning any mobs.");
-                }
-                yield return new WaitForEndOfFrame();
-
-                anim.SetTrigger("lungeAscend");
-                yield return new WaitForSeconds(lungeAscend.length);
-                gameObject.SetActive(false);
+                    break;
+                case 3:
+                    for (var i = 0; i < phaseThreeMobs.Count; i++)
+                    {
+                        if (phaseThreeMobs[i] != null) { phaseThreeMobs[i].SetActive(true); }
+                    }
+                    break;
+                case 4:
+                    for (var i = 0; i < phaseFourMobs.Count; i++)
+                    {
+                        if (phaseFourMobs[i] != null) { phaseFourMobs[i].SetActive(true); }
+                    }
+                    break;
+                default:
+                    break;
             }
-            #endregion
 
-            #region Phase 3 Transitional Mechanics
-            else if (phase == 3)
-            {
-                // Phase 3 will go here
-            }
-            #endregion
+            if (canChangeElements) { ChangeWeaponElements(phase); }
 
             invincible = false;
             isDying = false;
+
+            isHowling = false;
             howlCR = null;
         }
 
         /// <summary>
+        /// This function changes the current element of the werewolves' weapons to a new element depending on the phase.
+        /// </summary>
+        private void ChangeWeaponElements(int phase)
+        {
+            var randomElementIndex = Random.Range(0, randomElementsList.Count - 1);
+            var randomElement = randomElementsList[randomElementIndex];
+            randomElementsList.RemoveAt(randomElementIndex);
+
+            switch (phase)
+            {
+                case 1:
+                    rightClawWeapon.weaponElement = randomElement;
+                    leftClawWeapon.weaponElement = randomElement;
+                    doubleSwipeWeapon.weaponElement = randomElement;
+                    break;
+                case 2:
+                    rightClawWeapon.weaponElement = randomElement;
+                    leftClawWeapon.weaponElement = randomElement;
+                    doubleSwipeWeapon.weaponElement = randomElement;
+                    break;
+                case 3:
+                    rightClawWeapon.weaponElement = randomElement;
+                    leftClawWeapon.weaponElement = randomElement;
+                    doubleSwipeWeapon.weaponElement = randomElement;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
         /// A boolean function to determine whether the werewolf is still attacking or not. 
-        /// This exists so once the Howl coroutine begins, it will wait until the Attack coroutine is finished
+        /// This exists so once another coroutines begin it will wait until the Attack coroutine is finished
         /// before continuing.
         /// </summary>
-        private bool IsWerewolfAttacking()
+        private bool WerewolfAttackingCheck()
         {
-            if (!BossInputModule.isAttacking) { return true; }
+            if (!isAttacking) { return true; }
+            else { return false; }
+        }
+
+        /// <summary>
+        /// A boolean function to determine whether the werewolf is still howling or not. 
+        /// This exists so once another coroutines begin it will wait until the Howl coroutine is finished
+        /// before continuing.
+        /// </summary>
+        private bool WerewolfHowlingCheck()
+        {
+            if (!isHowling) { return true; }
+            else { return false; }
+        }
+
+        /// <summary>
+        /// A boolean function to determine whether the werewolf is still lunging or not. 
+        /// This exists so once another coroutines begin it will wait until the Lunge coroutine is finished
+        /// before continuing.
+        /// </summary>
+        private bool WerewolfLungingCheck()
+        {
+            if (!isLunging) { return true; }
             else { return false; }
         }
         #endregion

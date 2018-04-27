@@ -72,6 +72,65 @@ namespace Hunter.Characters.AI
     }
     #endregion
 
+    #region Lunge Action
+    /// <summary>
+    /// This class controls when and how the AI will attack another character.
+    /// </summary>
+    public sealed class Lunge : UtilityBasedAI
+    {
+        private GameObject aiGameObject;
+        private Werewolf aiWerewolfComponent;
+
+        public Lunge(GameObject aiGameObject)
+        {
+            this.aiGameObject = aiGameObject;
+            aiWerewolfComponent = aiGameObject.GetComponent<Werewolf>();
+        }
+
+        public override void Act()
+        {
+            LungeAction(aiGameObject);
+        }
+
+        /// <summary>
+        /// This function will calculate the urge to attack.
+        /// </summary>
+        public float CalculateLunge(float lungeRange, float distanceToTarget, bool canLunge, int phase, bool inCombat)
+        {
+            var lungeUrgeTotal = 0f;
+
+            if (inCombat)
+            {
+                if (phase > 0)
+                {
+                    if ((distanceToTarget > lungeRange) && (canLunge))
+                    {
+                        lungeUrgeTotal += 100f;
+                    }
+                }
+            }
+
+            Mathf.Clamp(lungeUrgeTotal, 0f, 100f);
+            return lungeUrgeTotal;
+        }
+
+        public void LungeAction(GameObject aiGameObject)
+        {
+            if (aiGameObject != null)
+            {
+                if (aiWerewolfComponent != null)
+                {
+                    aiWerewolfComponent.Lunge();
+                }
+                else
+                {
+                    Debug.LogError("There is no Werewolf component on this AI gameobject.", aiGameObject);
+                }
+            }
+        }
+    }
+    #endregion
+
     #region Turn Action
     // This action exists outside of Attack because some mobs might exclusively use the turn feature, i.e. the Gargoyle
     public sealed class Turn : UtilityBasedAI

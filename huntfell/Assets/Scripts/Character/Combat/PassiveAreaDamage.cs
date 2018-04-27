@@ -41,10 +41,10 @@ namespace Hunter.AI
         private float startWidth = 0.15f;
         private float endWidth = 0.15f;
 
-        private IEnumerator areaEffectDamageCR;
-        private Characters.Character aiCharacter;
+        private Character aiCharacter;
         #endregion
 
+        #region Unity Functions
         private void Start()
         {
             DoRenderer();
@@ -72,7 +72,9 @@ namespace Hunter.AI
                 Destroy(batDot);
             }
         }
+        #endregion
 
+        #region Helper Functions
         private void DoRenderer()
         {
             var batLine = gameObject.AddComponent<LineRenderer>();
@@ -118,5 +120,6 @@ namespace Hunter.AI
                 Gizmos.DrawLine(pos, lastPos);
             }
         }
+        #endregion
     }
 }
