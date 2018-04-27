@@ -12,13 +12,12 @@ namespace Hunter.Characters
         public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
         public const string EYELINE_TRANSFORM_TAG = "EyeLine Transform";
 
-        // Super General Character Traits
-        [SerializeField]
-        protected float health;
-        public int totalHealth = 100;
-
         [SerializeField]
         private string displayName = "No Name";
+        // Super General Character Traits
+        public int totalHealth = 100;
+        [SerializeField]
+        protected float currentHealth;
 
         private Weapon currentWeapon = null;
 
@@ -51,11 +50,11 @@ namespace Hunter.Characters
         {
             get
             {
-                return health;
+                return currentHealth;
             }
             set
             {
-                health = Mathf.Clamp(value, 0, totalHealth);
+                currentHealth = Mathf.Clamp(value, 0, totalHealth);
             }
         }
 
@@ -188,19 +187,24 @@ namespace Hunter.Characters
             int parseDamage = -1;
             if (int.TryParse(damage, out parseDamage))
             {
-                if(damageAction != null)
-                {
-                    StopCoroutine(damageAction);
-                }
-                damageAction = SubtractHealthFromCharacter(parseDamage, isCritical);
-                StartCoroutine(damageAction);
+                DamageCharacter(parseDamage, isCritical);
             }
 
             if (effectsModule != null)
             {
-                //Dont apply hits particles for dot effects or minor damage
+                //Dont apply hits particles for dot effects or immunity
                 effectsModule.StartDamageEffects(damage, isCritical, damageElement, (parseDamage > 3));
             }
+        }
+
+        protected virtual void DamageCharacter(int damage, bool isCritical)
+        {
+            if (damageAction != null)
+            {
+                StopCoroutine(damageAction);
+            }
+            damageAction = SubtractHealthFromCharacter(damage, isCritical);
+            StartCoroutine(damageAction);
         }
 
         protected virtual IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)

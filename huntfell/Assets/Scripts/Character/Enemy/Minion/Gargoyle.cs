@@ -31,12 +31,12 @@ namespace Hunter.Characters
         {
             get
             {
-                return health;
+                return currentHealth;
             }
             set
             {
-                health = value;
-                if (health <= 0)
+                currentHealth = value;
+                if (currentHealth <= 0)
                 {
                     var killGargoyleCR = KillGargoyle();
                     StartCoroutine(killGargoyleCR);

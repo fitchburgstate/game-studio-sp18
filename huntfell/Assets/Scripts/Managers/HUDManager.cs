@@ -168,7 +168,7 @@ namespace Hunter {
         /// </summary>
         /// <param name="targetFill"></param>
         /// <param name="fillSpeed"></param>
-        public void SetHealthBar(float targetFill, float fillSpeed)
+        public void SetTargetHealthBar(float targetFill, float fillSpeed)
         {
             targetHealthBarFill = targetFill;
             if(healthBarAction != null)
@@ -183,7 +183,7 @@ namespace Hunter {
         /// Stops any other health bar actions and instantly moves the health bar to the targetFill
         /// </summary>
         /// <param name="targetFill"></param>
-        public void SetHealthBar (float targetFill)
+        public void SetTargetHealthBar (float targetFill)
         {
             if (healthBarAction != null)
             {
@@ -199,7 +199,7 @@ namespace Hunter {
         /// </summary>
         /// <param name="targetFill"></param>
         /// <param name="fillSpeed"></param>
-        public void SetWoundBar(float targetFill, float fillSpeed)
+        public void SetCurrentHealthBar(float targetFill, float fillSpeed)
         {
             targetWoundBarFill = targetFill;
             if(woundBarAction != null)
@@ -216,7 +216,7 @@ namespace Hunter {
         /// Stops any other wound bar actions and instantly moves the wound bar to the targetFill
         /// </summary>
         /// <param name="targetFill"></param>
-        public void SetWoundBar (float targetFill)
+        public void SetCurrentHealthBar (float targetFill)
         {
             if (woundBarAction != null)
             {

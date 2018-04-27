@@ -12,12 +12,12 @@ namespace Hunter.Characters
         {
             get
             {
-                return health;
+                return currentHealth;
             }
             set
             {
-                health = value;
-                if (health <= 0 && !IsDying)
+                currentHealth = value;
+                if (currentHealth <= 0 && !IsDying)
                 {
                     //TODO Change this to reflect wether the death anim should be cinematic or not later
                     deathAction = KillBat(true);

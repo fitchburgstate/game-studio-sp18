@@ -12,14 +12,15 @@ namespace Hunter.Characters
     public sealed class Player : Character, IMoveable, IAttack
     {
         #region Variables
+        [SerializeField]
+        private float targetHealth;
+
         [Header("Combat Options")]
         public Transform weaponContainer;
-
         public float gunTrailLength = 1.5f;
 
         [Tooltip("The multiplier for how fast the wound bar should subtract health from the Player."), Range(0.1f, 10f)]
         public float healthSubtractionSpeed = 1;
-        private float targetHealth;
 
         public float respawnTime = 3f;
 
@@ -90,19 +91,20 @@ namespace Hunter.Characters
         {
             get
             {
-                return health;
+                return currentHealth;
             }
             set
             {
                 if (IsDying) { return; }
-                if (health <= 0)
+                if (currentHealth <= 0)
                 {
                     var closestSpawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
                     Respawn(closestSpawnPoint);
                 }
                 else
                 {
-                    health = Mathf.Clamp(value, 0, totalHealth);
+                    currentHealth = Mathf.Clamp(value, TargetHealth, totalHealth);
+                    HUDManager.instance?.SetCurrentHealthBar(CurrentHealth / totalHealth);
                 }
             }
         }
@@ -117,6 +119,7 @@ namespace Hunter.Characters
             {
                 if (IsDying) { return; }
                 targetHealth = Mathf.Clamp(value, 0, totalHealth);
+                HUDManager.instance?.SetTargetHealthBar(TargetHealth / totalHealth);
             }
         }
         #endregion
@@ -453,32 +456,34 @@ namespace Hunter.Characters
         #region Player Health
         public override void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
         {
+            if (invincible || IsDying) { return; }
             base.TakeDamage(damage, isCritical, weaponAttackedWith);
             Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
         }
 
+        protected override void DamageCharacter (int damage, bool isCritical)
+        {
+            TargetHealth -= damage;
+            base.DamageCharacter(damage, isCritical);
+        }
+
+        public void HealCharacter ()
+        {
+
+        }
+
         protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            var targetHealth = CurrentHealth - damage;
-
-            if (!isCritical && healthSubtractionSpeed != 0)
+            if(isCritical || healthSubtractionSpeed == 0)
             {
-                HUDManager.instance?.SetHealthBar(targetHealth / totalHealth);
-
-                while (CurrentHealth > targetHealth)
-                {
-                    var step = Time.deltaTime * healthSubtractionSpeed;
-                    CurrentHealth = Mathf.Clamp(CurrentHealth - step, targetHealth, totalHealth);
-
-                    HUDManager.instance?.SetWoundBar(CurrentHealth / totalHealth);
-                    yield return null;
-                }
+                CurrentHealth = TargetHealth;
+                yield break;
             }
-            else
+
+            while (CurrentHealth > TargetHealth)
             {
-                CurrentHealth = targetHealth;
-                HUDManager.instance?.SetWoundBar(targetHealth / totalHealth);
-                HUDManager.instance?.SetHealthBar(targetHealth / totalHealth);
+                CurrentHealth -= Time.deltaTime * healthSubtractionSpeed;
+                yield return null;
             }
         }
 
