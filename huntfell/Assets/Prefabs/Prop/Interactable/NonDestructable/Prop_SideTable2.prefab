@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23289605018760404}
   - component: {fileID: 95399382285048252}
   - component: {fileID: 114909437225932988}
+  - component: {fileID: 65137105712889052}
   m_Layer: 13
   m_Name: Prop_SideTable2
   m_TagString: Untagged
@@ -37,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1682984179753708}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.11284, y: -40.336372, z: -47.88813}
+  m_LocalPosition: {x: -63.901, y: 4.112494, z: 3.085}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,6 +85,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1682984179753708}
   m_Mesh: {fileID: 4300000, guid: 03fc8189fdf0b6a4ebcaa53879a773a0, type: 3}
+--- !u!65 &65137105712889052
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1682984179753708}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0004028, y: 1.238708, z: 0.85729337}
+  m_Center: {x: -0.00000029802322, y: 0, z: 0}
 --- !u!95 &95399382285048252
 Animator:
   serializedVersion: 3
@@ -113,9 +126,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemsToSpawn: []
-  elementTypeForInteraction: 0
-  animationName: 
   giveItemsDirectly: 0
+  elementTypeForInteraction: 0
+  overrideImportance: 0
   interactionSuccessMessage: 
   interactionFailMessage: 
   propType: 0

@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23366313124683918}
   - component: {fileID: 95087461759232432}
   - component: {fileID: 114899911483196136}
+  - component: {fileID: 65878843861671608}
   m_Layer: 13
   m_Name: Prop_ConsoleTable2
   m_TagString: Untagged
@@ -37,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1459131372402812}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.9629035, y: -32.374626, z: -39.056995}
+  m_LocalPosition: {x: -61.467, y: 4.1421356, z: 3.262}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,6 +85,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1459131372402812}
   m_Mesh: {fileID: 4300000, guid: 7e1c0d2e8850b0344a56b88b48375306, type: 3}
+--- !u!65 &65878843861671608
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1459131372402812}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.7788775, y: 1.2979902, z: 1.0628961}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &95087461759232432
 Animator:
   serializedVersion: 3
@@ -113,9 +126,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemsToSpawn: []
-  elementTypeForInteraction: 0
-  animationName: 
   giveItemsDirectly: 0
+  elementTypeForInteraction: 0
+  overrideImportance: 0
   interactionSuccessMessage: 
   interactionFailMessage: 
   propType: 0

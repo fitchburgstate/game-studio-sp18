@@ -38,8 +38,8 @@ GameObject:
   - component: {fileID: 33399177192379254}
   - component: {fileID: 23774666043796234}
   - component: {fileID: 54736969652936698}
-  - component: {fileID: 64881465659732158}
   - component: {fileID: 114871996788344454}
+  - component: {fileID: 64280103429310444}
   m_Layer: 17
   m_Name: Armchair_Shard
   m_TagString: Untagged
@@ -58,8 +58,8 @@ GameObject:
   - component: {fileID: 33697521033311796}
   - component: {fileID: 23261633427076450}
   - component: {fileID: 54224339181427090}
-  - component: {fileID: 64979911907692182}
   - component: {fileID: 114963153802115072}
+  - component: {fileID: 64151729633584910}
   m_Layer: 17
   m_Name: Armchair_Shard
   m_TagString: Untagged
@@ -78,8 +78,8 @@ GameObject:
   - component: {fileID: 33318910625971540}
   - component: {fileID: 23570130591559222}
   - component: {fileID: 54208544363580408}
-  - component: {fileID: 64540893149321038}
   - component: {fileID: 114382405150126224}
+  - component: {fileID: 64219554089575180}
   m_Layer: 17
   m_Name: Armchair_Shard
   m_TagString: Untagged
@@ -98,8 +98,8 @@ GameObject:
   - component: {fileID: 33759782882294266}
   - component: {fileID: 23370376546177932}
   - component: {fileID: 54188362877056590}
-  - component: {fileID: 64305669511716724}
   - component: {fileID: 114922141619021082}
+  - component: {fileID: 64038232157395460}
   m_Layer: 17
   m_Name: Armchair_Shard
   m_TagString: Untagged
@@ -118,8 +118,8 @@ GameObject:
   - component: {fileID: 33427714058931286}
   - component: {fileID: 23486578353745708}
   - component: {fileID: 54481352431906862}
-  - component: {fileID: 64311280472423512}
   - component: {fileID: 114027036800685838}
+  - component: {fileID: 64235883565784072}
   m_Layer: 17
   m_Name: Armchair_Shard
   m_TagString: Untagged
@@ -138,8 +138,8 @@ GameObject:
   - component: {fileID: 33528116463299252}
   - component: {fileID: 23798541392508080}
   - component: {fileID: 54614375545672630}
-  - component: {fileID: 64812865018726774}
   - component: {fileID: 114004690079922532}
+  - component: {fileID: 64956030611691092}
   m_Layer: 17
   m_Name: Armchair_Shard
   m_TagString: Untagged
@@ -158,8 +158,8 @@ GameObject:
   - component: {fileID: 33090279318901016}
   - component: {fileID: 23960856542255552}
   - component: {fileID: 54934798445395316}
-  - component: {fileID: 64108961306301656}
   - component: {fileID: 114006966101463426}
+  - component: {fileID: 64358937585389962}
   m_Layer: 17
   m_Name: Armchair_Shard
   m_TagString: Untagged
@@ -178,8 +178,8 @@ GameObject:
   - component: {fileID: 33230336456319650}
   - component: {fileID: 23546601288569906}
   - component: {fileID: 54108581370438412}
-  - component: {fileID: 64408973918630676}
   - component: {fileID: 114340299902389592}
+  - component: {fileID: 64350018960741764}
   m_Layer: 17
   m_Name: Armchair_Shard
   m_TagString: Untagged
@@ -766,21 +766,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &64108961306301656
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1901706152568392}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300002, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
---- !u!64 &64305669511716724
+--- !u!64 &64038232157395460
 MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -794,77 +780,7 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300006, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
---- !u!64 &64311280472423512
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1682852845343652}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300014, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
---- !u!64 &64408973918630676
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1945946710870714}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
---- !u!64 &64540893149321038
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1314242460607994}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300010, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
---- !u!64 &64812865018726774
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1797750812594954}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300008, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
---- !u!64 &64881465659732158
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1168186443197226}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300004, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
---- !u!64 &64979911907692182
+--- !u!64 &64151729633584910
 MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -878,6 +794,90 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300012, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
+--- !u!64 &64219554089575180
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1314242460607994}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300010, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
+--- !u!64 &64235883565784072
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1682852845343652}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300014, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
+--- !u!64 &64280103429310444
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1168186443197226}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300004, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
+--- !u!64 &64350018960741764
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1945946710870714}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
+--- !u!64 &64358937585389962
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1901706152568392}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300002, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
+--- !u!64 &64956030611691092
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1797750812594954}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300008, guid: 2bfab8bbb1432ed48aa94a015b7ad7dd, type: 3}
 --- !u!95 &95631522733802776
 Animator:
   serializedVersion: 3
