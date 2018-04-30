@@ -268,9 +268,9 @@ namespace Hunter.Characters
             }
 
             var dashTarget = Utility.GetClosestPointOnNavMesh(floorPointFromDashTarget, agent, transform);
-            if (Physics.Linecast(startPosition, dashTarget, out hit, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxHorizontalDistance)
+            if (Physics.Linecast(startPosition, dashTarget, out hit, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxVerticalDistance)
             {
-                Debug.LogWarning($"Your dash would have brought you somewhere you weren't supposed to go! {hit.transform.name}");
+                Debug.LogWarning($"Your dash would have brought you somewhere you weren't supposed to go!");
                 dashAction = null;
                 yield break;
             }
