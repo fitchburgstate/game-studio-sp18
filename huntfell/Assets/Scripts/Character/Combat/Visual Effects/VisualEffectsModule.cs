@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 
 namespace Hunter {
-    public class EffectsModule : MonoBehaviour
+    public class VisualEffectsModule : MonoBehaviour
     {
         [Header("Damage Pop-Up Options")]
         public GameObject damagePopUpRootPrefab;
@@ -31,7 +31,11 @@ namespace Hunter {
             if(popUpCanvas != null) {
                 var damageDisplay = damage.ToString();
                 if (damage < 1) { damageDisplay = "Immune"; }
-                SpawnPopUpText(damageDisplay, isCritical, element.elementColor);
+
+                var displayColor = Color.white;
+                if(element != null) { displayColor = element.elementColor; }
+
+                SpawnPopUpText(damageDisplay, isCritical, displayColor);
             }
             if (!playHitEffect) { return; }
 

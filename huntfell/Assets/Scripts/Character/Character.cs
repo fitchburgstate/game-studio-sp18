@@ -26,7 +26,7 @@ namespace Hunter.Characters
 
         protected NavMeshAgent agent;
         protected Animator anim;
-        protected EffectsModule effectsModule;
+        protected VisualEffectsModule effectsModule;
         protected CharacterController characterController;
         protected bool invincible = false;
 
@@ -140,7 +140,7 @@ namespace Hunter.Characters
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
-            effectsModule = GetComponentInChildren<EffectsModule>();
+            effectsModule = GetComponentInChildren<VisualEffectsModule>();
             if (effectsModule == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
             currentHealth = totalHealth;
         }

@@ -2570,7 +2570,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1058027423640836}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.22, y: -0.31885874, z: 42.09}
+  m_LocalPosition: {x: -2.87, y: 0.61, z: 8.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4750315558255530}
@@ -3243,9 +3243,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9199cca3d76a8b34596514712ddc5423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  totalHealth: 55
   displayName: Wolf
+  totalHealth: 55
+  currentHealth: 0
   enemyElementOption: 0
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114190814457826990}
@@ -3370,7 +3370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inspectorElementType: 0
   baseDamage: 6
-  critPercent: 20
+  critPercent: 15
   attackSpeed: 1
   recoverySpeed: 1.2
   characterHoldingWeapon: {fileID: 0}

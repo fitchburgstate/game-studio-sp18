@@ -1361,7 +1361,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1852036529956964}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 18.852245, y: 1.05, z: 48.398838}
+  m_LocalPosition: {x: 1.91, y: 1.41, z: -2.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4454126965061346}
@@ -1928,9 +1928,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a849aa914e0a6c34caef4fc0a083ef3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  totalHealth: 40
   displayName: Bat
+  totalHealth: 40
+  currentHealth: 0
   enemyElementOption: 1
   invincibilityFrames: 5
   minionHealthBar: {fileID: 114491889442859720}
@@ -1947,16 +1947,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92188624827a28e4db0ab9502d093b33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementalDamage: 1
-  damageRadius: 3
-  damageAmount: 1
-  damageInterval: 0.3
-  numSegments: 100
-  lineHeight: -1.25
-  lineColorGradient:
+  activateOnStart: 1
+  auraRadiusSize: 3
+  auraRadiusSegments: 100
+  auraRadiusHeight: -1
+  auraRadiusGradient:
     serializedVersion: 2
-    key0: {r: 0.7352941, g: 0.24870244, b: 0.24870244, a: 0.19607843}
-    key1: {r: 0.7352941, g: 0.24870244, b: 0.24870244, a: 0.19607843}
+    key0: {r: 0.9044118, g: 0.17955235, b: 0.17955235, a: 0.49019608}
+    key1: {r: 0.9044118, g: 0.17955235, b: 0.17955235, a: 0.49019608}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -1972,7 +1970,7 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 65342
+    atime1: 65535
     atime2: 0
     atime3: 0
     atime4: 0
@@ -1982,7 +1980,13 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  damageAura: {fileID: 198703159747250396}
+  auraParticleSystem: {fileID: 198703159747250396}
+  effectType: 0
+  effectAmount: 1
+  effectElement: 1
+  effectInterval: 0.33
+  effectLifeTime: 0
+  leavingAuraDestroysEffect: 1
 --- !u!114 &114394446834172142
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39742,8 +39746,8 @@ ParticleSystem:
   simulationSpeed: 1
   stopAction: 0
   looping: 1
-  prewarm: 1
-  playOnAwake: 1
+  prewarm: 0
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1

@@ -350,7 +350,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4016347807903170}
-  - component: {fileID: 95804671128712364}
   m_Layer: 8
   m_Name: Rotation Root
   m_TagString: Rotation Transform
@@ -2394,8 +2393,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1275573556108248}
-  m_LocalRotation: {x: 0, y: 0.9848078, z: -0, w: -0.17364809}
-  m_LocalPosition: {x: -12.5, y: -0.31, z: 5.4}
+  m_LocalRotation: {x: 0, y: 0.8664614, z: 0, w: 0.4992441}
+  m_LocalPosition: {x: -0.52, y: 0.1, z: 1.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4016347807903170}
@@ -3428,23 +3427,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!95 &95804671128712364
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1169972745597700}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 73706267faeed554d9aeb7354583b1d5, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!108 &108939258664111608
 Light:
   m_ObjectHideFlags: 1
@@ -3593,12 +3575,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0258c29db346274c8ca9eaf0312c76f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  totalHealth: 100
   displayName: Toothpick Timmy
+  totalHealth: 100
+  currentHealth: 0
+  targetHealth: 0
   weaponContainer: {fileID: 4859865527009212}
   gunTrailLength: 1.5
-  healthSubtractionTime: 1
+  healthModificationSpeed: 2
   respawnTime: 2
   moveSpeed: 5
   maxRotationSpeed: 60

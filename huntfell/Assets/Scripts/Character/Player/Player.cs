@@ -96,15 +96,14 @@ namespace Hunter.Characters
             set
             {
                 if (IsDying) { return; }
+
+                currentHealth = Mathf.Clamp(value, TargetHealth, totalHealth);
+                HUDManager.instance?.SetCurrentHealthBar(currentHealth / totalHealth);
+
                 if (currentHealth <= 0)
                 {
                     var closestSpawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
                     Respawn(closestSpawnPoint);
-                }
-                else
-                {
-                    currentHealth = Mathf.Clamp(value, TargetHealth, totalHealth);
-                    HUDManager.instance?.SetCurrentHealthBar(CurrentHealth / totalHealth);
                 }
             }
         }
@@ -119,7 +118,7 @@ namespace Hunter.Characters
             {
                 if (IsDying) { return; }
                 targetHealth = Mathf.Clamp(value, 0, totalHealth);
-                HUDManager.instance?.SetTargetHealthBar(TargetHealth / totalHealth);
+                HUDManager.instance?.SetTargetHealthBar(targetHealth / totalHealth);
             }
         }
         #endregion
@@ -519,12 +518,13 @@ namespace Hunter.Characters
             transform.position = Utility.GetClosestPointOnNavMesh(spawnPosition, agent, transform);
 
             yield return new WaitForSeconds(respawnTime);
-            var dots = GetComponents<HealthDrainDot>();
+            var dots = GetComponents<DamageOverTime>();
             for (var i = 0; i < dots.Length; i++)
             {
                 Destroy(dots[i]);
             }
-            AddHealthToCharacter(totalHealth, true);
+            currentHealth = totalHealth;
+            targetHealth = currentHealth;
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.In);
 

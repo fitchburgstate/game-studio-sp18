@@ -69,6 +69,7 @@ namespace Hunter.Characters
                 }
             }
             var randomInt = UnityEngine.Random.Range(-2, 3);
+            if (isCritical) { randomInt = Mathf.Abs(randomInt); }
 
             return ((int)((baseDamage + randomInt) * critMult * elementMult));
         }
