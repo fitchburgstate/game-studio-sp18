@@ -2115,15 +2115,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1640528691489282}
-  m_LocalRotation: {x: -0, y: -0.49999917, z: -0, w: 0.8660259}
-  m_LocalPosition: {x: -2.346921, y: 0.237, z: 71.29932}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4676229820568530}
   - {fileID: 4212749497114416}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -60.000004, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4379138990334198
 Transform:
   m_ObjectHideFlags: 1
@@ -2966,7 +2966,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 2476908a8d10a784f8c911d18ebe7309, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3039,6 +3039,7 @@ MonoBehaviour:
   detectionLayers:
     serializedVersion: 2
     m_Bits: 256
+  showGizmos: 1
 --- !u!114 &114032578286099136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3211,7 +3212,6 @@ MonoBehaviour:
   moveTo: 1
   idle: 1
   wander: 0
-  retreat: 0
   maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}

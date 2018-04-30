@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using Hunter.Characters.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hunter.Characters.AI;
 
 namespace Hunter.Characters
 {
@@ -11,8 +11,20 @@ namespace Hunter.Characters
         /// <summary>
         /// Determines whether debug logs relating to the boss will appear in the console window.
         /// </summary>
-        [Header("Debug"), Tooltip("Determines whether debug logs relating to the boss will appear in the console window.")]
+        [Header("Toggles"), Tooltip("Determines whether debug logs relating to the boss will appear in the console window.")]
         public bool showDebugLogs = false;
+
+        /// <summary>
+        /// A boolean to determine whether the boss can apply elements to himself during every phase change.
+        /// </summary>
+        [Tooltip("Determines whether the boss can change elements throughout the fight.")]
+        public bool canChangeElements = true;
+
+        /// <summary>
+        /// A boolean to determine whether the boss moves faster during his attack phase or not.
+        /// </summary>
+        [Tooltip("Determines whether the boss gains speed while attacking or not.")]
+        public bool moveFasterWhileAttacking = true;
 
         /// <summary>
         /// Determines the movement speed of the boss.
@@ -28,6 +40,12 @@ namespace Hunter.Characters
         public float turnSpeed = 200f;
 
         /// <summary>
+        /// Determines how much speed is added to the werewolf while attacking.
+        /// </summary>
+        [Range(0f, 10f), Tooltip("How much faster the boss gets while attacking.")]
+        public float speedBoost = 2f;
+
+        /// <summary>
         /// The mobs that will spawn in phase 2. This should be set in the inspector.
         /// </summary>
         [Header("Phases Options"), Tooltip("The mobs that will spawn when the boss enters phase 2.")]
@@ -38,18 +56,6 @@ namespace Hunter.Characters
         /// </summary>
         [Tooltip("The mobs that will spawn when the boss enters phase 3.")]
         public List<GameObject> phaseThreeMobs = new List<GameObject>();
-
-        /// <summary>
-        /// The mobs that will spawn in phase 4. This should be set in the inspector.
-        /// </summary>
-        [Tooltip("The mobs that will spawn when the boss enters phase 4.")]
-        public List<GameObject> phaseFourMobs = new List<GameObject>();
-
-        /// <summary>
-        /// A boolean to determine whether the boss can apply elements to himself during every phase change.
-        /// </summary>
-        [Tooltip("Determines whether the wereweolf can change elements throughout the fight.")]
-        public bool canChangeElements = true;
 
         /// <summary>
         /// The weapon that belongs in the left hand of the boss.
@@ -67,6 +73,11 @@ namespace Hunter.Characters
         public Melee doubleSwipeWeapon;
 
         /// <summary>
+        /// The weapon that will be used during the bosses' lunge attack.
+        /// </summary>
+        public Melee lungeWeapon;
+
+        /// <summary>
         /// The max distance that the boss can lunge.
         /// </summary>
         [Header("Lunge Options")]
@@ -75,7 +86,7 @@ namespace Hunter.Characters
         /// <summary>
         /// The cooldown time before the boss can lunge again.
         /// </summary>
-        public float lungeCoolDown = 5f;
+        public float lungeCooldown = 5f;
 
         /// <summary>
         /// The max speed that the boss can lunge at.
@@ -115,27 +126,46 @@ namespace Hunter.Characters
         private bool isLunging = false;
 
         /// <summary>
+        /// Determines whether the boss is outside of the arena or not. This
+        /// should only be activated during a phase change.
+        /// </summary>
+        private bool outsideOfArena = false;
+
+        /// <summary>
         /// Determines the phase that the boss is in, currently there are a maximum of 3 phases.
         /// </summary>
         [Range(1, 3), HideInInspector]
         public int phase = 1;
 
+        /// <summary>
+        /// A list of all of the elements that the werewolf can randomly enable during each phase.
+        /// </summary>
         private List<Element> randomElementsList = new List<Element>();
 
         /// <summary>
-        /// Determines whether the Attack Coroutine can be played or not.
+        /// Determines whether the Attack Coroutine can be started or not.
         /// </summary>
         private IEnumerator attackCR;
 
         /// <summary>
-        /// Determines whether the Howl Coroutine can be played or not.
+        /// Determines whether the Howl Coroutine can be started or not.
         /// </summary>
         private IEnumerator howlCR;
 
         /// <summary>
-        /// Determines whether the Lunge Coroutine can be played or not.
+        /// Determines whether the Lunge Coroutine can be started or not.
         /// </summary>
         private IEnumerator lungeCR;
+
+        /// <summary>
+        /// Determines whether the LungeCooldown Coroutine can be started or not.
+        /// </summary>
+        private IEnumerator lungeCooldownCR;
+
+        /// <summary>
+        /// Determines whether the ArenaEnter or ArenaExit Coroutines can be started or not.
+        /// </summary>
+        private IEnumerator arenaExitOrEnterCR;
 
         /// <summary>
         /// Used to reference the BossInputModule attached to the boss.
@@ -170,14 +200,18 @@ namespace Hunter.Characters
                 else if ((health / totalHealth < .66f) && phase < 2)
                 {
                     phase = 2;
+                    if (showDebugLogs) { Debug.Log("Entering phase " + phase); }
                     invincible = true;
 
                     InitiateHowl();
+                    InitiateArenaExitOrEnter();
+                    if (showDebugLogs) { Debug.Log("Exiting the arena."); }
                 }
                 // This checks to see if the werewolf has entered phase 3 yet.
                 else if ((health / totalHealth < .33f) && phase < 3)
                 {
                     phase = 3;
+                    if (showDebugLogs) { Debug.Log("Entering phase " + phase); }
                     invincible = true;
 
                     InitiateHowl();
@@ -214,10 +248,11 @@ namespace Hunter.Characters
             rightClawWeapon.gameObject.SetActive(false);
             leftClawWeapon.gameObject.SetActive(false);
             doubleSwipeWeapon.gameObject.SetActive(false);
+            lungeWeapon.gameObject.SetActive(false);
 
-            randomElementsList.Add(Utility.ElementOptionToElement(ElementOption.Fire));
-            randomElementsList.Add(Utility.ElementOptionToElement(ElementOption.Ice));
-            randomElementsList.Add(Utility.ElementOptionToElement(ElementOption.Lightning));
+            randomElementsList.Add(new Element.Fire());
+            randomElementsList.Add(new Element.Ice());
+            randomElementsList.Add(new Element.Lightning());
 
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
             if (canChangeElements) { ChangeWeaponElements(phase); }
@@ -237,23 +272,41 @@ namespace Hunter.Characters
                 Debug.LogWarning("There is no animator controller; floats dirX and dirY, and bool moving are not being set.");
             }
 
-            #region Debug Logs
-            if (showDebugLogs)
+            switch (phase)
             {
-                if (attackCR != null)
-                {
-                    Debug.Log("attackCR is not null, performing attack combo.");
-                }
-                else if (howlCR != null)
-                {
-                    Debug.Log("howlCR is not null, performing howl.");
-                }
-                else if (lungeCR != null)
-                {
-                    Debug.Log("lungeCR is not null, performing lunge.");
-                }
+                case 2:
+                    if (outsideOfArena)
+                    {
+                        for (var i = 0; i < phaseTwoMobs.Count; i++)
+                        {
+                            if (phaseTwoMobs[i] == null)
+                            {
+                                phaseTwoMobs.RemoveAt(i);
+                            }
+
+                            if (phaseTwoMobs.Count < 1)
+                            {
+                                InitiateArenaExitOrEnter();
+                                if (showDebugLogs) { Debug.Log("Returning to the arena."); }
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    if (phaseThreeMobs.Count > 0)
+                    {
+                        for (var i = 0; i < phaseThreeMobs.Count; i++)
+                        {
+                            if (phaseThreeMobs[i] == null)
+                            {
+                                phaseThreeMobs.RemoveAt(i);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
-            #endregion
         }
         #endregion
 
@@ -330,10 +383,11 @@ namespace Hunter.Characters
         /// </summary>
         public IEnumerator AttackAnimation()
         {
-            yield return new WaitUntil(WerewolfAttackingCheck);
+            yield return new WaitUntil(WerewolfHowlingCheck);
             yield return new WaitUntil(WerewolfLungingCheck);
 
             isAttacking = true;
+            if (moveFasterWhileAttacking) { speed += speedBoost; }
 
             // First attack in the combo swing
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
@@ -342,6 +396,7 @@ namespace Hunter.Characters
             anim.SetTrigger("firstAttack");
 
             yield return new WaitForSeconds(BossInputModuleInstance.firstAttackClip.length);
+            anim.ResetTrigger("firstAttack");
 
             // Second attack in the combo swing
             if (leftClawWeapon != null) { EquipWeaponToCharacter(leftClawWeapon); }
@@ -350,6 +405,7 @@ namespace Hunter.Characters
             anim.SetTrigger("secondAttack");
 
             yield return new WaitForSeconds(BossInputModuleInstance.secondAttackClip.length);
+            anim.ResetTrigger("secondAttack");
 
             // Third attack in the combo swing
             if (doubleSwipeWeapon != null) { EquipWeaponToCharacter(doubleSwipeWeapon); }
@@ -358,6 +414,7 @@ namespace Hunter.Characters
             anim.SetTrigger("thirdAttack");
 
             yield return new WaitForSeconds(BossInputModuleInstance.thirdAttackClip.length);
+            anim.ResetTrigger("thirdAttack");
 
             // Wait for the last swing to finish, and then resetting everything
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
@@ -366,6 +423,7 @@ namespace Hunter.Characters
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
 
             isAttacking = false;
+            if (moveFasterWhileAttacking) { speed -= speedBoost; }
             attackCR = null;
         }
 
@@ -397,7 +455,7 @@ namespace Hunter.Characters
         }
         #endregion
 
-        #region Werewolf lunge
+        #region Werewolf Lunge
         /// <summary>
         /// Begins the lunge coroutine.
         /// </summary>
@@ -470,10 +528,16 @@ namespace Hunter.Characters
             else
             {
                 Debug.LogWarning("You tried to lunge into the void. Canceling the lunge.");
+
                 isLunging = false;
                 isDying = false;
-                lungeCR = null;
                 invincible = false;
+
+                lungeCooldownCR = null;
+                lungeCooldownCR = LungeCooldown();
+                StartCoroutine(lungeCooldownCR);
+
+                lungeCR = null;
                 yield break;
             }
 
@@ -482,57 +546,65 @@ namespace Hunter.Characters
 
             anim.SetTrigger("lungeAscend");
 
+            yield return new WaitForSeconds(BossInputModuleInstance.lungeAscend.length);
             // PAUSE HERE FOR ANIMATION EVENT
-            StopCoroutine(lungeCR);
-            yield return null;
+            //StopCoroutine(lungeCR);
+            //yield return null;
 
             // COROUTINE RESUMES HERE
-            var lungeDistanceCheckMargin = 0.09f;
-            //var lungeTime = 0f;
-            var startTime = Time.time;
+            if (lungeWeapon != null) { EquipWeaponToCharacter(lungeWeapon); }
+
             var percentComplete = 0f;
-            var lungeAmount = 0f;
+            var tempPositon = transform.position;
+            var elapsedTime = 0f;
             agent.enabled = false;
 
-            //This is where the actual movement happens
-            while (Vector3.Distance(transform.position, lungeTarget) > lungeDistanceCheckMargin)
+            // This is where the actual lerping happens
+            var animationTriggerFlag = false;
+            while (percentComplete < 1f)
             {
-                var elapsedTime = Time.time - startTime;
-                percentComplete = Mathf.Clamp01(elapsedTime / lungeCoolDown);
-                lungeAmount = lungeSpeedCurve.Evaluate(percentComplete);
-                transform.position = Vector3.Lerp(transform.position, lungeTarget, lungeAmount);
+                elapsedTime += Time.deltaTime * lungeSpeedCurve.Evaluate(lungeMaxSpeed);
+                percentComplete = Mathf.Clamp01(elapsedTime / 1f);
+                transform.position = Vector3.Lerp(tempPositon, lungeTarget, percentComplete);
+
+                if (percentComplete > .9f && !animationTriggerFlag)
+                {
+                    anim.SetTrigger("lungeDescend");
+                    animationTriggerFlag = true;
+                }
+
                 yield return null;
             }
 
-            anim.SetTrigger("lungeDescend");
+            //anim.SetTrigger("lungeDescend");
             yield return new WaitForSeconds(BossInputModuleInstance.lungeDescend.length);
 
-            Debug.Log("Lunge Amount: " + lungeAmount);
-            Debug.Log("Percent Complete: " + percentComplete);
-
-            //while (Vector3.Distance(transform.position, lungeTarget) > lungeDistanceCheckMargin)
-            //{
-            //    lungeTime += lungeMaxSpeed * Time.deltaTime;
-            //    var lungeAmount = lungeSpeedCurve.Evaluate(lungeTime);
-            //    transform.position = Vector3.Lerp(transform.position, lungeTarget, lungeAmount);
-            //    yield return null;
-            //}
-
             agent.enabled = true;
-            yield return null;
-
             isLunging = false;
             isDying = false;
             invincible = false;
 
-            yield return new WaitForSeconds(lungeCoolDown);
+            yield return new WaitForSeconds(1f);
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
+
+            lungeCooldownCR = null;
+            lungeCooldownCR = LungeCooldown();
+            StartCoroutine(lungeCooldownCR);
+
             lungeCR = null;
+        }
+
+        private IEnumerator LungeCooldown()
+        {
+            yield return new WaitForSeconds(lungeCooldown);
+            canlunge = true;
+            lungeCooldownCR = null;
         }
         #endregion
 
         #region Phase Related Functions
         /// <summary>
-        /// Initiates the Howl coroutine once the werewolf enters the second and third phases.
+        /// Initiates the Howl Coroutine once the werewolf enters the second and third phases.
         /// </summary>
         public void InitiateHowl()
         {
@@ -544,6 +616,30 @@ namespace Hunter.Characters
         }
 
         /// <summary>
+        /// Initiates the ArenaExitOrEnter Coroutine once the werewolf enters the second phase.
+        /// </summary>
+        public void InitiateArenaExitOrEnter()
+        {
+            if (arenaExitOrEnterCR != null) { return; }
+
+            arenaExitOrEnterCR = ArenaExitOrEnter();
+            StartCoroutine(arenaExitOrEnterCR);
+        }
+
+        /// <summary>
+        /// Usually activated within the animation itself, this continues the Lunge coroutine.
+        /// </summary>
+        public void ArenaExitOrEnterAnimationEvent()
+        {
+            if (arenaExitOrEnterCR == null)
+            {
+                Debug.LogError("The ArenaChange Coroutine reference is null despite the animation event being called. This reference should have been set when you gave the lunge input.");
+                return;
+            }
+            StartCoroutine(arenaExitOrEnterCR);
+        }
+
+        /// <summary>
         /// The main logic for the bosses' howl.
         /// </summary>
         private IEnumerator HowlAnimation()
@@ -552,8 +648,8 @@ namespace Hunter.Characters
             yield return new WaitUntil(WerewolfLungingCheck);
 
             isHowling = true;
-
             isDying = true;
+
             anim.SetTrigger("howl");
 
             yield return new WaitForSeconds(BossInputModuleInstance.howlClip.length);
@@ -572,12 +668,6 @@ namespace Hunter.Characters
                         if (phaseThreeMobs[i] != null) { phaseThreeMobs[i].SetActive(true); }
                     }
                     break;
-                case 4:
-                    for (var i = 0; i < phaseFourMobs.Count; i++)
-                    {
-                        if (phaseFourMobs[i] != null) { phaseFourMobs[i].SetActive(true); }
-                    }
-                    break;
                 default:
                     break;
             }
@@ -592,6 +682,86 @@ namespace Hunter.Characters
         }
 
         /// <summary>
+        /// The main logic for the bosses arena exit or entrance during a phase change.
+        /// </summary>
+        private IEnumerator ArenaExitOrEnter()
+        {
+            yield return new WaitUntil(WerewolfAttackingCheck);
+            yield return new WaitUntil(WerewolfLungingCheck);
+            yield return new WaitUntil(WerewolfHowlingCheck);
+
+            agent.enabled = false;
+            isDying = true;
+            invincible = true;
+
+            if (!outsideOfArena)
+            {
+                anim.SetTrigger("arenaExit");
+
+                // PAUSE HERE FOR ANIMATION EVENT
+                StopCoroutine(arenaExitOrEnterCR);
+                yield return null;
+
+                // COROUTINE RESUMES HERE
+                var percentComplete = 0f;
+                var tempPositon = transform.position;
+                var elapsedTime = 0f;
+                var enterLocation = new Vector3(transform.position.x, transform.position.y + 20, transform.position.z);
+
+                // This is where the actual lerping happens
+                while (percentComplete < 1f)
+                {
+                    elapsedTime += Time.deltaTime * lungeSpeedCurve.Evaluate(lungeMaxSpeed);
+                    percentComplete = Mathf.Clamp01(elapsedTime / 1f);
+                    transform.position = Vector3.Lerp(tempPositon, enterLocation, percentComplete);
+
+                    yield return null;
+                }
+                RotationTransform.gameObject.SetActive(false);
+                outsideOfArena = true;
+            }
+            else if (outsideOfArena)
+            {
+                RotationTransform.gameObject.SetActive(true);
+
+                var percentComplete = 0f;
+                var tempPositon = transform.position;
+                var elapsedTime = 0f;
+                var enterLocation = new Vector3(transform.position.x, transform.position.y - 20, transform.position.z);
+                agent.enabled = false;
+
+                // This is where the actual lerping happens
+                var animationTriggerFlag = false;
+                while (percentComplete < 1f)
+                {
+                    elapsedTime += Time.deltaTime * lungeSpeedCurve.Evaluate(lungeMaxSpeed);
+                    percentComplete = Mathf.Clamp01(elapsedTime / 1f);
+                    transform.position = Vector3.Lerp(tempPositon, enterLocation, percentComplete);
+
+                    if (percentComplete > .9f && !animationTriggerFlag)
+                    {
+                        anim.SetTrigger("arenaEnter");
+                        animationTriggerFlag = true;
+                    }
+
+                    yield return null;
+                }
+
+                // PAUSE HERE FOR ANIMATION EVENT
+                StopCoroutine(arenaExitOrEnterCR);
+                yield return null;
+
+                // COROUTINE RESUMES HERE
+                agent.enabled = true;
+                isDying = false;
+                invincible = false;
+                outsideOfArena = false;
+            }
+
+            arenaExitOrEnterCR = null;
+        }
+
+        /// <summary>
         /// This function changes the current element of the werewolves' weapons to a new element depending on the phase.
         /// </summary>
         private void ChangeWeaponElements(int phase)
@@ -600,26 +770,9 @@ namespace Hunter.Characters
             var randomElement = randomElementsList[randomElementIndex];
             randomElementsList.RemoveAt(randomElementIndex);
 
-            switch (phase)
-            {
-                case 1:
-                    rightClawWeapon.weaponElement = randomElement;
-                    leftClawWeapon.weaponElement = randomElement;
-                    doubleSwipeWeapon.weaponElement = randomElement;
-                    break;
-                case 2:
-                    rightClawWeapon.weaponElement = randomElement;
-                    leftClawWeapon.weaponElement = randomElement;
-                    doubleSwipeWeapon.weaponElement = randomElement;
-                    break;
-                case 3:
-                    rightClawWeapon.weaponElement = randomElement;
-                    leftClawWeapon.weaponElement = randomElement;
-                    doubleSwipeWeapon.weaponElement = randomElement;
-                    break;
-                default:
-                    break;
-            }
+            rightClawWeapon.weaponElement = randomElement;
+            leftClawWeapon.weaponElement = randomElement;
+            doubleSwipeWeapon.weaponElement = randomElement;
         }
 
         /// <summary>
