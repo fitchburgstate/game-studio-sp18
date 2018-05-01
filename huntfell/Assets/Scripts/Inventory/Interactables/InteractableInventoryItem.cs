@@ -9,22 +9,17 @@ namespace Hunter
         //All the relevent data about this item
         public InventoryItem itemData;
 
-        //Math variables for the Anim function
-        public float propSpeed = 2;
-        public float bounceSpeed = 1;
-        public float bounceHeight = 3;
-        public float maxDistance = 10;
-
-        [Tooltip("Animation the prop plays")]
+        public float itemBounceTime = 2;
+        public int itemTotalBounces = 4;
+        public float itemBounceHeight;
         [SerializeField]
-        private AnimationCurve propCurve;
+        private AnimationCurve itemHeightCurve;
+        public float itemMaxSpawnDistance = 3;
 
         public string tutorialText;
         public Sprite tutorialIcon;
 
         private Collider interactableItemCollider;
-        private float propHeightOffset; // half the height of the object
-        private Vector3 targetPosition;
 
         public bool IsImportant
         {
@@ -51,49 +46,51 @@ namespace Hunter
             }
         }
 
-        public void SpawnFromProp () // when object is spawned from an interactble prop
+        public void SpawnFromProp (Vector3 spawnPosition)
         {
-            propHeightOffset = interactableItemCollider.bounds.extents.y; // get half the height of the object so it doesnt go in the ground
+            interactableItemCollider.enabled = false;
 
-            //Making it so it always spawns somewhere near the player and not behind the prop it came from
-            if (Utility.RandomNavMeshPoint(GameObject.FindGameObjectWithTag("Player").transform.position, maxDistance, out targetPosition)) // gets random position on a nav mesh + hald the hieght of the object on the y axis
+            var tempPosition = Vector3.zero;
+            if(Utility.RandomNavMeshPoint(spawnPosition, 1, out tempPosition))
             {
-                targetPosition.y += propHeightOffset;
+                spawnPosition = tempPosition;
             }
-
-            interactableItemCollider.enabled = false; //  disable colider when item spawns
-            StartCoroutine(PlaySpawnAnimation()); // plays anination curve
+            StartCoroutine(PlaySpawnAnimation(spawnPosition)); 
+            
         }
 
-        private IEnumerator PlaySpawnAnimation () // plays animation for object to move to point on navmesh
+        private IEnumerator PlaySpawnAnimation (Vector3 targetPosition)
         {
-            //TODO this whole thing needs to be refactored
-            var inRange = 0.5f; // range for how close object has to get to destination
-            float bounceTime = 0; // bounce speed
-
-            //Adding the or here because this is super jank atm
-            while (Vector3.Distance(transform.position, targetPosition) > inRange || bounceTime < 3)
+            for (var currentBounce = 1; currentBounce <= itemTotalBounces; currentBounce++)
             {
-                //Debug.Log(Vector3.Distance(transform.position, targetPosition) + " -- " + inRange);
-                bounceTime += bounceSpeed * Time.deltaTime;
-                var bounceAmount = propCurve.Evaluate(bounceTime); // how big is the bounce
-                var bouncePosition = new Vector3(0, 0, 0)
+                var startingPosition = transform.position;
+                var elapsedTime = 0f;
+                var adjustedBounceTime = itemBounceTime / currentBounce;
+
+                while (elapsedTime <= adjustedBounceTime)
                 {
-                    y = (bounceHeight * bounceAmount) // the bounch changing the y axis of the object
-                };
-                var currentPosition = new Vector3(targetPosition.x, bouncePosition.y + propHeightOffset, targetPosition.z); // the nav mesh position x and z axis and the bounce's y axis
-                transform.position = Vector3.MoveTowards(transform.position, currentPosition, propSpeed * Time.deltaTime); // moves towards that current position
-                yield return null;
-            }
+                    elapsedTime += Time.deltaTime;
+                    var percentComplete = Mathf.Clamp01(elapsedTime / adjustedBounceTime);
 
-            interactableItemCollider.enabled = true; // enables collider when reaches current position
+                    var newY = Mathf.Lerp(targetPosition.y, targetPosition.y + (itemBounceHeight / currentBounce), itemHeightCurve.Evaluate(percentComplete));
+
+                    var adjustedTargetPosition = new Vector3(targetPosition.x, newY, targetPosition.z);
+
+                    transform.position = Vector3.LerpUnclamped(startingPosition, adjustedTargetPosition, percentComplete);
+                    yield return null;
+                }
+            }
+            interactableItemCollider.enabled = true;
+            yield return null;
         }
 
-        public void SpawnOnGround (Vector3 propPosition)
+        public void SpawnOnGround (Vector3 spawnPosition)
         {
-            if (Utility.RandomNavMeshPoint(propPosition, 1, out targetPosition))
+            var targetPosition = transform.position;
+
+            if (Utility.RandomNavMeshPoint(spawnPosition, 1, out targetPosition))
             {
-                var groundPosition = new Vector3(propPosition.x, targetPosition.y, propPosition.z);
+                var groundPosition = new Vector3(spawnPosition.x, targetPosition.y, spawnPosition.z);
                 transform.position = groundPosition;
             }
         }

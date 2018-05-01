@@ -17,7 +17,7 @@ namespace Hunter
             {
                 var randomPoint = center + UnityEngine.Random.insideUnitSphere * range;
                 NavMeshHit hit;
-                if (NavMesh.SamplePosition(randomPoint, out hit, 1.0f, NavMesh.AllAreas))
+                if (NavMesh.SamplePosition(randomPoint, out hit, range, NavMesh.AllAreas))
                 {
                     result = hit.position;
                     return true;
@@ -141,6 +141,12 @@ namespace Hunter
         void Damage (int damage, bool isCritical, Element damageElement);
 
         void Heal (int restore, bool isCritical);
+
+        void Kill ();
+
+        float CurrentHealth { get; set; }
+
+        float TargetHealth { get; set; }
     }
 
     public interface IAttack

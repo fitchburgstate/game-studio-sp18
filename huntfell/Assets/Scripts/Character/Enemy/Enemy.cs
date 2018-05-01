@@ -18,6 +18,10 @@ namespace Hunter.Characters
         /// </summary>
         public ElementOption enemyElementOption;
 
+        [SerializeField]
+        private List<InventoryItem> itemsToSpawn = new List<InventoryItem>();
+
+
         protected override void Start ()
         {
             elementType = Utility.ElementOptionToElement(enemyElementOption);
@@ -68,6 +72,19 @@ namespace Hunter.Characters
             {
                 Debug.LogError("The navmeshpath is null.", gameObject);
             }
+        }
+
+        protected void SpawnInteractableItems (Character characterFromInteraction)
+        {
+            if (itemsToSpawn.Count == 0) { return; }
+
+            foreach (var item in itemsToSpawn)
+            {
+                var spawnedItem = Instantiate(item.InteractableItemPrefab, transform.position, transform.rotation);
+                spawnedItem.SpawnFromProp(characterFromInteraction.transform.position);
+            }
+
+            itemsToSpawn.Clear();
         }
     }
 }

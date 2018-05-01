@@ -59,6 +59,29 @@ namespace Hunter
             }
         }
 
+        public float CurrentHealth
+        {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+
+            }
+        }
+
+        public float TargetHealth {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+
+            }
+        }
+
         public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             FireInteraction(weaponAttackedWith.characterHoldingWeapon, weaponAttackedWith);
@@ -73,6 +96,12 @@ namespace Hunter
         public void Heal (int restore, bool isCritical)
         {
             // We dont want props to heal lol
+            return;
+        }
+
+        public void Kill ()
+        {
+            //no murdering props pls
             return;
         }
 
@@ -175,7 +204,7 @@ namespace Hunter
             }
             else
             {
-                SpawnInteractableItems();
+                SpawnInteractableItems(characterFromInteraction);
             }
 
             if (propEvent != null)
@@ -184,13 +213,9 @@ namespace Hunter
             }
         }
 
-        private void SpawnInteractableItems ()
+        private void SpawnInteractableItems (Character characterFromInteraction)
         {
-            if (itemsToSpawn.Count == 0)
-            {
-                //Debug.Log("Nothing in this prop!");
-                return;
-            }
+            if (itemsToSpawn.Count == 0) { return; }
 
             foreach (var item in itemsToSpawn)
             {
@@ -199,7 +224,7 @@ namespace Hunter
                 switch (propType)
                 {
                     case PropType.Interactable:
-                        spawnedItem.SpawnFromProp();
+                        spawnedItem.SpawnFromProp(characterFromInteraction.transform.position);
                         break;
                     default:
                         spawnedItem.SpawnOnGround(transform.position);

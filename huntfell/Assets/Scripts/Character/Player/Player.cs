@@ -12,8 +12,6 @@ namespace Hunter.Characters
     public sealed class Player : Character, IMoveable, IAttack
     {
         #region Variables
-        [SerializeField]
-        private float targetHealth;
 
         [Header("Combat Options")]
         public Transform weaponContainer;
@@ -109,9 +107,7 @@ namespace Hunter.Characters
             }
             set
             {
-                if (IsDying) { return; }
-
-                currentHealth = Mathf.Clamp(value, TargetHealth, totalHealth);
+                base.CurrentHealth = value;
                 HUDManager.instance?.SetCurrentHealthBar(currentHealth / totalHealth);
 
                 if (currentHealth <= 0)
@@ -122,7 +118,7 @@ namespace Hunter.Characters
             }
         }
 
-        public float TargetHealth
+        public override float TargetHealth
         {
             get
             {
@@ -130,12 +126,7 @@ namespace Hunter.Characters
             }
             set
             {
-                if (IsDying) { return; }
-                targetHealth = Mathf.Clamp(value, 0, totalHealth);
-                if(targetHealth > currentHealth)
-                {
-                    CurrentHealth = targetHealth;
-                }
+                base.TargetHealth = value;
                 HUDManager.instance?.SetTargetHealthBar(targetHealth / totalHealth);
             }
         }

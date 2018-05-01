@@ -86,7 +86,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1072239622342918}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 3.059, y: 0, z: 5.205}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4172126197520788}
@@ -188,34 +188,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 2987761680fb4bf4daab0a2400a3e76d, type: 2}
-  propSpeed: 3
-  bounceSpeed: 1
-  bounceHeight: 3
-  maxDistance: 1
-  propCurve:
+  itemBounceTime: 0.75
+  itemTotalBounces: 3
+  itemBounceHeight: 1.25
+  itemHeightCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: 0
+      time: 0.005584717
+      value: 0.49108887
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.49999905
+      value: 0.71174544
+      inSlope: -0.0653187
+      outSlope: -0.0653187
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
       value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.48476613
-      value: 0.8103695
-      inSlope: 0.9673834
-      outSlope: 0.9673834
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.99780273
-      value: -0.0036888123
       inSlope: 0
       outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  itemMaxSpawnDistance: 3
+  tutorialText: 
+  tutorialIcon: {fileID: 0}
   healthAmount: 30
 --- !u!135 &135665978696345862
 SphereCollider:

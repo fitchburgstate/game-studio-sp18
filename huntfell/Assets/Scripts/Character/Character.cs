@@ -17,7 +17,7 @@ namespace Hunter.Characters
         // Super General Character Traits
         public int totalHealth = 100;
         [SerializeField]
-        protected float currentHealth;
+        protected float currentHealth, targetHealth;
 
         private Weapon currentWeapon = null;
 
@@ -54,7 +54,30 @@ namespace Hunter.Characters
             }
             set
             {
-                currentHealth = Mathf.Clamp(value, 0, totalHealth);
+                if (IsDying) { return; }
+                currentHealth = Mathf.Clamp(value, TargetHealth, totalHealth);
+
+                if(currentHealth <= 0)
+                {
+                    Kill();
+                }
+            }
+        }
+
+        public virtual float TargetHealth
+        {
+            get
+            {
+                return targetHealth;
+            }
+            set
+            {
+                if (IsDying) { return; }
+                targetHealth = Mathf.Clamp(value, 0, totalHealth);
+                if (targetHealth > currentHealth)
+                {
+                    CurrentHealth = targetHealth;
+                }
             }
         }
 
@@ -236,6 +259,11 @@ namespace Hunter.Characters
         {
             CurrentHealth += restoreAmount;
             yield return null;
+        }
+
+        public void Kill ()
+        {
+
         }
         #endregion
     }
