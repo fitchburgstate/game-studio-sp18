@@ -548,8 +548,6 @@ namespace Hunter.Characters
 
             yield return new WaitForSeconds(BossInputModuleInstance.lungeAscend.length);
             // PAUSE HERE FOR ANIMATION EVENT
-            //StopCoroutine(lungeCR);
-            //yield return null;
 
             // COROUTINE RESUMES HERE
             if (lungeWeapon != null) { EquipWeaponToCharacter(lungeWeapon); }
@@ -576,7 +574,6 @@ namespace Hunter.Characters
                 yield return null;
             }
 
-            //anim.SetTrigger("lungeDescend");
             yield return new WaitForSeconds(BossInputModuleInstance.lungeDescend.length);
 
             agent.enabled = true;
@@ -773,6 +770,7 @@ namespace Hunter.Characters
             rightClawWeapon.weaponElement = randomElement;
             leftClawWeapon.weaponElement = randomElement;
             doubleSwipeWeapon.weaponElement = randomElement;
+            elementType = randomElement;
         }
 
         /// <summary>
