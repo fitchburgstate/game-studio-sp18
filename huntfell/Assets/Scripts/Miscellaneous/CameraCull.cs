@@ -65,10 +65,10 @@ namespace Hunter
 
         private void FixedUpdate()
         {
-            if (Physics.Linecast(transform.position, PlayerCharacter.eyeLine.position, cullingMask.value))
+            if (Physics.Linecast(transform.position, PlayerCharacter.EyeLineTransform.position, cullingMask.value))
             {
-                var hits = Physics.RaycastAll(transform.position, (PlayerCharacter.eyeLine.position - transform.position), Vector3.Distance(PlayerCharacter.eyeLine.position, transform.position), cullingMask.value);
-                Debug.DrawLine(transform.position, PlayerCharacter.eyeLine.position, Color.blue, 5);
+                var hits = Physics.RaycastAll(transform.position, (PlayerCharacter.EyeLineTransform.position - transform.position), Vector3.Distance(PlayerCharacter.EyeLineTransform.position, transform.position), cullingMask.value);
+                Debug.DrawLine(transform.position, PlayerCharacter.EyeLineTransform.position, Color.blue, 5);
 
                 if (hits.Length > 0)
                 {

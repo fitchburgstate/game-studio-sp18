@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Hunter.Characters;
 
-namespace Hunter.AI
+namespace Hunter
 {
     public class PassiveAreaDamage : MonoBehaviour
     {
@@ -19,9 +19,12 @@ namespace Hunter.AI
                 return aiCharacter;
             }
         }
+
+        public bool DoDamage { get; private set; } = true;
         #endregion
 
         #region Variables
+        public ElementOption elementalDamage;
         [Header("Damage Radius Variables"), Range(0.1f, 100f), Tooltip("The size of the circle.")]
         public float damageRadius = 1.0f;
 
@@ -38,46 +41,69 @@ namespace Hunter.AI
         public float lineHeight = -1f;
 
         public Gradient lineColorGradient;
-        private float startWidth = 0.15f;
-        private float endWidth = 0.15f;
+        public ParticleSystem damageAura;
+        private LineRenderer batLine;
+        private float startWidth = 0.1f;
+        private float endWidth = 0.1f;
 
+        private GameObject playerBeingDamaged;
         private Character aiCharacter;
         #endregion
 
-        #region Unity Functions
         private void Start()
         {
-            DoRenderer();
             var sphereCollider = gameObject.AddComponent<SphereCollider>();
             sphereCollider.radius = damageRadius;
             sphereCollider.isTrigger = true;
+
+            DoRenderer();
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!DoDamage) { return; }
             var damageable = other.gameObject.GetComponent<IDamageable>();
             if ((other.tag == "Player") && (damageable != null))
             {
-                var dotComponent = other.transform.gameObject.AddComponent<HealthDrainDot>();
-                dotComponent.InitializeDot(damageAmount, damageInterval, damageable);
+                playerBeingDamaged = other.transform.gameObject;
+                var dotComponent = playerBeingDamaged.AddComponent<HealthDrainDot>();
+                var damageElement = Utility.ElementOptionToElement(elementalDamage);
+                dotComponent.InitializeDot(damageAmount, damageInterval, damageElement, damageable);
+
                 Fabric.EventManager.Instance?.PostEvent("Bat Aggro", gameObject);
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            var batDot = other.gameObject.GetComponent<HealthDrainDot>();
-            if (batDot != null)
+            if (!DoDamage) { return; }
+            if (other.gameObject == playerBeingDamaged)
             {
-                Destroy(batDot);
+                RemoveDot();
             }
         }
-        #endregion
 
-        #region Helper Functions
+        private void RemoveDot ()
+        {
+            var batDot = playerBeingDamaged.GetComponent<HealthDrainDot>();
+            if (batDot != null) { Destroy(batDot); }
+            playerBeingDamaged = null;
+        }
+
+        public void DisableAreaDamage ()
+        {
+            DoDamage = false;
+            if(playerBeingDamaged != null)
+            {
+                RemoveDot();
+            }
+            if(batLine != null) { batLine.enabled = false; }
+            if(damageAura != null) { damageAura.Stop(); }
+        }
+
         private void DoRenderer()
         {
-            var batLine = gameObject.AddComponent<LineRenderer>();
+            batLine = gameObject.AddComponent<LineRenderer>();
             batLine.colorGradient = lineColorGradient;
             batLine.material = new Material(Shader.Find("Particles/Additive"));
             batLine.startWidth = startWidth;
@@ -106,20 +132,19 @@ namespace Hunter.AI
                 Gizmos.color = Color.red;
                 var x = damageRadius * Mathf.Cos(theta);
                 var z = damageRadius * Mathf.Sin(theta);
-                var pos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
+                var pos = AiCharacter.EyeLineTransform.position + new Vector3(x, lineHeight, z);
                 var newPos = pos;
                 var lastPos = pos;
                 for (theta = 0.1f; theta < Mathf.PI * 2; theta += 0.1f)
                 {
                     x = damageRadius * Mathf.Cos(theta);
                     z = damageRadius * Mathf.Sin(theta);
-                    newPos = AiCharacter.eyeLine.position + new Vector3(x, lineHeight, z);
+                    newPos = AiCharacter.EyeLineTransform.position + new Vector3(x, lineHeight, z);
                     Gizmos.DrawLine(pos, newPos);
                     pos = newPos;
                 }
                 Gizmos.DrawLine(pos, lastPos);
             }
         }
-        #endregion
     }
 }

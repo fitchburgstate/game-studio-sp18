@@ -9,8 +9,8 @@ namespace Hunter
     public class DeviceManager : MonoBehaviour
     {
         #region Variables
-        public static DeviceManager Instance { get; private set; }
         private PlayerControls controls;
+        private InputDevice currentDevice;
 
         public Vector2 Move { get; private set; } = new Vector2();
         public Vector2 Look { get; private set; } = new Vector2();
@@ -37,22 +37,13 @@ namespace Hunter
         public bool overrideLayout;
         public ControlsLayout inspectorLayout;
 
-        private ControlsLayout currentLayout;
+        public bool uiInputEnabled = true;
+        public bool gameInputEnabled = true;
 
         #endregion
 
         private void Awake ()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-                return;
-            }
-
             if (overrideLayout) { controls = new PlayerControls(inspectorLayout); }
             else { controls = new PlayerControls(); }
 
@@ -78,6 +69,8 @@ namespace Hunter
         private void NewDeviceAttatched (InputDevice device)
         {
             controls.SetDeviceAll(device);
+            currentDevice = device;
+
             if (overrideLayout) { return; }
 
             if (device != null && device.DeviceClass == InputDeviceClass.Controller)
@@ -90,11 +83,18 @@ namespace Hunter
             }
         }
 
+        public void SetDeviceVibration (float leftMotor, float rightMotor)
+        {
+            if (leftMotor == 0 && rightMotor == 0) { currentDevice.StopVibration(); }
+            else { currentDevice.Vibrate(leftMotor, rightMotor); }
+        }
+
         private void OldDeviceDetached (InputDevice device)
         {
             if (InputManager.Devices.Count == 0)
             {
-                controls.SetDeviceAll(null);
+                controls.SetDeviceAll(InputManager.ActiveDevice);
+                currentDevice = InputManager.ActiveDevice;
                 if (overrideLayout) { return; }
                 controls.SetBindingsAll(PlayerControls.DEFAULT_LAYOUT);
             }
@@ -107,32 +107,38 @@ namespace Hunter
         private void Update ()
         {
             //UI Inputs
-            PressedMenu = controls.UI.MenuButton.WasPressed;
-            PressedJournal = controls.UI.JournalsButton.WasPressed;
+            if (uiInputEnabled)
+            {
+                PressedMenu = controls.UI.MenuButton.WasPressed;
+                PressedJournal = controls.UI.JournalsButton.WasPressed;
 
-            PressedConfirm = controls.UI.ConfirmButton.WasPressed;
-            PressedCancel = controls.UI.CancelButton.WasPressed;
+                PressedConfirm = controls.UI.ConfirmButton.WasPressed;
+                PressedCancel = controls.UI.CancelButton.WasPressed;
 
-            PressedPageLeft = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value < 0;
-            PressedPageRight = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value > 0;
+                PressedPageLeft = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value < 0;
+                PressedPageRight = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value > 0;
+            }
 
             //Game Inputs
-            Move = controls.Game.MoveAxes.Value;
-            Look = controls.Game.LookAxes.Value;
+            if (gameInputEnabled)
+            {
+                Move = controls.Game.MoveAxes.Value;
+                Look = controls.Game.LookAxes.Value;
 
-            PressedElementDown = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value < 0;
-            PressedElementUp = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value > 0;
+                PressedElementDown = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value < 0;
+                PressedElementUp = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value > 0;
 
-            PressedWeaponDown = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value < 0;
-            PressedWeaponUp = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value > 0;
+                PressedWeaponDown = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value < 0;
+                PressedWeaponUp = controls.Game.WeaponsAxis.WasPressed && controls.Game.WeaponsAxis.Value > 0;
 
-            PressedSwitchRanged = controls.Game.WeaponTypeRangedButton.WasPressed;
-            PressedSwitchMelee = controls.Game.WeaponTypeMeleeButton.WasPressed;
+                PressedSwitchRanged = controls.Game.WeaponTypeRangedButton.WasPressed;
+                PressedSwitchMelee = controls.Game.WeaponTypeMeleeButton.WasPressed;
 
-            PressedAttack = controls.Game.AttackButton.WasPressed;
-            PressedDash = controls.Game.DashButton.WasPressed;
-            PressedInteract = controls.Game.InteractButton.WasPressed;
-            PressedPotion = controls.Game.PotionButton.WasPressed;
+                PressedAttack = controls.Game.AttackButton.WasPressed;
+                PressedDash = controls.Game.DashButton.WasPressed;
+                PressedInteract = controls.Game.InteractButton.WasPressed;
+                PressedPotion = controls.Game.PotionButton.WasPressed;
+            }
         }
     }
 }

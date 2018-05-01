@@ -78,7 +78,7 @@ namespace Hunter
             var journals = playerWhoPaused.Inventory.GetAllJournals();
             journalHeader.fontStyle = FontStyles.Bold;
             diaryHeader.fontStyle = FontStyles.Normal;
-            Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
+            //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
             //Only displaying two journals for now
             for (int i = 0; i < 2; i++)
             {
@@ -117,7 +117,7 @@ namespace Hunter
             var diaries = playerWhoPaused.Inventory.GetAllDiaries();
             diaryHeader.fontStyle = FontStyles.Bold;
             journalHeader.fontStyle = FontStyles.Normal;
-            Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
+            //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
             //Only displaying two diaries for now
             for (int i = 0; i < 2; i++)
             {

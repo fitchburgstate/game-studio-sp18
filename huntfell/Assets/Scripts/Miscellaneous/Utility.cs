@@ -8,7 +8,6 @@ namespace Hunter
 {
     public static class Utility
     {
-        #region RandomNavMeshPoint Function
         /// <summary>
         /// Finds random point on navmesh based on a stating center position, a range/distance it can go, and a vector3 navposition
         /// </summary>
@@ -27,9 +26,7 @@ namespace Hunter
             result = Vector3.zero;
             return false;
         }
-        #endregion
 
-        #region ElementOptionToElement Function
         public static Element ElementOptionToElement(ElementOption elementOption)
         {
             switch (elementOption)
@@ -40,8 +37,8 @@ namespace Hunter
                     return new Element.Ice();
                 case ElementOption.Silver:
                     return new Element.Silver();
-                case ElementOption.Lightning:
-                    return new Element.Lightning();
+                case ElementOption.Electric:
+                    return new Element.Electric();
                 case ElementOption.Nature:
                     return new Element.Nature();
                 case ElementOption.None:
@@ -52,22 +49,18 @@ namespace Hunter
             }
             return null;
         }
-        #endregion
 
-        #region ElementToElementOption Function
-        //Yeah this breaks style guide lines, dont fucking touch it -Connor
+        //Yeah this breaks style guide, dont fucking touch it -Connor
         public static ElementOption ElementToElementOption(Element element)
         {
-            if (element is Element.Fire) { return ElementOption.Fire; }
-            else if (element is Element.Ice) { return ElementOption.Ice; }
-            else if (element is Element.Lightning) { return ElementOption.Lightning; }
-            else if (element is Element.Nature) { return ElementOption.Nature; }
-            else if (element is Element.Silver) { return ElementOption.Silver; }
-            else { return ElementOption.None; }
+                 if (element is Element.Fire)       { return ElementOption.Fire; }
+            else if (element is Element.Ice)        { return ElementOption.Ice; }
+            else if (element is Element.Electric)   { return ElementOption.Electric; }
+            else if (element is Element.Nature)     { return ElementOption.Nature; }
+            else if (element is Element.Silver)     { return ElementOption.Silver; }
+            else                                    { return ElementOption.None; }
         }
-        #endregion
 
-        #region FindClosestPointOnNavmesh
         public static Vector3 GetClosestPointOnNavMesh(Vector3 target, NavMeshAgent agent, Transform transform)
         {
             var hit = new NavMeshHit();
@@ -91,14 +84,39 @@ namespace Hunter
             }
             return target;
         }
-        #endregion
+
+        public static IEnumerator FadeCanvasGroup (CanvasGroup canvasGroup, AnimationCurve fadeCurve, float fadeDuration, FadeType fadeType)
+        {
+            canvasGroup.alpha = (float)fadeType;
+            if (fadeDuration == 0)
+            {
+                canvasGroup.alpha = Mathf.Abs(canvasGroup.alpha - 1);
+            }
+            else
+            {
+                float curvePos = 0;
+                while (curvePos < 1)
+                {
+                    curvePos += (Time.deltaTime / fadeDuration);
+                    if (fadeType == FadeType.In)
+                    {
+                        canvasGroup.alpha = fadeCurve.Evaluate(1 - curvePos);
+                    }
+                    else
+                    {
+                        canvasGroup.alpha = fadeCurve.Evaluate(curvePos);
+                    }
+                    yield return new WaitForEndOfFrame();
+                }
+            }
+        }
     }
 
     #region Interfaces
     //Interface behaviours for characters and interactables
     public interface IMoveable
     {
-        void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection);
+        void Move(Vector3 moveDirection, Vector3 lookDirection);
 
         void Move(Transform navMeshTarget);
 
@@ -118,7 +136,9 @@ namespace Hunter
 
     public interface IDamageable
     {
-        void TakeDamage(int damage, bool isCritical, Weapon weaponAttackedWith);
+        void TakeDamage(string damage, bool isCritical, Weapon weaponAttackedWith);
+
+        void TakeDamage (string damage, bool isCritical, Element damageElement);
     }
 
     public interface IAttack
@@ -127,7 +147,7 @@ namespace Hunter
 
         IEnumerator AttackAnimation();
 
-        void WeaponAnimationEvent();
+        void AttackAnimationEvent();
 
         void CycleWeapons(bool cycleUp);
 

@@ -107,7 +107,7 @@ namespace Hunter.Characters.AI
         #region Unity Functions
         private void Start()
         {
-            aiCharacterEyeLine = AiCharacter.eyeLine;
+            aiCharacterEyeLine = AiCharacter.EyeLineTransform;
         }
         #endregion
 
@@ -131,6 +131,7 @@ namespace Hunter.Characters.AI
                 if (Physics.Raycast(aiCharacterEyeLine.position, rayDirection, out rayHit, maxDetectionDistance, detectionLayers)) // Detects to see if the player is within the field of view
                 {
                     inVisionCone = true;
+                    //Debug.Log(rayHit.transform.name, rayHit.transform.gameObject);
                     if (wolfComponent != null && !wolfComponent.justFound)
                     {
                         Fabric.EventManager.Instance?.PostEvent("Wolf Aggro", gameObject);

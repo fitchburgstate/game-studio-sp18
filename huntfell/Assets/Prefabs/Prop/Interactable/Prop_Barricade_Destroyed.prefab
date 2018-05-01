@@ -105,7 +105,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4686342936862468}
   - component: {fileID: 114223916863215458}
-  - component: {fileID: 95367702264407216}
   - component: {fileID: 65509908135684898}
   m_Layer: 13
   m_Name: Prop_Barricade_Destroyed
@@ -1227,23 +1226,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10.11, y: 5, z: 4.77}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!95 &95367702264407216
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1215662906125862}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 6cc24869dd1788a499704939d574a8c4, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114223916863215458
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1255,6 +1237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activateOnStart: 1
+  destroyWaitTime: 3
 --- !u!198 &198002994276098130
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -1262,7 +1246,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1087255654860756}
   serializedVersion: 5
-  lengthInSec: 1
+  lengthInSec: 6
   simulationSpeed: 1
   stopAction: 0
   looping: 1
@@ -1322,7 +1306,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 6
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1467,7 +1451,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2.67
+      scalar: 1.5
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -2209,7 +2193,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 0
+    enabled: 1
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -2218,10 +2202,10 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
-        key2: {r: 0, g: 0, b: 0, a: 0}
-        key3: {r: 0, g: 0, b: 0, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key1: {r: 1, g: 1, b: 1, a: 0}
+        key2: {r: 0, g: 0, b: 0, a: 1}
+        key3: {r: 0, g: 0, b: 0, a: 1}
+        key4: {r: 0, g: 0, b: 0, a: 1}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
@@ -2234,16 +2218,16 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 65535
-        atime2: 0
-        atime3: 0
-        atime4: 0
-        atime5: 0
+        atime1: 1349
+        atime2: 5204
+        atime3: 30647
+        atime4: 60331
+        atime5: 65535
         atime6: 0
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 2
+        m_NumAlphaKeys: 6
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -2320,7 +2304,7 @@ ParticleSystem:
     startFrame:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 0.9999
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -2362,7 +2346,7 @@ ParticleSystem:
     tilesY: 4
     animationType: 0
     rowIndex: 0
-    cycles: 3
+    cycles: 10
     uvChannelMask: -1
     flipU: 0
     flipV: 0
@@ -4623,7 +4607,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1203906413639706}
   serializedVersion: 5
-  lengthInSec: 1
+  lengthInSec: 6
   simulationSpeed: 1
   stopAction: 0
   looping: 1
@@ -4676,14 +4660,14 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -2010420585
+  randomSeed: 1091670343
   InitialModule:
     serializedVersion: 3
     enabled: 1
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 6
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -4828,7 +4812,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2.67
+      scalar: 1.5
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5570,7 +5554,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 0
+    enabled: 1
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -5579,10 +5563,10 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
-        key2: {r: 0, g: 0, b: 0, a: 0}
-        key3: {r: 0, g: 0, b: 0, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key1: {r: 1, g: 1, b: 1, a: 0}
+        key2: {r: 0, g: 0, b: 0, a: 1}
+        key3: {r: 0, g: 0, b: 0, a: 1}
+        key4: {r: 0, g: 0, b: 0, a: 1}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
@@ -5595,16 +5579,16 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 65535
-        atime2: 0
-        atime3: 0
-        atime4: 0
-        atime5: 0
+        atime1: 1349
+        atime2: 5204
+        atime3: 30647
+        atime4: 60331
+        atime5: 65535
         atime6: 0
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 2
+        m_NumAlphaKeys: 6
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5681,7 +5665,7 @@ ParticleSystem:
     startFrame:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 0.9999
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -5723,7 +5707,7 @@ ParticleSystem:
     tilesY: 4
     animationType: 0
     rowIndex: 0
-    cycles: 3
+    cycles: 10
     uvChannelMask: -1
     flipU: 0
     flipV: 0
@@ -7984,7 +7968,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1318083053199684}
   serializedVersion: 5
-  lengthInSec: 1
+  lengthInSec: 6
   simulationSpeed: 1
   stopAction: 0
   looping: 1
@@ -8037,14 +8021,14 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1322889154
+  randomSeed: -844314305
   InitialModule:
     serializedVersion: 3
     enabled: 1
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 6
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -8189,7 +8173,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2.67
+      scalar: 1.5
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -8931,7 +8915,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 0
+    enabled: 1
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -8940,10 +8924,10 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
-        key2: {r: 0, g: 0, b: 0, a: 0}
-        key3: {r: 0, g: 0, b: 0, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key1: {r: 1, g: 1, b: 1, a: 0}
+        key2: {r: 0, g: 0, b: 0, a: 1}
+        key3: {r: 0, g: 0, b: 0, a: 1}
+        key4: {r: 0, g: 0, b: 0, a: 1}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
@@ -8956,16 +8940,16 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 65535
-        atime2: 0
-        atime3: 0
-        atime4: 0
-        atime5: 0
+        atime1: 1349
+        atime2: 5204
+        atime3: 30647
+        atime4: 60331
+        atime5: 65535
         atime6: 0
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 2
+        m_NumAlphaKeys: 6
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9042,7 +9026,7 @@ ParticleSystem:
     startFrame:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 0.9999
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -9084,7 +9068,7 @@ ParticleSystem:
     tilesY: 4
     animationType: 0
     rowIndex: 0
-    cycles: 3
+    cycles: 10
     uvChannelMask: -1
     flipU: 0
     flipV: 0

@@ -1,39 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Hunter
 {
     public class TitleManager : MonoBehaviour
     {
-        private DeviceManager myDeviceManager;
-        public GameObject titlePanel;
-        public GameObject tutorialPanel;
+        public CanvasGroup titleScreenCanvasGroup;
+        private DeviceManager deviceManager;
 
         private bool acceptingInput = true;
 
         private void Start ()
         {
-            myDeviceManager = DeviceManager.Instance;
-
+            deviceManager = GameManager.instance?.DeviceManager;
+            deviceManager.gameInputEnabled = false;
+            deviceManager.uiInputEnabled = true;
         }
 
         private void Update ()
         {
-            if (acceptingInput & (myDeviceManager.PressedConfirm || myDeviceManager.PressedCancel))
+            if (acceptingInput & (deviceManager.PressedConfirm || deviceManager.PressedCancel))
             {
-                if (titlePanel.activeSelf)
-                {
-                    Fabric.EventManager.Instance?.PostEvent("UI Navigation Blip");
-                    titlePanel.SetActive(false);
-                    tutorialPanel.SetActive(true);
-                }
-                else
-                {
-                    Fabric.EventManager.Instance?.PostEvent("UI Start Game");
-                    GameManager.instance.LoadNewScene("PAXLevelScene", false);
-                    acceptingInput = false;
-                }
+                acceptingInput = false;
+                GameManager.instance?.StartCoroutine(GameManager.instance.StartGame(titleScreenCanvasGroup));
             }
         }
     }
