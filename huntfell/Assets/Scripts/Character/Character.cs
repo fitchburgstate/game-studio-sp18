@@ -210,17 +210,17 @@ namespace Hunter.Characters
 
         public void Heal (int restore, bool isCritical)
         {
-            if (invincible || IsDying) { return; }
+            if (invincible || IsDying || CurrentHealth == totalHealth) { return; }
 
             if (isCritical && damageAction != null)
             {
                 StopCoroutine(damageAction);
             }
 
-            if (restoreAction != null)
-            {
-                StopCoroutine(restoreAction);
-            }
+            //if (restoreAction != null)
+            //{
+            //    StopCoroutine(restoreAction);
+            //}
 
             restoreAction = AddHealthToCharacter(restore, isCritical);
             StartCoroutine(restoreAction);

@@ -32,7 +32,7 @@ namespace Hunter
         {
             if (destroyAction != null) { return; }
 
-            if(destroyTarget == null)
+            if(target == null)
             {
                 Debug.LogWarning("Cannot destroy a null target.", gameObject);
                 return;

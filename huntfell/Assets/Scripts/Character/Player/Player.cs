@@ -47,6 +47,20 @@ namespace Hunter.Characters
         public LayerMask dashInitialCheckBlockingLayers;
         public LayerMask dashFinalCheckBlockingLayers;
 
+        [Header("Potion Options")]
+        [Range(1, 5)]
+        public int potionCount = 1;
+        [Range(1, 100)]
+        public int maxPotionShards = 30;
+        [SerializeField]
+        private int potionShardCount;
+        [Range(1, 20)]
+        public int potionRestoreAmount = 2;
+        [Range(0.25f, 10)]
+        public float potionRestoreInterval = 0.33f;
+        [Range(1, 20)]
+        public float potionRestoreLifeTime = 5;
+
         [Header("World UI Options")]
         public Image interactPromptImage;
 
@@ -118,7 +132,24 @@ namespace Hunter.Characters
             {
                 if (IsDying) { return; }
                 targetHealth = Mathf.Clamp(value, 0, totalHealth);
+                if(targetHealth > currentHealth)
+                {
+                    CurrentHealth = targetHealth;
+                }
                 HUDManager.instance?.SetTargetHealthBar(targetHealth / totalHealth);
+            }
+        }
+
+        public int PotionShardCount
+        {
+            get
+            {
+                return potionShardCount;
+            }
+
+            set
+            {
+                potionShardCount = Mathf.Clamp(value, 0, maxPotionShards * potionCount);
             }
         }
         #endregion
@@ -454,6 +485,16 @@ namespace Hunter.Characters
 
         #region Player Health
 
+        public void UsePotion ()
+        {
+            if(PerformingMinorAction || PotionShardCount < maxPotionShards * potionCount) {
+                Debug.LogWarning("Cannot use potion at this time.");
+                return;
+            }
+            gameObject.AddComponent<HealOverTime>().InitializeEffect(potionRestoreAmount, potionRestoreInterval, potionRestoreLifeTime, null, this, null);
+            PotionShardCount -= maxPotionShards;
+        }
+
         protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
             TargetHealth -= damage;
@@ -475,17 +516,19 @@ namespace Hunter.Characters
         protected override IEnumerator AddHealthToCharacter (int amount, bool isCritical)
         {
             var healTarget = amount + TargetHealth;
+            var cachedTarget = TargetHealth;
 
             if (isCritical || healthModificationSpeed == 0)
             {
                 TargetHealth = healTarget;
-                CurrentHealth = TargetHealth;
                 yield break;
             }
 
-            while (TargetHealth < healTarget)
+            while (cachedTarget < healTarget)
             {
-                TargetHealth += Time.deltaTime * healthModificationSpeed;
+                var step = Time.deltaTime * healthModificationSpeed;
+                TargetHealth += step;
+                cachedTarget += step;
                 yield return null;
             }
         }
