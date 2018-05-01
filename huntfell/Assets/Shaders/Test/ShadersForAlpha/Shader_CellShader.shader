@@ -1,20 +1,20 @@
 // Shader created with Shader Forge v1.38 
 // Shader Forge (c) Neat Corporation / Joachim Holmer - http://www.acegikmo.com/shaderforge/
 // Note: Manually altering this data may prevent you from opening it in Shader Forge
-/*SF_DATA;ver:1.38;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,cgin:,lico:1,lgpr:1,limd:1,spmd:1,trmd:0,grmd:0,uamb:False,mssp:True,bkdf:True,hqlp:False,rprd:False,enco:False,rmgx:True,imps:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:2,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,atcv:False,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,atwp:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False,fsmp:False;n:type:ShaderForge.SFN_Final,id:4013,x:32719,y:32712,varname:node_4013,prsc:2|diff-4959-OUT,spec-8548-RGB,normal-2819-RGB,emission-3321-OUT,amdfl-8525-RGB,difocc-8525-A,spcocc-8525-A,olwid-8258-OUT,olcol-4515-RGB;n:type:ShaderForge.SFN_LightVector,id:2167,x:31389,y:32713,varname:node_2167,prsc:2;n:type:ShaderForge.SFN_NormalVector,id:2321,x:31389,y:32833,prsc:2,pt:False;n:type:ShaderForge.SFN_ValueProperty,id:8258,x:32444,y:33044,ptovrint:False,ptlb:OutlineWidth,ptin:_OutlineWidth,varname:_OutlineWidth,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0.05;n:type:ShaderForge.SFN_Color,id:4515,x:32444,y:33116,ptovrint:False,ptlb:OutLinecolor,ptin:_OutLinecolor,varname:_OutLinecolor,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0,c2:0,c3:0,c4:1;n:type:ShaderForge.SFN_Tex2d,id:1463,x:32033,y:32753,ptovrint:False,ptlb:Celltexture,ptin:_Celltexture,varname:_Celltexture,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:a65fdabb80940b647ba5e69ef5538613,ntxv:0,isnm:False|UVIN-915-OUT;n:type:ShaderForge.SFN_Append,id:915,x:31836,y:32753,varname:node_915,prsc:2|A-3738-OUT,B-1527-OUT;n:type:ShaderForge.SFN_ValueProperty,id:2302,x:31582,y:32769,ptovrint:False,ptlb:constant,ptin:_constant,varname:_constant,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0.4;n:type:ShaderForge.SFN_ValueProperty,id:1527,x:31582,y:32843,ptovrint:False,ptlb:AppendConstant,ptin:_AppendConstant,varname:_AppendConstant,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:1;n:type:ShaderForge.SFN_Dot,id:3738,x:31582,y:32605,varname:node_3738,prsc:2,dt:0|A-2167-OUT,B-2321-OUT;n:type:ShaderForge.SFN_Tex2d,id:3255,x:32033,y:32570,ptovrint:False,ptlb:Albedo,ptin:_Albedo,varname:_Albedo,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:False;n:type:ShaderForge.SFN_Multiply,id:3321,x:32332,y:32630,varname:node_3321,prsc:2|A-3255-RGB,B-1463-RGB;n:type:ShaderForge.SFN_Dot,id:9498,x:31580,y:32302,varname:node_9498,prsc:2,dt:0|A-8975-OUT,B-3788-OUT;n:type:ShaderForge.SFN_NormalVector,id:3788,x:31389,y:32425,prsc:2,pt:False;n:type:ShaderForge.SFN_Append,id:4939,x:31837,y:32414,varname:node_4939,prsc:2|A-9498-OUT,B-1527-OUT;n:type:ShaderForge.SFN_Tex2d,id:3682,x:32033,y:32397,ptovrint:False,ptlb:Celltexture_copy,ptin:_Celltexture_copy,varname:_Celltexture_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:af39bf2605278314c8acdd65ee751289,ntxv:0,isnm:False|UVIN-4939-OUT;n:type:ShaderForge.SFN_Multiply,id:4959,x:32332,y:32508,varname:node_4959,prsc:2|A-3682-RGB,B-3255-RGB;n:type:ShaderForge.SFN_LightVector,id:8975,x:31389,y:32302,varname:node_8975,prsc:2;n:type:ShaderForge.SFN_Tex2d,id:8548,x:33446,y:32802,ptovrint:False,ptlb:Specular,ptin:_Specular,varname:_Specular,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:3,isnm:False;n:type:ShaderForge.SFN_Tex2d,id:2819,x:33446,y:32637,ptovrint:False,ptlb:Normal,ptin:_Normal,varname:_Normal,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:3,isnm:True;n:type:ShaderForge.SFN_Tex2d,id:8525,x:33446,y:32969,ptovrint:False,ptlb:Occlusion,ptin:_Occlusion,varname:node_8525,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:False;proporder:8258-4515-1463-2302-1527-3255-3682-8548-2819-8525;pass:END;sub:END;*/
+/*SF_DATA;ver:1.38;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,cgin:,lico:1,lgpr:1,limd:1,spmd:1,trmd:0,grmd:0,uamb:False,mssp:True,bkdf:True,hqlp:False,rprd:False,enco:False,rmgx:True,imps:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:2,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,atcv:False,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,atwp:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False,fsmp:False;n:type:ShaderForge.SFN_Final,id:4013,x:32719,y:32712,varname:node_4013,prsc:2|diff-3743-OUT,spec-8548-RGB,normal-2819-RGB,emission-3321-OUT,amdfl-8525-RGB,difocc-8525-A,spcocc-8525-A,olwid-8258-OUT,olcol-4515-RGB;n:type:ShaderForge.SFN_LightVector,id:2167,x:31389,y:32713,varname:node_2167,prsc:2;n:type:ShaderForge.SFN_NormalVector,id:2321,x:31389,y:32833,prsc:2,pt:False;n:type:ShaderForge.SFN_ValueProperty,id:8258,x:32444,y:33044,ptovrint:False,ptlb:OutlineWidth,ptin:_OutlineWidth,varname:_OutlineWidth,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0.05;n:type:ShaderForge.SFN_Color,id:4515,x:32444,y:33116,ptovrint:False,ptlb:OutLinecolor,ptin:_OutLinecolor,varname:_OutLinecolor,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0,c2:0,c3:0,c4:1;n:type:ShaderForge.SFN_Tex2d,id:1463,x:32033,y:32753,ptovrint:False,ptlb:Celltexture,ptin:_Celltexture,varname:_Celltexture,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:a65fdabb80940b647ba5e69ef5538613,ntxv:3,isnm:False|UVIN-915-OUT;n:type:ShaderForge.SFN_Append,id:915,x:31836,y:32753,varname:node_915,prsc:2|A-3738-OUT,B-1527-OUT;n:type:ShaderForge.SFN_ValueProperty,id:1527,x:31582,y:32843,ptovrint:False,ptlb:AppendConstant,ptin:_AppendConstant,varname:_AppendConstant,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:1;n:type:ShaderForge.SFN_Dot,id:3738,x:31582,y:32605,varname:node_3738,prsc:2,dt:0|A-2167-OUT,B-2321-OUT;n:type:ShaderForge.SFN_Tex2d,id:3255,x:32033,y:32570,ptovrint:False,ptlb:Albedo,ptin:_Albedo,varname:_Albedo,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:3,isnm:False;n:type:ShaderForge.SFN_Multiply,id:3321,x:32332,y:32679,varname:node_3321,prsc:2|A-3255-RGB,B-1463-RGB;n:type:ShaderForge.SFN_Dot,id:9498,x:31580,y:32302,varname:node_9498,prsc:2,dt:0|A-8975-OUT,B-3788-OUT;n:type:ShaderForge.SFN_NormalVector,id:3788,x:31389,y:32425,prsc:2,pt:False;n:type:ShaderForge.SFN_Append,id:4939,x:31837,y:32414,varname:node_4939,prsc:2|A-9498-OUT,B-1527-OUT;n:type:ShaderForge.SFN_Tex2d,id:3682,x:32033,y:32397,ptovrint:False,ptlb:Celltexture_copy,ptin:_Celltexture_copy,varname:_Celltexture_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:af39bf2605278314c8acdd65ee751289,ntxv:3,isnm:False|UVIN-4939-OUT;n:type:ShaderForge.SFN_Multiply,id:4959,x:32332,y:32508,varname:node_4959,prsc:2|A-3682-RGB,B-3255-RGB;n:type:ShaderForge.SFN_LightVector,id:8975,x:31389,y:32302,varname:node_8975,prsc:2;n:type:ShaderForge.SFN_Tex2d,id:8548,x:33446,y:32836,ptovrint:False,ptlb:Specular,ptin:_Specular,varname:_Specular,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:3,isnm:False;n:type:ShaderForge.SFN_Tex2d,id:2819,x:33446,y:32637,ptovrint:False,ptlb:Normal,ptin:_Normal,varname:_Normal,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:3,isnm:True;n:type:ShaderForge.SFN_Tex2d,id:8525,x:32296,y:32872,ptovrint:False,ptlb:Occlusion,ptin:_Occlusion,varname:node_8525,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:2,isnm:False;n:type:ShaderForge.SFN_Color,id:2408,x:32335,y:32210,ptovrint:False,ptlb:Lightness,ptin:_Lightness,varname:node_2408,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.5955882,c2:0.5955882,c3:0.5955882,c4:1;n:type:ShaderForge.SFN_Multiply,id:3743,x:32554,y:32444,varname:node_3743,prsc:2|A-2408-RGB,B-4959-OUT;proporder:8258-4515-1463-1527-3255-3682-8548-2819-8525-2408;pass:END;sub:END;*/
 
 Shader "Shader Forge/BreakableCellShader" {
     Properties {
         _OutlineWidth ("OutlineWidth", Float ) = 0.05
         _OutLinecolor ("OutLinecolor", Color) = (0,0,0,1)
-        _Celltexture ("Celltexture", 2D) = "white" {}
-        _constant ("constant", Float ) = 0.4
+        _Celltexture ("Celltexture", 2D) = "bump" {}
         _AppendConstant ("AppendConstant", Float ) = 1
-        _Albedo ("Albedo", 2D) = "white" {}
-        _Celltexture_copy ("Celltexture_copy", 2D) = "white" {}
+        _Albedo ("Albedo", 2D) = "bump" {}
+        _Celltexture_copy ("Celltexture_copy", 2D) = "bump" {}
         _Specular ("Specular", 2D) = "bump" {}
         _Normal ("Normal", 2D) = "bump" {}
-        _Occlusion ("Occlusion", 2D) = "white" {}
+        _Occlusion ("Occlusion", 2D) = "black" {}
+        _Lightness ("Lightness", Color) = (0.5955882,0.5955882,0.5955882,1)
     }
     SubShader {
         Tags {
@@ -106,6 +106,7 @@ Shader "Shader Forge/BreakableCellShader" {
             uniform sampler2D _Specular; uniform float4 _Specular_ST;
             uniform sampler2D _Normal; uniform float4 _Normal_ST;
             uniform sampler2D _Occlusion; uniform float4 _Occlusion_ST;
+            uniform float4 _Lightness;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -217,7 +218,7 @@ Shader "Shader Forge/BreakableCellShader" {
                 float2 node_4939 = float2(dot(lightDirection,i.normalDir),_AppendConstant);
                 float4 _Celltexture_copy_var = tex2D(_Celltexture_copy,TRANSFORM_TEX(node_4939, _Celltexture_copy));
                 float4 _Albedo_var = tex2D(_Albedo,TRANSFORM_TEX(i.uv0, _Albedo));
-                float3 diffuseColor = (_Celltexture_copy_var.rgb*_Albedo_var.rgb);
+                float3 diffuseColor = (_Lightness.rgb*(_Celltexture_copy_var.rgb*_Albedo_var.rgb));
                 float3 diffuse = (directDiffuse + indirectDiffuse) * diffuseColor;
 ////// Emissive:
                 float2 node_915 = float2(dot(lightDirection,i.normalDir),_AppendConstant);
@@ -263,6 +264,7 @@ Shader "Shader Forge/BreakableCellShader" {
             uniform sampler2D _Celltexture_copy; uniform float4 _Celltexture_copy_ST;
             uniform sampler2D _Specular; uniform float4 _Specular_ST;
             uniform sampler2D _Normal; uniform float4 _Normal_ST;
+            uniform float4 _Lightness;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -329,7 +331,7 @@ Shader "Shader Forge/BreakableCellShader" {
                 float2 node_4939 = float2(dot(lightDirection,i.normalDir),_AppendConstant);
                 float4 _Celltexture_copy_var = tex2D(_Celltexture_copy,TRANSFORM_TEX(node_4939, _Celltexture_copy));
                 float4 _Albedo_var = tex2D(_Albedo,TRANSFORM_TEX(i.uv0, _Albedo));
-                float3 diffuseColor = (_Celltexture_copy_var.rgb*_Albedo_var.rgb);
+                float3 diffuseColor = (_Lightness.rgb*(_Celltexture_copy_var.rgb*_Albedo_var.rgb));
                 float3 diffuse = directDiffuse * diffuseColor;
 /// Final Color:
                 float3 finalColor = diffuse + specular;
@@ -422,6 +424,7 @@ Shader "Shader Forge/BreakableCellShader" {
             uniform sampler2D _Albedo; uniform float4 _Albedo_ST;
             uniform sampler2D _Celltexture_copy; uniform float4 _Celltexture_copy_ST;
             uniform sampler2D _Specular; uniform float4 _Specular_ST;
+            uniform float4 _Lightness;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -465,7 +468,7 @@ Shader "Shader Forge/BreakableCellShader" {
                 
                 float2 node_4939 = float2(dot(lightDirection,i.normalDir),_AppendConstant);
                 float4 _Celltexture_copy_var = tex2D(_Celltexture_copy,TRANSFORM_TEX(node_4939, _Celltexture_copy));
-                float3 diffColor = (_Celltexture_copy_var.rgb*_Albedo_var.rgb);
+                float3 diffColor = (_Lightness.rgb*(_Celltexture_copy_var.rgb*_Albedo_var.rgb));
                 float4 _Specular_var = tex2D(_Specular,TRANSFORM_TEX(i.uv0, _Specular));
                 float3 specColor = _Specular_var.rgb;
                 o.Albedo = diffColor + specColor * 0.125; // No gloss connected. Assume it's 0.5
