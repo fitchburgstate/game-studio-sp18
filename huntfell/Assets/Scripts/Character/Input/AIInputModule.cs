@@ -253,10 +253,12 @@ namespace Hunter.Characters.AI
 
             var currentState = FindNextState(distanceToTarget, distanceToPoint);
 
+            #region Debug Logs
 #if UNITY_EDITOR
-            Debug.Log(currentState);
+            //Debug.Log(currentState);
             //Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
 #endif
+            #endregion
 
             currentState.Act();
 

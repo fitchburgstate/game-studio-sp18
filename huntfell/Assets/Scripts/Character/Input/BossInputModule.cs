@@ -11,7 +11,7 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// A possible action for the boss.
         /// </summary>
-        [Header("Possible Boss Actions")]
+        [Space]
         public bool lunge = false;
 
         protected Lunge lungeAction;
@@ -47,6 +47,40 @@ namespace Hunter.Characters.AI
         /// </summary>
         public AnimationClip lungeDescend;
 
+        [Header("Particle Systems")]
+        /// <summary>
+        /// The particle system for the left claw's fire.
+        /// </summary>
+        public ParticleSystem leftClawFire;
+
+        /// <summary>
+        /// The particle system for the right claw's fire.
+        /// </summary>
+        public ParticleSystem rightClawFire;
+
+        /// <summary>
+        /// The particle system for the left claw's lightning.
+        /// </summary>
+        public ParticleSystem leftClawLightning;
+
+        /// <summary>
+        /// The particle system for the right claw's lightning.
+        /// </summary>
+        public ParticleSystem rightClawLightning;
+
+        /// <summary>
+        /// The particle system for the left claw's ice.
+        /// </summary>
+        public ParticleSystem leftClawIce;
+
+        /// <summary>
+        /// The particle system for the right claw's ice.
+        /// </summary>
+        public ParticleSystem rightClawIce;
+
+        /// <summary>
+        /// The instance of the werewolf script attached to the gameobject that this script is also attached to.
+        /// </summary>
         private Werewolf werewolfInstance;
         #endregion
 
