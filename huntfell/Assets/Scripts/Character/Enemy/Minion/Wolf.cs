@@ -82,7 +82,7 @@ namespace Hunter.Characters
         #region Wolf Movement
         public void Move(Transform target)
         {
-            if (isDying) { return; }
+            if (IsDying) { return; }
             Move(target, speed);
         }
 

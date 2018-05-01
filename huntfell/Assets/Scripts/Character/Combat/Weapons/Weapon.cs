@@ -15,7 +15,7 @@ namespace Hunter.Characters
         [Header("General Options")]
         public int baseDamage = 10;
 
-        public int critPercent = 10; 
+        public int critPercent = 10;
 
         public float attackSpeed = 1;
 

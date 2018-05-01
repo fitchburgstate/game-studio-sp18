@@ -32,6 +32,7 @@ namespace Hunter.Characters.AI
         /// </summary>
         public AnimationClip thirdAttackClip;
 
+        [Space]
         /// <summary>
         /// The animation clip for the howl.
         /// </summary>
@@ -58,6 +59,7 @@ namespace Hunter.Characters.AI
         /// </summary>
         public ParticleSystem rightClawFire;
 
+        [Space]
         /// <summary>
         /// The particle system for the left claw's lightning.
         /// </summary>
@@ -68,6 +70,7 @@ namespace Hunter.Characters.AI
         /// </summary>
         public ParticleSystem rightClawLightning;
 
+        [Space]
         /// <summary>
         /// The particle system for the left claw's ice.
         /// </summary>

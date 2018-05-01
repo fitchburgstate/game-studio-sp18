@@ -634,10 +634,15 @@ namespace Hunter.Characters
 
         #endregion
 
-        #region Helper Functions
+        #region Helper / Unused Functions
         private float SignedAngle(Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
+        }
+
+        public IEnumerator AttackAnimation()
+        {
+            yield return null;
         }
         #endregion
     }

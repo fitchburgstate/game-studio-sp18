@@ -176,6 +176,8 @@ namespace Hunter.Characters
         /// Used to reference the Player script attached to the player in the scene.
         /// </summary>
         private Player playerInstance;
+
+        private bool performingAction = false;
         #endregion
 
         #endregion
@@ -190,10 +192,10 @@ namespace Hunter.Characters
             set
             {
                 health = value;
-                if (health <= 0 && !isDying)
+                if (health <= 0 && !performingAction)
                 {
                     StartCoroutine(KillWerewolf());
-                    isDying = true;
+                    performingAction = true;
                 }
 
                 // This checks to see if the werewolf has entered phase 2 yet.
@@ -223,7 +225,7 @@ namespace Hunter.Characters
         {
             get
             {
-                if (bossInputModuleInstance == null) { GetComponent<BossInputModule>(); }
+                if (bossInputModuleInstance == null) { bossInputModuleInstance = GetComponent<BossInputModule>(); }
                 return bossInputModuleInstance;
             }
         }
@@ -252,7 +254,7 @@ namespace Hunter.Characters
 
             randomElementsList.Add(new Element.Fire());
             randomElementsList.Add(new Element.Ice());
-            randomElementsList.Add(new Element.Lightning());
+            randomElementsList.Add(new Element.Electric());
 
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
             if (canChangeElements) { ChangeWeaponElements(phase); }
@@ -313,14 +315,14 @@ namespace Hunter.Characters
         #region Werewolf Movement
         public void Move(Transform target)
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
             isAttacking = false;
             Move(target, speed);
         }
 
         public void Move(Transform target, float finalSpeed)
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
             var finalTarget = new Vector3(target.position.x, RotationTransform.localPosition.y, target.position.z);
 
             if (target != null)
@@ -335,17 +337,17 @@ namespace Hunter.Characters
 
         public void Move(Vector3 target, float finalSpeed)
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
         }
 
         public void Wander(Vector3 target)
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
         }
 
         public void Turn(Transform target)
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
             isAttacking = false;
             if (target != null)
             {
@@ -361,7 +363,7 @@ namespace Hunter.Characters
         public void Attack()
         {
             if (attackCR != null) { return; }
-            else if (isDying) { return; }
+            else if (performingAction) { return; }
 
             attackCR = AttackAnimation();
             StartCoroutine(attackCR);
@@ -462,7 +464,7 @@ namespace Hunter.Characters
         public void Lunge()
         {
             if (lungeCR != null) { return; }
-            else if (isDying) { return; }
+            else if (performingAction) { return; }
 
             lungeCR = LungeAnimation();
             StartCoroutine(lungeCR);
@@ -492,11 +494,11 @@ namespace Hunter.Characters
 
             // No movement during the lunge
             isLunging = true;
-            isDying = true;
+            performingAction = true;
             canlunge = false;
             invincible = true;
 
-            var startPosition = eyeLine.position;
+            var startPosition = EyeLineTransform.position;
             var bossForward = RotationTransform.forward;
             var lungeDirectionTarget = new Vector3();
 
@@ -527,10 +529,10 @@ namespace Hunter.Characters
             }
             else
             {
-                Debug.LogWarning("You tried to lunge into the void. Canceling the lunge.");
+                Debug.LogWarning("The boss tried to lunge into the void. Canceling the lunge.");
 
                 isLunging = false;
-                isDying = false;
+                performingAction = false;
                 invincible = false;
 
                 lungeCooldownCR = null;
@@ -561,6 +563,7 @@ namespace Hunter.Characters
             var animationTriggerFlag = false;
             while (percentComplete < 1f)
             {
+                // Yes this is broken but it's working fine so just leave it; unless you find a fix
                 elapsedTime += Time.deltaTime * lungeSpeedCurve.Evaluate(lungeMaxSpeed);
                 percentComplete = Mathf.Clamp01(elapsedTime / 1f);
                 transform.position = Vector3.Lerp(tempPositon, lungeTarget, percentComplete);
@@ -578,7 +581,7 @@ namespace Hunter.Characters
 
             agent.enabled = true;
             isLunging = false;
-            isDying = false;
+            performingAction = false;
             invincible = false;
 
             yield return new WaitForSeconds(1f);
@@ -591,6 +594,9 @@ namespace Hunter.Characters
             lungeCR = null;
         }
 
+        /// <summary>
+        /// The Cooldown Coroutine associated with the Lunge attack.
+        /// </summary>
         private IEnumerator LungeCooldown()
         {
             yield return new WaitForSeconds(lungeCooldown);
@@ -606,7 +612,7 @@ namespace Hunter.Characters
         public void InitiateHowl()
         {
             if (howlCR != null) { return; }
-            if (isDying) { return; }
+            if (performingAction) { return; }
 
             howlCR = HowlAnimation();
             StartCoroutine(howlCR);
@@ -645,7 +651,7 @@ namespace Hunter.Characters
             yield return new WaitUntil(WerewolfLungingCheck);
 
             isHowling = true;
-            isDying = true;
+            performingAction = true;
 
             anim.SetTrigger("howl");
 
@@ -672,7 +678,7 @@ namespace Hunter.Characters
             if (canChangeElements) { ChangeWeaponElements(phase); }
 
             invincible = false;
-            isDying = false;
+            performingAction = false;
 
             isHowling = false;
             howlCR = null;
@@ -688,7 +694,7 @@ namespace Hunter.Characters
             yield return new WaitUntil(WerewolfHowlingCheck);
 
             agent.enabled = false;
-            isDying = true;
+            performingAction = true;
             invincible = true;
 
             if (!outsideOfArena)
@@ -750,7 +756,7 @@ namespace Hunter.Characters
 
                 // COROUTINE RESUMES HERE
                 agent.enabled = true;
-                isDying = false;
+                performingAction = false;
                 invincible = false;
                 outsideOfArena = false;
             }
@@ -767,10 +773,53 @@ namespace Hunter.Characters
             var randomElement = randomElementsList[randomElementIndex];
             randomElementsList.RemoveAt(randomElementIndex);
 
-            rightClawWeapon.weaponElement = randomElement;
-            leftClawWeapon.weaponElement = randomElement;
-            doubleSwipeWeapon.weaponElement = randomElement;
+            rightClawWeapon.WeaponElement = randomElement;
+            leftClawWeapon.WeaponElement = randomElement;
+            doubleSwipeWeapon.WeaponElement = randomElement;
             elementType = randomElement;
+
+            var randomElementOption = Utility.ElementToElementOption(randomElement);
+
+            #region Switch Particle Systems
+            switch (randomElementOption)
+            {
+                case ElementOption.Fire:
+                    BossInputModuleInstance.leftClawFire.Play();
+                    BossInputModuleInstance.rightClawFire.Play();
+
+                    BossInputModuleInstance.leftClawIce.Stop();
+                    BossInputModuleInstance.rightClawIce.Stop();
+                    BossInputModuleInstance.leftClawLightning.Stop();
+                    BossInputModuleInstance.rightClawLightning.Stop();
+                    break;
+                case ElementOption.Ice:
+                    BossInputModuleInstance.leftClawIce.Play();
+                    BossInputModuleInstance.rightClawIce.Play();
+
+                    BossInputModuleInstance.leftClawFire.Stop();
+                    BossInputModuleInstance.rightClawFire.Stop();
+                    BossInputModuleInstance.leftClawLightning.Stop();
+                    BossInputModuleInstance.rightClawLightning.Stop();
+                    break;
+                case ElementOption.Electric:
+                    BossInputModuleInstance.leftClawLightning.Play();
+                    BossInputModuleInstance.rightClawLightning.Play();
+
+                    BossInputModuleInstance.leftClawFire.Stop();
+                    BossInputModuleInstance.rightClawFire.Stop();
+                    BossInputModuleInstance.leftClawIce.Stop();
+                    BossInputModuleInstance.rightClawIce.Stop();
+                    break;
+                default:
+                    BossInputModuleInstance.leftClawLightning.Stop();
+                    BossInputModuleInstance.rightClawLightning.Stop();
+                    BossInputModuleInstance.leftClawFire.Stop();
+                    BossInputModuleInstance.rightClawFire.Stop();
+                    BossInputModuleInstance.leftClawIce.Stop();
+                    BossInputModuleInstance.rightClawIce.Stop();
+                    break;
+            }
+            #endregion
         }
 
         /// <summary>
@@ -810,41 +859,51 @@ namespace Hunter.Characters
         #region Unused Functions
         public void Idle()
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
             // This feature has not yet been implemented.
         }
 
         public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
             // This feature will not be implemented.
         }
 
         public void Dash()
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
             // This feature will not be implemented.
         }
 
         public void Interact()
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
             // This feature will not be implemented.
         }
 
         public void CycleWeapons(bool cycleUp)
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
         }
 
         public void CycleElements(bool cycleUp)
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
         }
 
         public void SwitchWeaponType(bool switchToMelee)
         {
-            if (isDying) { return; }
+            if (performingAction) { return; }
+        }
+
+        public void AttackAnimationEvent()
+        {
+            if (performingAction) { return; }
+        }
+
+        public void Move(Vector3 moveDirection, Vector3 lookDirection)
+        {
+            if (performingAction) { return; }
         }
         #endregion
     }

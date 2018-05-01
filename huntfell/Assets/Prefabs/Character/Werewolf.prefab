@@ -107,7 +107,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1081287504933410
 GameObject:
   m_ObjectHideFlags: 1
@@ -231,7 +231,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1176347036379844
 GameObject:
   m_ObjectHideFlags: 1
@@ -418,7 +418,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1393849170240658
 GameObject:
   m_ObjectHideFlags: 1
@@ -450,7 +450,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1408260802267960
 GameObject:
   m_ObjectHideFlags: 1
@@ -674,7 +674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1653530745621972
 GameObject:
   m_ObjectHideFlags: 1
@@ -879,9 +879,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4097453954179014}
   - component: {fileID: 114283592190527186}
-  - component: {fileID: 114611376576669564}
-  - component: {fileID: 114963675593732388}
+  - component: {fileID: 114130836625230932}
   - component: {fileID: 114516845534879628}
+  - component: {fileID: 114963675593732388}
   - component: {fileID: 95725190028071088}
   - component: {fileID: 143566259224095476}
   - component: {fileID: 195764231298104408}
@@ -908,7 +908,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1892562682175774
 GameObject:
   m_ObjectHideFlags: 1
@@ -1046,7 +1046,7 @@ GameObject:
   - component: {fileID: 4068385627400054}
   m_Layer: 9
   m_Name: Eyeline
-  m_TagString: Untagged
+  m_TagString: EyeLine Transform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1198,7 +1198,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1840781645732888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.08, y: 0, z: -10.14}
+  m_LocalPosition: {x: -2.95, y: 0, z: -21.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4898874713604180}
@@ -2031,6 +2031,39 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114130836625230932
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1840781645732888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb8b1ef1038559043a8097807813317d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attack: 1
+  turn: 1
+  moveTo: 1
+  idle: 1
+  wander: 0
+  maxDistance: 10
+  urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
+  target: {fileID: 0}
+  randomPointTarget: {x: 0, y: 0, z: 0}
+  lunge: 1
+  firstAttackClip: {fileID: 7400000, guid: c2ed874608f6dfc41aece0bb372c45a5, type: 2}
+  secondAttackClip: {fileID: 7400000, guid: 0b3d2e0fa9ecf714ebf34ac940102797, type: 2}
+  thirdAttackClip: {fileID: 7400000, guid: 7126d35225a41ee4182fcf29ede92b07, type: 2}
+  howlClip: {fileID: 7400000, guid: f8b7e1a7264a8364fa0ed42aaf6fc565, type: 2}
+  lungeAscend: {fileID: 7400000, guid: 9cf75d5bda99f34488722ba786967b16, type: 2}
+  lungeDescend: {fileID: 7400000, guid: e80d3c776b36bbd4da9982bba1d0ce95, type: 2}
+  leftClawFire: {fileID: 198995925880586196}
+  rightClawFire: {fileID: 198615715282282856}
+  leftClawLightning: {fileID: 198565005931430750}
+  rightClawLightning: {fileID: 198865752201801140}
+  leftClawIce: {fileID: 198816524489311910}
+  rightClawIce: {fileID: 198446239352524580}
 --- !u!114 &114275934022457028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2069,7 +2102,7 @@ MonoBehaviour:
   boldOnCriticalHit: 1
   nullHitSystem: {fileID: 198429719771996678}
   fireHitSystem: {fileID: 198528275298772628}
-  poisonDamageSystem: {fileID: 198652092725633010}
+  iceHitSystem: {fileID: 0}
 --- !u!114 &114283592190527186
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2084,13 +2117,6 @@ MonoBehaviour:
   health: 0
   totalHealth: 1000
   displayName: Werewolf
-  rotationTransform: {fileID: 4898874713604180}
-  eyeLine: {fileID: 4068385627400054}
-  agent: {fileID: 0}
-  anim: {fileID: 0}
-  invincible: 0
-  isDying: 0
-  effectsController: {fileID: 0}
   enemyElementOption: 0
   bossHealthBar: {fileID: 0}
   invincibilityFrames: 5
@@ -2154,14 +2180,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inspectorElementType: 0
+  baseDamage: 20
+  critPercent: 25
   attackSpeed: 1
   recoverySpeed: 1
-  baseDamage: 20
-  inspectorElementType: 0
-  critPercent: 25
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 5
   swingParticleSystem: {fileID: 0}
+  equipEffects: []
 --- !u!114 &114439244766452288
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2173,14 +2200,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inspectorElementType: 0
+  baseDamage: 10
+  critPercent: 10
   attackSpeed: 1
   recoverySpeed: 1
-  baseDamage: 10
-  inspectorElementType: 0
-  critPercent: 10
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 8
   swingParticleSystem: {fileID: 0}
+  equipEffects: []
 --- !u!114 &114516845534879628
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2210,47 +2238,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inspectorElementType: 0
+  baseDamage: 10
+  critPercent: 5
   attackSpeed: 1
   recoverySpeed: 1
-  baseDamage: 10
-  inspectorElementType: 0
-  critPercent: 5
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 8
   swingParticleSystem: {fileID: 0}
---- !u!114 &114611376576669564
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1840781645732888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb8b1ef1038559043a8097807813317d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attack: 1
-  turn: 1
-  moveTo: 1
-  idle: 1
-  wander: 0
-  maxDistance: 1
-  urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
-  target: {fileID: 0}
-  randomPointTarget: {x: 0, y: 0, z: 0}
-  lunge: 1
-  firstAttackClip: {fileID: 7400000, guid: c2ed874608f6dfc41aece0bb372c45a5, type: 2}
-  secondAttackClip: {fileID: 7400000, guid: 0b3d2e0fa9ecf714ebf34ac940102797, type: 2}
-  thirdAttackClip: {fileID: 7400000, guid: 7126d35225a41ee4182fcf29ede92b07, type: 2}
-  howlClip: {fileID: 7400000, guid: f8b7e1a7264a8364fa0ed42aaf6fc565, type: 2}
-  lungeAscend: {fileID: 7400000, guid: 9cf75d5bda99f34488722ba786967b16, type: 2}
-  lungeDescend: {fileID: 7400000, guid: e80d3c776b36bbd4da9982bba1d0ce95, type: 2}
-  leftClawFire: {fileID: 198995925880586196}
-  rightClawFire: {fileID: 198615715282282856}
-  leftClawLightning: {fileID: 198565005931430750}
-  rightClawLightning: {fileID: 198865752201801140}
-  leftClawIce: {fileID: 198816524489311910}
-  rightClawIce: {fileID: 198446239352524580}
+  equipEffects: []
 --- !u!114 &114705499274962700
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2278,14 +2274,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dea0a21a866ce644b41e07a3bdfb60c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inspectorElementType: 0
+  baseDamage: 20
+  critPercent: 10
   attackSpeed: 1
   recoverySpeed: 1
-  baseDamage: 20
-  inspectorElementType: 0
-  critPercent: 10
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 5
   swingParticleSystem: {fileID: 0}
+  equipEffects: []
 --- !u!114 &114963675593732388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -36352,7 +36349,7 @@ ParticleSystem:
   stopAction: 0
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -63444,7 +63441,7 @@ ParticleSystem:
   stopAction: 0
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -73584,7 +73581,7 @@ ParticleSystem:
   stopAction: 0
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1

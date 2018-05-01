@@ -151,7 +151,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1607038246817686}
   m_LocalRotation: {x: 0.42042625, y: 0.5763976, z: 0.5212029, w: -0.46835366}
-  m_LocalPosition: {x: -0.303, y: 0.011, z: 0.542}
+  m_LocalPosition: {x: -0.255, y: -0.008, z: 0.475}
   m_LocalScale: {x: 1.1426381, y: 1.1426393, z: 1.1426395}
   m_Children:
   - {fileID: 4935880688696864}
@@ -178,7 +178,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1253983095352956}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.644, y: 0.243, z: -0.058}
+  m_LocalPosition: {x: -0.595, y: 0.028, z: 0.132}
   m_LocalScale: {x: 0.33926693, y: 0.33926705, z: 0.33926696}
   m_Children: []
   m_Father: {fileID: 4935880688696864}
@@ -315,22 +315,7 @@ MonoBehaviour:
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 10
   swingParticleSystem: {fileID: 198003281727481110}
-  equipEffects:
-  - elementEffect: 1
-    equipMaterials: []
-    equipParticleSystem: {fileID: 198567242927320792}
-  - elementEffect: 2
-    equipMaterials: []
-    equipParticleSystem: {fileID: 198353032100638956}
-  - elementEffect: 3
-    equipMaterials: []
-    equipParticleSystem: {fileID: 198066191142626696}
-  - elementEffect: 4
-    equipMaterials: []
-    equipParticleSystem: {fileID: 0}
-  - elementEffect: 5
-    equipMaterials: []
-    equipParticleSystem: {fileID: 198586023901701314}
+  equipEffects: []
 --- !u!198 &198003281727481110
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -391,7 +376,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1731411776
+  randomSeed: -1202555759
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3752,7 +3737,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -918688539
+  randomSeed: 294985456
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -7113,7 +7098,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1394761744
+  randomSeed: -2035197216
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -10474,7 +10459,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -423795679
+  randomSeed: 1161606338
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -12995,7 +12980,7 @@ ParticleSystem:
   LightsModule:
     enabled: 0
     ratio: 1
-    light: {fileID: 108050819416718466, guid: f74027d1d45aa3546b329a849ea08d46, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -13835,7 +13820,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1800542005
+  randomSeed: -1376951590
   InitialModule:
     serializedVersion: 3
     enabled: 1
