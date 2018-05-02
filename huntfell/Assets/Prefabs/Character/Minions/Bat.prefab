@@ -951,6 +951,7 @@ GameObject:
   - component: {fileID: 4362454956415518}
   - component: {fileID: 114057320590384580}
   - component: {fileID: 114083481070958220}
+  - component: {fileID: 114644893842960026}
   - component: {fileID: 143291229622713000}
   - component: {fileID: 195392751725000094}
   - component: {fileID: 95289937510671968}
@@ -1939,6 +1940,22 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114644893842960026
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1984009420628480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: 2cff1675aa62c0241a78b4fd6582479f, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!114 &114866108208954318
 MonoBehaviour:
   m_ObjectHideFlags: 1

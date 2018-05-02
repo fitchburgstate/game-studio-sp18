@@ -495,6 +495,7 @@ GameObject:
   - component: {fileID: 114549486219218100}
   - component: {fileID: 114107445228951894}
   - component: {fileID: 114265102825011292}
+  - component: {fileID: 114774344170257210}
   - component: {fileID: 95342551330136972}
   - component: {fileID: 143796428135121728}
   - component: {fileID: 195673135542196300}
@@ -2394,15 +2395,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1275573556108248}
-  m_LocalRotation: {x: 0, y: 0.9848078, z: -0, w: -0.17364809}
-  m_LocalPosition: {x: -12.5, y: -0.31, z: 5.4}
+  m_LocalRotation: {x: 0, y: 0.9659259, z: -0, w: -0.25881898}
+  m_LocalPosition: {x: -12.95, y: -0.31, z: 4.534}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4016347807903170}
   - {fileID: 4660554182852302}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 200, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 210, z: 0}
 --- !u!4 &4516474102596540
 Transform:
   m_ObjectHideFlags: 1
@@ -3130,7 +3131,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100012, guid: 73706267faeed554d9aeb7354583b1d5, type: 3}
+  - {fileID: 2100000, guid: 19812f6e1dc5e2c4e918a44ebf9d311f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3594,7 +3595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  totalHealth: 100
+  totalHealth: 120
   displayName: Toothpick Timmy
   weaponContainer: {fileID: 4859865527009212}
   gunTrailLength: 1.5
@@ -3673,6 +3674,22 @@ MonoBehaviour:
   nullHitSystem: {fileID: 198015392028788860}
   fireHitSystem: {fileID: 198642004287586000}
   iceHitSystem: {fileID: 198672325832120868}
+--- !u!114 &114774344170257210
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1275573556108248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: c531fce4ab6a8274db76c888cd7bfa82, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!135 &135646657085109754
 SphereCollider:
   m_ObjectHideFlags: 1

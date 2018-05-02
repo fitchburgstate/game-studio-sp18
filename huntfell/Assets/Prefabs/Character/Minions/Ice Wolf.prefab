@@ -1199,6 +1199,7 @@ GameObject:
   - component: {fileID: 4135882425459558}
   - component: {fileID: 114652717434940632}
   - component: {fileID: 114500430186664092}
+  - component: {fileID: 114305568261193830}
   - component: {fileID: 114231947755284508}
   - component: {fileID: 95758073068790650}
   - component: {fileID: 143265213202695514}
@@ -3322,6 +3323,22 @@ MonoBehaviour:
   hitBoxFrames: 7
   swingParticleSystem: {fileID: 0}
   equipEffects: []
+--- !u!114 &114305568261193830
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1720497567133960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: 2cff1675aa62c0241a78b4fd6582479f, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!114 &114500430186664092
 MonoBehaviour:
   m_ObjectHideFlags: 1

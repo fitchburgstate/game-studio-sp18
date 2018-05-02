@@ -1,8 +1,6 @@
-﻿using System.Collections;
+﻿using Hunter.Characters;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using Hunter.Characters;
 
 /*    THE ROUTINE FOR CULLING AWAY OBJECTS IN FRONT OF THE CAMERA
  * 1) Linecast from camera to player 
@@ -16,8 +14,18 @@ namespace Hunter
 {
     public class CameraCull : MonoBehaviour
     {
+        #region Variables
+        public Shader shaderToOverlay;
+        [Space]
+        public LayerMask cullingMask;
+
+        private List<Material> playerMaterials = new List<Material>();
+        private List<Shader> cachedShaders = new List<Shader>();
+        private Player playerCharacter;
+        #endregion
+
         #region Properties
-        public Character PlayerCharacter
+        public Player PlayerCharacter
         {
             get
             {
@@ -30,7 +38,7 @@ namespace Hunter
                         return null;
                     }
 
-                    playerCharacter = pcGO.GetComponent<Character>();
+                    playerCharacter = pcGO.GetComponent<Player>();
                     if (playerCharacter == null)
                     {
                         Debug.LogWarning("The Player does not have the proper Character script attached to them.", pcGO);
@@ -42,94 +50,35 @@ namespace Hunter
         }
         #endregion
 
-        #region Variables
-        [Tooltip("The amount the object will fade by.")]
-        [Range(0, 1)]
-        public float transparencyAmount = 0.3f;
-        [Tooltip("The amount the object will return to.")]
-        [Range(0, 1)]
-        public float opaqueAmount = 1f;
-
-        public LayerMask cullingMask;
-
-        private List<GameObject> cachedList;
-        private Shader cachedShader;
-        private Character playerCharacter;
-        #endregion
-
+        #region Unity Functions
         private void Start()
         {
-            cachedList = new List<GameObject>();
-            cachedShader = new Shader();
+            var playerRenderer = PlayerCharacter.GetComponentInChildren<Renderer>().materials;
+
+            for (var i = 0; i < playerRenderer.Length; i++)
+            {
+                playerMaterials.Add(playerRenderer[i]);
+                cachedShaders.Add(playerRenderer[i].shader);
+            }
         }
 
         private void FixedUpdate()
         {
-            if (Physics.Linecast(transform.position, PlayerCharacter.EyeLineTransform.position, cullingMask.value))
+            if (Physics.Linecast(transform.position, PlayerCharacter.EyeLineTransform.position, cullingMask))
             {
-                var hits = Physics.RaycastAll(transform.position, (PlayerCharacter.EyeLineTransform.position - transform.position), Vector3.Distance(PlayerCharacter.EyeLineTransform.position, transform.position), cullingMask.value);
-                Debug.DrawLine(transform.position, PlayerCharacter.EyeLineTransform.position, Color.blue, 5);
-
-                if (hits.Length > 0)
+                for (var i = 0; i < playerMaterials.Count; i++)
                 {
-                    var newList = new List<GameObject>();
-                    foreach (var hit in hits)
-                    {
-                        newList.Add(hit.transform.gameObject);
-                    }
-
-                    var makeTransparentList = newList.Except(cachedList).ToList();
-                    var makeOpaqueList = cachedList.Except(newList).ToList();
-
-                    for (var i = 0; i < makeTransparentList.Count; i++)
-                    {
-                        var objectToChange = makeTransparentList[i];
-                        var rend = objectToChange.transform.GetComponentInChildren<Renderer>();
-                        cachedShader = rend.material.shader;
-                        MakeTransparent(rend);
-                    }
-
-                    for (var i = 0; i < makeOpaqueList.Count; i++)
-                    {
-                        var objectToChange = makeOpaqueList[i];
-                        var rend = objectToChange.transform.GetComponentInChildren<Renderer>();
-                        MakeOpaque(rend);
-                    }
-                    cachedList = makeTransparentList;
+                    playerMaterials[i].shader = shaderToOverlay;
                 }
             }
-            else if (cachedList.Count > 0)
+            else
             {
-                for (var i = 0; i < cachedList.Count; i++)
+                for (var i = 0; i < playerMaterials.Count; i++)
                 {
-                    var objectToChange = cachedList[i];
-                    var rend = objectToChange.transform.GetComponentInChildren<Renderer>();
-                    MakeOpaque(rend);
+                    playerMaterials[i].shader = cachedShaders[i];
                 }
-                cachedList.Clear();
             }
         }
-
-        private void MakeOpaque(Renderer rend)
-        {
-            if (rend)
-            {
-                rend.material.shader = cachedShader;
-                var tempColor = rend.material.color;
-                tempColor.a = opaqueAmount;
-                rend.material.color = tempColor;
-            }
-        }
-
-        private void MakeTransparent(Renderer rend)
-        {
-            if (rend)
-            {
-                rend.material.shader = Shader.Find("Transparent/Diffuse");
-                var tempColor = rend.material.color;
-                tempColor.a = transparencyAmount;
-                rend.material.color = tempColor;
-            }
-        }
+        #endregion
     }
 }
