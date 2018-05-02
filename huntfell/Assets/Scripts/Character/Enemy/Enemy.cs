@@ -8,29 +8,34 @@ namespace Hunter.Characters
 {
     public abstract class Enemy : Character
     {
-        /// <summary>
-        /// Element Type of the Enemy
-        /// </summary>
         public Element elementType;
-
-        /// <summary>
-        /// Options variable for Unity Inspector Dropdown
-        /// </summary>
         public ElementOption enemyElementOption;
+        public int invincibilityFrames = 5;
 
         [SerializeField]
         private List<InventoryItem> itemsToSpawn = new List<InventoryItem>();
 
-
         protected override void Start ()
         {
+            base.Start();
             elementType = Utility.ElementOptionToElement(enemyElementOption);
         }
 
         protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
             Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
-            return base.SubtractHealthFromCharacter(damage, isCritical);
+            yield return base.SubtractHealthFromCharacter(damage, isCritical);
+            StartCoroutine(InvincibilityFrames());
+        }
+
+        protected IEnumerator InvincibilityFrames ()
+        {
+            invincible = true;
+            for (var i = 0; i < invincibilityFrames; i++)
+            {
+                yield return null;
+            }
+            invincible = false;
         }
 
         public void RotateTowardsTarget(Vector3 targetPoint, float turnSpeed)
@@ -74,17 +79,25 @@ namespace Hunter.Characters
             }
         }
 
-        protected void SpawnInteractableItems (Character characterFromInteraction)
+        protected void SpawnInteractableItems ()
         {
             if (itemsToSpawn.Count == 0) { return; }
 
             foreach (var item in itemsToSpawn)
             {
                 var spawnedItem = Instantiate(item.InteractableItemPrefab, transform.position, transform.rotation);
-                spawnedItem.SpawnFromProp(characterFromInteraction.transform.position);
+                spawnedItem.SpawnFromProp(transform.position);
             }
 
             itemsToSpawn.Clear();
+        }
+
+        protected override IEnumerator KillCharacter ()
+        {
+            agent.enabled = false;
+            characterController.enabled = false;
+            SpawnInteractableItems();
+            return base.KillCharacter();
         }
     }
 }

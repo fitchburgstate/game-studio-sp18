@@ -17,9 +17,6 @@ namespace Hunter.Characters
         public Transform weaponContainer;
         public float gunTrailLength = 1.5f;
 
-        [Tooltip("The multiplier for how fast the wound bar should subtract health from the Player."), Range(0.1f, 10f)]
-        public float healthModificationSpeed = 1;
-
         public float respawnTime = 3f;
 
         [Header("Movement and Rotation Options")]
@@ -110,11 +107,11 @@ namespace Hunter.Characters
                 base.CurrentHealth = value;
                 HUDManager.instance?.SetCurrentHealthBar(currentHealth / totalHealth);
 
-                if (currentHealth <= 0)
-                {
-                    var closestSpawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
-                    Respawn(closestSpawnPoint);
-                }
+                //if (currentHealth <= 0)
+                //{
+                //    var closestSpawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
+                //    Respawn(closestSpawnPoint);
+                //}
             }
         }
 
@@ -165,7 +162,6 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
-            targetHealth = currentHealth;
             EquipWeaponToCharacter(Inventory.GetMeleeWeaponAtIndex(0, weaponContainer));
             CheckInteractImage();
         }
@@ -488,54 +484,16 @@ namespace Hunter.Characters
 
         protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            TargetHealth -= damage;
             Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
-
-            if (isCritical || healthModificationSpeed == 0)
-            {
-                CurrentHealth = TargetHealth;
-                yield break;
-            }
-
-            while (CurrentHealth > TargetHealth)
-            {
-                CurrentHealth -= Time.deltaTime * healthModificationSpeed;
-                yield return null;
-            }
+            yield return base.SubtractHealthFromCharacter(damage, isCritical);
         }
 
-        protected override IEnumerator AddHealthToCharacter (int amount, bool isCritical)
+        protected override IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
         {
-            var healTarget = amount + TargetHealth;
-            var cachedTarget = TargetHealth;
-
-            if (isCritical || healthModificationSpeed == 0)
-            {
-                TargetHealth = healTarget;
-                yield break;
-            }
-
-            while (cachedTarget < healTarget)
-            {
-                var step = Time.deltaTime * healthModificationSpeed;
-                TargetHealth += step;
-                cachedTarget += step;
-                yield return null;
-            }
+            yield return base.AddHealthToCharacter(restoreAmount, isCritical);
         }
 
-        public void Respawn (SpawnPoint spawnPoint)
-        {
-            if (IsDying) { return; }
-
-            var spawnPosition = startingPosition;
-            if (spawnPoint != null) { spawnPosition = spawnPoint.transform.position; }
-
-            deathAction = PlayRespawnAnimation(spawnPosition);
-            StartCoroutine(deathAction);
-        }
-
-        private IEnumerator PlayRespawnAnimation (Vector3 spawnPosition)
+        protected override IEnumerator KillCharacter ()
         {
             invincible = true;
             agent.enabled = false;
@@ -549,13 +507,18 @@ namespace Hunter.Characters
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.Out);
 
+            var spawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
+            var spawnPosition = startingPosition;
+            if (spawnPoint != null) { spawnPosition = spawnPoint.transform.position; }
+
             transform.position = Utility.GetClosestPointOnNavMesh(spawnPosition, agent, transform);
 
             yield return new WaitForSeconds(respawnTime);
-            var dots = GetComponents<DamageOverTime>();
-            for (var i = 0; i < dots.Length; i++)
+
+            var statusEffects = GetComponents<StatusEffect>();
+            for (var i = 0; i < statusEffects.Length; i++)
             {
-                Destroy(dots[i]);
+                Destroy(statusEffects[i]);
             }
             currentHealth = totalHealth;
             targetHealth = currentHealth;

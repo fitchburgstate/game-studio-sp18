@@ -10,6 +10,7 @@ namespace Hunter.Characters
     {
         protected const float CRITICAL_HIT_MULTIPLIER = 1.5f;
         protected const float ELEMENTAL_WEAKNESS_MULTIPLIER = 1.5f;
+
         #region Variables
         [Header("Debug")]
         public ElementOption inspectorElementType;

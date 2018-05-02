@@ -7,27 +7,6 @@ namespace Hunter.Characters
 {
     public class Bat : Minion, IMoveable, IUtilityBasedAI
     {
-        #region Properties
-        public override float CurrentHealth
-        {
-            get
-            {
-                return currentHealth;
-            }
-            set
-            {
-                currentHealth = value;
-                if (currentHealth <= 0 && !IsDying)
-                {
-                    //TODO Change this to reflect wether the death anim should be cinematic or not later
-                    deathAction = KillBat(true);
-                    StartCoroutine(deathAction);
-                }
-            }
-        }
-
-        #endregion
-
         #region Variables
         /// <summary>
         /// This is the speed at which the character runs.
@@ -66,19 +45,12 @@ namespace Hunter.Characters
         #endregion
 
         #region Bat Combat
-        private IEnumerator KillBat(bool isCinematic)
+        protected override IEnumerator KillCharacter ()
         {
-            agent.speed = 0;
-            agent.destination = transform.position;
             anim.SetTrigger("death");
             Fabric.EventManager.Instance?.PostEvent("Bat Stop Wing Loop", gameObject);
-            agent.enabled = false;
-            characterController.enabled = false;
-            GetComponentInChildren<Aura>().DisableAura();
-            minionHealthBarParent?.gameObject.SetActive(false);
-            //TODO Change this later to reflect the animation time
-            yield return new WaitForSeconds(5);
-            Destroy(gameObject);
+            GetComponentInChildren<Aura>()?.DisableAura();
+            yield return base.KillCharacter();
         }
         #endregion
 

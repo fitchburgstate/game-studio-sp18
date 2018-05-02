@@ -9,9 +9,9 @@ namespace Hunter
         //All the relevent data about this item
         public InventoryItem itemData;
 
-        public float itemBounceTime = 2;
-        public int itemTotalBounces = 4;
-        public float itemBounceHeight;
+        public float itemBounceTime = 0.75f;
+        public int itemTotalBounces = 3;
+        public float itemBounceHeight = 1.25f;
         [SerializeField]
         private AnimationCurve itemHeightCurve;
         public float itemMaxSpawnDistance = 3;

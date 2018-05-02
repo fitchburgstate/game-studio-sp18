@@ -18,6 +18,8 @@ namespace Hunter.Characters
         public int totalHealth = 100;
         [SerializeField]
         protected float currentHealth, targetHealth;
+        [Tooltip("The multiplier for how fast the wound bar should subtract health from the Player."), Range(0.1f, 10f)]
+        public float healthModificationSpeed = 1;
 
         private Weapon currentWeapon = null;
 
@@ -165,12 +167,11 @@ namespace Hunter.Characters
             characterController = GetComponent<CharacterController>();
             effectsModule = GetComponentInChildren<VisualEffectsModule>();
             if (effectsModule == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
-            currentHealth = totalHealth;
         }
 
         protected virtual void Start ()
         {
-
+            TargetHealth = totalHealth;
         }
         #endregion
 
@@ -200,6 +201,9 @@ namespace Hunter.Characters
 
         public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
+            //If you are attacked with a weapon (not things like dots) and your target health is already at 0, critical hit you deadski
+            if (TargetHealth == 0) { isCritical = true; }
+
             Damage(damage, isCritical, weaponAttackedWith.WeaponElement);
         }
 
@@ -227,23 +231,29 @@ namespace Hunter.Characters
 
         protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            CurrentHealth -= damage;
-            yield return null;
+            TargetHealth -= damage;
+
+            if (isCritical || healthModificationSpeed == 0)
+            {
+                CurrentHealth = TargetHealth;
+                yield break;
+            }
+
+            while (CurrentHealth > TargetHealth)
+            {
+                CurrentHealth -= Time.deltaTime * healthModificationSpeed;
+                yield return null;
+            }
         }
 
         public void Heal (int restore, bool isCritical)
         {
-            if (invincible || IsDying || CurrentHealth == totalHealth) { return; }
+            if (IsDying || CurrentHealth == totalHealth) { return; }
 
             if (isCritical && damageAction != null)
             {
                 StopCoroutine(damageAction);
             }
-
-            //if (restoreAction != null)
-            //{
-            //    StopCoroutine(restoreAction);
-            //}
 
             restoreAction = AddHealthToCharacter(restore, isCritical);
             StartCoroutine(restoreAction);
@@ -257,13 +267,37 @@ namespace Hunter.Characters
 
         protected virtual IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
         {
-            CurrentHealth += restoreAmount;
-            yield return null;
+            var healTarget = restoreAmount + TargetHealth;
+            var cachedTarget = TargetHealth;
+
+            if (isCritical || healthModificationSpeed == 0)
+            {
+                TargetHealth = healTarget;
+                yield break;
+            }
+
+            while (cachedTarget < healTarget)
+            {
+                var step = Time.deltaTime * healthModificationSpeed;
+                TargetHealth += step;
+                cachedTarget += step;
+                yield return null;
+            }
         }
 
         public void Kill ()
         {
+            if (IsDying) { return; }
 
+            deathAction = KillCharacter();
+            StartCoroutine(deathAction);
+        }
+
+        protected virtual IEnumerator KillCharacter ()
+        {
+            yield return new WaitForSeconds(5);
+            gameObject.SetActive(false);
+            deathAction = null;
         }
         #endregion
     }
