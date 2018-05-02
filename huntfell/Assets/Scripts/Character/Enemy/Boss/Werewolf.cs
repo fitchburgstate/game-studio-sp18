@@ -73,11 +73,6 @@ namespace Hunter.Characters
         public Melee doubleSwipeWeapon;
 
         /// <summary>
-        /// The weapon that will be used during the bosses' lunge attack.
-        /// </summary>
-        public Melee lungeWeapon;
-
-        /// <summary>
         /// The max distance that the boss can lunge.
         /// </summary>
         [Header("Lunge Options")]
@@ -203,7 +198,6 @@ namespace Hunter.Characters
                 {
                     phase = 2;
                     if (showDebugLogs) { Debug.Log("Entering phase " + phase); }
-                    invincible = true;
 
                     InitiateHowl();
                     InitiateArenaExitOrEnter();
@@ -214,7 +208,6 @@ namespace Hunter.Characters
                 {
                     phase = 3;
                     if (showDebugLogs) { Debug.Log("Entering phase " + phase); }
-                    invincible = true;
 
                     InitiateHowl();
                 }
@@ -250,7 +243,6 @@ namespace Hunter.Characters
             rightClawWeapon.gameObject.SetActive(false);
             leftClawWeapon.gameObject.SetActive(false);
             doubleSwipeWeapon.gameObject.SetActive(false);
-            lungeWeapon.gameObject.SetActive(false);
 
             randomElementsList.Add(new Element.Fire());
             randomElementsList.Add(new Element.Ice());
@@ -552,8 +544,6 @@ namespace Hunter.Characters
             // PAUSE HERE FOR ANIMATION EVENT
 
             // COROUTINE RESUMES HERE
-            if (lungeWeapon != null) { EquipWeaponToCharacter(lungeWeapon); }
-
             var percentComplete = 0f;
             var tempPositon = transform.position;
             var elapsedTime = 0f;
@@ -585,11 +575,12 @@ namespace Hunter.Characters
             invincible = false;
 
             yield return new WaitForSeconds(1f);
-            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
 
             lungeCooldownCR = null;
             lungeCooldownCR = LungeCooldown();
             StartCoroutine(lungeCooldownCR);
+
+            if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
 
             lungeCR = null;
         }
@@ -652,6 +643,7 @@ namespace Hunter.Characters
 
             isHowling = true;
             performingAction = true;
+            invincible = true;
 
             anim.SetTrigger("howl");
 
