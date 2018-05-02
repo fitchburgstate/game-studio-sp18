@@ -41,6 +41,7 @@ GameObject:
   - component: {fileID: 23362209347288320}
   - component: {fileID: 95176971835150316}
   - component: {fileID: 65529199434588582}
+  - component: {fileID: 114640822365534862}
   m_Layer: 0
   m_Name: Environment_Door
   m_TagString: Untagged
@@ -130,15 +131,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1719531779572942}
-  m_LocalRotation: {x: -0, y: 0.92457163, z: -0, w: -0.38100845}
-  m_LocalPosition: {x: 11.19, y: -0.1, z: 49.386}
-  m_LocalScale: {x: 1.0000002, y: 1, z: 1.0000002}
+  m_LocalRotation: {x: -0, y: -0.4984262, z: -0, w: -0.86693215}
+  m_LocalPosition: {x: 59.728, y: 3.5406005, z: 87.001015}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4634095937088564}
   - {fileID: 4112327721299840}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 224.79199, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 419.792, z: 0}
 --- !u!23 &23362209347288320
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -362,3 +363,28 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114640822365534862
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1144522292140992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToSpawn: []
+  giveItemsDirectly: 0
+  elementTypeForInteraction: 0
+  overrideImportance: 0
+  interactionSuccessMessage: 
+  interactionFailMessage: 
+  propType: 0
+  destructionForce: 10
+  brokenPropPrefab: {fileID: 0}
+  propEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
