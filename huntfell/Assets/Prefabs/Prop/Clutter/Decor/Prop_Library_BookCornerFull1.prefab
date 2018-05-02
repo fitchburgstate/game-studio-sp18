@@ -122,6 +122,8 @@ GameObject:
   - component: {fileID: 33714299420290748}
   - component: {fileID: 23386423667508136}
   - component: {fileID: 95178613849593786}
+  - component: {fileID: 65095107175447920}
+  - component: {fileID: 65445649370416330}
   m_Layer: 0
   m_Name: Prop_Library_BookCorner
   m_TagString: Untagged
@@ -528,8 +530,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1227326175871866}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3266899, y: 2.7516847, z: 0.9570925}
+  m_LocalRotation: {x: -0, y: 0.4984295, z: -0, w: 0.86693025}
+  m_LocalPosition: {x: -7.7405267, y: 2.6431794, z: -4.2108197}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4785756264690660}
@@ -1438,6 +1440,30 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1878385519976502}
   m_Mesh: {fileID: 4300020, guid: ab3e70ea7e2310646a3c449be782c2b1, type: 3}
+--- !u!65 &65095107175447920
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1264041136014928}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.86, y: 3.4967096, z: 3.4829838}
+  m_Center: {x: -1.41, y: 0, z: 0}
+--- !u!65 &65445649370416330
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1264041136014928}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.4827185, y: 3.4967096, z: 0.86}
+  m_Center: {x: 0.000000834465, y: 0, z: -1.41}
 --- !u!95 &95178613849593786
 Animator:
   serializedVersion: 3
