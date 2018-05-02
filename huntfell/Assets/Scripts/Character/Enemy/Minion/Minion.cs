@@ -9,11 +9,46 @@ namespace Hunter.Characters
     public abstract class Minion : Enemy
     {
         #region Variables
-        public float invincibilityFrames = 5;
-
         public Image minionHealthBar;
+        public Image minionWoundBar;
 
         protected Transform minionHealthBarParent;
+        #endregion
+
+        #region Properties
+        public override float CurrentHealth
+        {
+            get
+            {
+                return base.CurrentHealth;
+            }
+
+            set
+            {
+                base.CurrentHealth = value;
+                if (minionWoundBar != null)
+                {
+                    minionWoundBar.fillAmount = currentHealth / totalHealth;
+                }
+            }
+        }
+
+        public override float TargetHealth
+        {
+            get
+            {
+                return base.TargetHealth;
+            }
+
+            set
+            {
+                base.TargetHealth = value;
+                if (minionHealthBar != null)
+                {
+                    minionHealthBar.fillAmount = targetHealth / totalHealth;
+                }
+            }
+        }
         #endregion
 
         protected override void Start()
@@ -26,26 +61,16 @@ namespace Hunter.Characters
             }
         }
 
-        #region SubtractHealthFromCharacter Function
-        //TODO Move this into Effects Controller as an optional parameter that only minions take
-        protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
+        protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
             minionHealthBarParent?.gameObject.SetActive(true);
-            var targetHealth = CurrentHealth - damage;
-            if (minionHealthBar != null)
-            {
-                minionHealthBar.fillAmount = targetHealth / totalHealth;
-            }
-            else { Debug.LogWarning($"{name} does not have a health bar set in the inspector."); }
-            CurrentHealth = targetHealth;
-            invincible = true;
-            for (var i = 0; i < invincibilityFrames; i++)
-            {
-                yield return null;
-            }
-            invincible = false;
-            yield return null;
+            return base.SubtractHealthFromCharacter(damage, isCritical);
         }
-        #endregion
+
+        protected override IEnumerator KillCharacter ()
+        {
+            minionHealthBarParent?.gameObject.SetActive(false);
+            return base.KillCharacter();
+        }
     }
 }

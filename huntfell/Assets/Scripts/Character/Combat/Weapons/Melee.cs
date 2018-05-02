@@ -93,9 +93,7 @@ namespace Hunter.Characters
 
             var isCritical = ShouldAttackBeCritical(critPercent);
             var totalDamage = CalculateDamage(WeaponElement, enemyElementType, isCritical);
-            damageableObject.TakeDamage(totalDamage, isCritical, this);
-
-            
+            damageableObject.Damage(totalDamage, isCritical, this);
         }
 
         /// <summary>

@@ -51,13 +51,57 @@ namespace Hunter
 
         private bool currentlyInteracting = false;
 
-        public void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
+        public bool IsImportant
+        {
+            get
+            {
+                return overrideImportance || itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
+            }
+        }
+
+        public float CurrentHealth
+        {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+
+            }
+        }
+
+        public float TargetHealth {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+
+            }
+        }
+
+        public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             FireInteraction(weaponAttackedWith.characterHoldingWeapon, weaponAttackedWith);
         }
 
-        public void TakeDamage (string damage, bool isCritical, Element damageElement)
+        public void Damage (int damage, bool isCritical, Element damageElement)
         {
+            // We dont want interactions to trigger when hit by non-weapon damage such as AOE effects
+            return;
+        }
+
+        public void Heal (int restore, bool isCritical)
+        {
+            // We dont want props to heal lol
+            return;
+        }
+
+        public void Kill ()
+        {
+            //no murdering props pls
             return;
         }
 
@@ -160,7 +204,7 @@ namespace Hunter
             }
             else
             {
-                SpawnInteractableItems();
+                SpawnInteractableItems(characterFromInteraction);
             }
 
             if (propEvent != null)
@@ -169,13 +213,9 @@ namespace Hunter
             }
         }
 
-        private void SpawnInteractableItems ()
+        private void SpawnInteractableItems (Character characterFromInteraction)
         {
-            if (itemsToSpawn.Count == 0)
-            {
-                //Debug.Log("Nothing in this prop!");
-                return;
-            }
+            if (itemsToSpawn.Count == 0) { return; }
 
             foreach (var item in itemsToSpawn)
             {
@@ -184,7 +224,7 @@ namespace Hunter
                 switch (propType)
                 {
                     case PropType.Interactable:
-                        spawnedItem.SpawnFromProp();
+                        spawnedItem.SpawnFromProp(characterFromInteraction.transform.position);
                         break;
                     default:
                         spawnedItem.SpawnOnGround(transform.position);
@@ -224,11 +264,6 @@ namespace Hunter
         private void ShowFailMessage ()
         {
             if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowHintPrompt(interactionFailMessage); }
-        }
-
-        public bool IsImportant ()
-        {
-            return overrideImportance || itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
         }
     }
 }

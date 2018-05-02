@@ -12,7 +12,7 @@ namespace Hunter
 
         public override void FireInteraction (Character characterTriggeringInteraction)
         {
-            characterTriggeringInteraction.RestoreHealthToCharacter(healthAmount);
+            characterTriggeringInteraction.Heal(healthAmount, true);
             gameObject.SetActive(false);
         }
     }

@@ -12,13 +12,10 @@ namespace Hunter.Characters
     public sealed class Player : Character, IMoveable, IAttack
     {
         #region Variables
+
         [Header("Combat Options")]
         public Transform weaponContainer;
-
         public float gunTrailLength = 1.5f;
-
-        [Tooltip("The total ammount of time it should take for the wound bar to catch up to the health bar."), Range(0.1f, 10f)]
-        public float healthSubtractionTime = 1;
 
         public float respawnTime = 3f;
 
@@ -44,6 +41,20 @@ namespace Hunter.Characters
         [Space]
         public LayerMask dashInitialCheckBlockingLayers;
         public LayerMask dashFinalCheckBlockingLayers;
+
+        [Header("Potion Options")]
+        [Range(1, 5)]
+        public int potionCount = 1;
+        [Range(1, 100)]
+        public int maxPotionShards = 30;
+        [SerializeField]
+        private int potionShardCount;
+        [Range(1, 20)]
+        public int potionRestoreAmount = 2;
+        [Range(0.25f, 10)]
+        public float potionRestoreInterval = 0.33f;
+        [Range(1, 20)]
+        public float potionRestoreLifeTime = 5;
 
         [Header("World UI Options")]
         public Image interactPromptImage;
@@ -89,16 +100,44 @@ namespace Hunter.Characters
         {
             get
             {
-                return health;
+                return currentHealth;
             }
             set
             {
-                health = Mathf.Clamp(value, 0, totalHealth);
-                if (health <= 0)
-                {
-                    var closestSpawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
-                    Respawn(closestSpawnPoint);
-                }
+                base.CurrentHealth = value;
+                HUDManager.instance?.SetCurrentHealthBar(currentHealth / totalHealth);
+
+                //if (currentHealth <= 0)
+                //{
+                //    var closestSpawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
+                //    Respawn(closestSpawnPoint);
+                //}
+            }
+        }
+
+        public override float TargetHealth
+        {
+            get
+            {
+                return targetHealth;
+            }
+            set
+            {
+                base.TargetHealth = value;
+                HUDManager.instance?.SetTargetHealthBar(targetHealth / totalHealth);
+            }
+        }
+
+        public int PotionShardCount
+        {
+            get
+            {
+                return potionShardCount;
+            }
+
+            set
+            {
+                potionShardCount = Mathf.Clamp(value, 0, maxPotionShards * potionCount);
             }
         }
         #endregion
@@ -151,7 +190,6 @@ namespace Hunter.Characters
                 RemoveNearbyInteractable(interactableItem);
             }
         }
-
         
         #endregion
 
@@ -268,9 +306,9 @@ namespace Hunter.Characters
             }
 
             var dashTarget = Utility.GetClosestPointOnNavMesh(floorPointFromDashTarget, agent, transform);
-            if (Physics.Linecast(startPosition, dashTarget, out hit, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxVerticalDistance)
+            if (Physics.Linecast(startPosition, dashTarget, out hit, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxHorizontalDistance)
             {
-                Debug.LogWarning($"Your dash would have brought you somewhere you weren't supposed to go!");
+                Debug.LogWarning($"Your dash would have brought you somewhere you weren't supposed to go! {hit.transform.name}");
                 dashAction = null;
                 yield break;
             }
@@ -433,69 +471,29 @@ namespace Hunter.Characters
         #endregion
 
         #region Player Health
-        public override void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
+
+        public void UsePotion ()
         {
-            base.TakeDamage(damage, isCritical, weaponAttackedWith);
-            Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
+            if(PerformingMinorAction || PotionShardCount < maxPotionShards * potionCount) {
+                Debug.LogWarning("Cannot use potion at this time.");
+                return;
+            }
+            gameObject.AddComponent<HealOverTime>().InitializeEffect(potionRestoreAmount, potionRestoreInterval, potionRestoreLifeTime, null, this, null);
+            PotionShardCount -= maxPotionShards;
         }
 
         protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            var startHealth = CurrentHealth;
-            var targetHealth = startHealth - damage;
-
-            if (!isCritical || healthSubtractionTime == 0)
-            {
-                var startTime = Time.time;
-                var percentComplete = 0f;
-                if (HUDManager.instance != null) { HUDManager.instance.healthBar.fillAmount = targetHealth / totalHealth; }
-
-                while (percentComplete < 1)
-                {
-                    var elapsedTime = Time.time - startTime;
-                    percentComplete = Mathf.Clamp01(elapsedTime / healthSubtractionTime);
-
-                    CurrentHealth = Mathf.Lerp(startHealth, targetHealth, percentComplete);
-                    if (HUDManager.instance != null) { HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth; }
-
-                    yield return null;
-                }
-            }
-            else
-            {
-                CurrentHealth = targetHealth;
-                if (HUDManager.instance != null)
-                {
-                    HUDManager.instance.healthBar.fillAmount = CurrentHealth / totalHealth;
-                    HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth;
-                }
-
-            }
+            Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
+            yield return base.SubtractHealthFromCharacter(damage, isCritical);
         }
 
-        public override void RestoreHealthToCharacter (int amount)
+        protected override IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
         {
-            StopCoroutine("SubtractHealthFromCharacter");
-            CurrentHealth += amount;
-            if (HUDManager.instance != null)
-            {
-                HUDManager.instance.healthBar.fillAmount = CurrentHealth / totalHealth;
-                HUDManager.instance.woundBar.fillAmount = CurrentHealth / totalHealth;
-            }
+            yield return base.AddHealthToCharacter(restoreAmount, isCritical);
         }
 
-        public void Respawn (SpawnPoint spawnPoint)
-        {
-            if (IsDying) { return; }
-
-            var spawnPosition = startingPosition;
-            if (spawnPoint != null) { spawnPosition = spawnPoint.transform.position; }
-
-            deathAction = PlayRespawnAnimation(spawnPosition);
-            StartCoroutine(deathAction);
-        }
-
-        private IEnumerator PlayRespawnAnimation (Vector3 spawnPosition)
+        protected override IEnumerator KillCharacter ()
         {
             invincible = true;
             agent.enabled = false;
@@ -509,15 +507,21 @@ namespace Hunter.Characters
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.Out);
 
+            var spawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
+            var spawnPosition = startingPosition;
+            if (spawnPoint != null) { spawnPosition = spawnPoint.transform.position; }
+
             transform.position = Utility.GetClosestPointOnNavMesh(spawnPosition, agent, transform);
 
             yield return new WaitForSeconds(respawnTime);
-            var dots = GetComponents<HealthDrainDot>();
-            for (var i = 0; i < dots.Length; i++)
+
+            var statusEffects = GetComponents<StatusEffect>();
+            for (var i = 0; i < statusEffects.Length; i++)
             {
-                Destroy(dots[i]);
+                Destroy(statusEffects[i]);
             }
-            RestoreHealthToCharacter(totalHealth);
+            currentHealth = totalHealth;
+            targetHealth = currentHealth;
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.In);
 
@@ -614,7 +618,7 @@ namespace Hunter.Characters
             if (nearbyInteractables.Count == 0) { return false; }
             foreach (var item in nearbyInteractables)
             {
-                if (item.IsImportant()) { return true; }
+                if (item.IsImportant) { return true; }
             }
             return false;
         }

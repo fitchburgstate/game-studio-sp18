@@ -11,6 +11,7 @@ namespace Hunter.Characters
 
         private bool inPauseMenu = false;
 
+        private Player player;
         private IAttack attackCharacter;
         private IMoveable moveCharacter;
         #endregion
@@ -23,6 +24,7 @@ namespace Hunter.Characters
             deviceManager = GameManager.instance?.DeviceManager;
             attackCharacter = GetComponent<IAttack>();
             moveCharacter = GetComponent<IMoveable>();
+            player = GetComponent<Player>();
         }
 
         private void Update ()
@@ -49,6 +51,10 @@ namespace Hunter.Characters
                 else if (deviceManager.PressedInteract)
                 {
                     moveCharacter.Interact();
+                }
+                else if(deviceManager.PressedPotion && player != null)
+                {
+                    player.UsePotion();
                 }
                 else if (deviceManager.PressedSwitchRanged || deviceManager.PressedSwitchMelee && attackCharacter != null)
                 {
