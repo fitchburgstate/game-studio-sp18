@@ -327,16 +327,6 @@ namespace Hunter.Characters
             }
         }
 
-        public void Move(Vector3 target, float finalSpeed)
-        {
-            if (performingAction) { return; }
-        }
-
-        public void Wander(Vector3 target)
-        {
-            if (performingAction) { return; }
-        }
-
         public void Turn(Transform target)
         {
             if (performingAction) { return; }
@@ -849,10 +839,22 @@ namespace Hunter.Characters
         #endregion
 
         #region Unused Functions
+        public void Move(Vector3 target, float finalSpeed)
+        {
+            if (performingAction) { return; }
+            // This feature will not be implemented.
+        }
+
+        public void Wander(Vector3 target)
+        {
+            if (performingAction) { return; }
+            // This feature will not be implemented.
+        }
+
         public void Idle()
         {
             if (performingAction) { return; }
-            // This feature has not yet been implemented.
+            // This feature will not be implemented.
         }
 
         public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
@@ -876,26 +878,31 @@ namespace Hunter.Characters
         public void CycleWeapons(bool cycleUp)
         {
             if (performingAction) { return; }
+            // This feature will not be implemented.
         }
 
         public void CycleElements(bool cycleUp)
         {
             if (performingAction) { return; }
+            // This feature will not be implemented.
         }
 
         public void SwitchWeaponType(bool switchToMelee)
         {
             if (performingAction) { return; }
+            // This feature will not be implemented.
         }
 
         public void AttackAnimationEvent()
         {
             if (performingAction) { return; }
+            // This feature will not be implemented.
         }
 
         public void Move(Vector3 moveDirection, Vector3 lookDirection)
         {
             if (performingAction) { return; }
+            // This feature will not be implemented.
         }
         #endregion
     }

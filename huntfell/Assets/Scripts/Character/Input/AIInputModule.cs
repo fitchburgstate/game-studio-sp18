@@ -26,37 +26,10 @@ namespace Hunter.Characters.AI
         [Range(0f, 25f), Tooltip("The max distance that the character will move to during a Wander action.")]
         public float maxDistance = 10f;
 
+        /// <summary>
+        /// The Scriptable Object which contains all of the values for the urge weights.
+        /// </summary>
         public UrgeWeights urgeWeights;
-
-        /// <summary>
-        /// Represents which direction the character should move in.
-        /// </summary>
-        protected Vector3 moveDirection = Vector3.zero;
-
-        /// <summary>
-        /// Represents which direction the character should look in.
-        /// </summary>
-        protected Vector3 lookDirection = Vector3.zero;
-
-        /// <summary>
-        /// The model's gameobject. This exists so the model can be turned independently of the parent.
-        /// </summary>
-        protected GameObject enemyModel;
-
-        /// <summary>
-        /// This is the navmesh agent attached to the parent. The navmesh is used to find walkable area.
-        /// </summary>
-        protected NavMeshAgent agent;
-
-        /// <summary>
-        /// The character controller that controls the character's movement.
-        /// </summary>
-        protected CharacterController controller;
-
-        /// <summary>
-        /// The final direction that the character will face that's calculated.
-        /// </summary>
-        protected Vector3 finalDirection;
 
         /// <summary>
         /// The target that the AI has acquired.
@@ -89,82 +62,6 @@ namespace Hunter.Characters.AI
         #endregion
 
         #region Properties
-        public Vector3 MoveDirection
-        {
-            get
-            {
-                return moveDirection;
-            }
-
-            set
-            {
-                moveDirection = value;
-            }
-        }
-
-        public Vector3 LookDirection
-        {
-            get
-            {
-                return lookDirection;
-            }
-
-            set
-            {
-                lookDirection = value;
-            }
-        }
-
-        public GameObject EnemyModel
-        {
-            get
-            {
-                if (enemyModel == null)
-                {
-                    enemyModel = gameObject.transform.GetChild(0).gameObject;
-                }
-                return enemyModel;
-            }
-        }
-
-        public NavMeshAgent Agent
-        {
-            get
-            {
-                if (agent == null)
-                {
-                    agent = GetComponent<NavMeshAgent>();
-                }
-                return agent;
-            }
-        }
-
-        public CharacterController Controller
-        {
-            get
-            {
-                return controller;
-            }
-
-            set
-            {
-                controller = value;
-            }
-        }
-
-        public Vector3 FinalDirection
-        {
-            get
-            {
-                return finalDirection;
-            }
-
-            set
-            {
-                finalDirection = value;
-            }
-        }
-
         public Transform Target
         {
             get
@@ -318,10 +215,10 @@ namespace Hunter.Characters.AI
 #if UNITY_EDITOR
             if (Selection.Contains(gameObject))
             {
-                //Debug.Log("Attack Value: " + attackValue);
+                // Debug.Log("Attack Value: " + attackValue);
                 // Debug.Log("Idle Value: " + idleValue);
                 // Debug.Log("Wander Value: " + wanderValue);
-                //Debug.Log("Turn Value: " + turnValue);
+                // Debug.Log("Turn Value: " + turnValue);
                 // Debug.Log("MoveTo Value: " + moveToValue);
                 // Debug.Log("Retreat Value: " + retreatValue);
             }
