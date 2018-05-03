@@ -162,6 +162,7 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
+            Inventory.AddStartingItems();
             EquipWeaponToCharacter(Inventory.GetMeleeWeaponAtIndex(0, weaponContainer));
             CheckInteractImage();
         }
@@ -382,7 +383,7 @@ namespace Hunter.Characters
         #region Player Combat
         public void Attack()
         {
-            if (PerformingMajorAction || PerformingMinorAction) { return; }
+            if (PerformingMajorAction || PerformingMinorAction || CurrentWeapon == null) { return; }
 
             attackAction = PlayAttackAnimation();
             StartCoroutine(attackAction);

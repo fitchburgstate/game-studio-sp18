@@ -24,9 +24,14 @@ namespace Hunter
         #region Unity Messages
         private void Awake()
         {
-            if(startingItems != null && startingItems.Count > 0)
+            //AddStartingItems();
+        }
+
+        public void AddStartingItems ()
+        {
+            if (startingItems != null && startingItems.Count > 0)
             {
-                foreach(var item in startingItems)
+                foreach (var item in startingItems)
                 {
                     TryAddItem(item);
                 }
@@ -116,14 +121,14 @@ namespace Hunter
             {
                 if (weapon.name == meleeWeaponPrefab.name)
                 {
-                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.WeaponElement?.elementHUDSprite); }
+                    if (HUDManager.instance != null) { HUDManager.instance.MoveWeaponWheel(index); }
                     return weapon;
                 }
             }
 
             var newMelee = Instantiate(meleeWeaponPrefab, weaponContainer);
             newMelee.name = meleeWeaponPrefab.name;
-            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newMelee?.WeaponElement?.elementHUDSprite); }
+            //if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newMelee?.WeaponElement?.elementHUDSprite); }
             return newMelee;
         }
 
@@ -142,14 +147,14 @@ namespace Hunter
             {
                 if (weapon.name == rangedWeaponPrefab.name)
                 {
-                    if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.WeaponElement?.elementHUDSprite); }
+                    //if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.WeaponElement?.elementHUDSprite); }
                     return weapon;
                 }
             }
 
             var newRanged = Instantiate(rangedWeaponPrefab, weaponContainer);
             newRanged.name = rangedWeaponPrefab.name;
-            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newRanged?.WeaponElement?.elementHUDSprite); }
+            //if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newRanged?.WeaponElement?.elementHUDSprite); }
             return newRanged;
         }
         #endregion
@@ -220,8 +225,7 @@ namespace Hunter
             {
                 element.elementHUDSprite = elementItemData.icon;
             }
-            if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(element?.elementHUDSprite); }
-            Fabric.EventManager.Instance?.PostEvent("UI Navigation Blip");
+            if (HUDManager.instance != null) { HUDManager.instance.MoveElementWheel(elementIndex); }
             return element;
         }
         #endregion
@@ -269,10 +273,12 @@ namespace Hunter
             else if (item is MeleeWeaponItem && !meleeWeapons.ContainsKey(item as MeleeWeaponItem))
             {
                 meleeWeapons.Add(item as MeleeWeaponItem, spawnedInteractableItem);
+                HUDManager.instance?.AddNewWeaponToSocket(item.icon);
             }
             else if (item is ElementModItem && !elementMods.ContainsKey(item as ElementModItem))
             {
                 elementMods.Add(item as ElementModItem, spawnedInteractableItem);
+                HUDManager.instance?.AddNewElementToSocket(item.icon);
             }
             else if (item is JournalItem && !journalEntries.ContainsKey(item as JournalItem))
             {
