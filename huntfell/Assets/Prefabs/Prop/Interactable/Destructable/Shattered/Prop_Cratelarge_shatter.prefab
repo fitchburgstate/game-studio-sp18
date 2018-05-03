@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4706833690334002}
   - component: {fileID: 95030285096193874}
+  - component: {fileID: 114123053060077688}
   m_Layer: 17
   m_Name: Prop_Cratelarge_shatter
   m_TagString: Untagged
@@ -473,6 +474,20 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114123053060077688
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1037065989599474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTarget: {fileID: 0}
+  destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114124480517833268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -484,8 +499,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114130994968523578
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -497,8 +513,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114566045540943870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -510,8 +527,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114883043081110398
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -523,5 +541,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1

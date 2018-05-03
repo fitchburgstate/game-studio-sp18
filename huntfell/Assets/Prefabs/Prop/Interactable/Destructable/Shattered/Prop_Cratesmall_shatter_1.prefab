@@ -120,6 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4719110883159348}
   - component: {fileID: 95169369587935240}
+  - component: {fileID: 114549866712095542}
   m_Layer: 17
   m_Name: Prop_Cratesmall_shatter_1
   m_TagString: Untagged
@@ -588,8 +589,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114112726459921818
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -601,8 +603,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114165184329507302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -614,8 +617,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
+--- !u!114 &114549866712095542
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1884120901301814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTarget: {fileID: 0}
+  destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114819952628270800
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -627,8 +645,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114912736361473960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -640,5 +659,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1

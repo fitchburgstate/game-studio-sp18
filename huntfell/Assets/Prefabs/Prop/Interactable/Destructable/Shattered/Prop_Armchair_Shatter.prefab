@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4361849918064818}
   - component: {fileID: 95631522733802776}
+  - component: {fileID: 114210446110910292}
   m_Layer: 17
   m_Name: Prop_Armchair_Shatter
   m_TagString: Untagged
@@ -906,8 +907,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114006966101463426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -919,8 +921,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114027036800685838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -932,8 +935,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
+--- !u!114 &114210446110910292
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154050126676946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTarget: {fileID: 0}
+  destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114340299902389592
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -945,8 +963,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114382405150126224
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -958,8 +977,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114871996788344454
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -971,8 +991,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114922141619021082
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -984,8 +1005,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114963153802115072
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -997,5 +1019,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1

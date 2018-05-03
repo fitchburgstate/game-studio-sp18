@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4455909076120758}
   - component: {fileID: 95666904222010002}
+  - component: {fileID: 114148093143654160}
   m_Layer: 17
   m_Name: Prop_Cratesmall_shatter
   m_TagString: Untagged
@@ -577,6 +578,20 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114148093143654160
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1403246963886544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTarget: {fileID: 0}
+  destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114370294766066890
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -588,8 +603,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114371222325353228
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -601,8 +617,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114667237263803862
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -614,8 +631,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114783447972015328
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -627,8 +645,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
 --- !u!114 &114888185042096966
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -640,5 +659,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb661110be530449bdab5d66588d190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnStart: 1
+  destroyTarget: {fileID: 0}
   destroyWaitTime: 3
+  activateOnStart: 1
