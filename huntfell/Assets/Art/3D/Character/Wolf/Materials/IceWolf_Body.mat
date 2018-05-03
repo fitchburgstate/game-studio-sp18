@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Wolf_WhiteBody
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: IceWolf_Body
+  m_Shader: {fileID: 4800000, guid: 23d7b6d31a1e0e941ab30013a709652c, type: 3}
   m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -71,7 +71,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Ice:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 0909195c2a1f63a42a2491c3323481aa, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IceShards:
+        m_Texture: {fileID: 2800000, guid: 0909195c2a1f63a42a2491c3323481aa, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IceShards2:
+        m_Texture: {fileID: 2800000, guid: 0909195c2a1f63a42a2491c3323481aa, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -79,7 +87,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 0909195c2a1f63a42a2491c3323481aa, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask:
@@ -146,10 +154,12 @@ Material:
     - _DetailNormalMapScale: 1
     - _Dissolveamount: 0.4877885
     - _DistortionStrench: 0.25
+    - _DistortionStretch: 0.25
     - _DstBlend: 0
     - _EmmissionValue: 0.5
     - _FireIntensity: 1
-    - _FresnelStrench: 2
+    - _FresnelStrench: 3
+    - _FresnelStretch: 5
     - _Gloss: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.186
@@ -157,7 +167,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Opacity: 0.3
+    - _Opacity: 0.25
     - _OutlineWidth: 0.0005
     - _PanSpeed: 0.5
     - _Parallax: 0.02
@@ -176,5 +186,5 @@ Material:
     - _EmmissionColor: {r: 1, g: 0.5586207, b: 0, a: 1}
     - _MultiplicativeColor: {r: 0.6617647, g: 0.34548005, b: 0.34548005, a: 1}
     - _OutLinecolor: {r: 1, g: 0.9618661, b: 0.6544118, a: 1}
-    - _OutlineColor: {r: 0.875, g: 0.7939782, b: 0.34099266, a: 1}
+    - _OutlineColor: {r: 0.5073529, g: 0.6696754, b: 0.75, a: 1}
     - _node_8852: {r: 1, g: 0.5220588, b: 0.5220588, a: 1}
