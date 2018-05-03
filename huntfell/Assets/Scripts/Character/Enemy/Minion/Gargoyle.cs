@@ -50,6 +50,7 @@ namespace Hunter.Characters
         #region Gargoyle Combat
         private void Attack()
         {
+            if (IsDying) { return; }
             if (gargoyleAttackCR != null) { return; }
             gargoyleAttackCR = GargoyleAttack();
             StartCoroutine(gargoyleAttackCR);

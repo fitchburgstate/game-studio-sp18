@@ -19,7 +19,7 @@ namespace Hunter
         public string tutorialText;
         public Sprite tutorialIcon;
 
-        private Collider interactableItemCollider;
+        protected Collider interactableItemCollider;
 
         public bool IsImportant
         {

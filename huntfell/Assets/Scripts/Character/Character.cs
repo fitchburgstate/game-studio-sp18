@@ -56,7 +56,7 @@ namespace Hunter.Characters
             }
             set
             {
-                if (IsDying) { return; }
+                //if (IsDying) { return; }
                 currentHealth = Mathf.Clamp(value, TargetHealth, totalHealth);
 
                 if(currentHealth <= 0)
@@ -74,7 +74,7 @@ namespace Hunter.Characters
             }
             set
             {
-                if (IsDying) { return; }
+                //if (IsDying) { return; }
                 targetHealth = Mathf.Clamp(value, 0, totalHealth);
                 if (targetHealth > currentHealth)
                 {
@@ -203,8 +203,18 @@ namespace Hunter.Characters
         {
             //If you are attacked with a weapon (not things like dots) and your target health is already at 0, critical hit you deadski
             if (TargetHealth == 0) { isCritical = true; }
-
+            if (isCritical && damage > 0) { StartCoroutine(SlowTimeCritical()); }
             Damage(damage, isCritical, weaponAttackedWith.WeaponElement);
+        }
+
+        private IEnumerator SlowTimeCritical ()
+        {
+            Time.timeScale = 0.25f;
+            yield return new WaitForSecondsRealtime(0.35f);
+
+            // If the player were to pause in the middle of this, we want the time scale to not be reset because then the game will resume while they are still paused
+            if (PauseManager.instance != null && PauseManager.instance.IsGamePaused) { yield break; }
+            Time.timeScale = 1;
         }
 
         public void Damage (int damage, bool isCritical, Element damageElement)

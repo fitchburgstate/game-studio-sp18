@@ -79,25 +79,27 @@ namespace Hunter.Characters
             }
         }
 
-        protected void SpawnInteractableItems ()
+        protected IEnumerator SpawnInteractableItems ()
         {
-            if (itemsToSpawn.Count == 0) { return; }
+            if (itemsToSpawn.Count == 0) { yield break; }
 
             foreach (var item in itemsToSpawn)
             {
                 var spawnedItem = Instantiate(item.InteractableItemPrefab, transform.position, transform.rotation);
                 spawnedItem.SpawnFromProp(transform.position);
+                yield return new WaitForSeconds(0.25f);
             }
 
             itemsToSpawn.Clear();
+            yield return null;
         }
 
         protected override IEnumerator KillCharacter ()
         {
             agent.enabled = false;
             characterController.enabled = false;
-            SpawnInteractableItems();
-            return base.KillCharacter();
+            yield return SpawnInteractableItems();
+            yield return base.KillCharacter();
         }
     }
 }

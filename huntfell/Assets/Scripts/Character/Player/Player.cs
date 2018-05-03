@@ -169,9 +169,17 @@ namespace Hunter.Characters
         private void OnTriggerEnter(Collider other)
         {
             var interactableItem = other.GetComponent<IInteractable>();
-            if (interactableItem != null && !nearbyInteractables.Contains(interactableItem))
+            if (interactableItem != null)
             {
-                AddNearbyInteractable(interactableItem);
+                if(other.GetComponent<InteractablePotionShard>() != null)
+                {
+                    interactableItem.FireInteraction(this);
+                }
+                else if (!nearbyInteractables.Contains(interactableItem))
+                {
+                    AddNearbyInteractable(interactableItem);
+                }
+                return;
             }
 
             var tutorialTrigger = other.GetComponent<TutorialTrigger>();
@@ -520,8 +528,7 @@ namespace Hunter.Characters
             {
                 Destroy(statusEffects[i]);
             }
-            currentHealth = totalHealth;
-            targetHealth = currentHealth;
+            TargetHealth = totalHealth;
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.In);
 
