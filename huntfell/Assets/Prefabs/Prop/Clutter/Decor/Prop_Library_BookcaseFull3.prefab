@@ -70,6 +70,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4718430505580318}
+  - component: {fileID: 65124465295350638}
   m_Layer: 0
   m_Name: Prop_Library_BookcaseFull3
   m_TagString: Untagged
@@ -301,7 +302,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1496828388649770}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.23913592, y: -0.51840186, z: -0.1157006}
+  m_LocalPosition: {x: 0, y: -0.51840186, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4162815644749718}
@@ -379,7 +380,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1965607088015422}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.23913592, y: -0.95740175, z: -0.30870056}
+  m_LocalPosition: {x: 0, y: -0.95740175, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4718430505580318}
@@ -431,7 +432,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1349618350690048}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.6208641, y: 3.0184019, z: 0.5187006}
+  m_LocalPosition: {x: -44.507465, y: 2.603331, z: 67.608345}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4076196825620984}
@@ -1078,6 +1079,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1404403580154664}
   m_Mesh: {fileID: 4300016, guid: b92abb46990d3204ba53ab4b42388088, type: 3}
+--- !u!65 &65124465295350638
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1349618350690048}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.519486, y: 3.492076, z: 0.7704315}
+  m_Center: {x: 0, y: -0.9, z: 0.0000001937151}
 --- !u!95 &95254732574902414
 Animator:
   serializedVersion: 3
