@@ -126,6 +126,7 @@ namespace Hunter.Characters.AI
             }
 
             var distanceToPoint = DistanceToTarget(RandomPointTarget);
+            var distanceToSpawn = DistanceToTarget(spawnPosition);
             var distanceToTarget = DistanceToTarget(Target.position);
 
             if (AiDetection != null)
@@ -143,7 +144,7 @@ namespace Hunter.Characters.AI
                 }
             }
 
-            var currentState = FindNextState(distanceToTarget, distanceToPoint);
+            var currentState = FindNextState(distanceToTarget, distanceToPoint, distanceToSpawn);
 
             #region Debug Logs
 #if UNITY_EDITOR
@@ -193,7 +194,7 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// Finds the next most desired state by determining multiple factors present within the environment.
         /// </summary>
-        public override UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
+        public override UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint, float distanceToSpawn)
         {
             var attackValue = 0f;
             var idleValue = 0f;
@@ -201,12 +202,14 @@ namespace Hunter.Characters.AI
             var turnValue = 0f;
             var moveToValue = 0f;
             var lungeValue = 0f;
+            var retreatValue = 0f;
 
-            if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
+            if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, distanceToSpawn, urgeWeights.distanceToPointMax, inCombat); }
             if (attack) { attackValue = attackAction.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
             if (wander) { wanderValue = wanderAction.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
             if (turn) { turnValue = turnAction.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
             if (moveTo) { moveToValue = moveToAction.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
+            if (retreat) { retreatValue = retreatAction.CalculateRetreat(distanceToSpawn, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
             if (lunge) { lungeValue = lungeAction.CalculateLunge(WerewolfInstance.lungeMaxDistance, distanceToTarget, WerewolfInstance.canlunge, WerewolfInstance.phase, inCombat); }
 
             #region Debug Logs
@@ -231,7 +234,8 @@ namespace Hunter.Characters.AI
                 { wanderAction, wanderValue },
                 { turnAction, turnValue },
                 { moveToAction, moveToValue },
-                { lungeAction, lungeValue }
+                { lungeAction, lungeValue },
+                { retreatAction, retreatValue }
             };
             var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
 

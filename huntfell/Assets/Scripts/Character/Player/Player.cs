@@ -656,6 +656,12 @@ namespace Hunter.Characters
         {
             yield return null;
         }
+
+        public void Move(Vector3 target, float finalSpeed)
+        {
+            if (IsDying) { return; }
+            // This should be left empty.
+        }
         #endregion
     }
 }

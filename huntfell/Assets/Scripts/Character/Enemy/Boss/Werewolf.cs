@@ -27,22 +27,9 @@ namespace Hunter.Characters
         public bool moveFasterWhileAttacking = true;
 
         /// <summary>
-        /// Determines the movement speed of the boss.
-        /// </summary>
-        [Header("Movement Options")]
-        [Range(0, 20), Tooltip("The running speed of the boss when it is in combat.")]
-        public float speed = 5f;
-
-        /// <summary>
-        /// Determines the speed at which the boss turns.
-        /// </summary>
-        [Range(1, 250), Tooltip("The speed at which the boss will turn.")]
-        public float turnSpeed = 200f;
-
-        /// <summary>
         /// Determines how much speed is added to the werewolf while attacking.
         /// </summary>
-        [Range(0f, 10f), Tooltip("How much faster the boss gets while attacking.")]
+        [Range(0f, 10f), Tooltip("How much faster the boss gets while attacking."), Header("Movement Options")]
         public float speedBoost = 2f;
 
         /// <summary>
@@ -182,19 +169,19 @@ namespace Hunter.Characters
         {
             get
             {
-                return health;
+                return CurrentHealth;
             }
             set
             {
-                health = value;
-                if (health <= 0 && !performingAction)
+                CurrentHealth = value;
+                if (CurrentHealth <= 0 && !performingAction)
                 {
                     StartCoroutine(KillWerewolf());
                     performingAction = true;
                 }
 
                 // This checks to see if the werewolf has entered phase 2 yet.
-                else if ((health / totalHealth < .66f) && phase < 2)
+                else if ((CurrentHealth / totalHealth < .66f) && phase < 2)
                 {
                     phase = 2;
                     if (showDebugLogs) { Debug.Log("Entering phase " + phase); }
@@ -204,7 +191,7 @@ namespace Hunter.Characters
                     if (showDebugLogs) { Debug.Log("Exiting the arena."); }
                 }
                 // This checks to see if the werewolf has entered phase 3 yet.
-                else if ((health / totalHealth < .33f) && phase < 3)
+                else if ((CurrentHealth / totalHealth < .33f) && phase < 3)
                 {
                     phase = 3;
                     if (showDebugLogs) { Debug.Log("Entering phase " + phase); }

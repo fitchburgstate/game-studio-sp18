@@ -1146,6 +1146,7 @@ GameObject:
   - component: {fileID: 4378048470915818}
   - component: {fileID: 114494934002656636}
   - component: {fileID: 114843737777903188}
+  - component: {fileID: 114750432522099322}
   - component: {fileID: 114012658498261492}
   - component: {fileID: 95908710184136440}
   - component: {fileID: 143702156824428090}
@@ -2470,7 +2471,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1640528691489282}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0.95, z: 4}
+  m_LocalPosition: {x: -64.613174, y: 0.374, z: 74.78467}
   m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_Children:
   - {fileID: 4676229820568530}
@@ -3615,6 +3616,7 @@ MonoBehaviour:
   detectionLayers:
     serializedVersion: 2
     m_Bits: 256
+  showGizmos: 1
 --- !u!114 &114101016779557442
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3717,13 +3719,7 @@ MonoBehaviour:
   healthModificationSpeed: 1
   enemyElementOption: 1
   invincibilityFrames: 5
-  itemsToSpawn:
-  - {fileID: 11400000, guid: 456890b2cf8d6c14a9bab10c79661251, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
+  itemsToSpawn: []
   speed: 5
   turnSpeed: 175
   meleeWeapon: {fileID: 114435617867718058}
@@ -3739,6 +3735,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2f71c3f27f5c904e865b075582a4828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114750432522099322
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1640528691489282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: 2cff1675aa62c0241a78b4fd6582479f, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!114 &114843737777903188
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3755,7 +3767,6 @@ MonoBehaviour:
   moveTo: 1
   idle: 1
   wander: 0
-  retreat: 0
   maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
@@ -3772,8 +3783,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayWorldSpaceHealth: 1
-  worldSpaceHealthBar: {fileID: 114979705031597582}
-  worldSpaceWoundBar: {fileID: 114101016779557442}
+  worldSpaceHealthBar: {fileID: 0}
+  worldSpaceWoundBar: {fileID: 0}
   damagePopUpRootPrefab: {fileID: 1923969854045580, guid: d41796c612653844582460f4db5e5fb9,
     type: 2}
   criticalFontSizeMultiplier: 1.5
@@ -3782,8 +3793,8 @@ MonoBehaviour:
   nullHitSystem: {fileID: 198860983121989498}
   fireHitSystem: {fileID: 198437280315253476}
   iceHitSystem: {fileID: 198918194602209490}
-  electricHitSystem: {fileID: 198386056623540970}
-  silverHitSystem: {fileID: 198863177108871958}
+  electricHitSystem: {fileID: 0}
+  silverHitSystem: {fileID: 0}
 --- !u!114 &114933132311575084
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3852,8 +3863,8 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 1bc28392d44932148b0d896c818ba8f6, type: 2}
-  - {fileID: 2100000, guid: 8e947765a5010d9498402456563377fc, type: 2}
+  - {fileID: 2100000, guid: d82e3eeb2f410ee4297ca17ab63cecf4, type: 2}
+  - {fileID: 2100000, guid: d82e3eeb2f410ee4297ca17ab63cecf4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

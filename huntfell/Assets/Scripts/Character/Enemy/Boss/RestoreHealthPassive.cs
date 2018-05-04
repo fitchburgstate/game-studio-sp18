@@ -60,7 +60,7 @@ namespace Hunter.Characters
         {
             while (!silverDebuff || CharacterToHeal.CurrentHealth < CharacterToHeal.totalHealth)
             {
-                CharacterToHeal.RestoreHealthToCharacter(amountToHeal);
+                CharacterToHeal.Heal(amountToHeal, false);
                 yield return new WaitForSeconds(secondsBetweenHeal);
             }
         }

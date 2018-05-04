@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 4640604088762514}
   - component: {fileID: 114217718388967258}
   - component: {fileID: 114337567584915600}
+  - component: {fileID: 114906626599087544}
   - component: {fileID: 114603232685659978}
   - component: {fileID: 95316165089855040}
   - component: {fileID: 143511043091720040}
@@ -3651,7 +3652,6 @@ MonoBehaviour:
   moveTo: 1
   idle: 1
   wander: 0
-  retreat: 0
   maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
@@ -3721,6 +3721,7 @@ MonoBehaviour:
   detectionLayers:
     serializedVersion: 2
     m_Bits: 256
+  showGizmos: 1
 --- !u!114 &114906134850551000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3761,6 +3762,22 @@ MonoBehaviour:
   iceHitSystem: {fileID: 198936501466494204}
   electricHitSystem: {fileID: 198926271657066540}
   silverHitSystem: {fileID: 198373719244871436}
+--- !u!114 &114906626599087544
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1058027423640836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: 2cff1675aa62c0241a78b4fd6582479f, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!114 &114910431859789410
 MonoBehaviour:
   m_ObjectHideFlags: 1

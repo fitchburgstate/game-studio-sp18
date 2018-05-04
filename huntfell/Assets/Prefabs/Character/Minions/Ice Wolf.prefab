@@ -1350,6 +1350,7 @@ GameObject:
   - component: {fileID: 4135882425459558}
   - component: {fileID: 114652717434940632}
   - component: {fileID: 114500430186664092}
+  - component: {fileID: 114231696254516462}
   - component: {fileID: 114231947755284508}
   - component: {fileID: 95758073068790650}
   - component: {fileID: 143265213202695514}
@@ -2044,7 +2045,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1720497567133960}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.81, z: 4}
+  m_LocalPosition: {x: -63.239944, y: 0.232, z: 73.38345}
   m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_Children:
   - {fileID: 4796785745465564}
@@ -3606,8 +3607,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayWorldSpaceHealth: 1
-  worldSpaceHealthBar: {fileID: 114092908591268148}
-  worldSpaceWoundBar: {fileID: 114022822160778196}
+  worldSpaceHealthBar: {fileID: 0}
+  worldSpaceWoundBar: {fileID: 0}
   damagePopUpRootPrefab: {fileID: 1923969854045580, guid: d41796c612653844582460f4db5e5fb9,
     type: 2}
   criticalFontSizeMultiplier: 1.5
@@ -3616,8 +3617,8 @@ MonoBehaviour:
   nullHitSystem: {fileID: 198879848275050856}
   fireHitSystem: {fileID: 198232713271545512}
   iceHitSystem: {fileID: 198599443868687350}
-  electricHitSystem: {fileID: 198875655635389754}
-  silverHitSystem: {fileID: 198266970637617906}
+  electricHitSystem: {fileID: 0}
+  silverHitSystem: {fileID: 0}
 --- !u!114 &114092908591268148
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3645,6 +3646,22 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114231696254516462
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1720497567133960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: 2cff1675aa62c0241a78b4fd6582479f, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!114 &114231947755284508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3662,6 +3679,7 @@ MonoBehaviour:
   detectionLayers:
     serializedVersion: 2
     m_Bits: 256
+  showGizmos: 1
 --- !u!114 &114302112681280164
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3741,7 +3759,6 @@ MonoBehaviour:
   moveTo: 1
   idle: 1
   wander: 0
-  retreat: 0
   maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
@@ -3764,13 +3781,7 @@ MonoBehaviour:
   healthModificationSpeed: 1
   enemyElementOption: 2
   invincibilityFrames: 5
-  itemsToSpawn:
-  - {fileID: 11400000, guid: 456890b2cf8d6c14a9bab10c79661251, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
+  itemsToSpawn: []
   speed: 5
   turnSpeed: 175
   meleeWeapon: {fileID: 114302112681280164}
@@ -3821,8 +3832,8 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 14dc3ec24f6076649a0c9f0c1af49000, type: 2}
-  - {fileID: 2100000, guid: 14dc3ec24f6076649a0c9f0c1af49000, type: 2}
+  - {fileID: 2100000, guid: b6dc07e3b5ad7f940b312d744d422cb4, type: 2}
+  - {fileID: 2100000, guid: b6dc07e3b5ad7f940b312d744d422cb4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

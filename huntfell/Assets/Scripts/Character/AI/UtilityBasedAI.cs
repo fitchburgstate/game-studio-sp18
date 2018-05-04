@@ -2,6 +2,7 @@
 
 namespace Hunter.Characters.AI
 {
+    #region Utility Based AI
     /// <summary>
     /// This class determines what action should be taken next based on an "urge".
     /// </summary>
@@ -9,6 +10,7 @@ namespace Hunter.Characters.AI
     {
         public abstract void Act();
     }
+    #endregion
 
     #region Attack Action
     /// <summary>
@@ -259,10 +261,16 @@ namespace Hunter.Characters.AI
     public sealed class Retreat : UtilityBasedAI
     {
         private GameObject aiGameObject;
+        private AIInputModule aiInputModuleComponent;
+        private IMoveable aiIMoveableComponent;
+        private float speed;
 
         public Retreat(GameObject aiGameObject)
         {
             this.aiGameObject = aiGameObject;
+            speed = aiGameObject.GetComponent<Enemy>().speed;
+            aiInputModuleComponent = aiGameObject.GetComponent<AIInputModule>();
+            aiIMoveableComponent = aiGameObject.GetComponent<IMoveable>();
         }
 
         public override void Act()
@@ -273,13 +281,13 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// This function will calculate the urge to retreat away from a target.
         /// </summary>
-        public float CalculateRetreat(float currentHealth, bool inCombat)
+        public float CalculateRetreat(float distanceToTarget, float distanceToTargetMin, float distanceToTargetMax, bool inCombat)
         {
             var retreatUrgeTotal = 0f;
 
-            if (inCombat)
+            if (!inCombat)
             {
-
+                retreatUrgeTotal += Mathf.Clamp(distanceToTarget, distanceToTargetMin, distanceToTargetMax);
             }
 
             Mathf.Clamp(retreatUrgeTotal, 0f, 100f);
@@ -288,7 +296,21 @@ namespace Hunter.Characters.AI
 
         public void RetreatAction(GameObject aiGameObject)
         {
-            // The retreat action will go here!
+            if (aiInputModuleComponent != null)
+            {
+                if (aiIMoveableComponent != null)
+                {
+                    aiIMoveableComponent.Move(aiInputModuleComponent.spawnPosition, speed);
+                }
+                else
+                {
+                    Debug.LogError("There is no IMoveable component on this AI gameobject!", aiGameObject);
+                }
+            }
+            else
+            {
+                Debug.LogError("There is no AIInputModule component on this AI gameobject!", aiGameObject);
+            }
         }
     }
     #endregion
@@ -316,15 +338,19 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// This function will calculate the urge to idle when not in combat.
         /// </summary>
-        public float CalculateIdle(float distanceToPoint, float distanceToPointMax, bool inCombat)
+        public float CalculateIdle(float distanceToPoint, float distanceToSpawn, float distanceToPointMax, bool inCombat)
         {
             var idleUrgeTotal = 0f;
 
             if (!inCombat)
             {
-                if (distanceToPoint < distanceToPointMax)
+                if (aiInputModuleComponent.wander == true)
                 {
-                    idleUrgeTotal += 100f;
+                    if (distanceToPoint < distanceToPointMax) { idleUrgeTotal += 100f; }
+                }
+                else
+                {
+                    if (distanceToSpawn < distanceToPointMax) { idleUrgeTotal += 100f; }
                 }
             }
 
@@ -336,7 +362,10 @@ namespace Hunter.Characters.AI
         {
             if (aiInputModuleComponent != null)
             {
-                aiInputModuleComponent.RandomPointTarget = aiInputModuleComponent.FindPointOnNavmesh();
+                if (aiInputModuleComponent.wander == true)
+                {
+                    aiInputModuleComponent.RandomPointTarget = aiInputModuleComponent.FindPointOnNavmesh();
+                }
             }
             else
             {

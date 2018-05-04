@@ -1063,6 +1063,7 @@ GameObject:
   - component: {fileID: 4352231205210194}
   - component: {fileID: 114259784436924396}
   - component: {fileID: 114394446834172142}
+  - component: {fileID: 114855069077979950}
   - component: {fileID: 114870913697420422}
   - component: {fileID: 143461414652725432}
   - component: {fileID: 195581955111344282}
@@ -1727,7 +1728,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1852036529956964}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 1.4, z: 0}
+  m_LocalPosition: {x: 1.81, y: 1.4, z: -7.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4454126965061346}
@@ -2362,6 +2363,8 @@ MonoBehaviour:
   currentHealth: 0
   targetHealth: 0
   healthModificationSpeed: 2.5
+  speed: 2.5
+  turnSpeed: 175
   enemyElementOption: 1
   invincibilityFrames: 5
   itemsToSpawn:
@@ -2369,8 +2372,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  speed: 2.5
-  turnSpeed: 175
 --- !u!114 &114336528905255984
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2436,13 +2437,15 @@ MonoBehaviour:
   attack: 0
   turn: 0
   moveTo: 0
+  retreat: 0
   idle: 1
   wander: 1
-  retreat: 0
   maxDistance: 3
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
   randomPointTarget: {x: 0, y: 0, z: 0}
+  spawnPosition: {x: 0, y: 0, z: 0}
+  inCombat: 0
 --- !u!114 &114522138413870386
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2548,6 +2551,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2f71c3f27f5c904e865b075582a4828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114855069077979950
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1852036529956964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: 2cff1675aa62c0241a78b4fd6582479f, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!114 &114868399338089900
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2605,7 +2624,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 6fc9a3d0944f41545acb21407b81bcb0, type: 2}
+  - {fileID: 2100000, guid: 98ad43865f1c6eb4ea463cf87bbeddee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
