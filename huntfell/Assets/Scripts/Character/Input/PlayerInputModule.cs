@@ -56,10 +56,10 @@ namespace Hunter.Characters
                 {
                     player.UsePotion();
                 }
-                else if (deviceManager.PressedSwitchRanged || deviceManager.PressedSwitchMelee && attackCharacter != null)
-                {
-                    attackCharacter.SwitchWeaponType(deviceManager.PressedSwitchMelee);
-                }
+                //else if (deviceManager.PressedSwitchRanged || deviceManager.PressedSwitchMelee && attackCharacter != null)
+                //{
+                //    attackCharacter.SwitchWeaponType(deviceManager.PressedSwitchMelee);
+                //}
                 else if ((deviceManager.PressedElementDown || deviceManager.PressedElementUp) && attackCharacter != null)
                 {
                     attackCharacter.CycleElements(deviceManager.PressedElementUp);

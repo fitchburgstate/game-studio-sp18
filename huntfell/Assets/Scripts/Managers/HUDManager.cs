@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 namespace Hunter {
     public class HUDManager : MonoBehaviour {
+
+        [Serializable]
+        public struct DecanterInfo
+        {
+            public GameObject parent;
+            public Image fillImage;
+            public TextMeshProUGUI shardsText;
+            public Image inputImage;
+        }
 
         [HideInInspector]
         public static HUDManager instance;
@@ -15,10 +25,7 @@ namespace Hunter {
         public Image healthBar;
         public Image woundBar;
         public Image staminaBar;
-        public Image firstDecanterFill;
-        private TextMeshProUGUI firstDecanterText;
-        public Image secondDecanterFill;
-        private TextMeshProUGUI secondDecanterText;
+        public List<DecanterInfo> decanters;
 
         [Header("Weapons and Elements")]
         [SerializeField]
@@ -113,11 +120,11 @@ namespace Hunter {
             }
         }
 
-        public void UpdateWeaponImage(Sprite newSprite)
-        {
-            //inactiveWeapon.sprite = activeWeapon.sprite;
-            //activeWeapon.sprite = newSprite;
-        }
+        //public void UpdateWeaponImage(Sprite newSprite)
+        //{
+        //    //inactiveWeapon.sprite = activeWeapon.sprite;
+        //    //activeWeapon.sprite = newSprite;
+        //}
 
         //public void UpdateElementImage (Sprite newSprite)
         //{
@@ -157,6 +164,22 @@ namespace Hunter {
                         socket.enabled = true;
                         break;
                     }
+                }
+            }
+        }
+
+        public void DimElementSockets(List<int> indexList)
+        {
+            //Start at one to not include null element since all weapons can equip it
+            for (int i = 1; i < elementSockets.Count; i++)
+            {
+                if (indexList.Contains(i))
+                {
+                    elementSockets[i].color = Color.gray;
+                }
+                else
+                {
+                    elementSockets[i].color = Color.white;
                 }
             }
         }
@@ -462,6 +485,41 @@ namespace Hunter {
             }
 
             staminaBarAction = null;
+        }
+
+        public void EnableDecanter(int decanterIndex)
+        {
+            if (decanterIndex >= decanters.Count)
+            {
+                Debug.LogWarning($"You tried to enable a decanter at index {decanterIndex} but there are only {decanters.Count} assigned in the inspector.");
+                return;
+            }
+            decanters[decanterIndex].parent.SetActive(true);
+        }
+
+        public void SetDecanterInfo (int decanterIndex, int currentShards, int maxShards)
+        {
+            if(decanterIndex >= decanters.Count)
+            {
+                Debug.LogWarning($"You tried to edit a decanter at index {decanterIndex} but there are only {decanters.Count} assigned in the inspector.");
+                return;
+            }
+            var decanter = decanters[decanterIndex];
+            var adjustedCurrentShards = Mathf.Clamp(currentShards - (maxShards * decanterIndex), 0, maxShards);
+            var targetFill = (float)adjustedCurrentShards / maxShards;
+            decanter.fillImage.fillAmount = targetFill;
+            decanter.shardsText.text = $"{adjustedCurrentShards}/{maxShards}";
+
+            if(targetFill == 1)
+            {
+                decanter.shardsText.gameObject.SetActive(false);
+                decanter.inputImage.gameObject.SetActive(true);
+            }
+            else
+            {
+                decanter.inputImage.gameObject.SetActive(false);
+                decanter.shardsText.gameObject.SetActive(true);
+            }
         }
     }
 }

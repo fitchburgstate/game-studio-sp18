@@ -188,6 +188,7 @@ namespace Hunter.Characters
                 currentWeapon = weapon;
                 currentWeapon.characterHoldingWeapon = this;
                 currentWeapon.gameObject.SetActive(true);
+                Debug.Log($"{DisplayName} equipped the {CurrentWeapon.name}");
             }
         }
 

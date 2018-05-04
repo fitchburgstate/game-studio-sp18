@@ -17,8 +17,10 @@ namespace Hunter
         {
             if(characterTriggeringInteraction is Player)
             {
-                (characterTriggeringInteraction as Player).PotionShardCount += shardCount;
-                characterToFlyTowards = characterTriggeringInteraction;
+                for (int i = 0; i < shardCount; i++)
+                {
+                    (characterTriggeringInteraction as Player).PotionShardCount += shardCount;
+                }
                 Destroy(gameObject);
             }
         }

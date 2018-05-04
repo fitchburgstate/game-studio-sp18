@@ -3842,8 +3842,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingItems:
-  - {fileID: 11400000, guid: aa9f88c9b4c13094daa1e8430dadf062, type: 2}
   - {fileID: 11400000, guid: 47330a7e9ff4a5b49bec96c09a1990db, type: 2}
+  - {fileID: 11400000, guid: aa9f88c9b4c13094daa1e8430dadf062, type: 2}
 --- !u!114 &114132859956458178
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3977,7 +3977,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   potionCount: 1
-  maxPotionShards: 30
+  maxShardsPerPotion: 15
   potionShardCount: 0
   potionRestoreAmount: 2
   potionRestoreInterval: 0.33
@@ -104893,7 +104893,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1090311354029252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.127}
+  m_LocalPosition: {x: 0, y: 0, z: -0.082}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224877078936714184}
@@ -104901,7 +104901,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.23099977, y: -0.104}
+  m_AnchoredPosition: {x: 0.00000015646219, y: -0.104}
   m_SizeDelta: {x: 0.5, y: 0.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224569038241249564
