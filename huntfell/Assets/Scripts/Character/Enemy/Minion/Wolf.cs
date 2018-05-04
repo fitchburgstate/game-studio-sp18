@@ -36,26 +36,6 @@ namespace Hunter.Characters
         public bool justFound = false;
         #endregion
 
-        #region Properties
-        public override float CurrentHealth
-        {
-            get
-            {
-                return health;
-            }
-            set
-            {
-                health = value;
-                if (health <= 0 && !IsDying)
-                {
-                    // TODO Change this to reflect wether the death anim should be cinematic or not later
-                    deathAction = KillWolf(true);
-                    StartCoroutine(deathAction);
-                }
-            }
-        }
-        #endregion
-
         #region Unity Functions
         protected override void Start()
         {
@@ -126,17 +106,11 @@ namespace Hunter.Characters
         #endregion
 
         #region Wolf Combat
-        private IEnumerator KillWolf(bool isCinematic)
+
+        protected override IEnumerator KillCharacter ()
         {
-            agent.speed = 0;
-            agent.destination = transform.position;
-            anim.SetTrigger(isCinematic ? "cinDeath" : "death");
-            minionHealthBarParent?.gameObject.SetActive(false);
-            characterController.enabled = false;
-            agent.enabled = false;
-            // TODO Change this later to reflect the animation time
-            yield return new WaitForSeconds(5);
-            Destroy(gameObject);
+            anim.SetTrigger("cinDeath");
+            return base.KillCharacter();
         }
 
         public void Attack()

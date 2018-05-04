@@ -50,14 +50,59 @@ namespace Hunter
         private UnityEvent propEvent;
 
         private bool currentlyInteracting = false;
+        private IEnumerator spawnAction;
 
-        public void TakeDamage (string damage, bool isCritical, Weapon weaponAttackedWith)
+        public bool IsImportant
+        {
+            get
+            {
+                return overrideImportance || itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
+            }
+        }
+
+        public float CurrentHealth
+        {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+
+            }
+        }
+
+        public float TargetHealth {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+
+            }
+        }
+
+        public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             FireInteraction(weaponAttackedWith.characterHoldingWeapon, weaponAttackedWith);
         }
 
-        public void TakeDamage (string damage, bool isCritical, Element damageElement)
+        public void Damage (int damage, bool isCritical, Element damageElement)
         {
+            // We dont want interactions to trigger when hit by non-weapon damage such as AOE effects
+            return;
+        }
+
+        public void Heal (int restore, bool isCritical)
+        {
+            // We dont want props to heal lol
+            return;
+        }
+
+        public void Kill ()
+        {
+            //no murdering props pls
             return;
         }
 
@@ -92,6 +137,7 @@ namespace Hunter
                 currentlyInteracting = true;
                 ShowSuccessMessage();
 
+                ExecutePropInteractions(characterWhoAttacked);
                 switch (propType)
                 {
                     case PropType.Destructible:
@@ -103,7 +149,6 @@ namespace Hunter
                         ShakeProp();
                         break;
                 }
-                ExecutePropInteractions(characterWhoAttacked);
             }
             else
             {
@@ -121,12 +166,13 @@ namespace Hunter
             var elapsed = 0.0f;
             var originalObjectPos = gameObject.transform.localPosition;
 
-            while (elapsed < duration)
+            while (elapsed < duration || spawnAction != null)
             {
                 elapsed += Time.deltaTime;
 
-                var percentComplete = elapsed / duration;
-                var damper = 1.0f - Mathf.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
+                var percentComplete = Mathf.Clamp01(elapsed / duration);
+                //var damper = 1.0f - Mathf.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
+                var damper = 0.5f -percentComplete;
                 var x = (Random.value * 2.0f - 1.0f);
                 var y = (Random.value * 2.0f - 1.0f);
                 x *= magnitude * damper;
@@ -160,7 +206,11 @@ namespace Hunter
             }
             else
             {
-                SpawnInteractableItems();
+                if (itemsToSpawn.Count > 0)
+                {
+                    spawnAction = SpawnInteractableItems(characterFromInteraction);
+                    StartCoroutine(spawnAction);
+                }
             }
 
             if (propEvent != null)
@@ -169,14 +219,8 @@ namespace Hunter
             }
         }
 
-        private void SpawnInteractableItems ()
+        private IEnumerator SpawnInteractableItems (Character characterFromInteraction)
         {
-            if (itemsToSpawn.Count == 0)
-            {
-                //Debug.Log("Nothing in this prop!");
-                return;
-            }
-
             foreach (var item in itemsToSpawn)
             {
                 var spawnedItem = Instantiate(item.InteractableItemPrefab, transform.position, transform.rotation);
@@ -184,7 +228,8 @@ namespace Hunter
                 switch (propType)
                 {
                     case PropType.Interactable:
-                        spawnedItem.SpawnFromProp();
+                        spawnedItem.SpawnFromProp(characterFromInteraction.transform.position);
+                        yield return new WaitForSeconds(0.25f);
                         break;
                     default:
                         spawnedItem.SpawnOnGround(transform.position);
@@ -193,6 +238,8 @@ namespace Hunter
             }
 
             itemsToSpawn.Clear();
+            spawnAction = null;
+            yield return null;
         }
 
         private void GiveItemsDirectly (Character characterFromInteraction)
@@ -224,11 +271,6 @@ namespace Hunter
         private void ShowFailMessage ()
         {
             if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowHintPrompt(interactionFailMessage); }
-        }
-
-        public bool IsImportant ()
-        {
-            return overrideImportance || itemsToSpawn.Count > 0 || elementTypeForInteraction != ElementOption.None;
         }
     }
 }

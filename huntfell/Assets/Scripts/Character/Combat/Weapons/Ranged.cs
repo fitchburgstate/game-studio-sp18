@@ -99,7 +99,7 @@ namespace Hunter.Characters
 
                     var isCritical = ShouldAttackBeCritical(critPercent);
                     var totalDamage = CalculateDamage(WeaponElement, enemyElementType, isCritical);
-                    damageableObject.TakeDamage(totalDamage, isCritical, this);
+                    damageableObject.Damage(totalDamage, isCritical, this);
                 }
                 endOfRay = hit.transform.GetComponent<Character>().EyeLineTransform.transform.position;
             }
@@ -119,7 +119,7 @@ namespace Hunter.Characters
         #endregion
 
         #region CalculateDamage Function
-        protected override string CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
+        protected override int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var normalDamage = base.CalculateDamage(weaponElement, enemyElementType, isCritical);
             return normalDamage;

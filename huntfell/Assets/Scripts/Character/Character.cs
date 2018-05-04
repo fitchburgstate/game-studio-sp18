@@ -12,13 +12,14 @@ namespace Hunter.Characters
         public const string ROTATION_TRANSFORM_TAG = "Rotation Transform";
         public const string EYELINE_TRANSFORM_TAG = "EyeLine Transform";
 
-        // Super General Character Traits
-        [SerializeField]
-        protected float health;
-        public int totalHealth = 100;
-
         [SerializeField]
         private string displayName = "No Name";
+        // Super General Character Traits
+        public int totalHealth = 100;
+        [SerializeField]
+        protected float currentHealth, targetHealth;
+        [Tooltip("The multiplier for how fast the wound bar should subtract health from the Player."), Range(0.1f, 10f)]
+        public float healthModificationSpeed = 1;
 
         private Weapon currentWeapon = null;
 
@@ -27,12 +28,14 @@ namespace Hunter.Characters
 
         protected NavMeshAgent agent;
         protected Animator anim;
-        protected EffectsModule effectsModule;
+        protected VisualEffectsModule effectsModule;
         protected CharacterController characterController;
         protected bool invincible = false;
 
         // Actions
         protected IEnumerator deathAction;
+        protected IEnumerator damageAction;
+        protected IEnumerator restoreAction;
 
         #endregion
 
@@ -49,11 +52,34 @@ namespace Hunter.Characters
         {
             get
             {
-                return health;
+                return currentHealth;
             }
             set
             {
-                health = Mathf.Clamp(value, 0, totalHealth);
+                //if (IsDying) { return; }
+                currentHealth = Mathf.Clamp(value, TargetHealth, totalHealth);
+
+                if(currentHealth <= 0)
+                {
+                    Kill();
+                }
+            }
+        }
+
+        public virtual float TargetHealth
+        {
+            get
+            {
+                return targetHealth;
+            }
+            set
+            {
+                //if (IsDying) { return; }
+                targetHealth = Mathf.Clamp(value, 0, totalHealth);
+                if (targetHealth > currentHealth)
+                {
+                    CurrentHealth = targetHealth;
+                }
             }
         }
 
@@ -134,24 +160,23 @@ namespace Hunter.Characters
         #endregion
 
         #region Unity Functions
-        protected virtual void Awake()
+        protected virtual void Awake ()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
-            effectsModule = GetComponentInChildren<EffectsModule>();
+            effectsModule = GetComponentInChildren<VisualEffectsModule>();
             if (effectsModule == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
-            CurrentHealth = totalHealth;
         }
 
-        protected virtual void Start()
+        protected virtual void Start ()
         {
-
+            TargetHealth = totalHealth;
         }
         #endregion
 
         #region Combat Related Functions
-        public void EquipWeaponToCharacter(Weapon weapon)
+        public void EquipWeaponToCharacter (Weapon weapon)
         {
             if (weapon != null)
             {
@@ -166,7 +191,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void EquipElementToWeapon(Element element)
+        public void EquipElementToWeapon (Element element)
         {
             if (CurrentWeapon != null)
             {
@@ -174,38 +199,115 @@ namespace Hunter.Characters
             }
         }
 
-        public virtual void TakeDamage(string damage, bool isCritical, Weapon weaponAttackedWith)
+        public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
         {
-            TakeDamage(damage, isCritical, weaponAttackedWith.WeaponElement);
+            //If you are attacked with a weapon (not things like dots) and your target health is already at 0, critical hit you deadski
+            if (TargetHealth == 0) { isCritical = true; }
+            if (isCritical && damage > 0) { StartCoroutine(SlowTimeCritical()); }
+            Damage(damage, isCritical, weaponAttackedWith.WeaponElement);
         }
 
-        public virtual void TakeDamage (string damage, bool isCritical, Element damageElement)
+        private IEnumerator SlowTimeCritical ()
+        {
+            Time.timeScale = 0.25f;
+            yield return new WaitForSecondsRealtime(0.35f);
+
+            // If the player were to pause in the middle of this, we want the time scale to not be reset because then the game will resume while they are still paused
+            if (PauseManager.instance != null && PauseManager.instance.IsGamePaused) { yield break; }
+            Time.timeScale = 1;
+        }
+
+        public void Damage (int damage, bool isCritical, Element damageElement)
         {
             if (invincible || IsDying) { return; }
 
-            int parseDamage = -1;
-            if (int.TryParse(damage, out parseDamage))
+            if (damage > 0)
             {
-                StartCoroutine(SubtractHealthFromCharacter(parseDamage, isCritical));
+                if (damageAction != null)
+                {
+                    StopCoroutine(damageAction);
+                }
+
+                damageAction = SubtractHealthFromCharacter(damage, isCritical);
+                StartCoroutine(damageAction);
             }
 
             if (effectsModule != null)
             {
-                //Dont apply hits particles for dot effects or minor damage
-                effectsModule.StartDamageEffects(damage, isCritical, damageElement, (parseDamage > 3));
+                //Dont apply hits particles for dot effects or immunity
+                effectsModule.StartDamageEffects(damage, isCritical, damageElement, (damage > 3));
             }
         }
 
-        protected virtual IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
+        protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
-            CurrentHealth -= damage;
-            yield return null;
+            TargetHealth -= damage;
+
+            if (isCritical || healthModificationSpeed == 0)
+            {
+                CurrentHealth = TargetHealth;
+                yield break;
+            }
+
+            while (CurrentHealth > TargetHealth)
+            {
+                CurrentHealth -= Time.deltaTime * healthModificationSpeed;
+                yield return null;
+            }
         }
 
-        public virtual void RestoreHealthToCharacter(int restoreAmount)
+        public void Heal (int restore, bool isCritical)
         {
-            StopCoroutine("SubtractHealthFromCharacter");
-            CurrentHealth += restoreAmount;
+            if (IsDying || CurrentHealth == totalHealth) { return; }
+
+            if (isCritical && damageAction != null)
+            {
+                StopCoroutine(damageAction);
+            }
+
+            restoreAction = AddHealthToCharacter(restore, isCritical);
+            StartCoroutine(restoreAction);
+
+            if (effectsModule != null)
+            {
+                effectsModule.StartHealEffects(restore, isCritical);
+            }
+
+        }
+
+        protected virtual IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
+        {
+            var healTarget = restoreAmount + TargetHealth;
+            var cachedTarget = TargetHealth;
+
+            if (isCritical || healthModificationSpeed == 0)
+            {
+                TargetHealth = healTarget;
+                yield break;
+            }
+
+            while (cachedTarget < healTarget)
+            {
+                var step = Time.deltaTime * healthModificationSpeed;
+                TargetHealth += step;
+                cachedTarget += step;
+                yield return null;
+            }
+        }
+
+        public void Kill ()
+        {
+            if (IsDying) { return; }
+
+            deathAction = KillCharacter();
+            StartCoroutine(deathAction);
+        }
+
+        protected virtual IEnumerator KillCharacter ()
+        {
+            yield return new WaitForSeconds(5);
+            gameObject.SetActive(false);
+            deathAction = null;
         }
         #endregion
     }

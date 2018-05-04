@@ -26,25 +26,6 @@ namespace Hunter.Characters
         private IEnumerator gargoyleAttackCR;
         #endregion
 
-        #region Properties
-        public override float CurrentHealth
-        {
-            get
-            {
-                return health;
-            }
-            set
-            {
-                health = value;
-                if (health <= 0)
-                {
-                    var killGargoyleCR = KillGargoyle();
-                    StartCoroutine(killGargoyleCR);
-                }
-            }
-        }
-        #endregion
-
         #region Unity Functions
         protected override void Start()
         {
@@ -69,6 +50,7 @@ namespace Hunter.Characters
         #region Gargoyle Combat
         private void Attack()
         {
+            if (IsDying) { return; }
             if (gargoyleAttackCR != null) { return; }
             gargoyleAttackCR = GargoyleAttack();
             StartCoroutine(gargoyleAttackCR);
@@ -83,11 +65,10 @@ namespace Hunter.Characters
             gargoyleAttackCR = null;
         }
 
-        private IEnumerator KillGargoyle()
+        protected override IEnumerator KillCharacter()
         {
             deathParticle?.Play();
-            yield return new WaitForSeconds(.75f);
-            Destroy(gameObject);
+            return base.KillCharacter();
         }
         #endregion
     }

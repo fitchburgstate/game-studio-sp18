@@ -8,6 +8,9 @@ namespace Hunter.Characters
 {
     public abstract class Weapon : MonoBehaviour
     {
+        protected const float CRITICAL_HIT_MULTIPLIER = 1.5f;
+        protected const float ELEMENTAL_WEAKNESS_MULTIPLIER = 1.5f;
+
         #region Variables
         [Header("Debug")]
         public ElementOption inspectorElementType;
@@ -46,9 +49,9 @@ namespace Hunter.Characters
 
         public abstract void StartAttackFromAnimationEvent();
 
-        protected virtual string CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
+        protected virtual int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
-            var critMult = isCritical ? 1.5f : 1.0f;
+            var critMult = isCritical ? CRITICAL_HIT_MULTIPLIER : 1.0f;
             var elementMult = 1.0f;
 
             if (enemyElementType != null && weaponElement != null)
@@ -59,16 +62,17 @@ namespace Hunter.Characters
 
                 if (weaponType.Equals(enemyType))
                 {
-                    return "Immune";
+                    elementMult = 0;
                 }
                 else if (weaponType.Equals(enemyWeaknessType))
                 {
-                    elementMult = 1.5f;
+                    elementMult = ELEMENTAL_WEAKNESS_MULTIPLIER;
                 }
             }
-            var randomInt = UnityEngine.Random.Range(-1, 2);
+            var randomInt = UnityEngine.Random.Range(-2, 3);
+            if (isCritical) { randomInt = Mathf.Abs(randomInt); }
 
-            return ((int)((baseDamage + randomInt) * critMult * elementMult)).ToString();
+            return ((int)((baseDamage + randomInt) * critMult * elementMult));
         }
 
         /// <summary>
