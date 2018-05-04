@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33044258836883094}
   - component: {fileID: 23571146624983550}
   - component: {fileID: 95221400122099862}
+  - component: {fileID: 65610696072997690}
   m_Layer: 0
   m_Name: Prop_Library_Bookcase
   m_TagString: Untagged
@@ -36,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1100114839869922}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -41.497486, y: 1.6459293, z: 67.58405}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,6 +84,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1100114839869922}
   m_Mesh: {fileID: 4300000, guid: 67391b0fd1f4e634184d0851d83cc12b, type: 3}
+--- !u!65 &65610696072997690
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1100114839869922}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.519486, y: 3.492076, z: 0.7704315}
+  m_Center: {x: 0, y: 0, z: 0.0000001937151}
 --- !u!95 &95221400122099862
 Animator:
   serializedVersion: 3

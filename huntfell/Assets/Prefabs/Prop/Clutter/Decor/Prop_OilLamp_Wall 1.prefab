@@ -38,7 +38,6 @@ GameObject:
   - component: {fileID: 4981043973985486}
   - component: {fileID: 33115210436418736}
   - component: {fileID: 23303456502176536}
-  - component: {fileID: 65760346298411402}
   m_Layer: 13
   m_Name: polySurface230
   m_TagString: Untagged
@@ -72,7 +71,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4553620174298556}
   - component: {fileID: 95543995878257870}
-  - component: {fileID: 65575751263673054}
   m_Layer: 13
   m_Name: Prop_OilLamp_Wall 1
   m_TagString: Untagged
@@ -129,15 +127,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1893786637125930}
-  m_LocalRotation: {x: -0, y: 0.86693096, z: -0, w: -0.49842826}
-  m_LocalPosition: {x: 22.463, y: 2.014851, z: 14.312}
+  m_LocalRotation: {x: 0.52440083, y: -0.46815813, z: -0.01283472, w: 0.7111027}
+  m_LocalPosition: {x: -41.664, y: -0.176, z: 61.507}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4981043973985486}
   - {fileID: 4649073969886948}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180.00002, z: 0}
+  m_LocalEulerAnglesHint: {x: 47.205, y: -89.01601, z: -48.555004}
 --- !u!4 &4649073969886948
 Transform:
   m_ObjectHideFlags: 1
@@ -207,30 +205,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1512800532582068}
   m_Mesh: {fileID: 4300000, guid: 5ab8543213870e94db31461d8fd99408, type: 3}
---- !u!65 &65575751263673054
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1893786637125930}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.28, y: 0.12, z: 0.14}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65760346298411402
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1512800532582068}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.06, y: 0.59962445, z: 0.39331374}
-  m_Center: {x: 0.15, y: 0, z: -0.00000047683716}
 --- !u!95 &95543995878257870
 Animator:
   serializedVersion: 3
@@ -308,7 +282,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1574725045
+  randomSeed: -884282527
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3669,7 +3643,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1230581186
+  randomSeed: 145873413
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -7030,7 +7004,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1240274055
+  randomSeed: -1416519411
   InitialModule:
     serializedVersion: 3
     enabled: 1
