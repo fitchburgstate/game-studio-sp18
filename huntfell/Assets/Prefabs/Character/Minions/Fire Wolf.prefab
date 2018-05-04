@@ -2471,7 +2471,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1640528691489282}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -64.613174, y: 0.374, z: 74.78467}
+  m_LocalPosition: {x: 2.5, y: 0.95, z: 4}
   m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_Children:
   - {fileID: 4676229820568530}
@@ -3717,11 +3717,17 @@ MonoBehaviour:
   currentHealth: 0
   targetHealth: 0
   healthModificationSpeed: 1
-  enemyElementOption: 1
-  invincibilityFrames: 5
-  itemsToSpawn: []
   speed: 5
   turnSpeed: 175
+  enemyElementOption: 1
+  invincibilityFrames: 5
+  itemsToSpawn:
+  - {fileID: 11400000, guid: 456890b2cf8d6c14a9bab10c79661251, type: 2}
+  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
+  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
+  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
+  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
+  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   meleeWeapon: {fileID: 114435617867718058}
   justFound: 0
 --- !u!114 &114685992588477562
@@ -3765,12 +3771,15 @@ MonoBehaviour:
   attack: 1
   turn: 1
   moveTo: 1
+  retreat: 1
   idle: 1
   wander: 0
   maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
   randomPointTarget: {x: 0, y: 0, z: 0}
+  spawnPosition: {x: 0, y: 0, z: 0}
+  inCombat: 0
 --- !u!114 &114897209116450380
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3783,8 +3792,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayWorldSpaceHealth: 1
-  worldSpaceHealthBar: {fileID: 0}
-  worldSpaceWoundBar: {fileID: 0}
+  worldSpaceHealthBar: {fileID: 114979705031597582}
+  worldSpaceWoundBar: {fileID: 114101016779557442}
   damagePopUpRootPrefab: {fileID: 1923969854045580, guid: d41796c612653844582460f4db5e5fb9,
     type: 2}
   criticalFontSizeMultiplier: 1.5
@@ -3793,8 +3802,8 @@ MonoBehaviour:
   nullHitSystem: {fileID: 198860983121989498}
   fireHitSystem: {fileID: 198437280315253476}
   iceHitSystem: {fileID: 198918194602209490}
-  electricHitSystem: {fileID: 0}
-  silverHitSystem: {fileID: 0}
+  electricHitSystem: {fileID: 198386056623540970}
+  silverHitSystem: {fileID: 198863177108871958}
 --- !u!114 &114933132311575084
 MonoBehaviour:
   m_ObjectHideFlags: 1

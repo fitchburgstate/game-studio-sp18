@@ -91,7 +91,6 @@ GameObject:
   - component: {fileID: 23016588136407104}
   - component: {fileID: 65922445296498518}
   - component: {fileID: 114274044907937246}
-  - component: {fileID: 114815494051193854}
   - component: {fileID: 54189738489303574}
   m_Layer: 10
   m_Name: Cutlass Melee Weapon
@@ -328,25 +327,7 @@ MonoBehaviour:
     equipParticleSystem: {fileID: 198066191142626696}
   - elementEffect: 4
     equipMaterials: []
-    equipParticleSystem: {fileID: 0}
-  - elementEffect: 5
-    equipMaterials: []
     equipParticleSystem: {fileID: 198586023901701314}
---- !u!114 &114815494051193854
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1607038246817686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shaderToOverlay: {fileID: 4800000, guid: c531fce4ab6a8274db76c888cd7bfa82, type: 3}
-  cullingMask:
-    serializedVersion: 2
-    m_Bits: 12288
 --- !u!198 &198003281727481110
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -13011,7 +12992,7 @@ ParticleSystem:
   LightsModule:
     enabled: 0
     ratio: 1
-    light: {fileID: 108050819416718466, guid: f74027d1d45aa3546b329a849ea08d46, type: 2}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1

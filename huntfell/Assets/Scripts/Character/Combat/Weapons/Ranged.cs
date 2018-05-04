@@ -101,7 +101,7 @@ namespace Hunter.Characters
                     var totalDamage = CalculateDamage(WeaponElement, enemyElementType, isCritical);
                     damageableObject.Damage(totalDamage, isCritical, this);
                 }
-                endOfRay = hit.transform.GetComponent<Character>().EyeLineTransform.transform.position;
+                endOfRay = hit.point;
             }
             else
             {

@@ -1880,7 +1880,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1428960619483910}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -64.5546, y: 0.166, z: 72.28615}
+  m_LocalPosition: {x: -2.5, y: 0.81, z: 4}
   m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_Children:
   - {fileID: 4863656748212302}
@@ -3593,6 +3593,8 @@ MonoBehaviour:
   currentHealth: 0
   targetHealth: 0
   healthModificationSpeed: 1
+  speed: 5
+  turnSpeed: 175
   enemyElementOption: 3
   invincibilityFrames: 5
   itemsToSpawn:
@@ -3602,8 +3604,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  speed: 5
-  turnSpeed: 175
   meleeWeapon: {fileID: 114954640568594170}
   justFound: 0
 --- !u!114 &114423604555963708
@@ -3620,12 +3620,15 @@ MonoBehaviour:
   attack: 1
   turn: 1
   moveTo: 1
+  retreat: 1
   idle: 1
   wander: 0
   maxDistance: 0
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
   randomPointTarget: {x: 0, y: 0, z: 0}
+  spawnPosition: {x: 0, y: 0, z: 0}
+  inCombat: 0
 --- !u!114 &114464728763423818
 MonoBehaviour:
   m_ObjectHideFlags: 1

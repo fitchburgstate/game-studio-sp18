@@ -719,8 +719,8 @@ GameObject:
   m_Name: Minion_Gargoyle_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!1 &1960035046204314
 GameObject:
@@ -1659,10 +1659,12 @@ MonoBehaviour:
   currentHealth: 0
   targetHealth: 0
   healthModificationSpeed: 1
+  speed: 5
+  turnSpeed: 100
   enemyElementOption: 0
   invincibilityFrames: 5
-  itemsToSpawn: []
-  turnSpeed: 100
+  itemsToSpawn:
+  - {fileID: 11400000, guid: 456890b2cf8d6c14a9bab10c79661251, type: 2}
   rangedWeapon: {fileID: 114268143001333596}
   deathParticle: {fileID: 198481395803579878}
 --- !u!114 &114874449656000094
@@ -1715,7 +1717,7 @@ NavMeshAgent:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1243443152083812}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 0

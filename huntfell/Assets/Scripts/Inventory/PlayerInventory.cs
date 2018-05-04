@@ -11,13 +11,15 @@ namespace Hunter
 
         //TODO Make it so that the InteractableInventoryItem and the seperate actual Weapon are the same thing
         private Dictionary<MeleeWeaponItem, InteractableInventoryItem> meleeWeapons = new Dictionary<MeleeWeaponItem, InteractableInventoryItem>();
-        private Dictionary<RangedWeaponItem, InteractableInventoryItem> rangedWeapons = new Dictionary<RangedWeaponItem, InteractableInventoryItem>();
+        //private Dictionary<RangedWeaponItem, InteractableInventoryItem> rangedWeapons = new Dictionary<RangedWeaponItem, InteractableInventoryItem>();
         private Dictionary<ElementModItem, InteractableInventoryItem> elementMods = new Dictionary<ElementModItem, InteractableInventoryItem>();
         private Dictionary<JournalItem, InteractableInventoryItem> journalEntries = new Dictionary<JournalItem, InteractableInventoryItem>();
         private Dictionary<DiaryItem, InteractableInventoryItem> diaryEntries = new Dictionary<DiaryItem, InteractableInventoryItem>();
 
-        public int RangedWeaponIndex { get; private set; } = 0;
-        public int RangedElementIndex { get; private set; } = 0;
+        private Dictionary<Weapon, int> weaponAndElementIndex = new Dictionary<Weapon, int>();
+
+        //public int RangedWeaponIndex { get; private set; } = 0;
+        //public int RangedElementIndex { get; private set; } = 0;
         public int MeleeWeaponIndex { get; private set; } = 0;
         public int MeleeElementIndex { get; private set; } = 0;
 
@@ -42,66 +44,36 @@ namespace Hunter
         #region Weapons
         public Weapon CycleWeaponsUp(Weapon currentWeapon, Transform weaponContainer)
         {
-            var isMelee = currentWeapon is Melee;
-            var isRanged = currentWeapon is Ranged;
             Weapon newWeapon = null;
 
-            //Dont cycle anything if there are no weapons or only 1 weapon in the inventory
-            if (isMelee && meleeWeapons.Count < 2)
+            //Dont cycle anything if there are no weapons in the inventory
+            if (meleeWeapons.Count < 1)
             {
                 Debug.LogWarning("Unable to cycle melee weapons.");
                 return null;
             }
-            else if(isRanged && rangedWeapons.Count < 2)
-            {
-                Debug.LogWarning("Unable to cycle ranged weapons.");
-                return null;
-            }
 
-            if (isMelee)
-            {
-                MeleeWeaponIndex++;
-                if (MeleeWeaponIndex >= meleeWeapons.Count) { MeleeWeaponIndex = 0; }
-                newWeapon = GetMeleeWeaponAtIndex(MeleeWeaponIndex, weaponContainer);
-            }
-            else if (isRanged)
-            {
-                RangedWeaponIndex++;
-                if (RangedWeaponIndex >= rangedWeapons.Count) { RangedWeaponIndex = 0; }
-                newWeapon = GetRangedWeaponAtIndex(RangedWeaponIndex, weaponContainer);
-            }
+            MeleeWeaponIndex++;
+            if (MeleeWeaponIndex >= meleeWeapons.Count) { MeleeWeaponIndex = 0; }
+            newWeapon = GetMeleeWeaponAtIndex(MeleeWeaponIndex, weaponContainer);
+            
             return newWeapon;
         }
 
         public Weapon CycleWeaponsDown (Weapon currentWeapon, Transform weaponContainer)
         {
-            var isMelee = currentWeapon is Melee;
-            var isRanged = currentWeapon is Ranged;
             Weapon newWeapon = null;
-            //Dont cycle anything if there are no weapons or only 1 weapon in the inventory
-            if (isMelee && meleeWeapons.Count < 2)
+            //Dont cycle anything if there are no weapons in the inventory
+            if (meleeWeapons.Count < 1)
             {
                 Debug.LogWarning("Unable to cycle melee weapons.");
                 return null;
             }
-            else if (isRanged && rangedWeapons.Count < 2)
-            {
-                Debug.LogWarning("Unable to cycle ranged weapons.");
-                return null;
-            }
 
-            if (isMelee)
-            {
-                MeleeWeaponIndex--;
-                if (MeleeWeaponIndex < 0) { MeleeWeaponIndex = meleeWeapons.Count - 1; }
-                newWeapon = GetMeleeWeaponAtIndex(MeleeWeaponIndex, weaponContainer);
-            }
-            else if (isRanged)
-            {
-                RangedWeaponIndex--;
-                if (RangedWeaponIndex < 0) { RangedWeaponIndex = rangedWeapons.Count - 1; }
-                newWeapon = GetRangedWeaponAtIndex(RangedWeaponIndex, weaponContainer);
-            }
+            MeleeWeaponIndex--;
+            if (MeleeWeaponIndex < 0) { MeleeWeaponIndex = meleeWeapons.Count - 1; }
+            newWeapon = GetMeleeWeaponAtIndex(MeleeWeaponIndex, weaponContainer);
+            
             return newWeapon;
         }
 
@@ -115,108 +87,94 @@ namespace Hunter
             var existingWeapons = weaponContainer.GetComponentsInChildren<Melee>(true);
             var meleeItemData = meleeWeapons.Keys.ElementAt(index);
             var meleeWeaponPrefab = meleeItemData.MeleeWeaponPrefab;
-            if (HUDManager.instance != null) { HUDManager.instance.UpdateWeaponImage(meleeItemData.icon); }
+
+            Melee resultMelee = null;
 
             foreach (var weapon in existingWeapons)
             {
                 if (weapon.name == meleeWeaponPrefab.name)
                 {
-                    if (HUDManager.instance != null) { HUDManager.instance.MoveWeaponWheel(index); }
-                    return weapon;
+                    resultMelee = weapon;
+                    break;
                 }
             }
 
-            var newMelee = Instantiate(meleeWeaponPrefab, weaponContainer);
-            newMelee.name = meleeWeaponPrefab.name;
-            //if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newMelee?.WeaponElement?.elementHUDSprite); }
-            return newMelee;
-        }
-
-        public Ranged GetRangedWeaponAtIndex (int index, Transform weaponContainer)
-        {
-            if (rangedWeapons.Count == 0 || rangedWeapons.Count <= index)
+            if(resultMelee == null)
             {
-                Debug.LogWarning("Unable get ranged weapon at index " + index);
-                return null;
+                resultMelee = Instantiate(meleeWeaponPrefab, weaponContainer);
+                resultMelee.name = meleeWeaponPrefab.name;
             }
-            var existingWeapons = weaponContainer.GetComponentsInChildren<Ranged>(true);
-            var rangedItemData = rangedWeapons.Keys.ElementAt(index);
-            var rangedWeaponPrefab = rangedItemData.RangedWeaponPrefab;
-            if (HUDManager.instance != null) { HUDManager.instance.UpdateWeaponImage(rangedItemData.icon); }
-            foreach (var weapon in existingWeapons)
+
+            int elementIndex = 0;
+            if (GetIndexOfElement(resultMelee.WeaponElement, out elementIndex))
             {
-                if (weapon.name == rangedWeaponPrefab.name)
+                if (!weaponAndElementIndex.ContainsKey(resultMelee))
                 {
-                    //if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(weapon?.WeaponElement?.elementHUDSprite); }
-                    return weapon;
+                    weaponAndElementIndex.Add(resultMelee, elementIndex);
+                }
+
+                MeleeElementIndex = elementIndex;
+
+                if (HUDManager.instance != null)
+                {
+                    var indexList = weaponAndElementIndex.Values.ToList();
+                    indexList.Remove(elementIndex);
+                    HUDManager.instance.DimElementSockets(indexList);
+                    HUDManager.instance.MoveWeaponWheel(index);
+                    HUDManager.instance.MoveElementWheel(elementIndex);
                 }
             }
 
-            var newRanged = Instantiate(rangedWeaponPrefab, weaponContainer);
-            newRanged.name = rangedWeaponPrefab.name;
-            //if (HUDManager.instance != null) { HUDManager.instance.UpdateElementImage(newRanged?.WeaponElement?.elementHUDSprite); }
-            return newRanged;
+            return resultMelee;
         }
+
         #endregion
 
         #region Elements
         public Element CycleElementsUp (Weapon currentWeapon)
         {
-            if (elementMods.Count < 2)
+            if (elementMods.Count < 2 || currentWeapon == null)
             {
                 Debug.LogWarning("Unable to cycle through element mods.");
                 return null;
             }
-            var isMelee = currentWeapon is Melee;
-            var isRanged = currentWeapon is Ranged;
             Element newElement = null;
 
-            if (isMelee)
+            for (int i = MeleeElementIndex + 1; i != MeleeElementIndex; i++)
             {
-                MeleeElementIndex++;
-                if (MeleeElementIndex >= elementMods.Count) { MeleeElementIndex = 0; }
-                if(MeleeElementIndex != 0 && MeleeElementIndex == RangedElementIndex) { MeleeElementIndex++; }
-                newElement = GetElementAtIndex(MeleeElementIndex);
+                if (i >= elementMods.Count) { i = 0; }
+                if (weaponAndElementIndex.ContainsValue(i) && i != 0) { continue; }
+                MeleeElementIndex = i;
+                newElement = GetElementAtIndex(MeleeElementIndex, currentWeapon);
+                break;
             }
-            else if (isRanged)
-            {
-                RangedElementIndex++;
-                if (RangedElementIndex >= elementMods.Count) { RangedElementIndex = 0; }
-                //if (RangedElementIndex == MeleeElementIndex) { RangedElementIndex++; }
-                newElement = GetElementAtIndex(RangedElementIndex);
-            }
+            
             return newElement;
         }
 
         public Element CycleElementsDown (Weapon currentWeapon)
         {
-            if (elementMods.Count < 2)
+            if (elementMods.Count < 2 || currentWeapon == null)
             {
                 Debug.LogWarning("Unable to cycle through element mods.");
                 return null;
             }
-            var isMelee = currentWeapon is Melee;
-            var isRanged = currentWeapon is Ranged;
+
             Element newElement = null;
 
-            if (isMelee)
+            for(int i = MeleeElementIndex -1; i != MeleeElementIndex; i--)
             {
-                MeleeElementIndex--;
-                if (MeleeElementIndex < 0) { MeleeElementIndex = elementMods.Count - 1; }
-                if (MeleeElementIndex != 0 && MeleeElementIndex == RangedElementIndex) { MeleeElementIndex--; }
-                newElement = GetElementAtIndex(MeleeElementIndex);
+                if (i < 0) { i = elementMods.Count - 1; }
+                if (weaponAndElementIndex.ContainsValue(i) && i != 0) { continue; }
+                MeleeElementIndex = i;
+                newElement = GetElementAtIndex(MeleeElementIndex, currentWeapon);
+                break;
             }
-            else if (isRanged)
-            {
-                RangedElementIndex--;
-                if (RangedElementIndex < 0) { RangedElementIndex = elementMods.Count - 1; }
-                //if (RangedElementIndex == MeleeElementIndex) { RangedElementIndex--; }
-                newElement = GetElementAtIndex(RangedElementIndex);
-            }
+
             return newElement;
         }
 
-        public Element GetElementAtIndex (int elementIndex)
+        public Element GetElementAtIndex (int elementIndex, Weapon currentWeapon)
         {
             var elementItemData = elementMods.Keys.ElementAt(elementIndex);
             var element = Utility.ElementOptionToElement(elementItemData.elementOption);
@@ -225,8 +183,26 @@ namespace Hunter
             {
                 element.elementHUDSprite = elementItemData.icon;
             }
+
+            weaponAndElementIndex[currentWeapon] = elementIndex;
+
             if (HUDManager.instance != null) { HUDManager.instance.MoveElementWheel(elementIndex); }
             return element;
+        }
+
+        public bool GetIndexOfElement(Element element, out int index)
+        {
+            var elementOption = Utility.ElementToElementOption(element);
+            index = 0;
+            foreach(var pair in elementMods)
+            {
+                if(pair.Key.elementOption == elementOption)
+                {
+                    return true;
+                }
+                index++;
+            }
+            return false;
         }
         #endregion
 
@@ -266,14 +242,12 @@ namespace Hunter
 
         public bool TryAddItem (InventoryItem item, InteractableInventoryItem spawnedInteractableItem)
         {
-            if (item is RangedWeaponItem && !rangedWeapons.ContainsKey(item as RangedWeaponItem))
-            {
-                rangedWeapons.Add(item as RangedWeaponItem, spawnedInteractableItem);
-            }
-            else if (item is MeleeWeaponItem && !meleeWeapons.ContainsKey(item as MeleeWeaponItem))
+            if (item is MeleeWeaponItem && !meleeWeapons.ContainsKey(item as MeleeWeaponItem))
             {
                 meleeWeapons.Add(item as MeleeWeaponItem, spawnedInteractableItem);
                 HUDManager.instance?.AddNewWeaponToSocket(item.icon);
+                //Jank but w/e
+                if(meleeWeapons.Count == 1) { GetComponent<Player>()?.CycleWeapons(true); }
             }
             else if (item is ElementModItem && !elementMods.ContainsKey(item as ElementModItem))
             {
