@@ -1,22 +1,11 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Hunter.Characters
 {
     public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
         #region Variables
-        /// <summary>
-        /// This is the speed at which the character runs.
-        /// </summary>
-        [Range(0, 20), Tooltip("The running speed of the character when it is in combat.")]
-        public float speed = 5f;
-
-        [Range(1, 250)]
-        public float turnSpeed = 175f;
-
         /// <summary>
         /// The melee weapon that the wolf will use.
         /// </summary>
@@ -34,26 +23,6 @@ namespace Hunter.Characters
         /// </summary>
         [HideInInspector]
         public bool justFound = false;
-        #endregion
-
-        #region Properties
-        public override float CurrentHealth
-        {
-            get
-            {
-                return health;
-            }
-            set
-            {
-                health = value;
-                if (health <= 0 && !IsDying)
-                {
-                    // TODO Change this to reflect wether the death anim should be cinematic or not later
-                    deathAction = KillWolf(true);
-                    StartCoroutine(deathAction);
-                }
-            }
-        }
         #endregion
 
         #region Unity Functions
@@ -82,6 +51,7 @@ namespace Hunter.Characters
         #region Wolf Movement
         public void Move(Transform target)
         {
+            if (IsDying) { return; }
             Move(target, speed);
         }
 
@@ -125,28 +95,22 @@ namespace Hunter.Characters
         #endregion
 
         #region Wolf Combat
-        private IEnumerator KillWolf(bool isCinematic)
+
+        protected override IEnumerator KillCharacter()
         {
-            agent.speed = 0;
-            agent.destination = transform.position;
-            anim.SetTrigger(isCinematic ? "cinDeath" : "death");
-            minionHealthBarParent?.gameObject.SetActive(false);
-            characterController.enabled = false;
-            agent.enabled = false;
-            // TODO Change this later to reflect the animation time
-            yield return new WaitForSeconds(5);
-            Destroy(gameObject);
+            anim.SetTrigger("cinDeath");
+            return base.KillCharacter();
         }
 
         public void Attack()
         {
             if (IsDying) { return; }
             if (attackCR != null) { return; }
-            attackCR = PlayAttackAnimation();
+            attackCR = AttackAnimation();
             StartCoroutine(attackCR);
         }
 
-        public IEnumerator PlayAttackAnimation()
+        public IEnumerator AttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("combat");

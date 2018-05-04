@@ -374,9 +374,11 @@
     <Compile Include="Assets\Scripts\Character\AI\UtilityBasedAI.cs" />
     <Compile Include="Assets\Scripts\Character\Character.cs" />
     <Compile Include="Assets\Scripts\Character\CharacterSpawner.cs" />
-    <Compile Include="Assets\Scripts\Character\Combat\Effects\EffectsModule.cs" />
-    <Compile Include="Assets\Scripts\Character\Combat\HealthDrainDot.cs" />
-    <Compile Include="Assets\Scripts\Character\Combat\PassiveAreaDamage.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\Status Effects\Aura.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\Status Effects\DamageOverTime.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\Status Effects\HealOverTime.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\Status Effects\StatusEffect.cs" />
+    <Compile Include="Assets\Scripts\Character\Combat\Visual Effects\VisualEffectsModule.cs" />
     <Compile Include="Assets\Scripts\Character\Combat\Weapons\Melee.cs" />
     <Compile Include="Assets\Scripts\Character\Combat\Weapons\Ranged.cs" />
     <Compile Include="Assets\Scripts\Character\Combat\Weapons\Weapon.cs" />
@@ -394,6 +396,7 @@
     <Compile Include="Assets\Scripts\Inventory\Interactables\CaseStudy.cs" />
     <Compile Include="Assets\Scripts\Inventory\Interactables\InteractableHealthRestore.cs" />
     <Compile Include="Assets\Scripts\Inventory\Interactables\InteractableInventoryItem.cs" />
+    <Compile Include="Assets\Scripts\Inventory\Interactables\InteractablePotionShard.cs" />
     <Compile Include="Assets\Scripts\Inventory\Interactables\InteractableProp.cs" />
     <Compile Include="Assets\Scripts\Inventory\Items\Combat\ElementModItem.cs" />
     <Compile Include="Assets\Scripts\Inventory\Items\Combat\MeleeWeaponItem.cs" />

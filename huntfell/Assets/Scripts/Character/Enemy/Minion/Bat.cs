@@ -7,44 +7,14 @@ namespace Hunter.Characters
 {
     public class Bat : Minion, IMoveable, IUtilityBasedAI
     {
-        #region Properties
-        public override float CurrentHealth
-        {
-            get
-            {
-                return health;
-            }
-            set
-            {
-                health = value;
-                if (health <= 0 && !IsDying)
-                {
-                    //TODO Change this to reflect wether the death anim should be cinematic or not later
-                    deathAction = KillBat(true);
-                    StartCoroutine(deathAction);
-                }
-            }
-        }
-
-        #endregion
-
-        #region Variables
-        /// <summary>
-        /// This is the speed at which the character runs.
-        /// </summary>
-        [Range(0, 20), Tooltip("The running speed of the character when it is in combat.")]
-        public float speed = 2.5f;
-
-        [Range(1, 250)]
-        public float turnSpeed = 175f;
-        #endregion
-
+        #region Unity Functions
         protected override void Start()
         {
             base.Start();
             Fabric.EventManager.Instance?.PostEvent("Bat Start Wing Loop", gameObject);
             agent.updateRotation = false;
         }
+        #endregion
 
         #region Bat Movement
         public void Move(Vector3 target, float finalSpeed)
@@ -66,19 +36,12 @@ namespace Hunter.Characters
         #endregion
 
         #region Bat Combat
-        private IEnumerator KillBat(bool isCinematic)
+        protected override IEnumerator KillCharacter ()
         {
-            agent.speed = 0;
-            agent.destination = transform.position;
             anim.SetTrigger("death");
             Fabric.EventManager.Instance?.PostEvent("Bat Stop Wing Loop", gameObject);
-            agent.enabled = false;
-            characterController.enabled = false;
-            GetComponentInChildren<PassiveAreaDamage>().DisableAreaDamage();
-            minionHealthBarParent?.gameObject.SetActive(false);
-            //TODO Change this later to reflect the animation time
-            yield return new WaitForSeconds(5);
-            Destroy(gameObject);
+            GetComponentInChildren<Aura>()?.DisableAura();
+            yield return base.KillCharacter();
         }
         #endregion
 

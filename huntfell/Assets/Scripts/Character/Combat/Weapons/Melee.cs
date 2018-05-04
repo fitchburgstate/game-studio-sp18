@@ -93,9 +93,7 @@ namespace Hunter.Characters
 
             var isCritical = ShouldAttackBeCritical(critPercent);
             var totalDamage = CalculateDamage(WeaponElement, enemyElementType, isCritical);
-            damageableObject.TakeDamage(totalDamage, isCritical, this);
-
-            
+            damageableObject.Damage(totalDamage, isCritical, this);
         }
 
         /// <summary>
@@ -110,7 +108,7 @@ namespace Hunter.Characters
         private IEnumerator OpenAndCloseHitBox ()
         {
             EnableHitbox();
-            for (int i = 0; i < hitBoxFrames; i++)
+            for (var i = 0; i < hitBoxFrames; i++)
             {
                 yield return new WaitForEndOfFrame();
             }

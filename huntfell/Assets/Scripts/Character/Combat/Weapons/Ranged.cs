@@ -90,6 +90,7 @@ namespace Hunter.Characters
             {
                 var target = hit.transform;
                 var damageableObject = target.GetComponent<IDamageable>();
+
                 if (damageableObject != null)
                 {
                     var enemy = target.GetComponent<Enemy>();
@@ -98,7 +99,7 @@ namespace Hunter.Characters
 
                     var isCritical = ShouldAttackBeCritical(critPercent);
                     var totalDamage = CalculateDamage(WeaponElement, enemyElementType, isCritical);
-                    damageableObject.TakeDamage(totalDamage, isCritical, this);
+                    damageableObject.Damage(totalDamage, isCritical, this);
                 }
                 endOfRay = hit.point;
             }
@@ -114,12 +115,11 @@ namespace Hunter.Characters
                 weaponTrailCR = MakeGunTrail(startPoint, endOfRay);
                 StartCoroutine(weaponTrailCR);
             }
-            //CheckAmmo();
         }
         #endregion
 
         #region CalculateDamage Function
-        protected override string CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
+        protected override int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var normalDamage = base.CalculateDamage(weaponElement, enemyElementType, isCritical);
             return normalDamage;

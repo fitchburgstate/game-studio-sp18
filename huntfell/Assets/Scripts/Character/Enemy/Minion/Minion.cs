@@ -1,50 +1,51 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.AI;
 
 namespace Hunter.Characters
 {
     public abstract class Minion : Enemy
     {
-        #region Variables
-        public float invincibilityFrames = 5;
-
-        public Image minionHealthBar;
-
-        protected Transform minionHealthBarParent;
-        #endregion
-
-        protected override void Start()
+        #region Properties
+        public override float CurrentHealth
         {
-            base.Start();
-            if (minionHealthBar != null)
+            get
             {
-                minionHealthBarParent = minionHealthBar.transform.parent;
-                minionHealthBarParent.gameObject.SetActive(false);
+                return base.CurrentHealth;
+            }
+
+            set
+            {
+                base.CurrentHealth = value;
+                effectsModule?.SetWoundBarFill(currentHealth / totalHealth);
+
             }
         }
 
-        #region SubtractHealthFromCharacter Function
-        //TODO Move this into Effects Controller as an optional parameter that only minions take
-        protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
+        public override float TargetHealth
         {
-            minionHealthBarParent?.gameObject.SetActive(true);
-            var targetHealth = CurrentHealth - damage;
-            if (minionHealthBar != null)
+            get
             {
-                minionHealthBar.fillAmount = targetHealth / totalHealth;
+                return base.TargetHealth;
             }
-            else { Debug.LogWarning($"{name} does not have a health bar set in the inspector."); }
-            CurrentHealth = targetHealth;
-            invincible = true;
-            for (var i = 0; i < invincibilityFrames; i++)
+
+            set
             {
-                yield return null;
+                base.TargetHealth = value;
+                effectsModule?.SetHealthBarFill(targetHealth / totalHealth);
             }
-            invincible = false;
-            yield return null;
+        }
+        #endregion
+
+        #region Combat Related Functions
+        protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        {
+            effectsModule?.EnableHealthBars();
+            return base.SubtractHealthFromCharacter(damage, isCritical);
+        }
+
+        protected override IEnumerator KillCharacter ()
+        {
+            effectsModule?.DisableHealthBars();
+            return base.KillCharacter();
         }
         #endregion
     }

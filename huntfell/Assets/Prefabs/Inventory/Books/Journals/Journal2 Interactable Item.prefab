@@ -175,34 +175,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 9808ae810e44aab41afd6bfd0564d33b, type: 2}
-  propSpeed: 2
-  bounceSpeed: 5
-  bounceHeight: 3
-  maxDistance: 2
-  propCurve:
+  itemBounceTime: 0.75
+  itemTotalBounces: 3
+  itemBounceHeight: 1.25
+  itemHeightCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
+      time: 0.005584717
+      value: 0.49108887
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.4956388
-      value: 0.9892081
-      inSlope: -0.053346157
-      outSlope: -0.053346157
+      time: 0.49999905
+      value: 0.71174544
+      inSlope: -0.0653187
+      outSlope: -0.0653187
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.9833374
+      time: 1
       value: 0
-      inSlope: -3.782447
-      outSlope: -3.782447
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  itemMaxSpawnDistance: 3
+  tutorialText: 
+  tutorialIcon: {fileID: 0}
 --- !u!135 &135655572334881934
 SphereCollider:
   m_ObjectHideFlags: 1

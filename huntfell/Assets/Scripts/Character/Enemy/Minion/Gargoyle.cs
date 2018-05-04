@@ -8,41 +8,16 @@ namespace Hunter.Characters
     public class Gargoyle : Minion
     {
         #region Variables
-        [Header("Combat Options")]
-        [Range(1, 250)]
-        public float turnSpeed = 175f;
-
-        [SerializeField]
+        [SerializeField, Header("Combat Options")]
         private Ranged rangedWeapon;
 
         [Header("Death Options")]
         [SerializeField]
         private ParticleSystem deathParticle;
 
-
-        private AIDetection gargoyleDetection;
         private GameObject target;
-
+        private AIDetection gargoyleDetection;
         private IEnumerator gargoyleAttackCR;
-        #endregion
-
-        #region Properties
-        public override float CurrentHealth
-        {
-            get
-            {
-                return health;
-            }
-            set
-            {
-                health = value;
-                if (health <= 0)
-                {
-                    var killGargoyleCR = KillGargoyle();
-                    StartCoroutine(killGargoyleCR);
-                }
-            }
-        }
         #endregion
 
         #region Unity Functions
@@ -69,6 +44,7 @@ namespace Hunter.Characters
         #region Gargoyle Combat
         private void Attack()
         {
+            if (IsDying) { return; }
             if (gargoyleAttackCR != null) { return; }
             gargoyleAttackCR = GargoyleAttack();
             StartCoroutine(gargoyleAttackCR);
@@ -83,11 +59,10 @@ namespace Hunter.Characters
             gargoyleAttackCR = null;
         }
 
-        private IEnumerator KillGargoyle()
+        protected override IEnumerator KillCharacter()
         {
             deathParticle?.Play();
-            yield return new WaitForSeconds(.75f);
-            Destroy(gameObject);
+            return base.KillCharacter();
         }
         #endregion
     }

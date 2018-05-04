@@ -12,7 +12,7 @@ namespace Hunter
         Fire,
         Ice,
         Electric,
-        Nature,
+        //Nature,
         Silver
     }
 
@@ -34,7 +34,7 @@ namespace Hunter
         {
             public Fire ()
             {
-                weakness = typeof(Ice);
+                weakness = typeof(Electric);
                 elementColor = Color.red;
             }
         }
@@ -52,19 +52,19 @@ namespace Hunter
         {
             public Electric ()
             {
-                weakness = typeof(Nature);
+                weakness = typeof(Ice);
                 elementColor = Color.yellow;
             }
         }
 
-        public class Nature : Element
-        {
-            public Nature ()
-            {
-                weakness = typeof(Electric);
-                elementColor = Color.green;
-            }
-        }
+        //public class Nature : Element
+        //{
+        //    public Nature ()
+        //    {
+        //        weakness = typeof(Electric);
+        //        elementColor = Color.green;
+        //    }
+        //}
 
         public class Silver : Element
         {
