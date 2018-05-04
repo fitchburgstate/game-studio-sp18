@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 23016588136407104}
   - component: {fileID: 65922445296498518}
   - component: {fileID: 114274044907937246}
+  - component: {fileID: 114815494051193854}
   - component: {fileID: 54189738489303574}
   m_Layer: 10
   m_Name: Cutlass Melee Weapon
@@ -151,7 +152,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1607038246817686}
   m_LocalRotation: {x: 0.42042625, y: 0.5763976, z: 0.5212029, w: -0.46835366}
-  m_LocalPosition: {x: -0.255, y: -0.008, z: 0.475}
+  m_LocalPosition: {x: -0.303, y: 0.011, z: 0.542}
   m_LocalScale: {x: 1.1426381, y: 1.1426393, z: 1.1426395}
   m_Children:
   - {fileID: 4935880688696864}
@@ -178,7 +179,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1253983095352956}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.595, y: 0.028, z: 0.132}
+  m_LocalPosition: {x: -0.644, y: 0.243, z: -0.058}
   m_LocalScale: {x: 0.33926693, y: 0.33926705, z: 0.33926696}
   m_Children: []
   m_Father: {fileID: 4935880688696864}
@@ -315,7 +316,37 @@ MonoBehaviour:
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 10
   swingParticleSystem: {fileID: 198003281727481110}
-  equipEffects: []
+  equipEffects:
+  - elementEffect: 1
+    equipMaterials: []
+    equipParticleSystem: {fileID: 198567242927320792}
+  - elementEffect: 2
+    equipMaterials: []
+    equipParticleSystem: {fileID: 198353032100638956}
+  - elementEffect: 3
+    equipMaterials: []
+    equipParticleSystem: {fileID: 198066191142626696}
+  - elementEffect: 4
+    equipMaterials: []
+    equipParticleSystem: {fileID: 0}
+  - elementEffect: 5
+    equipMaterials: []
+    equipParticleSystem: {fileID: 198586023901701314}
+--- !u!114 &114815494051193854
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1607038246817686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shaderToOverlay: {fileID: 4800000, guid: c531fce4ab6a8274db76c888cd7bfa82, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!198 &198003281727481110
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -376,7 +407,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1202555759
+  randomSeed: -1731411776
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3737,7 +3768,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 294985456
+  randomSeed: -918688539
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -7098,7 +7129,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -2035197216
+  randomSeed: -1394761744
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -10459,7 +10490,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1161606338
+  randomSeed: -423795679
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -12980,7 +13011,7 @@ ParticleSystem:
   LightsModule:
     enabled: 0
     ratio: 1
-    light: {fileID: 0}
+    light: {fileID: 108050819416718466, guid: f74027d1d45aa3546b329a849ea08d46, type: 2}
     randomDistribution: 1
     color: 1
     range: 1
@@ -13820,7 +13851,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1376951590
+  randomSeed: 1800542005
   InitialModule:
     serializedVersion: 3
     enabled: 1
