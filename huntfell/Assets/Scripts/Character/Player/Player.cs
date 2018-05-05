@@ -43,10 +43,10 @@ namespace Hunter.Characters
         public LayerMask dashFinalCheckBlockingLayers;
 
         [Header("Potion Options")]
-        [Range(1, 5)]
-        public int potionCount = 1;
+        [Range(1, 5), SerializeField]
+        private int potionCount = 1;
         [Range(1, 100)]
-        public int maxPotionShards = 30;
+        public int maxShardsPerPotion = 30;
         [SerializeField]
         private int potionShardCount;
         [Range(1, 20)]
@@ -55,6 +55,8 @@ namespace Hunter.Characters
         public float potionRestoreInterval = 0.33f;
         [Range(1, 20)]
         public float potionRestoreLifeTime = 5;
+
+        private int currentPotionIndex;
 
         [Header("World UI Options")]
         public Image interactPromptImage;
@@ -137,7 +139,22 @@ namespace Hunter.Characters
 
             set
             {
-                potionShardCount = Mathf.Clamp(value, 0, maxPotionShards * potionCount);
+                potionShardCount = Mathf.Clamp(value, 0, maxShardsPerPotion * PotionCount);
+                UpdateDecanters();
+            }
+        }
+
+        public int PotionCount
+        {
+            get
+            {
+                return potionCount;
+            }
+
+            set
+            {
+                potionCount = value;
+                HUDManager.instance?.EnableDecanter(potionCount - 1);
             }
         }
         #endregion
@@ -162,16 +179,25 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
-            EquipWeaponToCharacter(Inventory.GetMeleeWeaponAtIndex(0, weaponContainer));
+            UpdateDecanters();
+            Inventory.AddStartingItems();
             CheckInteractImage();
         }
 
         private void OnTriggerEnter(Collider other)
         {
             var interactableItem = other.GetComponent<IInteractable>();
-            if (interactableItem != null && !nearbyInteractables.Contains(interactableItem))
+            if (interactableItem != null)
             {
-                AddNearbyInteractable(interactableItem);
+                if(other.GetComponent<InteractablePotionShard>() != null)
+                {
+                    interactableItem.FireInteraction(this);
+                }
+                else if (!nearbyInteractables.Contains(interactableItem))
+                {
+                    AddNearbyInteractable(interactableItem);
+                }
+                return;
             }
 
             var tutorialTrigger = other.GetComponent<TutorialTrigger>();
@@ -374,7 +400,7 @@ namespace Hunter.Characters
         #region Player Combat
         public void Attack()
         {
-            if (PerformingMajorAction || PerformingMinorAction) { return; }
+            if (PerformingMajorAction || PerformingMinorAction || CurrentWeapon == null) { return; }
 
             attackAction = PlayAttackAnimation();
             StartCoroutine(attackAction);
@@ -436,7 +462,7 @@ namespace Hunter.Characters
             }
             //TODO This should really be referencing a clip on the new weapon being equipped and playing that instead
             if (newWeapon is Melee) { Fabric.EventManager.Instance?.PostEvent("Player Draw Sword", gameObject); }
-            else if (newWeapon is Ranged) { Fabric.EventManager.Instance?.PostEvent("Player Draw Luger", gameObject); }
+            //else if (newWeapon is Ranged) { Fabric.EventManager.Instance?.PostEvent("Player Draw Luger", gameObject); }
             EquipWeaponToCharacter(newWeapon);
         }
 
@@ -455,16 +481,16 @@ namespace Hunter.Characters
             }
         }
 
-        public void SwitchWeaponType(bool switchToMelee)
+        public void SwitchWeaponType (bool switchToMelee)
         {
-            if (switchToMelee && !(CurrentWeapon is Melee))
-            {
-                EquipWeaponToCharacter(Inventory.GetMeleeWeaponAtIndex(Inventory.MeleeWeaponIndex, weaponContainer));
-            }
-            else if (!switchToMelee && !(CurrentWeapon is Ranged))
-            {
-                EquipWeaponToCharacter(Inventory.GetRangedWeaponAtIndex(Inventory.RangedWeaponIndex, weaponContainer));
-            }
+            //if (switchToMelee && !(CurrentWeapon is Melee))
+            //{
+            //    EquipWeaponToCharacter(Inventory.GetMeleeWeaponAtIndex(Inventory.MeleeWeaponIndex, weaponContainer));
+            //}
+            //else if (!switchToMelee && !(CurrentWeapon is Ranged))
+            //{
+            //    EquipWeaponToCharacter(Inventory.GetRangedWeaponAtIndex(Inventory.RangedWeaponIndex, weaponContainer));
+            //}
         }
         #endregion
 
@@ -474,12 +500,20 @@ namespace Hunter.Characters
 
         public void UsePotion ()
         {
-            if(PerformingMinorAction || PotionShardCount < maxPotionShards * potionCount) {
+            if(PerformingMinorAction || PotionShardCount < maxShardsPerPotion || TargetHealth == totalHealth) {
                 Debug.LogWarning("Cannot use potion at this time.");
                 return;
             }
             gameObject.AddComponent<HealOverTime>().InitializeEffect(potionRestoreAmount, potionRestoreInterval, potionRestoreLifeTime, null, this, null);
-            PotionShardCount -= maxPotionShards;
+            PotionShardCount -= maxShardsPerPotion;
+        }
+
+        private void UpdateDecanters ()
+        {
+            for (int i = 0; i < potionCount; i++)
+            {
+                HUDManager.instance?.SetDecanterInfo(i, PotionShardCount, maxShardsPerPotion);
+            }
         }
 
         protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
@@ -520,8 +554,10 @@ namespace Hunter.Characters
             {
                 Destroy(statusEffects[i]);
             }
-            currentHealth = totalHealth;
-            targetHealth = currentHealth;
+            TargetHealth = totalHealth;
+
+            PotionShardCount = 0;
+            UpdateDecanters();
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.In);
 
@@ -638,10 +674,21 @@ namespace Hunter.Characters
 
         #endregion
 
-        #region Helper Functions
+        #region Helper / Unused Functions
         private float SignedAngle(Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);
+        }
+
+        public IEnumerator AttackAnimation()
+        {
+            yield return null;
+        }
+
+        public void Move(Vector3 target, float finalSpeed)
+        {
+            if (IsDying) { return; }
+            // This should be left empty.
         }
         #endregion
     }

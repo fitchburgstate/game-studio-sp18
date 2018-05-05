@@ -3,26 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 namespace Hunter {
     public class HUDManager : MonoBehaviour {
+
+        [Serializable]
+        public struct DecanterInfo
+        {
+            public GameObject parent;
+            public Image fillImage;
+            public TextMeshProUGUI shardsText;
+            public Image inputImage;
+        }
 
         [HideInInspector]
         public static HUDManager instance;
         public CanvasGroup hudCanvasGroup;
 
-        [SerializeField]
+        [Header("Health and Stamina")]
         public Image healthBar;
-        [SerializeField]
         public Image woundBar;
-        [SerializeField]
         public Image staminaBar;
+        public List<DecanterInfo> decanters;
+
+        [Header("Weapons and Elements")]
         [SerializeField]
-        private Image activeWeapon;
+        private List<Image> weaponSockets;
         [SerializeField]
-        private Image inactiveWeapon;
+        private Animator weaponWheelController;
         [SerializeField]
-        private Image activeElement;
+        private List<Image> elementSockets;
+        [SerializeField]
+        private Animator elementWheelController;
+        [SerializeField]
+        private float wheelSpeed = 2;
+        [SerializeField]
+        private Sprite nullElementSprite;
+
+        [Header("Prompts")]
         [SerializeField]
         private TextMeshProUGUI promptText;
         [SerializeField]
@@ -31,14 +50,12 @@ namespace Hunter {
         private TextMeshProUGUI tutorialText;
         [SerializeField]
         private Image tutorialIcon;
-
-        public AnimationCurve fadeCurve;
-        [SerializeField]
-        private Sprite nullElementSprite;
         [SerializeField]
         private Sprite hintSprite;
 
-        public GameObject damagePopUpPrefab;
+        [Space]
+        public AnimationCurve fadeCurve;
+
         private CanvasGroup promptCanvasGroup;
         private CanvasGroup tutorialCanvasGroup;
 
@@ -55,6 +72,13 @@ namespace Hunter {
         private IEnumerator woundBarAction;
         private float targetWoundBarFill;
 
+        private IEnumerator elementWheelAction;
+        private int currentElementWheelIndex = 0;
+        private int targetElementWheelIndex = 0;
+
+        private IEnumerator weaponWheelAction;
+        private int currentWeaponWheelIndex = 0;
+        private int targetWeaponWheelIndex = 0;
 
         public void Awake ()
         {
@@ -80,22 +104,178 @@ namespace Hunter {
                 hudCanvasGroup.alpha = 0;
                 StartCoroutine(Utility.FadeCanvasGroup(hudCanvasGroup, fadeCurve, 1, FadeType.Out));
             }
-        }
-
-        public void UpdateWeaponImage(Sprite newSprite)
-        {
-            inactiveWeapon.sprite = activeWeapon.sprite;
-            activeWeapon.sprite = newSprite;
-        }
-
-        public void UpdateElementImage (Sprite newSprite)
-        {
-            if(newSprite == null)
+            if(elementSockets != null && elementSockets.Count > 0)
             {
-                activeElement.sprite = nullElementSprite;
-                return;
+                foreach(var socket in elementSockets)
+                {
+                    socket.enabled = false;
+                }
             }
-            activeElement.sprite = newSprite;
+            if (weaponSockets != null && weaponSockets.Count > 0)
+            {
+                foreach (var socket in weaponSockets)
+                {
+                    socket.enabled = false;
+                }
+            }
+        }
+
+        //public void UpdateWeaponImage(Sprite newSprite)
+        //{
+        //    //inactiveWeapon.sprite = activeWeapon.sprite;
+        //    //activeWeapon.sprite = newSprite;
+        //}
+
+        //public void UpdateElementImage (Sprite newSprite)
+        //{
+        //    if(newSprite == null)
+        //    {
+        //        activeElement.sprite = nullElementSprite;
+        //        return;
+        //    }
+        //    activeElement.sprite = newSprite;
+        //}
+
+        public void AddNewElementToSocket (Sprite elementIcon)
+        {
+            if (elementSockets != null && elementSockets.Count > 0)
+            {
+                foreach (var socket in elementSockets)
+                {
+                    if (!socket.enabled)
+                    {
+                        socket.sprite = elementIcon;
+                        socket.enabled = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void AddNewWeaponToSocket (Sprite weaponIcon)
+        {
+            if (weaponSockets != null && weaponSockets.Count > 0)
+            {
+                foreach (var socket in weaponSockets)
+                {
+                    if (!socket.enabled)
+                    {
+                        socket.sprite = weaponIcon;
+                        socket.enabled = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void DimElementSockets(List<int> indexList)
+        {
+            //Start at one to not include null element since all weapons can equip it
+            for (int i = 1; i < elementSockets.Count; i++)
+            {
+                if (indexList.Contains(i))
+                {
+                    elementSockets[i].color = Color.gray;
+                }
+                else
+                {
+                    elementSockets[i].color = Color.white;
+                }
+            }
+        }
+
+        public void MoveElementWheel(int elementIndex)
+        {
+            targetElementWheelIndex = elementIndex;
+            if(elementWheelAction != null) { return; }
+
+            elementWheelAction = ElementWheelAnimation();
+            StartCoroutine(elementWheelAction);
+        }
+
+        private IEnumerator ElementWheelAnimation ()
+        {
+            DisableElementSocketHighlight(currentElementWheelIndex);
+
+            //This gets the total amount of element slots with respect to index notation and then converts it to a 'divide by zero' safe fraction
+            float eMod = 1.0f / (elementSockets.Count - 1.0f);
+
+            // Converts the index values to blend tree percentage values
+            float targetWheelAmount = targetElementWheelIndex * eMod;
+            float currentWheelAmount = currentElementWheelIndex * eMod;
+
+            while(targetWheelAmount != currentWheelAmount)
+            {
+                var step = Time.deltaTime * wheelSpeed;
+                targetWheelAmount = targetElementWheelIndex * eMod;
+
+                if (currentWheelAmount < targetWheelAmount)
+                {
+                    currentWheelAmount = Mathf.Clamp(currentWheelAmount + step, 0, targetWheelAmount);
+                }
+                else if(currentWheelAmount > targetWheelAmount)
+                {
+                    currentWheelAmount = Mathf.Clamp(currentWheelAmount - step, targetWheelAmount, 1);
+                }
+
+                elementWheelController.SetFloat("wheelAmount", currentWheelAmount);
+                yield return null;
+            }
+
+            currentElementWheelIndex = targetElementWheelIndex;
+            EnableElementSocketHighlight(currentElementWheelIndex);
+            elementWheelAction = null;
+        }
+
+        public void MoveWeaponWheel (int weaponIndex)
+        {
+            targetWeaponWheelIndex = weaponIndex;
+            if (weaponWheelAction != null) { return; }
+
+            weaponWheelAction = WeaponWheelAnimation(weaponIndex);
+            StartCoroutine(weaponWheelAction);
+        }
+
+        private IEnumerator WeaponWheelAnimation (int elementIndex)
+        {
+
+            //This gets the total amount of weapon slots with respect to index notation and then converts it to a 'divide by zero' safe fraction
+            float wMod = 1.0f / (weaponSockets.Count - 1.0f);
+
+            // Converts the index values to blend tree percentage values
+            float targetWheelAmount = targetWeaponWheelIndex * wMod;
+            float currentWheelAmount = currentWeaponWheelIndex * wMod;
+
+            while (targetWheelAmount != currentWheelAmount)
+            {
+                var step = Time.deltaTime * wheelSpeed;
+                targetWheelAmount = targetWeaponWheelIndex * wMod;
+
+                if (currentWheelAmount < targetWheelAmount)
+                {
+                    currentWheelAmount = Mathf.Clamp(currentWheelAmount + step, 0, targetWheelAmount);
+                }
+                else if (currentWheelAmount > targetWheelAmount)
+                {
+                    currentWheelAmount = Mathf.Clamp(currentWheelAmount - step, targetWheelAmount, 1);
+                }
+
+                weaponWheelController.SetFloat("wheelAmount", currentWheelAmount);
+                yield return null;
+            }
+
+            currentWeaponWheelIndex = elementIndex;
+            weaponWheelAction = null;
+        }
+
+        public void EnableElementSocketHighlight(int index)
+        {
+            elementSockets[index].transform.GetChild(0).gameObject.SetActive(true);
+        }
+
+        public void DisableElementSocketHighlight(int index)
+        {
+            elementSockets[index].transform.GetChild(0).gameObject.SetActive(false);
         }
 
         public void ShowItemPickupPrompt(string itemName, Sprite itemIcon)
@@ -305,6 +485,41 @@ namespace Hunter {
             }
 
             staminaBarAction = null;
+        }
+
+        public void EnableDecanter(int decanterIndex)
+        {
+            if (decanterIndex >= decanters.Count)
+            {
+                Debug.LogWarning($"You tried to enable a decanter at index {decanterIndex} but there are only {decanters.Count} assigned in the inspector.");
+                return;
+            }
+            decanters[decanterIndex].parent.SetActive(true);
+        }
+
+        public void SetDecanterInfo (int decanterIndex, int currentShards, int maxShards)
+        {
+            if(decanterIndex >= decanters.Count)
+            {
+                Debug.LogWarning($"You tried to edit a decanter at index {decanterIndex} but there are only {decanters.Count} assigned in the inspector.");
+                return;
+            }
+            var decanter = decanters[decanterIndex];
+            var adjustedCurrentShards = Mathf.Clamp(currentShards - (maxShards * decanterIndex), 0, maxShards);
+            var targetFill = (float)adjustedCurrentShards / maxShards;
+            decanter.fillImage.fillAmount = targetFill;
+            decanter.shardsText.text = $"{adjustedCurrentShards}/{maxShards}";
+
+            if(targetFill == 1)
+            {
+                decanter.shardsText.gameObject.SetActive(false);
+                decanter.inputImage.gameObject.SetActive(true);
+            }
+            else
+            {
+                decanter.inputImage.gameObject.SetActive(false);
+                decanter.shardsText.gameObject.SetActive(true);
+            }
         }
     }
 }

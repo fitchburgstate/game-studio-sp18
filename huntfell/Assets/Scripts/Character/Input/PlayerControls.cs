@@ -199,11 +199,11 @@ namespace Hunter {
                     cycleElement_Negative.AddDefaultBinding(InputControlType.DPadDown);
                     cycleElement_Positive.AddDefaultBinding(InputControlType.DPadUp);
 
-                    cycleWeapon_Negative.AddDefaultBinding(InputControlType.LeftBumper);
-                    cycleWeapon_Positive.AddDefaultBinding(InputControlType.RightBumper);
+                    cycleWeapon_Negative.AddDefaultBinding(InputControlType.DPadRight);
+                    cycleWeapon_Positive.AddDefaultBinding(InputControlType.DPadLeft);
 
-                    WeaponTypeRangedButton.AddDefaultBinding(InputControlType.DPadLeft);
-                    WeaponTypeMeleeButton.AddDefaultBinding(InputControlType.DPadRight);
+                    //WeaponTypeRangedButton.AddDefaultBinding(InputControlType.DPadLeft);
+                    //WeaponTypeMeleeButton.AddDefaultBinding(InputControlType.DPadRight);
 
                     // Main Bindings
                     if (layout == ControlsLayout.Controller_Face)
@@ -291,14 +291,14 @@ namespace Hunter {
         public void SetBindingsAll (ControlsLayout layout)
         {
             RefreshBindings();
-            Debug.Log("Setting the bindings to use the layout " + layout);
+            //Debug.Log("Setting the bindings to use the layout " + layout);
             UI?.SetBindings(layout);
             Game?.SetBindings(layout);
         }
 
         public void SetDeviceAll(InputDevice device)
         {
-            if(device != null) { Debug.Log("Attaching new device: " + device.Name); }
+            if(device != null) { /*Debug.Log("Attaching new device: " + device.Name);*/ }
             else { Debug.LogWarning("No valid devices were detected, falling back to Active Input."); }
             UI?.SetDevice(device);
             Game?.SetDevice(device);

@@ -50,6 +50,7 @@ namespace Hunter
         private UnityEvent propEvent;
 
         private bool currentlyInteracting = false;
+        private IEnumerator spawnAction;
 
         public bool IsImportant
         {
@@ -136,6 +137,7 @@ namespace Hunter
                 currentlyInteracting = true;
                 ShowSuccessMessage();
 
+                ExecutePropInteractions(characterWhoAttacked);
                 switch (propType)
                 {
                     case PropType.Destructible:
@@ -147,7 +149,6 @@ namespace Hunter
                         ShakeProp();
                         break;
                 }
-                ExecutePropInteractions(characterWhoAttacked);
             }
             else
             {
@@ -165,12 +166,13 @@ namespace Hunter
             var elapsed = 0.0f;
             var originalObjectPos = gameObject.transform.localPosition;
 
-            while (elapsed < duration)
+            while (elapsed < duration || spawnAction != null)
             {
                 elapsed += Time.deltaTime;
 
-                var percentComplete = elapsed / duration;
-                var damper = 1.0f - Mathf.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
+                var percentComplete = Mathf.Clamp01(elapsed / duration);
+                //var damper = 1.0f - Mathf.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
+                var damper = 0.5f -percentComplete;
                 var x = (Random.value * 2.0f - 1.0f);
                 var y = (Random.value * 2.0f - 1.0f);
                 x *= magnitude * damper;
@@ -204,7 +206,11 @@ namespace Hunter
             }
             else
             {
-                SpawnInteractableItems(characterFromInteraction);
+                if (itemsToSpawn.Count > 0)
+                {
+                    spawnAction = SpawnInteractableItems(characterFromInteraction);
+                    StartCoroutine(spawnAction);
+                }
             }
 
             if (propEvent != null)
@@ -213,10 +219,8 @@ namespace Hunter
             }
         }
 
-        private void SpawnInteractableItems (Character characterFromInteraction)
+        private IEnumerator SpawnInteractableItems (Character characterFromInteraction)
         {
-            if (itemsToSpawn.Count == 0) { return; }
-
             foreach (var item in itemsToSpawn)
             {
                 var spawnedItem = Instantiate(item.InteractableItemPrefab, transform.position, transform.rotation);
@@ -225,6 +229,7 @@ namespace Hunter
                 {
                     case PropType.Interactable:
                         spawnedItem.SpawnFromProp(characterFromInteraction.transform.position);
+                        yield return new WaitForSeconds(0.25f);
                         break;
                     default:
                         spawnedItem.SpawnOnGround(transform.position);
@@ -233,6 +238,8 @@ namespace Hunter
             }
 
             itemsToSpawn.Clear();
+            spawnAction = null;
+            yield return null;
         }
 
         private void GiveItemsDirectly (Character characterFromInteraction)

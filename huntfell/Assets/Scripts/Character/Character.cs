@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -36,7 +35,6 @@ namespace Hunter.Characters
         protected IEnumerator deathAction;
         protected IEnumerator damageAction;
         protected IEnumerator restoreAction;
-
         #endregion
 
         #region Properties
@@ -56,10 +54,10 @@ namespace Hunter.Characters
             }
             set
             {
-                if (IsDying) { return; }
+                //if (IsDying) { return; }
                 currentHealth = Mathf.Clamp(value, TargetHealth, totalHealth);
 
-                if(currentHealth <= 0)
+                if (currentHealth <= 0)
                 {
                     Kill();
                 }
@@ -74,7 +72,7 @@ namespace Hunter.Characters
             }
             set
             {
-                if (IsDying) { return; }
+                //if (IsDying) { return; }
                 targetHealth = Mathf.Clamp(value, 0, totalHealth);
                 if (targetHealth > currentHealth)
                 {
@@ -160,7 +158,7 @@ namespace Hunter.Characters
         #endregion
 
         #region Unity Functions
-        protected virtual void Awake ()
+        protected virtual void Awake()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
@@ -169,14 +167,14 @@ namespace Hunter.Characters
             if (effectsModule == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
         }
 
-        protected virtual void Start ()
+        protected virtual void Start()
         {
             TargetHealth = totalHealth;
         }
         #endregion
 
         #region Combat Related Functions
-        public void EquipWeaponToCharacter (Weapon weapon)
+        public void EquipWeaponToCharacter(Weapon weapon)
         {
             if (weapon != null)
             {
@@ -188,10 +186,11 @@ namespace Hunter.Characters
                 currentWeapon = weapon;
                 currentWeapon.characterHoldingWeapon = this;
                 currentWeapon.gameObject.SetActive(true);
+                Debug.Log($"{DisplayName} equipped the {CurrentWeapon.name}");
             }
         }
 
-        public void EquipElementToWeapon (Element element)
+        public void EquipElementToWeapon(Element element)
         {
             if (CurrentWeapon != null)
             {
@@ -199,15 +198,25 @@ namespace Hunter.Characters
             }
         }
 
-        public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
+        public void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             //If you are attacked with a weapon (not things like dots) and your target health is already at 0, critical hit you deadski
             if (TargetHealth == 0) { isCritical = true; }
-
+            if (isCritical && damage > 0) { StartCoroutine(SlowTimeCritical()); }
             Damage(damage, isCritical, weaponAttackedWith.WeaponElement);
         }
 
-        public void Damage (int damage, bool isCritical, Element damageElement)
+        private IEnumerator SlowTimeCritical()
+        {
+            Time.timeScale = 0.25f;
+            yield return new WaitForSecondsRealtime(0.35f);
+
+            // If the player were to pause in the middle of this, we want the time scale to not be reset because then the game will resume while they are still paused
+            if (PauseManager.instance != null && PauseManager.instance.IsGamePaused) { yield break; }
+            Time.timeScale = 1;
+        }
+
+        public void Damage(int damage, bool isCritical, Element damageElement)
         {
             if (invincible || IsDying) { return; }
 
@@ -229,7 +238,7 @@ namespace Hunter.Characters
             }
         }
 
-        protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected virtual IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
             TargetHealth -= damage;
 
@@ -246,7 +255,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void Heal (int restore, bool isCritical)
+        public void Heal(int restore, bool isCritical)
         {
             if (IsDying || CurrentHealth == totalHealth) { return; }
 
@@ -265,7 +274,7 @@ namespace Hunter.Characters
 
         }
 
-        protected virtual IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
+        protected virtual IEnumerator AddHealthToCharacter(int restoreAmount, bool isCritical)
         {
             var healTarget = restoreAmount + TargetHealth;
             var cachedTarget = TargetHealth;
@@ -285,7 +294,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void Kill ()
+        public void Kill()
         {
             if (IsDying) { return; }
 
@@ -293,7 +302,7 @@ namespace Hunter.Characters
             StartCoroutine(deathAction);
         }
 
-        protected virtual IEnumerator KillCharacter ()
+        protected virtual IEnumerator KillCharacter()
         {
             yield return new WaitForSeconds(5);
             gameObject.SetActive(false);

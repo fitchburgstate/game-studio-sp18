@@ -90,6 +90,7 @@ namespace Hunter.Characters
             {
                 var target = hit.transform;
                 var damageableObject = target.GetComponent<IDamageable>();
+
                 if (damageableObject != null)
                 {
                     var enemy = target.GetComponent<Enemy>();
@@ -114,7 +115,6 @@ namespace Hunter.Characters
                 weaponTrailCR = MakeGunTrail(startPoint, endOfRay);
                 StartCoroutine(weaponTrailCR);
             }
-            //CheckAmmo();
         }
         #endregion
 

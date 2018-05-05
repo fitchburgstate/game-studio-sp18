@@ -7,23 +7,14 @@ namespace Hunter.Characters
 {
     public class Bat : Minion, IMoveable, IUtilityBasedAI
     {
-        #region Variables
-        /// <summary>
-        /// This is the speed at which the character runs.
-        /// </summary>
-        [Range(0, 20), Tooltip("The running speed of the character when it is in combat.")]
-        public float speed = 2.5f;
-
-        [Range(1, 250)]
-        public float turnSpeed = 175f;
-        #endregion
-
+        #region Unity Functions
         protected override void Start()
         {
             base.Start();
             Fabric.EventManager.Instance?.PostEvent("Bat Start Wing Loop", gameObject);
             agent.updateRotation = false;
         }
+        #endregion
 
         #region Bat Movement
         public void Move(Vector3 target, float finalSpeed)

@@ -8,21 +8,15 @@ namespace Hunter.Characters
     public class Gargoyle : Minion
     {
         #region Variables
-        [Header("Combat Options")]
-        [Range(1, 250)]
-        public float turnSpeed = 175f;
-
-        [SerializeField]
+        [SerializeField, Header("Combat Options")]
         private Ranged rangedWeapon;
 
         [Header("Death Options")]
         [SerializeField]
         private ParticleSystem deathParticle;
 
-
-        private AIDetection gargoyleDetection;
         private GameObject target;
-
+        private AIDetection gargoyleDetection;
         private IEnumerator gargoyleAttackCR;
         #endregion
 
@@ -50,6 +44,7 @@ namespace Hunter.Characters
         #region Gargoyle Combat
         private void Attack()
         {
+            if (IsDying) { return; }
             if (gargoyleAttackCR != null) { return; }
             gargoyleAttackCR = GargoyleAttack();
             StartCoroutine(gargoyleAttackCR);
