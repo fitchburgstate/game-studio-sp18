@@ -257,6 +257,7 @@ GameObject:
   - component: {fileID: 4807767746338268}
   - component: {fileID: 114597538050065698}
   - component: {fileID: 114728341856492028}
+  - component: {fileID: 114462899407160276}
   - component: {fileID: 143037354816612082}
   - component: {fileID: 195290278472634238}
   - component: {fileID: 95246067686058042}
@@ -718,8 +719,8 @@ GameObject:
   m_Name: Minion_Gargoyle_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!1 &1960035046204314
 GameObject:
@@ -1557,6 +1558,22 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114462899407160276
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1243443152083812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 0}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &114597538050065698
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1574,6 +1591,7 @@ MonoBehaviour:
   detectionLayers:
     serializedVersion: 2
     m_Bits: 256
+  showGizmos: 1
 --- !u!114 &114618727006943538
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1641,10 +1659,12 @@ MonoBehaviour:
   currentHealth: 0
   targetHealth: 0
   healthModificationSpeed: 1
+  speed: 5
+  turnSpeed: 100
   enemyElementOption: 0
   invincibilityFrames: 5
-  itemsToSpawn: []
-  turnSpeed: 100
+  itemsToSpawn:
+  - {fileID: 11400000, guid: 456890b2cf8d6c14a9bab10c79661251, type: 2}
   rangedWeapon: {fileID: 114268143001333596}
   deathParticle: {fileID: 198481395803579878}
 --- !u!114 &114874449656000094
@@ -1697,7 +1717,7 @@ NavMeshAgent:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1243443152083812}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 0

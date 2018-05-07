@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,9 +14,9 @@ namespace Hunter.Characters.AI
         public bool attack = true;
         public bool turn = true;
         public bool moveTo = true;
+        public bool retreat = true;
         public bool idle = true;
         public bool wander = true;
-        public bool retreat = true;
 
         [Header("Other Variables")]
         /// <summary>
@@ -27,145 +25,44 @@ namespace Hunter.Characters.AI
         [Range(0f, 25f), Tooltip("The max distance that the character will move to during a Wander action.")]
         public float maxDistance = 10f;
 
+        /// <summary>
+        /// The Scriptable Object which contains all of the values for the urge weights.
+        /// </summary>
         public UrgeWeights urgeWeights;
-
-        /// <summary>
-        /// Represents which direction the character should move in.
-        /// </summary>
-        private Vector3 moveDirection = Vector3.zero;
-
-        /// <summary>
-        /// Represents which direction the character should look in.
-        /// </summary>
-        private Vector3 lookDirection = Vector3.zero;
-
-        /// <summary>
-        /// The model's gameobject. This exists so the model can be turned independently of the parent.
-        /// </summary>
-        private GameObject enemyModel;
-
-        /// <summary>
-        /// This is the navmesh agent attached to the parent. The navmesh is used to find walkable area.
-        /// </summary>
-        private NavMeshAgent agent;
-
-        /// <summary>
-        /// The character controller that controls the character's movement.
-        /// </summary>
-        private CharacterController controller;
-
-        /// <summary>
-        /// The final direction that the character will face that's calculated.
-        /// </summary>
-        private Vector3 finalDirection;
 
         /// <summary>
         /// The target that the AI has acquired.
         /// </summary>
         [SerializeField]
-        private Transform target;
+        protected Transform target;
 
         /// <summary>
         /// The target point that the AI has acquired.
         /// </summary>
         [SerializeField]
-        private Vector3 randomPointTarget;
+        protected Vector3 randomPointTarget;
 
-        private float tempHealth = 0f;
+        public Vector3 spawnPosition;
+
+        protected float tempHealth = 0f;
 
         #region AI Actions
-        private AIDetection aiDetection;
-        private Attack attackAction;
-        private Turn turnAction;
-        private MoveTo moveToAction;
-        private Idle idleAction;
-        private Wander wanderAction;
-        private Retreat retreatAction;
-        private Enemy enemy;
+        protected AIDetection aiDetection;
+        protected Attack attackAction;
+        protected Turn turnAction;
+        protected MoveTo moveToAction;
+        protected Idle idleAction;
+        protected Wander wanderAction;
+        protected Retreat retreatAction;
+        protected Enemy enemy;
         #endregion
 
-        private bool enemyInLOS = false;
-        private bool inCombat = false;
-        private bool enemyInVisionCone = false;
+        public bool inCombat = false;
+        protected bool enemyInLOS = false;
+        protected bool enemyInVisionCone = false;
         #endregion
 
         #region Properties
-        public Vector3 MoveDirection
-        {
-            get
-            {
-                return moveDirection;
-            }
-
-            set
-            {
-                moveDirection = value;
-            }
-        }
-
-        public Vector3 LookDirection
-        {
-            get
-            {
-                return lookDirection;
-            }
-
-            set
-            {
-                lookDirection = value;
-            }
-        }
-
-        public GameObject EnemyModel
-        {
-            get
-            {
-                if (enemyModel == null)
-                {
-                    enemyModel = gameObject.transform.GetChild(0).gameObject;
-                }
-                return enemyModel;
-            }
-        }
-
-        public NavMeshAgent Agent
-        {
-            get
-            {
-                if (agent == null)
-                {
-                    agent = GetComponent<NavMeshAgent>();
-                }
-                return agent;
-            }
-        }
-
-        public CharacterController Controller
-        {
-            get
-            {
-                return controller;
-            }
-
-            set
-            {
-                controller = value;
-            }
-        }
-
-        public Vector3 FinalDirection
-        {
-            get
-            {
-                return finalDirection;
-            }
-
-            set
-            {
-                finalDirection = value;
-            }
-        }
-
         public Transform Target
         {
             get
@@ -202,8 +99,10 @@ namespace Hunter.Characters.AI
         }
         #endregion
 
-        private void Start()
+        #region Unity Functions
+        protected virtual void Start()
         {
+            spawnPosition = transform.position;
             urgeWeights = ScriptableObject.CreateInstance<UrgeWeights>();
             enemy = GetComponent<Enemy>();
 
@@ -217,7 +116,7 @@ namespace Hunter.Characters.AI
             #endregion
         }
 
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             if (!inCombat)
             {
@@ -228,6 +127,7 @@ namespace Hunter.Characters.AI
             }
 
             var distanceToPoint = DistanceToTarget(RandomPointTarget);
+            var distanceToSpawn = DistanceToTarget(spawnPosition);
             var distanceToTarget = DistanceToTarget(Target.position);
 
             if (AiDetection != null)
@@ -239,11 +139,12 @@ namespace Hunter.Characters.AI
                 {
                     inCombat = true;
                 }
-                else if ((distanceToTarget > (AiDetection.maxDetectionDistance*2)) && (!enemyInLOS))
+                else if ((distanceToTarget > (AiDetection.maxDetectionDistance * 2)) && (!enemyInLOS))
                 {
                     inCombat = false;
 
                     var wolfComponent = GetComponent<Wolf>();
+
                     if (wolfComponent != null)
                     {
                         wolfComponent.justFound = false;
@@ -252,12 +153,17 @@ namespace Hunter.Characters.AI
                 }
             }
 
-            var currentState = FindNextState(distanceToTarget, distanceToPoint);
+            var currentState = FindNextState(distanceToTarget, distanceToPoint, distanceToSpawn);
 
+            #region Debug Logs
 #if UNITY_EDITOR
-            //Debug.Log(currentState);
-            //Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
+            if (Selection.Contains(this.gameObject))
+            {
+                Debug.Log(currentState);
+                //Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
+            }
 #endif
+            #endregion
 
             currentState.Act();
 
@@ -276,7 +182,7 @@ namespace Hunter.Characters.AI
             }
             else if (currentState is Retreat)
             {
-                inCombat = true;
+                inCombat = false;
             }
             else if (currentState is Idle)
             {
@@ -290,13 +196,14 @@ namespace Hunter.Characters.AI
 
             tempHealth = enemy.CurrentHealth;
         }
+        #endregion
 
         #region FindNextState Function
         /// <summary>
         /// This function performs various operations to determine what action has the highest urge value and then returns it.
         /// </summary>
         /// <returns></returns>
-        public UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint)
+        public virtual UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint, float distanceToSpawn)
         {
             var attackValue = 0f;
             var idleValue = 0f;
@@ -306,22 +213,22 @@ namespace Hunter.Characters.AI
             var retreatValue = 0f;
 
             if (attack) { attackValue = attackAction.CalculateAttack(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
-            if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
+            if (idle) { idleValue = idleAction.CalculateIdle(distanceToPoint, distanceToSpawn, urgeWeights.distanceToPointMax, inCombat); }
             if (wander) { wanderValue = wanderAction.CalculateWander(distanceToPoint, urgeWeights.distanceToPointMax, inCombat); }
             if (turn) { turnValue = turnAction.CalculateTurn(urgeWeights.attackRangeMin, distanceToTarget, enemyInVisionCone, inCombat); }
             if (moveTo) { moveToValue = moveToAction.CalculateMoveTo(distanceToTarget, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
-            if (retreat) { retreatValue = retreatAction.CalculateRetreat(enemy.CurrentHealth, inCombat); }
+            if (retreat) { retreatValue = retreatAction.CalculateRetreat(distanceToSpawn, urgeWeights.distanceToTargetMin, urgeWeights.distanceToTargetMax, inCombat); }
 
             #region Debug Logs
 #if UNITY_EDITOR
-            if (Selection.Contains(gameObject))
+            if (Selection.Contains(this.gameObject))
             {
                 //Debug.Log("Attack Value: " + attackValue);
-                // Debug.Log("Idle Value: " + idleValue);
-                // Debug.Log("Wander Value: " + wanderValue);
+                Debug.Log("Idle Value: " + idleValue);
+                //Debug.Log("Wander Value: " + wanderValue);
                 //Debug.Log("Turn Value: " + turnValue);
-                // Debug.Log("MoveTo Value: " + moveToValue);
-                // Debug.Log("Retreat Value: " + retreatValue);
+                //Debug.Log("MoveTo Value: " + moveToValue);
+                Debug.Log("Retreat Value: " + retreatValue);
             }
 #endif
             #endregion
@@ -341,16 +248,14 @@ namespace Hunter.Characters.AI
         }
         #endregion
 
-        #region DistanceToTarget Function
-        private float DistanceToTarget(Vector3 targetPosition)
+        #region Helper Functions
+        protected float DistanceToTarget(Vector3 targetPosition)
         {
             var distance = Vector3.Distance(targetPosition, gameObject.transform.position);
 
             return distance;
         }
-        #endregion
 
-        #region FindNearestTargetWithString Function
         /// <summary>
         /// This function returns the nearest transform with the correct tag.
         /// </summary>
@@ -374,9 +279,7 @@ namespace Hunter.Characters.AI
             }
             return bestTarget;
         }
-        #endregion
 
-        #region FindPointOnNavmesh Function
         public Vector3 FindPointOnNavmesh()
         {
             var targetPosition = new Vector3();
@@ -387,6 +290,12 @@ namespace Hunter.Characters.AI
             }
 
             return randomPointTarget;
+        }
+
+        public Vector3 FindNewTargetPoint()
+        {
+            RandomPointTarget = FindPointOnNavmesh();
+            return RandomPointTarget;
         }
         #endregion
     }

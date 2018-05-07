@@ -1,14 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.AI;
 
 namespace Hunter.Characters
 {
     public abstract class Minion : Enemy
     {
-
         #region Properties
         public override float CurrentHealth
         {
@@ -40,6 +35,7 @@ namespace Hunter.Characters
         }
         #endregion
 
+        #region Combat Related Functions
         protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
         {
             effectsModule?.EnableHealthBars();
@@ -51,5 +47,6 @@ namespace Hunter.Characters
             effectsModule?.DisableHealthBars();
             return base.KillCharacter();
         }
+        #endregion
     }
 }

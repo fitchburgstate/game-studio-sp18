@@ -120,6 +120,8 @@ namespace Hunter
 
         void Move(Transform navMeshTarget);
 
+        void Move(Vector3 target, float finalSpeed);
+
         void Dash();
 
         void Interact();
@@ -153,7 +155,7 @@ namespace Hunter
     {
         void Attack();
 
-        IEnumerator PlayAttackAnimation();
+        IEnumerator AttackAnimation();
 
         void AttackAnimationEvent();
 

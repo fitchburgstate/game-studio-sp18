@@ -1,22 +1,11 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Hunter.Characters
 {
     public sealed class Wolf : Minion, IMoveable, IAttack, IUtilityBasedAI
     {
         #region Variables
-        /// <summary>
-        /// This is the speed at which the character runs.
-        /// </summary>
-        [Range(0, 20), Tooltip("The running speed of the character when it is in combat.")]
-        public float speed = 5f;
-
-        [Range(1, 250)]
-        public float turnSpeed = 175f;
-
         /// <summary>
         /// The melee weapon that the wolf will use.
         /// </summary>
@@ -62,6 +51,7 @@ namespace Hunter.Characters
         #region Wolf Movement
         public void Move(Transform target)
         {
+            if (IsDying) { return; }
             Move(target, speed);
         }
 
@@ -106,7 +96,7 @@ namespace Hunter.Characters
 
         #region Wolf Combat
 
-        protected override IEnumerator KillCharacter ()
+        protected override IEnumerator KillCharacter()
         {
             anim.SetTrigger("cinDeath");
             return base.KillCharacter();
@@ -116,11 +106,11 @@ namespace Hunter.Characters
         {
             if (IsDying) { return; }
             if (attackCR != null) { return; }
-            attackCR = PlayAttackAnimation();
+            attackCR = AttackAnimation();
             StartCoroutine(attackCR);
         }
 
-        public IEnumerator PlayAttackAnimation()
+        public IEnumerator AttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             anim.SetTrigger("combat");
