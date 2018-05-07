@@ -22,11 +22,27 @@ namespace Hunter
 
         public Canvas menuCanvas;
 
+        private int currentTabIndex = 0;
+
         public bool IsGamePaused
         {
             get
             {
                 return menuCanvas != null && menuCanvas.gameObject.activeSelf;
+            }
+        }
+
+        public int CurrentTabIndex
+        {
+            get
+            {
+                return currentTabIndex;
+            }
+
+            set
+            {
+                //if(value < 0)
+                currentTabIndex = value;
             }
         }
 
@@ -70,6 +86,43 @@ namespace Hunter
 
             Fabric.EventManager.Instance?.PostEvent("UI Navigation Back");
             menuCanvas.gameObject.SetActive(false);
+        }
+
+        public void SwitchTabs ()
+        {
+            switch (CurrentTabIndex)
+            {
+                case 0:
+                    DisplayPause();
+                    break;
+                case 1:
+                    DisplayJournals();
+                    break;
+                case 2:
+                    DisplayDiaries();
+                    break;
+                case 3:
+                    DisplayBestiary();
+                    break;
+                case 4:
+                    DisplayMap();
+                    break;
+            }
+        }
+
+        public void DisplayPause ()
+        {
+
+        }
+
+        public void DisplayBestiary ()
+        {
+
+        }
+
+        public void DisplayMap ()
+        {
+
         }
 
         public void DisplayJournals ()

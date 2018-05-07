@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
 namespace Hunter.Characters
 {
+    //Used for bestiary entires
+    public enum EnemyType
+    {
+        Wolf,
+        Bat,
+        Gargoyle,
+        Werewolf
+    }
+
     public abstract class Enemy : Character
     {
         public Element elementType;
