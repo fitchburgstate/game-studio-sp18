@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33530802150982004}
   - component: {fileID: 23104337655744688}
   - component: {fileID: 95812480089065650}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Journal Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,8 @@ GameObject:
   - component: {fileID: 4401709257916138}
   - component: {fileID: 114628500824089876}
   - component: {fileID: 135925788826043658}
-  m_Layer: 0
+  - component: {fileID: 114313808067009324}
+  m_Layer: 18
   m_Name: Journal1 Interactable Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +57,7 @@ GameObject:
   - component: {fileID: 4535626658261208}
   - component: {fileID: 198828525551430486}
   - component: {fileID: 199883842000609960}
-  m_Layer: 13
+  m_Layer: 18
   m_Name: Shineparticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,6 +164,22 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114313808067009324
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1637588551869614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: 2cb2c6e79493ade44861f7c6d4d16b4d, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!114 &114628500824089876
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -212,7 +229,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1637588551869614}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
