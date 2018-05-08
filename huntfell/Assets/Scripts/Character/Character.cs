@@ -165,11 +165,12 @@ namespace Hunter.Characters
             characterController = GetComponent<CharacterController>();
             effectsModule = GetComponentInChildren<VisualEffectsModule>();
             if (effectsModule == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
+
+            TargetHealth = totalHealth;
         }
 
         protected virtual void Start()
         {
-            TargetHealth = totalHealth;
         }
         #endregion
 
