@@ -6,6 +6,14 @@ using UnityEngine.AI;
 
 namespace Hunter.Characters
 {
+    public enum EnemyType
+    {
+        Wolf,
+        Bat,
+        Gargoyle,
+        Werewolf
+    }
+
     public abstract class Enemy : Character
     {
         #region Variables

@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4228536509306180}
   - component: {fileID: 33411703043516832}
-  - component: {fileID: 64086979269253734}
   - component: {fileID: 23869957795570350}
-  m_Layer: 0
+  - component: {fileID: 65191959553745212}
+  m_Layer: 12
   m_Name: Opacitymap_Clawmark02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,13 +35,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1110199508857692}
-  m_LocalRotation: {x: -0.100046694, y: -0.6014294, z: 0.12786455, w: 0.78225577}
-  m_LocalPosition: {x: 66.54305, y: 1.8535719, z: 27.997442}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.038175892, y: -0.70307964, z: 0.037853066, w: 0.70907605}
+  m_LocalPosition: {x: 0.638, y: -9.814672, z: -6.681}
+  m_LocalScale: {x: 1.0000005, y: 1, z: 1.0000006}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -0.156, y: -134.927, z: 18.686}
+  m_LocalEulerAnglesHint: {x: -0.052, y: -89.51601, z: 6.163}
 --- !u!23 &23869957795570350
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -83,8 +83,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1110199508857692}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!64 &64086979269253734
-MeshCollider:
+--- !u!65 &65191959553745212
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -92,8 +92,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 2
+  m_Size: {x: 1.0000002, y: 1, z: 0.000000051164534}
+  m_Center: {x: 0.000002861023, y: -0.00000047683716, z: 0.0000022649765}

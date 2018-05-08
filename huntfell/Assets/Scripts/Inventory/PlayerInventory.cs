@@ -15,6 +15,8 @@ namespace Hunter
         private Dictionary<ElementModItem, InteractableInventoryItem> elementMods = new Dictionary<ElementModItem, InteractableInventoryItem>();
         private Dictionary<JournalItem, InteractableInventoryItem> journalEntries = new Dictionary<JournalItem, InteractableInventoryItem>();
         private Dictionary<DiaryItem, InteractableInventoryItem> diaryEntries = new Dictionary<DiaryItem, InteractableInventoryItem>();
+        private Dictionary<BestiaryItem, InteractableInventoryItem> bestiaryEntries = new Dictionary<BestiaryItem, InteractableInventoryItem>();
+        private Dictionary<MapItem, InteractableInventoryItem> mapEntries = new Dictionary<MapItem, InteractableInventoryItem>();
 
         private Dictionary<Weapon, int> weaponAndElementIndex = new Dictionary<Weapon, int>();
 
@@ -22,12 +24,6 @@ namespace Hunter
         //public int RangedElementIndex { get; private set; } = 0;
         public int MeleeWeaponIndex { get; private set; } = 0;
         public int MeleeElementIndex { get; private set; } = 0;
-
-        #region Unity Messages
-        private void Awake()
-        {
-            //AddStartingItems();
-        }
 
         public void AddStartingItems ()
         {
@@ -39,7 +35,6 @@ namespace Hunter
                 }
             }
         }
-        #endregion
 
         #region Weapons
         public Weapon CycleWeaponsUp(Weapon currentWeapon, Transform weaponContainer)
@@ -261,6 +256,14 @@ namespace Hunter
             else if (item is DiaryItem && !diaryEntries.ContainsKey(item as DiaryItem))
             {
                 diaryEntries.Add(item as DiaryItem, spawnedInteractableItem);
+            }
+            else if(item is BestiaryItem && !bestiaryEntries.ContainsKey(item as BestiaryItem))
+            {
+                bestiaryEntries.Add(item as BestiaryItem, spawnedInteractableItem);
+            }
+            else if(item is MapItem && !mapEntries.ContainsKey(item as MapItem))
+            {
+                mapEntries.Add(item as MapItem, spawnedInteractableItem);
             }
             else
             {
