@@ -8,7 +8,7 @@ namespace Hunter.Characters.AI
     /// </summary>
     public abstract class UtilityBasedAI
     {
-        public abstract void Act();
+        public abstract void Act ();
     }
     #endregion
 
@@ -21,13 +21,13 @@ namespace Hunter.Characters.AI
         private GameObject aiGameObject;
         private IAttack aiIAttackComponent;
 
-        public Attack(GameObject aiGameObject)
+        public Attack (GameObject aiGameObject)
         {
             this.aiGameObject = aiGameObject;
             aiIAttackComponent = aiGameObject.GetComponent<IAttack>();
         }
 
-        public override void Act()
+        public override void Act ()
         {
             AttackAction(aiGameObject);
         }
@@ -35,7 +35,7 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// This function will calculate the urge to attack.
         /// </summary>
-        public float CalculateAttack(float attackRange, float distanceToTarget, bool enemyInVisionCone, bool inCombat)
+        public float CalculateAttack (float attackRange, float distanceToTarget, bool enemyInVisionCone, bool inCombat)
         {
             var attackUrgeTotal = 0f;
 
@@ -55,7 +55,7 @@ namespace Hunter.Characters.AI
             return attackUrgeTotal;
         }
 
-        public void AttackAction(GameObject aiGameObject)
+        public void AttackAction (GameObject aiGameObject)
         {
             if (aiGameObject != null)
             {
@@ -81,13 +81,13 @@ namespace Hunter.Characters.AI
         private GameObject aiGameObject;
         private Werewolf aiWerewolfComponent;
 
-        public Lunge(GameObject aiGameObject)
+        public Lunge (GameObject aiGameObject)
         {
             this.aiGameObject = aiGameObject;
             aiWerewolfComponent = aiGameObject.GetComponent<Werewolf>();
         }
 
-        public override void Act()
+        public override void Act ()
         {
             LungeAction(aiGameObject);
         }
@@ -95,13 +95,13 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// This function will calculate the urge to attack.
         /// </summary>
-        public float CalculateLunge(float lungeRange, float distanceToTarget, bool canLunge, int phase, bool inCombat)
+        public float CalculateLunge (float lungeRange, float distanceToTarget, bool canLunge, int phase, bool inCombat)
         {
             var lungeUrgeTotal = 0f;
 
             if (inCombat)
             {
-                if (phase > 0)
+                if (phase > 1)
                 {
                     if ((distanceToTarget > lungeRange) && (canLunge))
                     {
@@ -114,7 +114,7 @@ namespace Hunter.Characters.AI
             return lungeUrgeTotal;
         }
 
-        public void LungeAction(GameObject aiGameObject)
+        public void LungeAction (GameObject aiGameObject)
         {
             if (aiGameObject != null)
             {
@@ -139,14 +139,14 @@ namespace Hunter.Characters.AI
         private AIInputModule aiInputModuleComponent;
         private IUtilityBasedAI aiIUtilityBasedAIComponent;
 
-        public Turn(GameObject aiGameObject)
+        public Turn (GameObject aiGameObject)
         {
             this.aiGameObject = aiGameObject;
             aiInputModuleComponent = aiGameObject.GetComponent<AIInputModule>();
             aiIUtilityBasedAIComponent = aiGameObject.GetComponent<IUtilityBasedAI>();
         }
 
-        public override void Act()
+        public override void Act ()
         {
             TurnAction(aiGameObject);
         }
@@ -154,7 +154,7 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// This function will calculate the urge to turn to a target.
         /// </summary>
-        public float CalculateTurn(float attackRange, float distanceToTarget, bool enemyInVisionCone, bool inCombat)
+        public float CalculateTurn (float attackRange, float distanceToTarget, bool enemyInVisionCone, bool inCombat)
         {
             var turnUrgeTotal = 0f;
 
@@ -174,7 +174,7 @@ namespace Hunter.Characters.AI
             return turnUrgeTotal;
         }
 
-        public void TurnAction(GameObject aiGameObject)
+        public void TurnAction (GameObject aiGameObject)
         {
             if (aiInputModuleComponent != null)
             {
@@ -205,14 +205,14 @@ namespace Hunter.Characters.AI
         private AIInputModule aiInputModuleComponent;
         private IMoveable aiIMoveableComponent;
 
-        public MoveTo(GameObject aiGameObject)
+        public MoveTo (GameObject aiGameObject)
         {
             this.aiGameObject = aiGameObject;
             aiInputModuleComponent = aiGameObject.GetComponent<AIInputModule>();
             aiIMoveableComponent = aiGameObject.GetComponent<IMoveable>();
         }
 
-        public override void Act()
+        public override void Act ()
         {
             MoveToAction(aiGameObject);
         }
@@ -220,7 +220,7 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// This function will calculate the urge to move a target.
         /// </summary>
-        public float CalculateMoveTo(float distanceToTarget, float distanceToTargetMin, float distanceToTargetMax, bool inCombat)
+        public float CalculateMoveTo (float distanceToTarget, float distanceToTargetMin, float distanceToTargetMax, bool inCombat)
         {
             var moveToUrgeTotal = 0f;
 
@@ -233,7 +233,7 @@ namespace Hunter.Characters.AI
             return moveToUrgeTotal;
         }
 
-        public void MoveToAction(GameObject aiGameObject)
+        public void MoveToAction (GameObject aiGameObject)
         {
             if (aiInputModuleComponent != null)
             {
@@ -265,7 +265,7 @@ namespace Hunter.Characters.AI
         private IMoveable aiIMoveableComponent;
         private float speed;
 
-        public Retreat(GameObject aiGameObject)
+        public Retreat (GameObject aiGameObject)
         {
             this.aiGameObject = aiGameObject;
             speed = aiGameObject.GetComponent<Enemy>().speed;
@@ -273,7 +273,7 @@ namespace Hunter.Characters.AI
             aiIMoveableComponent = aiGameObject.GetComponent<IMoveable>();
         }
 
-        public override void Act()
+        public override void Act ()
         {
             RetreatAction(aiGameObject);
         }
@@ -281,7 +281,7 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// This function will calculate the urge to retreat away from a target.
         /// </summary>
-        public float CalculateRetreat(float distanceToTarget, float distanceToTargetMin, float distanceToTargetMax, bool inCombat)
+        public float CalculateRetreat (float distanceToTarget, float distanceToTargetMin, float distanceToTargetMax, bool inCombat)
         {
             var retreatUrgeTotal = 0f;
 
@@ -294,7 +294,7 @@ namespace Hunter.Characters.AI
             return retreatUrgeTotal;
         }
 
-        public void RetreatAction(GameObject aiGameObject)
+        public void RetreatAction (GameObject aiGameObject)
         {
             if (aiInputModuleComponent != null)
             {
@@ -324,13 +324,13 @@ namespace Hunter.Characters.AI
         private GameObject aiGameObject;
         private AIInputModule aiInputModuleComponent;
 
-        public Idle(GameObject aiGameObject)
+        public Idle (GameObject aiGameObject)
         {
             this.aiGameObject = aiGameObject;
             aiInputModuleComponent = aiGameObject.GetComponent<AIInputModule>();
         }
 
-        public override void Act()
+        public override void Act ()
         {
             IdleAction(aiGameObject);
         }
@@ -338,7 +338,7 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// This function will calculate the urge to idle when not in combat.
         /// </summary>
-        public float CalculateIdle(float distanceToPoint, float distanceToSpawn, float distanceToPointMax, bool inCombat)
+        public float CalculateIdle (float distanceToPoint, float distanceToSpawn, float distanceToPointMax, bool inCombat)
         {
             var idleUrgeTotal = 0f;
 
@@ -358,7 +358,7 @@ namespace Hunter.Characters.AI
             return idleUrgeTotal;
         }
 
-        public void IdleAction(GameObject aiGameObject)
+        public void IdleAction (GameObject aiGameObject)
         {
             if (aiInputModuleComponent != null)
             {
@@ -385,14 +385,14 @@ namespace Hunter.Characters.AI
         private AIInputModule aiInputModuleComponent;
         private IUtilityBasedAI aiUtilityBasedAIComponent;
 
-        public Wander(GameObject aiGameObject)
+        public Wander (GameObject aiGameObject)
         {
             this.aiGameObject = aiGameObject;
             aiInputModuleComponent = aiGameObject.GetComponent<AIInputModule>();
             aiUtilityBasedAIComponent = aiGameObject.GetComponent<IUtilityBasedAI>();
         }
 
-        public override void Act()
+        public override void Act ()
         {
             WanderAction(aiGameObject);
         }
@@ -400,7 +400,7 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// This function will calculate the urge to wander around when not in combat.
         /// </summary>
-        public float CalculateWander(float distanceToPoint, float distanceToPointMax, bool inCombat)
+        public float CalculateWander (float distanceToPoint, float distanceToPointMax, bool inCombat)
         {
             var wanderUrgeTotal = 0f;
 
@@ -416,7 +416,7 @@ namespace Hunter.Characters.AI
             return wanderUrgeTotal;
         }
 
-        public void WanderAction(GameObject aiGameObject)
+        public void WanderAction (GameObject aiGameObject)
         {
             if (aiUtilityBasedAIComponent != null)
             {

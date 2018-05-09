@@ -8,8 +8,8 @@ namespace Hunter.Characters
 {
     public abstract class Weapon : MonoBehaviour
     {
-        protected const float CRITICAL_HIT_MULTIPLIER = 1.5f;
-        protected const float ELEMENTAL_WEAKNESS_MULTIPLIER = 1.5f;
+        protected const float CRITICAL_HIT_MULTIPLIER = 1.33f;
+        protected const float ELEMENTAL_WEAKNESS_MULTIPLIER = 1.66f;
 
         #region Variables
         [Header("Debug")]
@@ -38,22 +38,23 @@ namespace Hunter.Characters
             set
             {
                 weaponElement = value;
+                inspectorElementType = Utility.ElementToElementOption(value);
             }
         }
         #endregion
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             WeaponElement = Utility.ElementOptionToElement(inspectorElementType);
         }
 
         public abstract void StartAttackFromAnimationEvent();
 
-        protected virtual int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
+        protected virtual int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var critMult = isCritical ? CRITICAL_HIT_MULTIPLIER : 1.0f;
             var elementMult = 1.0f;
-
+            Debug.Log($"{characterHoldingWeapon.DisplayName} - {weaponElement}");
             if (enemyElementType != null && weaponElement != null)
             {
                 var weaponType = weaponElement.GetType();
@@ -72,7 +73,7 @@ namespace Hunter.Characters
             var randomInt = UnityEngine.Random.Range(-2, 3);
             if (isCritical) { randomInt = Mathf.Abs(randomInt); }
 
-            return ((int)((baseDamage + randomInt) * critMult * elementMult));
+            return ((int)(((baseDamage * critMult) + randomInt) * elementMult));
         }
 
         /// <summary>

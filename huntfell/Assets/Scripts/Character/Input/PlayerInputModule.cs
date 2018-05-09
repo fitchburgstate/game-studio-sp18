@@ -97,7 +97,7 @@ namespace Hunter.Characters
                 }
                 else if (deviceManager.PressedPageLeft)
                 {
-                    PauseManager.instance.DisplayJournals();
+                    PauseManager.instance.EnableJournalTab();
                 }
             }
         }

@@ -3,26 +3,83 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Hunter.Characters;
+using UnityEngine.UI;
 
 namespace Hunter
 {
     public class PauseManager : MonoBehaviour
     {
-
         [HideInInspector]
         public static PauseManager instance;
 
-        public TextMeshProUGUI leftPageTitle;
-        public TextMeshProUGUI leftPageText;
-        public TextMeshProUGUI rightPageTitle;
-        public TextMeshProUGUI rightPageText;
-
+        [Header("Global Elements")]
         public TextMeshProUGUI journalHeader;
         public TextMeshProUGUI diaryHeader;
+        public TextMeshProUGUI mapHeader;
+        public TextMeshProUGUI bestiaryHeader;
+        public TextMeshProUGUI pauseHeader;
+        public Image leftArrow;
+        public Image rightArrow;
+
+        [Header("Pause Page Elements")]
+        public GameObject pauseLeftPageRoot;
+        public GameObject pauseRightPageRoot;
+        public Image fireMaladiteIcon;
+        public Image iceMaladiteIcon;
+        public Image electricMaladiteIcon;
+        public Image silverMaladiteIcon;
+        public Image decanterFirstIcon;
+        public Image decanterSecondIcon;
+        public Image controlsLayoutBackground;
+
+        [Header("Modular Page Elements")]
+        public GameObject modularLeftPageRoot;
+        /// <summary>
+        /// This should be the map background
+        /// </summary>
+        public Image modularLeftPageBackground;
+        public TextMeshProUGUI modularLeftPageTitle;
+        public TextMeshProUGUI modularLeftPageText;
+        [Space]
+        public GameObject modularRightPageRoot;
+        /// <summary>
+        /// This should be the map background
+        /// </summary>
+        public Image modularRightPageBackground;
+        public TextMeshProUGUI modularRightPageTitle;
+        public TextMeshProUGUI modularRightPageText;
+
+        [Header("Bestiary Page Elements")]
+        public GameObject bestiaryLeftPageRoot;
+        public TextMeshProUGUI bestiaryLeftPageTitle;
+        public TextMeshProUGUI bestiaryLeftPageFirstEntry;
+        public Image bestiaryLeftPageFirstSketch;
+        public TextMeshProUGUI bestiaryLeftPageSecondEntry;
+        public Image bestiaryLeftPageSecondSketch;
+        public TextMeshProUGUI bestiaryLeftPageThirdEntry;
+        public Image bestiaryLeftPageThirdSketch;
+        [Space]
+        public GameObject bestiaryRightPageRoot;
+        public TextMeshProUGUI bestiaryRightPageTitle;
+        public TextMeshProUGUI bestiaryRightPageFirstEntry;
+        public Image bestiaryRightPageFirstSketch;
+        public TextMeshProUGUI bestiaryRightPageSecondEntry;
+        public Image bestiaryRightPageSecondSketch;
+        public TextMeshProUGUI bestiaryRightPageThirdEntry;
+        public Image bestiaryRightPageThirdSketch;
 
         public Canvas menuCanvas;
 
         private int currentTabIndex = 0;
+        private int journalPageIndex = 0;
+        private int diaryPageIndex = 0;
+        private int bestiaryPageIndex = 0;
+
+        private List<JournalItem> journalEntries;
+        private List<DiaryItem> diaryEntries;
+        private List<BestiaryItem> bestiaryEntries;
+        private List<MapItem> mapEntries;
+        private List<ElementModItem> elementEntries;
 
         public bool IsGamePaused
         {
@@ -41,8 +98,10 @@ namespace Hunter
 
             set
             {
-                //if(value < 0)
+                // Our tab index ranges from 0 to 4 since there are 5 total tabs in the pause menu, this prevents under/over flow
+                if(value < 0 || value > 4) { return; }
                 currentTabIndex = value;
+                SwitchTabs();
             }
         }
 
@@ -76,7 +135,7 @@ namespace Hunter
             Fabric.EventManager.Instance?.PostEvent("UI Start Game");
             menuCanvas.gameObject.SetActive(true);
 
-            DisplayJournals();
+            CurrentTabIndex = 0;
         }
 
         public void UnpauseGame ()
@@ -85,122 +144,347 @@ namespace Hunter
             playerWhoPaused = null;
 
             Fabric.EventManager.Instance?.PostEvent("UI Navigation Back");
+
+            journalEntries = null;
+            diaryEntries = null;
+            bestiaryEntries = null;
+            mapEntries = null;
+            elementEntries = null;
+            journalPageIndex = 0;
+            diaryPageIndex = 0;
+            bestiaryPageIndex = 0;
+
             menuCanvas.gameObject.SetActive(false);
         }
 
         public void SwitchTabs ()
         {
+            if (playerWhoPaused == null) { return; }
+            ResetAllPages();
+
             switch (CurrentTabIndex)
             {
                 case 0:
                     DisplayPause();
                     break;
                 case 1:
-                    DisplayJournals();
+                    EnableJournalTab();
                     break;
                 case 2:
-                    DisplayDiaries();
+                    EnableDiaryTab();
                     break;
                 case 3:
                     DisplayBestiary();
                     break;
                 case 4:
-                    DisplayMap();
+                    EnableMapTab();
                     break;
             }
         }
 
+        public void SwitchPage(bool forwards)
+        {
+            if (playerWhoPaused == null) { return; }
+            switch (CurrentTabIndex)
+            {
+                case 1:
+                    FlipJournalPage(forwards);
+                    break;
+                case 2:
+                    FlipDiaryPage(forwards);
+                    break;
+                case 3:
+                    DisplayBestiary();
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        #region Pause
         public void DisplayPause ()
         {
 
         }
+        #endregion
 
-        public void DisplayBestiary ()
+
+        #region Bestiary
+        public void EnableBestiaryTab ()
         {
+            if (bestiaryEntries == null)
+            {
+                bestiaryEntries = playerWhoPaused.Inventory.GetAllBestiaries();
+            }
 
-        }
-
-        public void DisplayMap ()
-        {
-
-        }
-
-        public void DisplayJournals ()
-        {
-            if (playerWhoPaused == null) { return; }
-            var journals = playerWhoPaused.Inventory.GetAllJournals();
             journalHeader.fontStyle = FontStyles.Bold;
-            diaryHeader.fontStyle = FontStyles.Normal;
+            bestiaryLeftPageRoot.SetActive(true);
+            bestiaryRightPageRoot.SetActive(true);
             //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
-            //Only displaying two journals for now
-            for (int i = 0; i < 2; i++)
+            DisplayBestiaryPages();
+        }
+
+        private void FlipBestiaryPage (bool forwards)
+        {
+            if (bestiaryEntries == null || bestiaryEntries.Count == 0) { return; }
+
+            if (forwards)
             {
-                if (journals.Count - 1 < i)
+                if (bestiaryPageIndex + 2 > bestiaryEntries.Count) { return; }
+                bestiaryPageIndex += 2;
+            }
+            else
+            {
+                if (bestiaryPageIndex - 2 < 0) { return; }
+                bestiaryPageIndex -= 2;
+            }
+
+            DisplayBestiaryPages();
+        }
+
+        private void DisplayBestiaryPages ()
+        {
+            for (int i = journalPageIndex; i < journalPageIndex + 2; i++)
+            {
+                if (i >= journalEntries.Count)
                 {
-                    if (i == 0)
+                    //Even numbered entries go on the left page, odd numbered ones go to the right
+                    if (i % 2 == 0)
                     {
-                        leftPageTitle.text = "";
-                        leftPageText.text = "Nothing here yet.";
+                        modularLeftPageTitle.text = "";
+                        modularLeftPageText.text = "Nothing here yet.";
                     }
-                    else if (i == 1)
+                    else
                     {
-                        rightPageTitle.text = "";
-                        rightPageText.text = "Nothing here yet.";
+                        modularRightPageTitle.text = "";
+                        modularRightPageText.text = "Nothing here yet.";
                     }
                 }
                 else
                 {
-                    if (i == 0)
+                    if (i % 2 == 0)
                     {
-                        leftPageTitle.text = journals[i].itemName;
-                        leftPageText.text = journals[i].bookContents;
+                        modularLeftPageTitle.text = journalEntries[i].itemName;
+                        modularLeftPageText.text = journalEntries[i].bookContents;
                     }
-                    else if (i == 1)
+                    else
                     {
-                        rightPageTitle.text = journals[i].itemName;
-                        rightPageText.text = journals[i].bookContents;
+                        modularRightPageTitle.text = journalEntries[i].itemName;
+                        modularRightPageText.text = journalEntries[i].bookContents;
+                    }
+                }
+            }
+
+            leftArrow.gameObject.SetActive(bestiaryPageIndex - 2 > 0);
+            rightArrow.gameObject.SetActive(bestiaryPageIndex + 2 < bestiaryEntries.Count);
+        }
+        #endregion
+
+        #region Map
+        public void EnableMapTab ()
+        {
+            if(mapEntries == null)
+            {
+                mapEntries = playerWhoPaused.Inventory.GetAllMaps();
+            }
+
+            mapHeader.fontStyle = FontStyles.Bold;
+            modularLeftPageRoot.SetActive(true);
+            modularRightPageRoot.SetActive(true);
+
+            DisplayMaps();
+        }
+
+        private void DisplayMaps ()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                if (i >= mapEntries.Count)
+                {
+                    //Even numbered entries go on the left page, odd numbered ones go to the right
+                    if (i % 2 == 0)
+                    {
+                        modularLeftPageTitle.text = "";
+                        modularLeftPageText.text = "Nothing here yet.";
+                    }
+                    else
+                    {
+                        modularRightPageTitle.text = "";
+                        modularRightPageText.text = "Nothing here yet.";
+                    }
+                }
+                else
+                {
+                    if (i % 2 == 0)
+                    {
+                        modularLeftPageTitle.text = mapEntries[i].itemName;
+                        modularLeftPageBackground.sprite = mapEntries[i].mapSprite;
+                    }
+                    else
+                    {
+                        modularRightPageTitle.text = mapEntries[i].itemName;
+                        modularRightPageBackground.sprite = mapEntries[i].mapSprite;
                     }
                 }
             }
         }
+        #endregion
 
-        public void DisplayDiaries ()
+        #region Journal
+        public void EnableJournalTab ()
         {
-            if (playerWhoPaused == null) { return; }
-            var diaries = playerWhoPaused.Inventory.GetAllDiaries();
-            diaryHeader.fontStyle = FontStyles.Bold;
-            journalHeader.fontStyle = FontStyles.Normal;
-            //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
-            //Only displaying two diaries for now
-            for (int i = 0; i < 2; i++)
+            if (journalEntries == null)
             {
-                if (diaries.Count - 1 < i)
+                journalEntries = playerWhoPaused.Inventory.GetAllJournals();
+            }
+
+            journalHeader.fontStyle = FontStyles.Bold;
+            modularLeftPageRoot.SetActive(true);
+            modularRightPageRoot.SetActive(true);
+            //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
+            DisplayJournalPages();
+        }
+
+        private void FlipJournalPage (bool forwards)
+        {
+            if(journalEntries == null) { return; }
+
+            if (forwards)
+            {
+                if(journalPageIndex + 2 > journalEntries.Count) { return; }
+                journalPageIndex += 2;
+            }
+            else
+            {
+                if(journalPageIndex - 2 < 0) { return; }
+                journalPageIndex -= 2;
+            }
+            
+            DisplayJournalPages();
+        }
+
+        private void DisplayJournalPages ()
+        {
+            for (int i = journalPageIndex; i < journalPageIndex + 2; i++)
+            {
+                if (i >= journalEntries.Count)
                 {
-                    if (i == 0)
+                    //Even numbered entries go on the left page, odd numbered ones go to the right
+                    if (i % 2 == 0)
                     {
-                        leftPageTitle.text = "";
-                        leftPageText.text = "Nothing here yet.";
+                        modularLeftPageTitle.text = "";
+                        modularLeftPageText.text = "Nothing here yet.";
                     }
-                    else if (i == 1)
+                    else
                     {
-                        rightPageTitle.text = "";
-                        rightPageText.text = "Nothing here yet.";
+                        modularRightPageTitle.text = "";
+                        modularRightPageText.text = "Nothing here yet.";
                     }
                 }
                 else
                 {
-                    if (i == 0)
+                    if (i % 2 == 0)
                     {
-                        leftPageTitle.text = diaries[i].itemName;
-                        leftPageText.text = diaries[i].bookContents;
+                        modularLeftPageTitle.text = journalEntries[i].itemName;
+                        modularLeftPageText.text = journalEntries[i].bookContents;
                     }
-                    else if (i == 1)
+                    else
                     {
-                        rightPageTitle.text = diaries[i].itemName;
-                        rightPageText.text = diaries[i].bookContents;
+                        modularRightPageTitle.text = journalEntries[i].itemName;
+                        modularRightPageText.text = journalEntries[i].bookContents;
                     }
                 }
             }
+
+            leftArrow.gameObject.SetActive(journalPageIndex - 2 > 0);
+            rightArrow.gameObject.SetActive(journalPageIndex + 2 < journalEntries.Count);
+        }
+        #endregion
+
+        #region Diaries
+        public void EnableDiaryTab ()
+        {
+            if (diaryEntries == null)
+            {
+                diaryEntries = playerWhoPaused.Inventory.GetAllDiaries();
+            }
+
+            diaryHeader.fontStyle = FontStyles.Bold;
+            modularLeftPageRoot.SetActive(true);
+            modularRightPageRoot.SetActive(true);
+            //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
+            DisplayDiaryPages();
+        }
+
+        private void FlipDiaryPage (bool forwards)
+        {
+            if (diaryEntries == null) { return; }
+
+            if (forwards)
+            {
+                if (diaryPageIndex + 2 > diaryEntries.Count) { return; }
+                diaryPageIndex += 2;
+            }
+            else
+            {
+                if (diaryPageIndex - 2 < 0) { return; }
+                diaryPageIndex -= 2;
+            }
+
+            DisplayDiaryPages();
+        }
+
+        private void DisplayDiaryPages ()
+        {
+            for (int i = diaryPageIndex; i < diaryPageIndex + 2; i++)
+            {
+                if (i >= diaryEntries.Count)
+                {
+                    //Even numbered entries go on the left page, odd numbered ones go to the right
+                    if (i % 2 == 0)
+                    {
+                        modularLeftPageTitle.text = "";
+                        modularLeftPageText.text = "Nothing here yet.";
+                    }
+                    else
+                    {
+                        modularRightPageTitle.text = "";
+                        modularRightPageText.text = "Nothing here yet.";
+                    }
+                }
+                else
+                {
+                    if (i % 2 == 0)
+                    {
+                        modularLeftPageTitle.text = diaryEntries[i].itemName;
+                        modularLeftPageText.text = diaryEntries[i].bookContents;
+                    }
+                    else
+                    {
+                        modularRightPageTitle.text = diaryEntries[i].itemName;
+                        modularRightPageText.text = diaryEntries[i].bookContents;
+                    }
+                }
+            }
+
+            leftArrow.gameObject.SetActive(diaryPageIndex - 2 > 0);
+            rightArrow.gameObject.SetActive(diaryPageIndex + 2 < diaryEntries.Count);
+        }
+        #endregion
+
+        private void ResetAllPages ()
+        {
+            diaryHeader.fontStyle = journalHeader.fontStyle = mapHeader.fontStyle = bestiaryHeader.fontStyle = pauseHeader.fontStyle = FontStyles.Normal;
+            modularLeftPageBackground.enabled = modularRightPageBackground.enabled = false;
+            modularLeftPageText.text = modularRightPageText.text = "";
+            leftArrow.gameObject.SetActive(false);
+            rightArrow.gameObject.SetActive(false);
+            pauseLeftPageRoot.SetActive(false);
+            pauseRightPageRoot.SetActive(false);
+            modularLeftPageRoot.SetActive(false);
+            modularRightPageRoot.SetActive(false);
+            bestiaryLeftPageRoot.SetActive(false);
+            bestiaryRightPageRoot.SetActive(false);
         }
     }
 }
