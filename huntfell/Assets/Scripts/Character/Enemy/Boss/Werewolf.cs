@@ -169,19 +169,19 @@ namespace Hunter.Characters
         {
             get
             {
-                return CurrentHealth;
+                return currentHealth;
             }
             set
             {
-                CurrentHealth = value;
-                if (CurrentHealth <= 0 && !performingAction)
+                base.CurrentHealth = value;
+                if (currentHealth <= 0 && !performingAction)
                 {
                     StartCoroutine(KillWerewolf());
                     performingAction = true;
                 }
 
                 // This checks to see if the werewolf has entered phase 2 yet.
-                else if ((CurrentHealth / totalHealth < .66f) && phase < 2)
+                else if ((currentHealth / totalHealth < .66f) && phase < 2)
                 {
                     phase = 2;
                     if (showDebugLogs) { Debug.Log("Entering phase " + phase); }
@@ -191,7 +191,7 @@ namespace Hunter.Characters
                     if (showDebugLogs) { Debug.Log("Exiting the arena."); }
                 }
                 // This checks to see if the werewolf has entered phase 3 yet.
-                else if ((CurrentHealth / totalHealth < .33f) && phase < 3)
+                else if ((currentHealth / totalHealth < .33f) && phase < 3)
                 {
                     phase = 3;
                     if (showDebugLogs) { Debug.Log("Entering phase " + phase); }

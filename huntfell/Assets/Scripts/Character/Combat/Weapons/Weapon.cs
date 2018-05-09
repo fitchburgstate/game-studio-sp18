@@ -24,6 +24,8 @@ namespace Hunter.Characters
 
         public float recoverySpeed = 0.5f;
 
+        public float finisherCooldown = 2;
+
         [HideInInspector]
         public Character characterHoldingWeapon;
         protected Element weaponElement = null;

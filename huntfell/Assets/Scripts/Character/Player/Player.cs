@@ -59,15 +59,23 @@ namespace Hunter.Characters
         public Image interactPromptImage;
 
         // Action Coroutine Refs
-        private IEnumerator attackAction;
         private IEnumerator attackFinisherCooldown;
-        private IEnumerator dashAction;
+        private IEnumerator attackCooldown;
         private IEnumerator dashCooldown;
+        private IEnumerator attackAction;
+        private IEnumerator dashAction;
         private IEnumerator pickupAction;
+        private IEnumerator inputFramesAction;
 
         // Inventory and Items
         public PlayerInventory Inventory { get; private set; }
         private List<IInteractable> nearbyInteractables = new List<IInteractable>();
+
+        // Attack Combo
+        [Space]
+        public bool acceptingAttackInput;
+        public int currentAttackIndex = 0;
+        public int acceptingAttackFrames = 6;
         #endregion
 
         #region Properties
@@ -91,7 +99,7 @@ namespace Hunter.Characters
         {
             get
             {
-                return attackFinisherCooldown != null || dashCooldown != null;
+                return dashCooldown != null || attackFinisherCooldown != null;
             }
         }
 
@@ -176,6 +184,7 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
+            acceptingAttackInput = true;
             UpdateDecanters();
             Inventory.AddStartingItems();
             CheckInteractImage();
@@ -298,6 +307,8 @@ namespace Hunter.Characters
             var characterForward = RotationTransform.forward;
             var dashDirectionTarget = new Vector3();
 
+            invincible = true;
+
             // Raycast to determine target point for dodge destination on the X and Z axis
             var hit = new RaycastHit();
             var ray = new Ray(startPosition, characterForward);
@@ -364,6 +375,8 @@ namespace Hunter.Characters
             // Dont want players to be able to spam dash, so we have a cooldown which resets the Coroutine reference after (If that reference isn't null, that means we're still dashing)
             dashCooldown = DashCooldown();
             StartCoroutine(dashCooldown);
+
+            invincible = false;
             yield return null;
 
             dashAction = null;
@@ -397,7 +410,15 @@ namespace Hunter.Characters
         #region Player Combat
         public void Attack()
         {
-            if (PerformingMajorAction || PerformingMinorAction || CurrentWeapon == null) { return; }
+            if (PerformingMajorAction || PerformingMinorAction || CurrentWeapon == null || !acceptingAttackInput) { return; }
+
+            acceptingAttackInput = false;
+
+            if (inputFramesAction != null)
+            {
+                StopCoroutine(inputFramesAction);
+                inputFramesAction = null;
+            }
 
             attackAction = PlayAttackAnimation();
             StartCoroutine(attackAction);
@@ -408,20 +429,81 @@ namespace Hunter.Characters
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
+        public void StartInputFramesAnimationEvent()
+        {
+            if (inputFramesAction != null) { return; }
+
+            inputFramesAction = StartInputFrames();
+            StartCoroutine(inputFramesAction);
+
+            attackAction = null;
+        }
+
         public IEnumerator PlayAttackAnimation()
         {
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+
             if (CurrentWeapon is Melee)
             {
-                anim.SetTrigger("firstSwing");
+                switch (currentAttackIndex)
+                {
+                    case 0:
+                        anim.SetTrigger("firstSwing");
+                        break;
+                    case 1:
+                        anim.SetTrigger("secondSwing");
+                        break;
+                    case 2:
+                        if (ActionsOnCooldown)
+                        {
+                            acceptingAttackInput = true;
+                            yield break;
+                        }
+                        anim.SetTrigger("thirdSwing");
+                        StartCoroutine(SetStaminaBar(0, 0.3f));
+                        break;
+                    default:
+                        break;
+                }
             }
-            else if (CurrentWeapon is Ranged)
+        }
+
+        public IEnumerator AttackCooldown(float recoverySpeed)
+        {
+            yield return new WaitForSeconds(recoverySpeed);
+
+            attackCooldown = null;
+            attackFinisherCooldown = null;
+            acceptingAttackInput = true;
+        }
+
+        public IEnumerator StartInputFrames()
+        {
+            Debug.Log("inputFrames open!");
+            acceptingAttackInput = true;
+            currentAttackIndex++;
+
+            if (currentAttackIndex < 3)
             {
+                for (var i = 0; i < acceptingAttackFrames; i++)
+                {
+                    yield return null;
+                }
 
+                attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
+                StartCoroutine(attackCooldown);
+            }
+            else
+            {
+                StartCoroutine(SetStaminaBar(1, CurrentWeapon.finisherCooldown));
+                attackFinisherCooldown = AttackCooldown(CurrentWeapon.finisherCooldown);
+                StartCoroutine(attackFinisherCooldown);
             }
 
-            yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
-            attackAction = null;
+            currentAttackIndex = 0;
+            Debug.Log("inputFrames closed!");
+
+            yield return null;
         }
 
         #region Non-Core Attack Functions

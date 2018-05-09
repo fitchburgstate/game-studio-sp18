@@ -16,7 +16,7 @@ namespace Hunter.Characters
         private IMoveable moveCharacter;
         #endregion
 
-        private void Start ()
+        private void Start()
         {
             //Whoever this script is on is being controlled by the Player, so naturally they should be tagged as such
             transform.tag = "Player";
@@ -27,7 +27,7 @@ namespace Hunter.Characters
             player = GetComponent<Player>();
         }
 
-        private void Update ()
+        private void Update()
         {
             //Game Input Actions
             if (!inPauseMenu)
@@ -52,7 +52,7 @@ namespace Hunter.Characters
                 {
                     moveCharacter.Interact();
                 }
-                else if(deviceManager.PressedPotion && player != null)
+                else if (deviceManager.PressedPotion && player != null)
                 {
                     player.UsePotion();
                 }
