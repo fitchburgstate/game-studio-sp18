@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Hunter.Characters
@@ -12,7 +10,6 @@ namespace Hunter.Characters
     public sealed class Player : Character, IMoveable, IAttack
     {
         #region Variables
-
         [Header("Combat Options")]
         public Transform weaponContainer;
         public float gunTrailLength = 1.5f;
@@ -170,7 +167,7 @@ namespace Hunter.Characters
         {
             base.Start();
 
-            if(GameManager.instance != null)
+            if (GameManager.instance != null)
             {
                 transform.forward = GameManager.instance.isometricFollowCM.transform.forward;
             }
@@ -189,7 +186,7 @@ namespace Hunter.Characters
             var interactableItem = other.GetComponent<IInteractable>();
             if (interactableItem != null)
             {
-                if(other.GetComponent<InteractablePotionShard>() != null)
+                if (other.GetComponent<InteractablePotionShard>() != null)
                 {
                     interactableItem.FireInteraction(this);
                 }
@@ -201,7 +198,7 @@ namespace Hunter.Characters
             }
 
             var tutorialTrigger = other.GetComponent<TutorialTrigger>();
-            if(tutorialTrigger != null && HUDManager.instance != null)
+            if (tutorialTrigger != null && HUDManager.instance != null)
             {
                 HUDManager.instance.ShowTutorialPrompt(tutorialTrigger.tutorialText, tutorialTrigger.controlSprite);
                 tutorialTrigger.gameObject.SetActive(false);
@@ -216,7 +213,7 @@ namespace Hunter.Characters
                 RemoveNearbyInteractable(interactableItem);
             }
         }
-        
+
         #endregion
 
         #region Player Movement
@@ -339,7 +336,7 @@ namespace Hunter.Characters
                 yield break;
             }
 
-            anim.SetTrigger("DodgeRoll");
+            anim.SetTrigger("dodgeRoll");
             StartCoroutine(SetStaminaBar(0, 0.3f));
 
             // PAUSE HERE FOR ANIMATION EVENT
@@ -372,7 +369,7 @@ namespace Hunter.Characters
             dashAction = null;
         }
 
-        private IEnumerator DashCooldown ()
+        private IEnumerator DashCooldown()
         {
             StartCoroutine(SetStaminaBar(1, dashCoolDown));
             yield return new WaitForSeconds(dashCoolDown);
@@ -416,11 +413,11 @@ namespace Hunter.Characters
             anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
             if (CurrentWeapon is Melee)
             {
-                anim.SetTrigger("melee");
+                anim.SetTrigger("firstSwing");
             }
             else if (CurrentWeapon is Ranged)
             {
-                anim.SetTrigger("ranged");
+
             }
 
             yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
@@ -481,7 +478,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void SwitchWeaponType (bool switchToMelee)
+        public void SwitchWeaponType(bool switchToMelee)
         {
             //if (switchToMelee && !(CurrentWeapon is Melee))
             //{
@@ -497,10 +494,10 @@ namespace Hunter.Characters
         #endregion
 
         #region Player Health
-
-        public void UsePotion ()
+        public void UsePotion()
         {
-            if(PerformingMinorAction || PotionShardCount < maxShardsPerPotion || TargetHealth == totalHealth) {
+            if (PerformingMinorAction || PotionShardCount < maxShardsPerPotion || TargetHealth == totalHealth)
+            {
                 Debug.LogWarning("Cannot use potion at this time.");
                 return;
             }
@@ -508,26 +505,26 @@ namespace Hunter.Characters
             PotionShardCount -= maxShardsPerPotion;
         }
 
-        private void UpdateDecanters ()
+        private void UpdateDecanters()
         {
-            for (int i = 0; i < potionCount; i++)
+            for (var i = 0; i < potionCount; i++)
             {
                 HUDManager.instance?.SetDecanterInfo(i, PotionShardCount, maxShardsPerPotion);
             }
         }
 
-        protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
             Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
             yield return base.SubtractHealthFromCharacter(damage, isCritical);
         }
 
-        protected override IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
+        protected override IEnumerator AddHealthToCharacter(int restoreAmount, bool isCritical)
         {
             yield return base.AddHealthToCharacter(restoreAmount, isCritical);
         }
 
-        protected override IEnumerator KillCharacter ()
+        protected override IEnumerator KillCharacter()
         {
             invincible = true;
             agent.enabled = false;
@@ -537,7 +534,7 @@ namespace Hunter.Characters
             anim.SetFloat("dirX", 0);
             anim.SetFloat("dirY", 0);
             anim.SetBool("moving", false);
-            anim.SetTrigger("isDead");
+            anim.SetTrigger("death");
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.Out);
 
@@ -611,11 +608,11 @@ namespace Hunter.Characters
         {
             var footHeightDif = Mathf.Abs(interactableItem.transform.position.y - transform.position.y);
             var handHeightDif = Mathf.Abs(interactableItem.transform.position.y - weaponContainer.transform.position.y);
-            var triggerName = "PickupLow";
+            var triggerName = "pickupLow";
 
             if (handHeightDif < footHeightDif)
             {
-                triggerName = "PickupHigh";
+                triggerName = "pickupHigh";
             }
 
             anim.SetTrigger(triggerName);
@@ -659,13 +656,13 @@ namespace Hunter.Characters
             return false;
         }
 
-        private void AddNearbyInteractable (IInteractable interactableItem)
+        private void AddNearbyInteractable(IInteractable interactableItem)
         {
             nearbyInteractables.Add(interactableItem);
             CheckInteractImage();
         }
 
-        public void RemoveNearbyInteractable (IInteractable interactableItem)
+        public void RemoveNearbyInteractable(IInteractable interactableItem)
         {
             nearbyInteractables.Remove(interactableItem);
             CheckInteractImage();

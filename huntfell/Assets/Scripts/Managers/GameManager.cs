@@ -44,7 +44,7 @@ namespace Hunter
         #endregion
 
         #region Unity Functions
-        private void Awake ()
+        private void Awake()
         {
 
             if (instance == null)
@@ -75,8 +75,8 @@ namespace Hunter
         #endregion
 
         #region Scene Management
-        
-        public IEnumerator StartGame (CanvasGroup titleScreenCanvasGroup)
+
+        public IEnumerator StartGame(CanvasGroup titleScreenCanvasGroup)
         {
             Fabric.EventManager.Instance?.PostEvent("UI Start Game");
             yield return Utility.FadeCanvasGroup(titleScreenCanvasGroup, fadeCurve, 2, FadeType.In);
@@ -97,7 +97,7 @@ namespace Hunter
             SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
             DeviceManager.gameInputEnabled = true;
 
-            Fabric.EventManager.Instance.PostEvent("Expo to Combat Music");
+            Fabric.EventManager.Instance?.PostEvent("Expo to Combat Music");
         }
 
         public void LoadNewScene(string sceneName, bool loadAdditively)
@@ -123,7 +123,7 @@ namespace Hunter
 
         #region Helper Functions
 
-        public IEnumerator FadeScreen (Color fadeColor, FadeType fadeType)
+        public IEnumerator FadeScreen(Color fadeColor, FadeType fadeType)
         {
             yield return FadeScreen(fadeDuration, fadeColor, fadeType);
         }
