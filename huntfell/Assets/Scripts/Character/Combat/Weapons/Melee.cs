@@ -20,6 +20,7 @@ namespace Hunter.Characters
         #region Variables
         [Header("Melee Options")]
         public float hitBoxFrames = 5;
+        public float finisherHitBoxFrames = 10;
         public ParticleSystem swingParticleSystem;
 
         [Space]
@@ -107,10 +108,12 @@ namespace Hunter.Characters
 
         private IEnumerator OpenAndCloseHitBox ()
         {
+            var frames = hitBoxFrames;
+            if (bigAttackEffect) { frames = finisherHitBoxFrames; }
             EnableHitbox();
-            for (var i = 0; i < hitBoxFrames; i++)
+            for (var i = 0; i < frames + 1; i++)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
             }
             DisableHitbox();
         }

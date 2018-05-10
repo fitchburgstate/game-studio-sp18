@@ -73,9 +73,12 @@ namespace Hunter.Characters
 
         // Attack Combo
         [Space]
-        public bool acceptingAttackInput;
+        public bool canAttack;
         public int currentAttackIndex = 0;
         public int acceptingAttackFrames = 6;
+        private bool moving;
+        private bool movingAttack;
+        private bool standingAttack;
         #endregion
 
         #region Properties
@@ -184,7 +187,7 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
-            acceptingAttackInput = true;
+            canAttack = true;
             UpdateDecanters();
             Inventory.AddStartingItems();
             CheckInteractImage();
@@ -229,12 +232,13 @@ namespace Hunter.Characters
         public void Move(Vector3 moveDirection, Vector3 lookDirection)
         {
             // We do not want the player to be able to move during any big actions (dash, pickup, death, etc)
-            if (PerformingMajorAction) { return; }
+            if (PerformingMajorAction || standingAttack) { return; }
 
             //Setting animation params
             anim.SetFloat("dirX", moveDirection.x);
             anim.SetFloat("dirY", moveDirection.z);
-            anim.SetBool("moving", moveDirection.magnitude != 0);
+            moving = moveDirection.magnitude != 0;
+            anim.SetBool("moving", moving);
 
             //Cacheing Rotation Transform since its used for both movement and rotation
             var characterRoot = RotationTransform;
@@ -379,6 +383,20 @@ namespace Hunter.Characters
             invincible = false;
             yield return null;
 
+            //Putting this here incase attacking breaks, the player can dash to reset it
+            canAttack = true;
+            movingAttack = false;
+            standingAttack = false;
+            currentAttackIndex = 0;
+            anim.SetBool("attackInputWindow", false);
+            anim.ResetTrigger("firstSwing");
+            anim.ResetTrigger("secondSwing");
+            anim.ResetTrigger("thirdSwing");
+            attackAction = null;
+            attackCooldown = null;
+            attackFinisherCooldown = null;
+            inputFramesAction = null;
+
             dashAction = null;
         }
 
@@ -410,18 +428,56 @@ namespace Hunter.Characters
         #region Player Combat
         public void Attack()
         {
-            if (PerformingMajorAction || PerformingMinorAction || CurrentWeapon == null || !acceptingAttackInput) { return; }
+            if (PerformingMajorAction || CurrentWeapon == null || !canAttack) { return; }
 
-            acceptingAttackInput = false;
-
+            canAttack = false;
             if (inputFramesAction != null)
             {
                 StopCoroutine(inputFramesAction);
                 inputFramesAction = null;
+                anim.SetBool("attackInputWindow", false);
             }
-
+            Debug.Log("Starting Attack " + currentAttackIndex);
             attackAction = PlayAttackAnimation();
             StartCoroutine(attackAction);
+        }
+
+        public IEnumerator PlayAttackAnimation()
+        {
+
+            if (CurrentWeapon is Melee)
+            {
+                switch (currentAttackIndex)
+                {
+                    case 0:
+                        movingAttack = moving;
+                        standingAttack = !moving;
+                        anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+
+                        anim.SetTrigger("firstSwing");
+                        break;
+                    case 1:
+                        anim.SetTrigger("secondSwing");
+                        break;
+                    case 2:
+                        if (ActionsOnCooldown || movingAttack)
+                        {
+                            Debug.Log("no third swing");
+                            goto default;
+                        }
+                        CurrentWeapon.bigAttackEffect = true;
+                        anim.SetInteger("finisher", (int)CurrentWeapon.finishingMove);
+                        anim.SetFloat("attackSpeed", CurrentWeapon.finisherAttackSpeed);
+                        anim.SetTrigger("thirdSwing");
+                        StartCoroutine(SetStaminaBar(0, 0.3f));
+                        break;
+                    default:
+                        attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
+                        StartCoroutine(attackCooldown);
+                        break;
+                }
+            }
+            yield return null;
         }
 
         public void AttackAnimationEvent()
@@ -431,64 +487,53 @@ namespace Hunter.Characters
 
         public void StartInputFramesAnimationEvent()
         {
-            if (inputFramesAction != null) { return; }
-
+            if (inputFramesAction != null) {
+                Debug.LogWarning("input frames action was not null");
+                return;
+            }
+            Debug.Log("Input Frames Animation Event Called");
             inputFramesAction = StartInputFrames();
             StartCoroutine(inputFramesAction);
-
-            attackAction = null;
         }
 
-        public IEnumerator PlayAttackAnimation()
-        {
-            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-
-            if (CurrentWeapon is Melee)
-            {
-                switch (currentAttackIndex)
-                {
-                    case 0:
-                        anim.SetTrigger("firstSwing");
-                        break;
-                    case 1:
-                        anim.SetTrigger("secondSwing");
-                        break;
-                    case 2:
-                        if (ActionsOnCooldown)
-                        {
-                            acceptingAttackInput = true;
-                            yield break;
-                        }
-                        anim.SetTrigger("thirdSwing");
-                        StartCoroutine(SetStaminaBar(0, 0.3f));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
 
         public IEnumerator AttackCooldown(float recoverySpeed)
         {
+            Debug.Log("Starting cooldown");
+            attackAction = null;
+            canAttack = false;
+            CurrentWeapon.bigAttackEffect = false;
+            movingAttack = false;
+            standingAttack = false;
+
             yield return new WaitForSeconds(recoverySpeed);
 
+            canAttack = true;
+            currentAttackIndex = 0;
+
+            anim.ResetTrigger("firstSwing");
+            anim.ResetTrigger("secondSwing");
+            anim.ResetTrigger("thirdSwing");
             attackCooldown = null;
             attackFinisherCooldown = null;
-            acceptingAttackInput = true;
+            Debug.Log("Ending cooldown");
         }
 
         public IEnumerator StartInputFrames()
         {
-            Debug.Log("inputFrames open!");
-            acceptingAttackInput = true;
+            canAttack = true;
             currentAttackIndex++;
 
             if (currentAttackIndex < 3)
             {
+                Debug.Log("inputFrames open!");
+                anim.SetBool("attackInputWindow", true);
                 for (var i = 0; i < acceptingAttackFrames; i++)
                 {
                     yield return null;
                 }
+                anim.SetBool("attackInputWindow", false);
+                Debug.Log("inputFrames closed!");
 
                 attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
                 StartCoroutine(attackCooldown);
@@ -499,11 +544,6 @@ namespace Hunter.Characters
                 attackFinisherCooldown = AttackCooldown(CurrentWeapon.finisherCooldown);
                 StartCoroutine(attackFinisherCooldown);
             }
-
-            currentAttackIndex = 0;
-            Debug.Log("inputFrames closed!");
-
-            yield return null;
         }
 
         #region Non-Core Attack Functions
