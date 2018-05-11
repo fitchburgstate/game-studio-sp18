@@ -163,8 +163,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1668264434570078}
   m_LocalRotation: {x: 0.4478237, y: -0.5571704, z: -0.47349837, w: 0.5146013}
-  m_LocalPosition: {x: -0.074, y: 0.088, z: 0.408}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.074, y: 0.126, z: 0.52}
+  m_LocalScale: {x: 1.294787, y: 1.294787, z: 1.294787}
   m_Children:
   - {fileID: 4299048097428008}
   m_Father: {fileID: 0}
@@ -278,8 +278,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.10588148, y: 1.2471296, z: 0.49451554}
-  m_Center: {x: -0.00000035769386, y: 0.07944624, z: 0.00000044058385}
+  m_Size: {x: 0.10588148, y: 1.5564055, z: 0.49451554}
+  m_Center: {x: -0.0000004691072, y: 0.23408458, z: 0.00000044972143}
 --- !u!114 &114888198115398434
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -292,15 +292,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inspectorElementType: 0
-  baseDamage: 15
-  critPercent: 0
-  attackSpeed: 0.75
-  recoverySpeed: 0.75
+  baseDamage: 14
+  critPercent: 5
+  attackSpeed: 1
+  finisherAttackSpeed: 1.5
+  recoverySpeed: 0.3
   finisherCooldown: 1.25
   finishingMove: 1
   bigAttackEffect: 0
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 10
+  finisherHitBoxFrames: 10
   swingParticleSystem: {fileID: 198721742290387952}
   equipEffects:
   - elementEffect: 1

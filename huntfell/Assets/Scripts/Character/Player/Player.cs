@@ -73,7 +73,7 @@ namespace Hunter.Characters
 
         // Attack Combo
         [Space]
-        public bool canAttack;
+        public bool attackQueued = true;
         public int currentAttackIndex = 0;
         public int acceptingAttackFrames = 6;
         private bool moving;
@@ -187,7 +187,6 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
-            canAttack = true;
             UpdateDecanters();
             Inventory.AddStartingItems();
             CheckInteractImage();
@@ -384,19 +383,6 @@ namespace Hunter.Characters
             yield return null;
 
             //Putting this here incase attacking breaks, the player can dash to reset it
-            canAttack = true;
-            movingAttack = false;
-            standingAttack = false;
-            currentAttackIndex = 0;
-            anim.SetBool("attackInputWindow", false);
-            anim.ResetTrigger("firstSwing");
-            anim.ResetTrigger("secondSwing");
-            anim.ResetTrigger("thirdSwing");
-            attackAction = null;
-            attackCooldown = null;
-            attackFinisherCooldown = null;
-            inputFramesAction = null;
-
             dashAction = null;
         }
 
@@ -428,54 +414,52 @@ namespace Hunter.Characters
         #region Player Combat
         public void Attack()
         {
-            if (PerformingMajorAction || CurrentWeapon == null || !canAttack) { return; }
+            if (PerformingMajorAction || CurrentWeapon == null || attackCooldown != null) { return; }
 
-            canAttack = false;
-            if (inputFramesAction != null)
+            if(attackAction != null)
             {
-                StopCoroutine(inputFramesAction);
-                inputFramesAction = null;
-                anim.SetBool("attackInputWindow", false);
+                if (currentAttackIndex < 3)
+                {
+                    attackQueued = true;
+                }
+                return;
             }
-            Debug.Log("Starting Attack " + currentAttackIndex);
             attackAction = PlayAttackAnimation();
             StartCoroutine(attackAction);
         }
 
         public IEnumerator PlayAttackAnimation()
         {
-
-            if (CurrentWeapon is Melee)
+            Debug.Log("Starting Attack " + currentAttackIndex);
+            attackQueued = false;
+            switch (currentAttackIndex)
             {
-                switch (currentAttackIndex)
-                {
-                    case 0:
-                        movingAttack = moving;
-                        standingAttack = !moving;
-                        anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+                case 0:
+                    movingAttack = moving;
+                    standingAttack = !moving;
+                    anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
 
-                        anim.SetTrigger("firstSwing");
-                        break;
-                    case 1:
-                        anim.SetTrigger("secondSwing");
-                        break;
-                    case 2:
-                        if (ActionsOnCooldown || movingAttack)
-                        {
-                            Debug.Log("no third swing");
-                            goto default;
-                        }
-                        CurrentWeapon.bigAttackEffect = true;
-                        anim.SetInteger("finisher", (int)CurrentWeapon.finishingMove);
-                        anim.SetFloat("attackSpeed", CurrentWeapon.finisherAttackSpeed);
-                        anim.SetTrigger("thirdSwing");
-                        StartCoroutine(SetStaminaBar(0, 0.3f));
-                        break;
-                    default:
-                        attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
-                        StartCoroutine(attackCooldown);
-                        break;
-                }
+                    anim.SetTrigger("firstSwing");
+                    break;
+                case 1:
+                    anim.SetTrigger("secondSwing");
+                    break;
+                case 2:
+                    if (ActionsOnCooldown || movingAttack)
+                    {
+                        Debug.Log("no third swing");
+                        goto default;
+                    }
+                    CurrentWeapon.bigAttackEffect = true;
+                    anim.SetInteger("finisher", (int)CurrentWeapon.finishingMove);
+                    anim.SetFloat("attackSpeed", CurrentWeapon.finisherAttackSpeed);
+                    anim.SetTrigger("thirdSwing");
+                    StartCoroutine(SetStaminaBar(0, 0.3f));
+                    break;
+                default:
+                    attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
+                    StartCoroutine(attackCooldown);
+                    break;
             }
             yield return null;
         }
@@ -485,65 +469,48 @@ namespace Hunter.Characters
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public void StartInputFramesAnimationEvent()
+        public void EndOfAttackAnimationEvent ()
         {
-            if (inputFramesAction != null) {
-                Debug.LogWarning("input frames action was not null");
-                return;
-            }
-            Debug.Log("Input Frames Animation Event Called");
-            inputFramesAction = StartInputFrames();
-            StartCoroutine(inputFramesAction);
-        }
-
-
-        public IEnumerator AttackCooldown(float recoverySpeed)
-        {
-            Debug.Log("Starting cooldown");
-            attackAction = null;
-            canAttack = false;
-            CurrentWeapon.bigAttackEffect = false;
-            movingAttack = false;
-            standingAttack = false;
-
-            yield return new WaitForSeconds(recoverySpeed);
-
-            canAttack = true;
-            currentAttackIndex = 0;
-
-            anim.ResetTrigger("firstSwing");
-            anim.ResetTrigger("secondSwing");
-            anim.ResetTrigger("thirdSwing");
-            attackCooldown = null;
-            attackFinisherCooldown = null;
-            Debug.Log("Ending cooldown");
-        }
-
-        public IEnumerator StartInputFrames()
-        {
-            canAttack = true;
             currentAttackIndex++;
 
-            if (currentAttackIndex < 3)
-            {
-                Debug.Log("inputFrames open!");
-                anim.SetBool("attackInputWindow", true);
-                for (var i = 0; i < acceptingAttackFrames; i++)
-                {
-                    yield return null;
-                }
-                anim.SetBool("attackInputWindow", false);
-                Debug.Log("inputFrames closed!");
-
-                attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
-                StartCoroutine(attackCooldown);
-            }
-            else
+            if (currentAttackIndex >= 3)
             {
                 StartCoroutine(SetStaminaBar(1, CurrentWeapon.finisherCooldown));
                 attackFinisherCooldown = AttackCooldown(CurrentWeapon.finisherCooldown);
                 StartCoroutine(attackFinisherCooldown);
             }
+            else if (attackQueued)
+            {
+                attackAction = PlayAttackAnimation();
+                StartCoroutine(attackAction);
+            }
+            else
+            {
+                attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
+                StartCoroutine(attackCooldown);
+            }
+        }
+
+        public IEnumerator AttackCooldown(float cooldownLength)
+        {
+            Debug.Log("Starting cooldown");
+            attackQueued = false;
+            CurrentWeapon.bigAttackEffect = false;
+            movingAttack = false;
+            standingAttack = false;
+
+            yield return new WaitForSeconds(cooldownLength);
+
+            currentAttackIndex = 0;
+
+            anim.ResetTrigger("firstSwing");
+            anim.ResetTrigger("secondSwing");
+            anim.ResetTrigger("thirdSwing");
+
+            attackAction = null;
+            attackCooldown = null;
+            attackFinisherCooldown = null;
+            Debug.Log("Ending cooldown");
         }
 
         #region Non-Core Attack Functions

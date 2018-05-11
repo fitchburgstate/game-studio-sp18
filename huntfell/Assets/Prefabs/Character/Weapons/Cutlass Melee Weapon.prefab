@@ -308,14 +308,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inspectorElementType: 0
-  baseDamage: 10
+  baseDamage: 8
   critPercent: 10
-  attackSpeed: 1
-  recoverySpeed: 0.5
+  attackSpeed: 1.25
+  finisherAttackSpeed: 1.25
+  recoverySpeed: 0.3
   finisherCooldown: 1
+  finishingMove: 0
   bigAttackEffect: 0
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 10
+  finisherHitBoxFrames: 10
   swingParticleSystem: {fileID: 198003281727481110}
   equipEffects:
   - elementEffect: 1
