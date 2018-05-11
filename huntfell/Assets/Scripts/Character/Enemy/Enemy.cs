@@ -51,6 +51,8 @@ namespace Hunter.Characters
         /// An instance of the AIInputModule component attached to the enemy.
         /// </summary>
         private AIInputModule aiInputModuleInstance;
+
+        private Player playerScript;
         #endregion
 
         #region Properties
@@ -60,6 +62,15 @@ namespace Hunter.Characters
             {
                 if (aiInputModuleInstance == null) { aiInputModuleInstance = GetComponent<AIInputModule>(); }
                 return aiInputModuleInstance;
+            }
+        }
+
+        public Player PlayerScript
+        {
+            get
+            {
+                if (playerScript == null) { playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); }
+                return playerScript;
             }
         }
         #endregion
@@ -75,7 +86,8 @@ namespace Hunter.Characters
         #region Combat Related Functions
         protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
-            Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
+            Fabric.EventManager.Instance?.PostEvent(PlayerScript.CurrentWeapon.weaponHitSoundEvent, gameObject);
+            Fabric.EventManager.Instance?.PostEvent(PlayerScript.CurrentWeapon.WeaponElement.elementSoundEventName, gameObject);
             yield return base.SubtractHealthFromCharacter(damage, isCritical);
             StartCoroutine(InvincibilityFrames());
         }

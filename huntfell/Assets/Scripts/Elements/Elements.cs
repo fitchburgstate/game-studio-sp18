@@ -20,6 +20,7 @@ namespace Hunter
     {
         public Sprite elementHUDSprite;
         public Color elementColor = Color.white;
+        public string elementSoundEventName;
         protected Type weakness = null;
         
         public Type Weakness

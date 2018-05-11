@@ -39,6 +39,10 @@ namespace Hunter.Characters
 
         public bool bigAttackEffect = false;
 
+        public string weaponDrawSoundEvent;
+
+        public string weaponHitSoundEvent;
+
         [HideInInspector]
         public Character characterHoldingWeapon;
         protected Element weaponElement = null;
@@ -96,7 +100,7 @@ namespace Hunter.Characters
         protected bool ShouldAttackBeCritical(int percent)
         {
             if (bigAttackEffect || percent == 100) { return true; }
-            else if(percent == 0) { return false; }
+            else if (percent == 0) { return false; }
 
             var rng = new RNGCryptoServiceProvider();
             var buffer = new byte[4];

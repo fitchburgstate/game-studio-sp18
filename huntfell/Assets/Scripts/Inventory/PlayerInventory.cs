@@ -29,7 +29,7 @@ namespace Hunter
             //AddStartingItems();
         }
 
-        public void AddStartingItems ()
+        public void AddStartingItems()
         {
             if (startingItems != null && startingItems.Count > 0)
             {
@@ -56,11 +56,11 @@ namespace Hunter
             MeleeWeaponIndex++;
             if (MeleeWeaponIndex >= meleeWeapons.Count) { MeleeWeaponIndex = 0; }
             newWeapon = GetMeleeWeaponAtIndex(MeleeWeaponIndex, weaponContainer);
-            
+
             return newWeapon;
         }
 
-        public Weapon CycleWeaponsDown (Weapon currentWeapon, Transform weaponContainer)
+        public Weapon CycleWeaponsDown(Weapon currentWeapon, Transform weaponContainer)
         {
             Weapon newWeapon = null;
             //Dont cycle anything if there are no weapons in the inventory
@@ -73,11 +73,11 @@ namespace Hunter
             MeleeWeaponIndex--;
             if (MeleeWeaponIndex < 0) { MeleeWeaponIndex = meleeWeapons.Count - 1; }
             newWeapon = GetMeleeWeaponAtIndex(MeleeWeaponIndex, weaponContainer);
-            
+
             return newWeapon;
         }
 
-        public Melee GetMeleeWeaponAtIndex (int index, Transform weaponContainer)
+        public Melee GetMeleeWeaponAtIndex(int index, Transform weaponContainer)
         {
             if (meleeWeapons.Count == 0 || meleeWeapons.Count <= index)
             {
@@ -99,7 +99,7 @@ namespace Hunter
                 }
             }
 
-            if(resultMelee == null)
+            if (resultMelee == null)
             {
                 resultMelee = Instantiate(meleeWeaponPrefab, weaponContainer);
                 resultMelee.name = meleeWeaponPrefab.name;
@@ -131,7 +131,7 @@ namespace Hunter
         #endregion
 
         #region Elements
-        public Element CycleElementsUp (Weapon currentWeapon)
+        public Element CycleElementsUp(Weapon currentWeapon)
         {
             if (elementMods.Count < 2 || currentWeapon == null)
             {
@@ -140,7 +140,7 @@ namespace Hunter
             }
             Element newElement = null;
 
-            for (int i = MeleeElementIndex + 1; i != MeleeElementIndex; i++)
+            for (var i = MeleeElementIndex + 1; i != MeleeElementIndex; i++)
             {
                 if (i >= elementMods.Count) { i = 0; }
                 if (weaponAndElementIndex.ContainsValue(i) && i != 0) { continue; }
@@ -148,11 +148,11 @@ namespace Hunter
                 newElement = GetElementAtIndex(MeleeElementIndex, currentWeapon);
                 break;
             }
-            
+
             return newElement;
         }
 
-        public Element CycleElementsDown (Weapon currentWeapon)
+        public Element CycleElementsDown(Weapon currentWeapon)
         {
             if (elementMods.Count < 2 || currentWeapon == null)
             {
@@ -162,7 +162,7 @@ namespace Hunter
 
             Element newElement = null;
 
-            for(int i = MeleeElementIndex -1; i != MeleeElementIndex; i--)
+            for (var i = MeleeElementIndex - 1; i != MeleeElementIndex; i--)
             {
                 if (i < 0) { i = elementMods.Count - 1; }
                 if (weaponAndElementIndex.ContainsValue(i) && i != 0) { continue; }
@@ -174,7 +174,7 @@ namespace Hunter
             return newElement;
         }
 
-        public Element GetElementAtIndex (int elementIndex, Weapon currentWeapon)
+        public Element GetElementAtIndex(int elementIndex, Weapon currentWeapon)
         {
             var elementItemData = elementMods.Keys.ElementAt(elementIndex);
             var element = Utility.ElementOptionToElement(elementItemData.elementOption);
@@ -194,9 +194,9 @@ namespace Hunter
         {
             var elementOption = Utility.ElementToElementOption(element);
             index = 0;
-            foreach(var pair in elementMods)
+            foreach (var pair in elementMods)
             {
-                if(pair.Key.elementOption == elementOption)
+                if (pair.Key.elementOption == elementOption)
                 {
                     return true;
                 }
@@ -207,22 +207,22 @@ namespace Hunter
         #endregion
 
         #region Books
-        public List<JournalItem> GetAllJournals ()
+        public List<JournalItem> GetAllJournals()
         {
             return new List<JournalItem>(journalEntries.Keys);
         }
 
-        public List<DiaryItem> GetAllDiaries ()
+        public List<DiaryItem> GetAllDiaries()
         {
             return new List<DiaryItem>(diaryEntries.Keys);
         }
         #endregion
 
         //Method for simply giving the player an instance of item data from which we spawn it's interactble prefab too
-        public bool TryAddItem(InventoryItem item) 
+        public bool TryAddItem(InventoryItem item)
         {
             var spawnedItem = SpawnInteractableItem(item);
-            if(!TryAddItem(item, spawnedItem))
+            if (!TryAddItem(item, spawnedItem))
             {
                 Destroy(spawnedItem);
                 return false;
@@ -230,9 +230,9 @@ namespace Hunter
             return true;
         }
 
-        private InteractableInventoryItem SpawnInteractableItem (InventoryItem item)
+        private InteractableInventoryItem SpawnInteractableItem(InventoryItem item)
         {
-            if(item == null || item.InteractableItemPrefab == null)
+            if (item == null || item.InteractableItemPrefab == null)
             {
                 Debug.LogWarning($"Couldn't spawn an interactble object from the inventory item ({item.itemName} / {item.name}) provided. Make sure a prefab reference is set in the scriptable object.");
                 return null;
@@ -240,14 +240,14 @@ namespace Hunter
             return Instantiate(item.InteractableItemPrefab);
         }
 
-        public bool TryAddItem (InventoryItem item, InteractableInventoryItem spawnedInteractableItem)
+        public bool TryAddItem(InventoryItem item, InteractableInventoryItem spawnedInteractableItem)
         {
             if (item is MeleeWeaponItem && !meleeWeapons.ContainsKey(item as MeleeWeaponItem))
             {
                 meleeWeapons.Add(item as MeleeWeaponItem, spawnedInteractableItem);
                 HUDManager.instance?.AddNewWeaponToSocket(item.icon);
                 //Jank but w/e
-                if(meleeWeapons.Count == 1) { GetComponent<Player>()?.CycleWeapons(true); }
+                if (meleeWeapons.Count == 1) { GetComponent<Player>()?.CycleWeapons(true); }
             }
             else if (item is ElementModItem && !elementMods.ContainsKey(item as ElementModItem))
             {
@@ -269,7 +269,7 @@ namespace Hunter
             }
 
             Debug.Log($"Added the item ({item.itemName} / {item.name}) to your inventory.");
-            if(HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(item.itemName, item.icon); }
+            if (HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(item.itemName, item.icon); }
 
             spawnedInteractableItem?.transform.SetParent(transform);
             spawnedInteractableItem?.gameObject.SetActive(false);

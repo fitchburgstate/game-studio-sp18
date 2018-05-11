@@ -273,7 +273,7 @@ namespace Hunter.Characters
         #region Non-Core Movement Functions
         public void FootstepSoundAnimationEvent()
         {
-            Fabric.EventManager.Instance?.PostEvent("Footstep", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Player Footstep - Wood", gameObject);
         }
 
         public void Move(Transform target)
@@ -416,7 +416,7 @@ namespace Hunter.Characters
         {
             if (PerformingMajorAction || CurrentWeapon == null || attackCooldown != null) { return; }
 
-            if(attackAction != null)
+            if (attackAction != null)
             {
                 if (currentAttackIndex < 3)
                 {
@@ -469,7 +469,7 @@ namespace Hunter.Characters
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public void EndOfAttackAnimationEvent ()
+        public void EndOfAttackAnimationEvent()
         {
             currentAttackIndex++;
 
@@ -547,8 +547,7 @@ namespace Hunter.Characters
                 return;
             }
             //TODO This should really be referencing a clip on the new weapon being equipped and playing that instead
-            if (newWeapon is Melee) { Fabric.EventManager.Instance?.PostEvent("Player Draw Sword", gameObject); }
-            //else if (newWeapon is Ranged) { Fabric.EventManager.Instance?.PostEvent("Player Draw Luger", gameObject); }
+            Fabric.EventManager.Instance?.PostEvent(CurrentWeapon.weaponDrawSoundEvent, gameObject);
             EquipWeaponToCharacter(newWeapon);
         }
 
