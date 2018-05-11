@@ -6,22 +6,22 @@ namespace Hunter
     public class GameobjectToggle : MonoBehaviour
     {
         #region Variables
-        [Header("Minion Management Settings")]
-        public bool disableMinionsAtStart = true;
-        public List<GameObject> minionSet = new List<GameObject>();
+        [Header("Single Activation Set Settings")]
+        public bool disableSetAtStart = true;
+        public List<GameObject> singleActivationGameobjectSet = new List<GameObject>();
 
-        private bool hasToggledMinions = false;
+        private bool hasToggledSet = false;
 
-        [Header("Room Management Settings")]
-        public bool floorToggle;
-        public bool disableSecondFloorAtStart = true;
-        public List<GameObject> roomSetA = new List<GameObject>();
-        public List<GameObject> roomSetB = new List<GameObject>();
+        [Header("Toggle between Set A and B Settings")]
+        public bool setToggle;
+        public bool disableSetBAtStart = true;
+        public List<GameObject> gameobjectSetA = new List<GameObject>();
+        public List<GameObject> gameobjectSetB = new List<GameObject>();
 
         [Header("Debug Options")]
         public bool showDebugLogs = false;
 
-        private bool firstFloor = true;
+        private bool setA = true;
         private GameObject player;
         #endregion
 
@@ -39,19 +39,19 @@ namespace Hunter
         #region Unity Functions
         private void Start()
         {
-            hasToggledMinions = false;
+            hasToggledSet = false;
 
-            if (minionSet != null && disableMinionsAtStart)
+            if (singleActivationGameobjectSet != null && disableSetAtStart)
             {
-                foreach (var minion in minionSet)
+                foreach (var minion in singleActivationGameobjectSet)
                 {
                     minion.SetActive(false);
                 }
             }
 
-            if (roomSetB != null && disableSecondFloorAtStart)
+            if (gameobjectSetB != null && disableSetBAtStart)
             {
-                foreach (var room in roomSetB)
+                foreach (var room in gameobjectSetB)
                 {
                     room.SetActive(false);
                 }
@@ -62,13 +62,13 @@ namespace Hunter
         {
             if (other.gameObject == Player)
             {
-                if (floorToggle)
+                if (setToggle)
                 {
                     RoomToggle();
-                    firstFloor = !firstFloor;
+                    setA = !setA;
                 }
 
-                if (!hasToggledMinions) { MinionToggle(); }
+                if (!hasToggledSet) { MinionToggle(); }
             }
         }
         #endregion
@@ -76,38 +76,38 @@ namespace Hunter
         #region Room Toggle Functions
         private void RoomToggle()
         {
-            if (firstFloor)
+            if (setA)
             {
-                if (roomSetA != null)
+                if (gameobjectSetA != null)
                 {
-                    foreach (var room in roomSetA)
+                    foreach (var room in gameobjectSetA)
                     {
                         room.SetActive(false);
                     }
                 }
 
-                if (roomSetB != null)
+                if (gameobjectSetB != null)
                 {
-                    foreach (var room in roomSetB)
+                    foreach (var room in gameobjectSetB)
                     {
                         room.SetActive(true);
                     }
                 }
                 if (showDebugLogs) { Debug.Log("Shut off the first floor, and activated the second floor."); }
             }
-            else if (!firstFloor)
+            else if (!setA)
             {
-                if (roomSetA != null)
+                if (gameobjectSetA != null)
                 {
-                    foreach (var room in roomSetA)
+                    foreach (var room in gameobjectSetA)
                     {
                         room.SetActive(true);
                     }
                 }
 
-                if (roomSetB != null)
+                if (gameobjectSetB != null)
                 {
-                    foreach (var room in roomSetB)
+                    foreach (var room in gameobjectSetB)
                     {
                         room.SetActive(false);
                     }
@@ -120,14 +120,14 @@ namespace Hunter
         #region Minions to Spawn Functions
         private void MinionToggle()
         {
-            if (minionSet != null)
+            if (singleActivationGameobjectSet != null)
             {
-                foreach (var minion in minionSet)
+                foreach (var minion in singleActivationGameobjectSet)
                 {
                     minion.SetActive(true);
                 }
             }
-            hasToggledMinions = true;
+            hasToggledSet = true;
         }
         #endregion
 

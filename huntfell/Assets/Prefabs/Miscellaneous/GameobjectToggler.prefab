@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114101633047485656}
   - component: {fileID: 65137188602573020}
   m_Layer: 0
-  m_Name: RoomMinionToggler
+  m_Name: GameobjectToggler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,10 +64,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b751340fef68a2a4a966c5dac1d8ab8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disableMinionsAtStart: 1
-  minionSet: []
-  floorToggle: 1
-  disableSecondFloorAtStart: 1
-  roomSetA: []
-  roomSetB: []
+  disableSetAtStart: 1
+  singleActivationGameobjectSet: []
+  setToggle: 1
+  disableSetBAtStart: 1
+  gameobjectSetA: []
+  gameobjectSetB: []
   showDebugLogs: 0
