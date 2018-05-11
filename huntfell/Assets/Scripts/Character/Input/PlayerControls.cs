@@ -40,6 +40,11 @@ namespace Hunter {
 
             public PlayerOneAxisAction PagesAxis { get; private set; }
 
+            private PlayerAction cycleTab_Negative;
+            private PlayerAction cycleTab_Positive;
+
+            public PlayerOneAxisAction TabsAxis { get; private set; }
+
             public UIInput ()
             {
                 ConfirmButton = CreatePlayerAction("Confirm");
@@ -51,6 +56,11 @@ namespace Hunter {
                 cyclePage_Positive = CreatePlayerAction("Page Right");
 
                 PagesAxis = CreateOneAxisPlayerAction(cyclePage_Negative, cyclePage_Positive);
+
+                cycleTab_Negative = CreatePlayerAction("Tab Left");
+                cycleTab_Positive = CreatePlayerAction("Tab Right");
+
+                TabsAxis = CreateOneAxisPlayerAction(cycleTab_Negative, cycleTab_Positive);
             }
 
             public override void SetBindings (ControlsLayout layout)
@@ -68,9 +78,13 @@ namespace Hunter {
 
                     JournalsButton.AddDefaultBinding(InputControlType.Select);
 
-                    cyclePage_Negative.AddDefaultBinding(InputControlType.LeftBumper);
+                    cyclePage_Negative.AddDefaultBinding(InputControlType.LeftStickLeft);
 
-                    cyclePage_Positive.AddDefaultBinding(InputControlType.RightBumper);
+                    cyclePage_Positive.AddDefaultBinding(InputControlType.LeftStickRight);
+
+                    cycleTab_Negative.AddDefaultBinding(InputControlType.LeftBumper);
+
+                    cycleTab_Positive.AddDefaultBinding(InputControlType.RightBumper);
                 }
                 else if (layout == ControlsLayout.Keyboard_and_Mouse)
                 {
@@ -86,6 +100,10 @@ namespace Hunter {
                     cyclePage_Negative.AddDefaultBinding(Key.A);
 
                     cyclePage_Positive.AddDefaultBinding(Key.D);
+
+                    cycleTab_Negative.AddDefaultBinding(Key.LeftControl);
+
+                    cycleTab_Positive.AddDefaultBinding(Key.LeftShift);
                 }
                 else
                 {

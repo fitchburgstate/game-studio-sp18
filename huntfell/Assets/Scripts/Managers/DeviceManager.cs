@@ -21,6 +21,8 @@ namespace Hunter
         public bool PressedJournal { get; private set; }
         public bool PressedPageLeft { get; private set; }
         public bool PressedPageRight { get; private set; }
+        public bool PressedTabLeft { get; private set; }
+        public bool PressedTabRight { get; private set; }
 
         public bool PressedElementUp { get; private set; }
         public bool PressedElementDown { get; private set; }
@@ -117,6 +119,10 @@ namespace Hunter
 
                 PressedPageLeft = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value < 0;
                 PressedPageRight = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value > 0;
+
+                PressedTabLeft = controls.UI.TabsAxis.WasPressed && controls.UI.TabsAxis.Value < 0;
+                PressedTabRight = controls.UI.TabsAxis.WasPressed && controls.UI.TabsAxis.Value > 0;
+
             }
 
             //Game Inputs

@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Hunter.Characters;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Hunter
 {
@@ -77,9 +78,15 @@ namespace Hunter
 
         private List<JournalItem> journalEntries;
         private List<DiaryItem> diaryEntries;
-        private List<BestiaryItem> bestiaryEntries;
         private List<MapItem> mapEntries;
         private List<ElementModItem> elementEntries;
+
+        private List<BestiaryItem> bestiaryEntries;
+        private List<BestiaryItem> wolfEntries;
+        private List<BestiaryItem> batEntries;
+        private List<BestiaryItem> gargoyleEntries;
+        private List<BestiaryItem> werewolfEntries;
+
 
         public bool IsGamePaused
         {
@@ -150,6 +157,10 @@ namespace Hunter
             bestiaryEntries = null;
             mapEntries = null;
             elementEntries = null;
+            wolfEntries = null;
+            batEntries = null;
+            gargoyleEntries = null;
+            werewolfEntries = null;
             journalPageIndex = 0;
             diaryPageIndex = 0;
             bestiaryPageIndex = 0;
@@ -174,7 +185,7 @@ namespace Hunter
                     EnableDiaryTab();
                     break;
                 case 3:
-                    DisplayBestiary();
+                    EnableBestiaryTab();
                     break;
                 case 4:
                     EnableMapTab();
@@ -194,7 +205,7 @@ namespace Hunter
                     FlipDiaryPage(forwards);
                     break;
                 case 3:
-                    DisplayBestiary();
+                    FlipBestiaryPage(forwards);
                     break;
                 default:
                     return;
@@ -204,10 +215,43 @@ namespace Hunter
         #region Pause
         public void DisplayPause ()
         {
+            if(elementEntries == null)
+            {
+                elementEntries = playerWhoPaused.Inventory.GetAllElements();
+            }
+            pauseHeader.fontStyle = FontStyles.Bold;
+            pauseLeftPageRoot.SetActive(true);
+            pauseRightPageRoot.SetActive(true);
 
+            foreach(var element in elementEntries)
+            {
+                switch (element.elementOption)
+                {
+                    case ElementOption.Fire:
+                        fireMaladiteIcon.enabled = true;
+                        break;
+                    case ElementOption.Ice:
+                        iceMaladiteIcon.enabled = true;
+                        break;
+                    case ElementOption.Electric:
+                        electricMaladiteIcon.enabled = true;
+                        break;
+                    case ElementOption.Silver:
+                        silverMaladiteIcon.enabled = true;
+                        break;
+                }
+            }
+
+            if(playerWhoPaused.PotionCount > 0)
+            {
+                decanterFirstIcon.enabled = true;
+            }
+            if(playerWhoPaused.PotionCount > 1)
+            {
+                decanterSecondIcon.enabled = true;
+            }
         }
         #endregion
-
 
         #region Bestiary
         public void EnableBestiaryTab ()
@@ -215,9 +259,14 @@ namespace Hunter
             if (bestiaryEntries == null)
             {
                 bestiaryEntries = playerWhoPaused.Inventory.GetAllBestiaries();
+
+                wolfEntries = new List<BestiaryItem>(bestiaryEntries.Where(entry => entry.enemyType == EnemyType.Wolf).OrderBy(entry => entry.entryOrder));
+                batEntries = new List<BestiaryItem>(bestiaryEntries.Where(entry => entry.enemyType == EnemyType.Bat).OrderBy(entry => entry.entryOrder));
+                gargoyleEntries = new List<BestiaryItem>(bestiaryEntries.Where(entry => entry.enemyType == EnemyType.Gargoyle).OrderBy(entry => entry.entryOrder));
+                werewolfEntries = new List<BestiaryItem>(bestiaryEntries.Where(entry => entry.enemyType == EnemyType.Werewolf).OrderBy(entry => entry.entryOrder));
             }
 
-            journalHeader.fontStyle = FontStyles.Bold;
+            bestiaryHeader.fontStyle = FontStyles.Bold;
             bestiaryLeftPageRoot.SetActive(true);
             bestiaryRightPageRoot.SetActive(true);
             //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
@@ -226,11 +275,11 @@ namespace Hunter
 
         private void FlipBestiaryPage (bool forwards)
         {
-            if (bestiaryEntries == null || bestiaryEntries.Count == 0) { return; }
+            if (bestiaryEntries == null) { return; }
 
             if (forwards)
             {
-                if (bestiaryPageIndex + 2 > bestiaryEntries.Count) { return; }
+                if (bestiaryPageIndex + 2 > 2) { return; }
                 bestiaryPageIndex += 2;
             }
             else
@@ -244,39 +293,89 @@ namespace Hunter
 
         private void DisplayBestiaryPages ()
         {
-            for (int i = journalPageIndex; i < journalPageIndex + 2; i++)
+            switch (bestiaryPageIndex)
             {
-                if (i >= journalEntries.Count)
-                {
-                    //Even numbered entries go on the left page, odd numbered ones go to the right
-                    if (i % 2 == 0)
-                    {
-                        modularLeftPageTitle.text = "";
-                        modularLeftPageText.text = "Nothing here yet.";
-                    }
-                    else
-                    {
-                        modularRightPageTitle.text = "";
-                        modularRightPageText.text = "Nothing here yet.";
-                    }
-                }
-                else
-                {
-                    if (i % 2 == 0)
-                    {
-                        modularLeftPageTitle.text = journalEntries[i].itemName;
-                        modularLeftPageText.text = journalEntries[i].bookContents;
-                    }
-                    else
-                    {
-                        modularRightPageTitle.text = journalEntries[i].itemName;
-                        modularRightPageText.text = journalEntries[i].bookContents;
-                    }
-                }
+                case 0:
+                    DisplayLeftBestiaryPage(wolfEntries);
+                    DisplayRightBestiaryPage(batEntries);
+
+                    rightArrow.gameObject.SetActive(true);
+                    leftArrow.gameObject.SetActive(false);
+                    break;
+                case 2:
+                    DisplayLeftBestiaryPage(gargoyleEntries);
+                    DisplayRightBestiaryPage(werewolfEntries);
+
+                    leftArrow.gameObject.SetActive(true);
+                    rightArrow.gameObject.SetActive(false);
+                    break;
+            }
+        }
+
+        private void DisplayLeftBestiaryPage(List<BestiaryItem> entries)
+        {
+            if(entries.Count == 0)
+            {
+                bestiaryLeftPageTitle.text = "?";
+                return;
             }
 
-            leftArrow.gameObject.SetActive(bestiaryPageIndex - 2 > 0);
-            rightArrow.gameObject.SetActive(bestiaryPageIndex + 2 < bestiaryEntries.Count);
+            bestiaryLeftPageTitle.text = entries[0].enemyType.ToString();
+            for (int i = 0; i < 3; i++)
+            {
+                if (i >= entries.Count) { break; }
+                switch (i)
+                {
+                    case 0:
+                        bestiaryLeftPageFirstEntry.text = entries[i].bookContents;
+                        bestiaryLeftPageFirstSketch.sprite = entries[i].entrySketch;
+                        bestiaryLeftPageFirstSketch.enabled = true;
+                        break;
+                    case 1:
+                        bestiaryLeftPageSecondEntry.text = entries[i].bookContents;
+                        bestiaryLeftPageSecondSketch.sprite = entries[i].entrySketch;
+                        bestiaryLeftPageSecondSketch.enabled = true;
+                        break;
+                    case 2:
+                        bestiaryLeftPageThirdEntry.text = entries[i].bookContents;
+                        bestiaryLeftPageThirdSketch.sprite = entries[i].entrySketch;
+                        bestiaryLeftPageThirdSketch.enabled = true;
+                        break;
+                }
+            }
+        }
+
+        private void DisplayRightBestiaryPage (List<BestiaryItem> entries)
+        {
+            if (entries.Count == 0)
+            {
+                bestiaryRightPageTitle.text = "?";
+                return;
+            }
+
+            bestiaryRightPageTitle.text = entries[0].enemyType.ToString();
+            for (int i = 0; i < 3; i++)
+            {
+                if (i >= entries.Count) { break; }
+                switch (i)
+                {
+                    case 0:
+                        bestiaryRightPageFirstEntry.text = entries[i].bookContents;
+                        bestiaryRightPageFirstSketch.sprite = entries[i].entrySketch;
+                        bestiaryRightPageFirstSketch.enabled = true;
+                        break;  
+                    case 1:     
+                        bestiaryRightPageSecondEntry.text = entries[i].bookContents;
+                        bestiaryRightPageSecondSketch.sprite = entries[i].entrySketch;
+                        bestiaryRightPageSecondSketch.enabled = true;
+                        break;  
+                    case 2:     
+                        bestiaryRightPageThirdEntry.text = entries[i].bookContents;
+                        bestiaryRightPageThirdSketch.sprite = entries[i].entrySketch;
+                        bestiaryRightPageThirdSketch.enabled = true;
+                        break;
+                }
+            }
         }
         #endregion
 
@@ -304,13 +403,13 @@ namespace Hunter
                     //Even numbered entries go on the left page, odd numbered ones go to the right
                     if (i % 2 == 0)
                     {
-                        modularLeftPageTitle.text = "";
-                        modularLeftPageText.text = "Nothing here yet.";
+                        modularLeftPageTitle.text = "?";
+                        //modularLeftPageText.text = "Nothing here yet.";
                     }
                     else
                     {
-                        modularRightPageTitle.text = "";
-                        modularRightPageText.text = "Nothing here yet.";
+                        modularRightPageTitle.text = "?";
+                        //modularRightPageText.text = "Nothing here yet.";
                     }
                 }
                 else
@@ -372,13 +471,13 @@ namespace Hunter
                     //Even numbered entries go on the left page, odd numbered ones go to the right
                     if (i % 2 == 0)
                     {
-                        modularLeftPageTitle.text = "";
-                        modularLeftPageText.text = "Nothing here yet.";
+                        modularLeftPageTitle.text = "?";
+                        modularLeftPageText.text = "";
                     }
                     else
                     {
-                        modularRightPageTitle.text = "";
-                        modularRightPageText.text = "Nothing here yet.";
+                        modularRightPageTitle.text = "?";
+                        modularRightPageText.text = "";
                     }
                 }
                 else
@@ -396,7 +495,7 @@ namespace Hunter
                 }
             }
 
-            leftArrow.gameObject.SetActive(journalPageIndex - 2 > 0);
+            leftArrow.gameObject.SetActive(journalPageIndex - 2 >= 0);
             rightArrow.gameObject.SetActive(journalPageIndex + 2 < journalEntries.Count);
         }
         #endregion
@@ -443,13 +542,13 @@ namespace Hunter
                     //Even numbered entries go on the left page, odd numbered ones go to the right
                     if (i % 2 == 0)
                     {
-                        modularLeftPageTitle.text = "";
-                        modularLeftPageText.text = "Nothing here yet.";
+                        modularLeftPageTitle.text = "?";
+                        modularLeftPageText.text = "";
                     }
                     else
                     {
-                        modularRightPageTitle.text = "";
-                        modularRightPageText.text = "Nothing here yet.";
+                        modularRightPageTitle.text = "?";
+                        modularRightPageText.text = "";
                     }
                 }
                 else
@@ -467,16 +566,22 @@ namespace Hunter
                 }
             }
 
-            leftArrow.gameObject.SetActive(diaryPageIndex - 2 > 0);
+            leftArrow.gameObject.SetActive(diaryPageIndex - 2 >= 0);
             rightArrow.gameObject.SetActive(diaryPageIndex + 2 < diaryEntries.Count);
         }
         #endregion
 
         private void ResetAllPages ()
         {
+            //Reset tab styling
             diaryHeader.fontStyle = journalHeader.fontStyle = mapHeader.fontStyle = bestiaryHeader.fontStyle = pauseHeader.fontStyle = FontStyles.Normal;
-            modularLeftPageBackground.enabled = modularRightPageBackground.enabled = false;
-            modularLeftPageText.text = modularRightPageText.text = "";
+
+            //Disable all images in pages
+            bestiaryLeftPageFirstSketch.enabled = bestiaryLeftPageSecondSketch.enabled = bestiaryLeftPageThirdSketch.enabled = bestiaryRightPageFirstSketch.enabled = bestiaryRightPageSecondSketch.enabled = bestiaryRightPageThirdSketch.enabled = modularLeftPageBackground.enabled = modularRightPageBackground.enabled = fireMaladiteIcon.enabled = iceMaladiteIcon.enabled = electricMaladiteIcon.enabled = silverMaladiteIcon.enabled = decanterFirstIcon.enabled = decanterSecondIcon.enabled = false;
+
+            //Reset all text in pages
+            bestiaryLeftPageFirstEntry.text = bestiaryLeftPageSecondEntry.text = bestiaryLeftPageThirdEntry.text = bestiaryRightPageFirstEntry.text = bestiaryRightPageSecondEntry.text = bestiaryRightPageThirdEntry.text = modularLeftPageText.text = modularRightPageText.text = "";
+
             leftArrow.gameObject.SetActive(false);
             rightArrow.gameObject.SetActive(false);
             pauseLeftPageRoot.SetActive(false);

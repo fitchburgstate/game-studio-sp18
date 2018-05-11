@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Hunter.Characters
@@ -12,7 +10,6 @@ namespace Hunter.Characters
     public sealed class Player : Character, IMoveable, IAttack
     {
         #region Variables
-
         [Header("Combat Options")]
         public Transform weaponContainer;
         public float gunTrailLength = 1.5f;
@@ -62,15 +59,26 @@ namespace Hunter.Characters
         public Image interactPromptImage;
 
         // Action Coroutine Refs
-        private IEnumerator attackAction;
         private IEnumerator attackFinisherCooldown;
-        private IEnumerator dashAction;
+        private IEnumerator attackCooldown;
         private IEnumerator dashCooldown;
+        private IEnumerator attackAction;
+        private IEnumerator dashAction;
         private IEnumerator pickupAction;
+        private IEnumerator inputFramesAction;
 
         // Inventory and Items
         public PlayerInventory Inventory { get; private set; }
         private List<IInteractable> nearbyInteractables = new List<IInteractable>();
+
+        // Attack Combo
+        [Space]
+        public bool attackQueued = true;
+        public int currentAttackIndex = 0;
+        public int acceptingAttackFrames = 6;
+        private bool moving;
+        private bool movingAttack;
+        private bool standingAttack;
         #endregion
 
         #region Properties
@@ -94,7 +102,7 @@ namespace Hunter.Characters
         {
             get
             {
-                return attackFinisherCooldown != null || dashCooldown != null;
+                return dashCooldown != null || attackFinisherCooldown != null;
             }
         }
 
@@ -170,7 +178,7 @@ namespace Hunter.Characters
         {
             base.Start();
 
-            if(GameManager.instance != null)
+            if (GameManager.instance != null)
             {
                 transform.forward = GameManager.instance.isometricFollowCM.transform.forward;
             }
@@ -191,7 +199,7 @@ namespace Hunter.Characters
             var interactableItem = other.GetComponent<IInteractable>();
             if (interactableItem != null)
             {
-                if(other.GetComponent<InteractablePotionShard>() != null)
+                if (other.GetComponent<InteractablePotionShard>() != null)
                 {
                     interactableItem.FireInteraction(this);
                 }
@@ -203,7 +211,7 @@ namespace Hunter.Characters
             }
 
             var tutorialTrigger = other.GetComponent<TutorialTrigger>();
-            if(tutorialTrigger != null && HUDManager.instance != null)
+            if (tutorialTrigger != null && HUDManager.instance != null)
             {
                 HUDManager.instance.ShowTutorialPrompt(tutorialTrigger.tutorialText, tutorialTrigger.controlSprite);
                 tutorialTrigger.gameObject.SetActive(false);
@@ -218,7 +226,7 @@ namespace Hunter.Characters
                 RemoveNearbyInteractable(interactableItem);
             }
         }
-        
+
         #endregion
 
         public void InitPlayerUI ()
@@ -231,12 +239,13 @@ namespace Hunter.Characters
         public void Move(Vector3 moveDirection, Vector3 lookDirection)
         {
             // We do not want the player to be able to move during any big actions (dash, pickup, death, etc)
-            if (PerformingMajorAction) { return; }
+            if (PerformingMajorAction || standingAttack) { return; }
 
             //Setting animation params
             anim.SetFloat("dirX", moveDirection.x);
             anim.SetFloat("dirY", moveDirection.z);
-            anim.SetBool("moving", moveDirection.magnitude != 0);
+            moving = moveDirection.magnitude != 0;
+            anim.SetBool("moving", moving);
 
             //Cacheing Rotation Transform since its used for both movement and rotation
             var characterRoot = RotationTransform;
@@ -309,6 +318,8 @@ namespace Hunter.Characters
             var characterForward = RotationTransform.forward;
             var dashDirectionTarget = new Vector3();
 
+            invincible = true;
+
             // Raycast to determine target point for dodge destination on the X and Z axis
             var hit = new RaycastHit();
             var ray = new Ray(startPosition, characterForward);
@@ -347,7 +358,7 @@ namespace Hunter.Characters
                 yield break;
             }
 
-            anim.SetTrigger("DodgeRoll");
+            anim.SetTrigger("dodgeRoll");
             StartCoroutine(SetStaminaBar(0, 0.3f));
 
             // PAUSE HERE FOR ANIMATION EVENT
@@ -375,12 +386,15 @@ namespace Hunter.Characters
             // Dont want players to be able to spam dash, so we have a cooldown which resets the Coroutine reference after (If that reference isn't null, that means we're still dashing)
             dashCooldown = DashCooldown();
             StartCoroutine(dashCooldown);
+
+            invincible = false;
             yield return null;
 
+            //Putting this here incase attacking breaks, the player can dash to reset it
             dashAction = null;
         }
 
-        private IEnumerator DashCooldown ()
+        private IEnumerator DashCooldown()
         {
             StartCoroutine(SetStaminaBar(1, dashCoolDown));
             yield return new WaitForSeconds(dashCoolDown);
@@ -408,10 +422,54 @@ namespace Hunter.Characters
         #region Player Combat
         public void Attack()
         {
-            if (PerformingMajorAction || PerformingMinorAction || CurrentWeapon == null) { return; }
+            if (PerformingMajorAction || CurrentWeapon == null || attackCooldown != null) { return; }
 
+            if(attackAction != null)
+            {
+                if (currentAttackIndex < 3)
+                {
+                    attackQueued = true;
+                }
+                return;
+            }
             attackAction = PlayAttackAnimation();
             StartCoroutine(attackAction);
+        }
+
+        public IEnumerator PlayAttackAnimation()
+        {
+            Debug.Log("Starting Attack " + currentAttackIndex);
+            attackQueued = false;
+            switch (currentAttackIndex)
+            {
+                case 0:
+                    movingAttack = moving;
+                    standingAttack = !moving;
+                    anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+
+                    anim.SetTrigger("firstSwing");
+                    break;
+                case 1:
+                    anim.SetTrigger("secondSwing");
+                    break;
+                case 2:
+                    if (ActionsOnCooldown || movingAttack)
+                    {
+                        Debug.Log("no third swing");
+                        goto default;
+                    }
+                    CurrentWeapon.bigAttackEffect = true;
+                    anim.SetInteger("finisher", (int)CurrentWeapon.finishingMove);
+                    anim.SetFloat("attackSpeed", CurrentWeapon.finisherAttackSpeed);
+                    anim.SetTrigger("thirdSwing");
+                    StartCoroutine(SetStaminaBar(0, 0.3f));
+                    break;
+                default:
+                    attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
+                    StartCoroutine(attackCooldown);
+                    break;
+            }
+            yield return null;
         }
 
         public void AttackAnimationEvent()
@@ -419,20 +477,48 @@ namespace Hunter.Characters
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public IEnumerator PlayAttackAnimation()
+        public void EndOfAttackAnimationEvent ()
         {
-            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-            if (CurrentWeapon is Melee)
-            {
-                anim.SetTrigger("melee");
-            }
-            else if (CurrentWeapon is Ranged)
-            {
-                anim.SetTrigger("ranged");
-            }
+            currentAttackIndex++;
 
-            yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
+            if (currentAttackIndex >= 3)
+            {
+                StartCoroutine(SetStaminaBar(1, CurrentWeapon.finisherCooldown));
+                attackFinisherCooldown = AttackCooldown(CurrentWeapon.finisherCooldown);
+                StartCoroutine(attackFinisherCooldown);
+            }
+            else if (attackQueued)
+            {
+                attackAction = PlayAttackAnimation();
+                StartCoroutine(attackAction);
+            }
+            else
+            {
+                attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
+                StartCoroutine(attackCooldown);
+            }
+        }
+
+        public IEnumerator AttackCooldown(float cooldownLength)
+        {
+            Debug.Log("Starting cooldown");
+            attackQueued = false;
+            CurrentWeapon.bigAttackEffect = false;
+            movingAttack = false;
+            standingAttack = false;
+
+            yield return new WaitForSeconds(cooldownLength);
+
+            currentAttackIndex = 0;
+
+            anim.ResetTrigger("firstSwing");
+            anim.ResetTrigger("secondSwing");
+            anim.ResetTrigger("thirdSwing");
+
             attackAction = null;
+            attackCooldown = null;
+            attackFinisherCooldown = null;
+            Debug.Log("Ending cooldown");
         }
 
         #region Non-Core Attack Functions
@@ -489,7 +575,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void SwitchWeaponType (bool switchToMelee)
+        public void SwitchWeaponType(bool switchToMelee)
         {
             //if (switchToMelee && !(CurrentWeapon is Melee))
             //{
@@ -505,10 +591,10 @@ namespace Hunter.Characters
         #endregion
 
         #region Player Health
-
-        public void UsePotion ()
+        public void UsePotion()
         {
-            if(PerformingMinorAction || PotionShardCount < maxShardsPerPotion || TargetHealth == totalHealth) {
+            if (PerformingMinorAction || PotionShardCount < maxShardsPerPotion || TargetHealth == totalHealth)
+            {
                 Debug.LogWarning("Cannot use potion at this time.");
                 return;
             }
@@ -516,26 +602,26 @@ namespace Hunter.Characters
             PotionShardCount -= maxShardsPerPotion;
         }
 
-        private void UpdateDecanters ()
+        private void UpdateDecanters()
         {
-            for (int i = 0; i < potionCount; i++)
+            for (var i = 0; i < potionCount; i++)
             {
                 HUDManager.instance?.SetDecanterInfo(i, PotionShardCount, maxShardsPerPotion);
             }
         }
 
-        protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
             Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
             yield return base.SubtractHealthFromCharacter(damage, isCritical);
         }
 
-        protected override IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
+        protected override IEnumerator AddHealthToCharacter(int restoreAmount, bool isCritical)
         {
             yield return base.AddHealthToCharacter(restoreAmount, isCritical);
         }
 
-        protected override IEnumerator KillCharacter ()
+        protected override IEnumerator KillCharacter()
         {
             invincible = true;
             agent.enabled = false;
@@ -545,7 +631,7 @@ namespace Hunter.Characters
             anim.SetFloat("dirX", 0);
             anim.SetFloat("dirY", 0);
             anim.SetBool("moving", false);
-            anim.SetTrigger("isDead");
+            anim.SetTrigger("death");
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.Out);
 
@@ -619,11 +705,11 @@ namespace Hunter.Characters
         {
             var footHeightDif = Mathf.Abs(interactableItem.transform.position.y - transform.position.y);
             var handHeightDif = Mathf.Abs(interactableItem.transform.position.y - weaponContainer.transform.position.y);
-            var triggerName = "PickupLow";
+            var triggerName = "pickupLow";
 
             if (handHeightDif < footHeightDif)
             {
-                triggerName = "PickupHigh";
+                triggerName = "pickupHigh";
             }
 
             anim.SetTrigger(triggerName);
@@ -667,13 +753,13 @@ namespace Hunter.Characters
             return false;
         }
 
-        private void AddNearbyInteractable (IInteractable interactableItem)
+        private void AddNearbyInteractable(IInteractable interactableItem)
         {
             nearbyInteractables.Add(interactableItem);
             CheckInteractImage();
         }
 
-        public void RemoveNearbyInteractable (IInteractable interactableItem)
+        public void RemoveNearbyInteractable(IInteractable interactableItem)
         {
             nearbyInteractables.Remove(interactableItem);
             CheckInteractImage();

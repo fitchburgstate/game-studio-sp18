@@ -768,9 +768,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4975580352999854}
   - component: {fileID: 95001712862974898}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rotation Root
-  m_TagString: Untagged
+  m_TagString: Rotation Transform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3585,7 +3585,7 @@ Animator:
   m_GameObject: {fileID: 1282463547878574}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 7b620df17e68af342886909c986bee4a, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 827abe66eaa2dea44880c7b34877d381, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3908,8 +3908,8 @@ MonoBehaviour:
     - serializedVersion: 2
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -3922,7 +3922,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   potionCount: 1
-  maxPotionShards: 30
+  maxShardsPerPotion: 30
   potionShardCount: 0
   potionRestoreAmount: 2
   potionRestoreInterval: 0.33
