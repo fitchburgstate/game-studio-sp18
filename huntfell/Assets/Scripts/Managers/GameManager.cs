@@ -93,8 +93,10 @@ namespace Hunter
                 yield return new WaitForSeconds((float)director.duration);
             }
 
-            SceneManager.LoadScene("UI_Hud", LoadSceneMode.Additive);
+            SceneManager.LoadScene("SpencerWithers_Hud_Scene", LoadSceneMode.Additive);
             SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
+            yield return null;
+            FindObjectOfType<Player>()?.InitPlayerUI();
             DeviceManager.gameInputEnabled = true;
 
             Fabric.EventManager.Instance?.PostEvent("Expo to Combat Music");

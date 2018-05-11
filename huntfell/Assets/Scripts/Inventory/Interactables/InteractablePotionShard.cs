@@ -19,7 +19,7 @@ namespace Hunter
             {
                 for (int i = 0; i < shardCount; i++)
                 {
-                    (characterTriggeringInteraction as Player).PotionShardCount += shardCount;
+                    (characterTriggeringInteraction as Player).PotionShardCount++;
                 }
                 Destroy(gameObject);
             }

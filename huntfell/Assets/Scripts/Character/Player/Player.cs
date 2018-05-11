@@ -115,7 +115,7 @@ namespace Hunter.Characters
             set
             {
                 base.CurrentHealth = value;
-                HUDManager.instance?.SetCurrentHealthBar(currentHealth / totalHealth);
+                HUDManager.instance?.SetPlayerCurrentHealthBar(currentHealth / totalHealth);
 
                 //if (currentHealth <= 0)
                 //{
@@ -134,7 +134,7 @@ namespace Hunter.Characters
             set
             {
                 base.TargetHealth = value;
-                HUDManager.instance?.SetTargetHealthBar(targetHealth / totalHealth);
+                HUDManager.instance?.SetPlayerTargetHealthBar(targetHealth / totalHealth);
             }
         }
 
@@ -187,8 +187,10 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
-            UpdateDecanters();
-            Inventory.AddStartingItems();
+            if(GameManager.instance != null && !GameManager.instance.loadTitleScreen && Application.isEditor)
+            {
+                InitPlayerUI();
+            }
             CheckInteractImage();
         }
 
@@ -226,6 +228,12 @@ namespace Hunter.Characters
         }
 
         #endregion
+
+        public void InitPlayerUI ()
+        {
+            Inventory.AddStartingItems();
+            UpdateDecanters();
+        }
 
         #region Player Movement
         public void Move(Vector3 moveDirection, Vector3 lookDirection)
@@ -343,9 +351,9 @@ namespace Hunter.Characters
             }
 
             var dashTarget = Utility.GetClosestPointOnNavMesh(floorPointFromDashTarget, agent, transform);
-            if (Physics.Linecast(startPosition, dashTarget, out hit, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxHorizontalDistance)
+            if (Physics.Linecast(startPosition, dashTarget, out hit, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxVerticalDistance)
             {
-                Debug.LogWarning($"Your dash would have brought you somewhere you weren't supposed to go! {hit.transform.name}");
+                Debug.LogWarning($"Your dash would have brought you somewhere you weren't supposed to go!");
                 dashAction = null;
                 yield break;
             }
@@ -398,14 +406,14 @@ namespace Hunter.Characters
         {
             if (HUDManager.instance == null) { yield break; }
 
-            var startFill = HUDManager.instance.staminaBar.fillAmount;
+            var startFill = HUDManager.instance.playerStaminaBar.fillAmount;
             var startTime = Time.time;
             var percentComplete = 0f;
             while (percentComplete < 1)
             {
                 var elapsedTime = Time.time - startTime;
                 percentComplete = Mathf.Clamp01(elapsedTime / totalTime);
-                HUDManager.instance.staminaBar.fillAmount = Mathf.Lerp(startFill, targetFill, percentComplete);
+                HUDManager.instance.playerStaminaBar.fillAmount = Mathf.Lerp(startFill, targetFill, percentComplete);
                 yield return null;
             }
         }

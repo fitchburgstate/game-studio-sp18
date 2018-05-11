@@ -38,13 +38,13 @@ namespace Hunter.Characters
         {
             get
             {
-                return weaponElement;
+                return base.WeaponElement;
             }
 
             set
             {
-                weaponElement = value;
-                ActivateMeleeEffect(Utility.ElementToElementOption(weaponElement));
+                base.WeaponElement = value;
+                ActivateMeleeEffect(Utility.ElementToElementOption(value));
             }
         }
 
@@ -57,8 +57,9 @@ namespace Hunter.Characters
         private Collider meleeHitBox;
         #endregion
 
-        protected void Awake ()
+        protected override void Awake ()
         {
+            base.Awake();
             weaponRenderer = GetComponentInChildren<MeshRenderer>();
             if (weaponRenderer != null)
             {
@@ -69,9 +70,8 @@ namespace Hunter.Characters
             DisableHitbox();
         }
 
-        protected override void Start ()
+        protected void Start ()
         {
-            base.Start();
             if (swingParticleSystem != null)
             {
                 swingParticleSystem.Stop();

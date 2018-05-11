@@ -93,11 +93,19 @@ namespace Hunter.Characters
                 }
                 else if (deviceManager.PressedPageRight)
                 {
-                    PauseManager.instance.DisplayDiaries();
+                    PauseManager.instance.SwitchPage(true);
                 }
                 else if (deviceManager.PressedPageLeft)
                 {
-                    PauseManager.instance.DisplayJournals();
+                    PauseManager.instance.SwitchPage(false);
+                }
+                else if (deviceManager.PressedTabRight)
+                {
+                    PauseManager.instance.CurrentTabIndex++;
+                }
+                else if (deviceManager.PressedTabLeft)
+                {
+                    PauseManager.instance.CurrentTabIndex--;
                 }
             }
         }

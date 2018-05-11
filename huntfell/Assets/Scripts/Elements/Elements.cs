@@ -71,7 +71,7 @@ namespace Hunter
         {
             public Silver ()
             {
-                elementColor = Color.gray;
+                elementColor = Color.white;
             }
         }
     }

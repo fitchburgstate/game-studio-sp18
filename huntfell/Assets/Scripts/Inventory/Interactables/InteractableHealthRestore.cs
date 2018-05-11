@@ -6,13 +6,14 @@ using System.Collections;
 
 namespace Hunter
 {
-    class InteractableHealthRestore : InteractableInventoryItem
+    class InteractableDecanter : InteractableInventoryItem
     {
-        public int healthAmount = 20;
-
         public override void FireInteraction (Character characterTriggeringInteraction)
         {
-            characterTriggeringInteraction.Heal(healthAmount, true);
+            if(characterTriggeringInteraction is Player)
+            {
+                (characterTriggeringInteraction as Player).PotionCount++;
+            }
             gameObject.SetActive(false);
         }
     }
