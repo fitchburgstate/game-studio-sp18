@@ -39,9 +39,11 @@ namespace Hunter.Characters
 
         public bool bigAttackEffect = false;
 
-        public string weaponDrawSoundEvent;
+        public string weaponEquipSoundEvent;
 
         public string weaponHitSoundEvent;
+
+        public string optionalSecondaryHitSoundEvent;
 
         [HideInInspector]
         public Character characterHoldingWeapon;
@@ -69,7 +71,7 @@ namespace Hunter.Characters
 
         public abstract void StartAttackFromAnimationEvent();
 
-        protected virtual int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
+        protected virtual int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var critMult = isCritical ? CRITICAL_HIT_MULTIPLIER : 1.0f;
             var elementMult = 1.0f;

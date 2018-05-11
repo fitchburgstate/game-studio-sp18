@@ -76,7 +76,7 @@ namespace Hunter.Characters
         #endregion
 
         #region Unity Functions
-        protected override void Start ()
+        protected override void Start()
         {
             base.Start();
             elementType = Utility.ElementOptionToElement(enemyElementOption);
@@ -84,15 +84,13 @@ namespace Hunter.Characters
         #endregion
 
         #region Combat Related Functions
-        protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
-            Fabric.EventManager.Instance?.PostEvent(PlayerScript.CurrentWeapon.weaponHitSoundEvent, gameObject);
-            Fabric.EventManager.Instance?.PostEvent(PlayerScript.CurrentWeapon.WeaponElement.elementSoundEventName, gameObject);
             yield return base.SubtractHealthFromCharacter(damage, isCritical);
             StartCoroutine(InvincibilityFrames());
         }
 
-        protected IEnumerator InvincibilityFrames ()
+        protected IEnumerator InvincibilityFrames()
         {
             invincible = true;
             for (var i = 0; i < invincibilityFrames; i++)
@@ -102,17 +100,31 @@ namespace Hunter.Characters
             invincible = false;
         }
 
-        protected override IEnumerator KillCharacter ()
+        protected override IEnumerator KillCharacter()
         {
             agent.enabled = false;
             characterController.enabled = false;
             yield return SpawnInteractableItems();
             yield return base.KillCharacter();
         }
+
+        public override void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, weaponAttackedWith);
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent)) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
+        }
+
+        public override void Damage(int damage, bool isCritical, Element damageElement)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, damageElement);
+            if (!string.IsNullOrWhiteSpace(damageElement.elementSoundEventName)) { Fabric.EventManager.Instance?.PostEvent(damageElement.elementSoundEventName, gameObject); }
+        }
         #endregion
 
         #region Movement Related Functions
-        public void RotateTowardsTarget (Vector3 targetPoint, float turnSpeed)
+        public void RotateTowardsTarget(Vector3 targetPoint, float turnSpeed)
         {
             if (IsDying) { return; }
             var characterRoot = RotationTransform;
@@ -123,7 +135,7 @@ namespace Hunter.Characters
             characterRoot.localRotation = Quaternion.Euler(0, yRotEuler, 0);
         }
 
-        public void MoveToCalculations (float turnSpeed, float finalSpeed, Vector3 finalTarget)
+        public void MoveToCalculations(float turnSpeed, float finalSpeed, Vector3 finalTarget)
         {
             var navMeshPath = new NavMeshPath();
 
@@ -175,7 +187,7 @@ namespace Hunter.Characters
         #endregion
 
         #region Other Functions
-        protected IEnumerator SpawnInteractableItems ()
+        protected IEnumerator SpawnInteractableItems()
         {
             if (itemsToSpawn.Count == 0) { yield break; }
 

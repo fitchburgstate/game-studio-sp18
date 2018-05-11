@@ -72,13 +72,17 @@ namespace Hunter
             spawnPoints = new List<SpawnPoint>(FindObjectsOfType<SpawnPoint>());
         }
 
+        private void Start()
+        {
+            Fabric.EventManager.Instance?.PostEvent("Music - Start Main Menu Loop");
+        }
         #endregion
 
         #region Scene Management
 
         public IEnumerator StartGame(CanvasGroup titleScreenCanvasGroup)
         {
-            Fabric.EventManager.Instance?.PostEvent("UI Start Game");
+            Fabric.EventManager.Instance?.PostEvent("Stop Main Menu Loop, Start Game");
             yield return Utility.FadeCanvasGroup(titleScreenCanvasGroup, fadeCurve, 2, FadeType.In);
 
             SceneManager.UnloadSceneAsync("UI_Title_Menu");
@@ -99,7 +103,7 @@ namespace Hunter
             FindObjectOfType<Player>()?.InitPlayerUI();
             DeviceManager.gameInputEnabled = true;
 
-            Fabric.EventManager.Instance?.PostEvent("Expo to Combat Music");
+            Fabric.EventManager.Instance?.PostEvent("Music - Start Expo");
         }
 
         public void LoadNewScene(string sceneName, bool loadAdditively)

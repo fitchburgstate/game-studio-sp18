@@ -139,7 +139,7 @@ namespace Hunter
             Time.timeScale = 0;
             playerWhoPaused = player;
 
-            Fabric.EventManager.Instance?.PostEvent("UI Start Game");
+            Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
             menuCanvas.gameObject.SetActive(true);
 
             CurrentTabIndex = 0;
@@ -149,8 +149,6 @@ namespace Hunter
         {
             Time.timeScale = 1;
             playerWhoPaused = null;
-
-            Fabric.EventManager.Instance?.PostEvent("UI Navigation Back");
 
             journalEntries = null;
             diaryEntries = null;

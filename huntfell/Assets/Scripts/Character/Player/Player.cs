@@ -187,7 +187,7 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
-            if(GameManager.instance != null && !GameManager.instance.loadTitleScreen && Application.isEditor)
+            if (GameManager.instance != null && !GameManager.instance.loadTitleScreen && Application.isEditor)
             {
                 InitPlayerUI();
             }
@@ -229,7 +229,7 @@ namespace Hunter.Characters
 
         #endregion
 
-        public void InitPlayerUI ()
+        public void InitPlayerUI()
         {
             Inventory.AddStartingItems();
             UpdateDecanters();
@@ -524,7 +524,7 @@ namespace Hunter.Characters
         #region Non-Core Attack Functions
         public void MeleeWeaponSwingAnimationEvent()
         {
-            Fabric.EventManager.Instance?.PostEvent("Player Sword Swing", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Player Melee Swing", gameObject);
         }
 
         public void SwordSwingParticleAnimationEvent()
@@ -555,7 +555,7 @@ namespace Hunter.Characters
                 return;
             }
             //TODO This should really be referencing a clip on the new weapon being equipped and playing that instead
-            Fabric.EventManager.Instance?.PostEvent(CurrentWeapon.weaponDrawSoundEvent, gameObject);
+            Fabric.EventManager.Instance?.PostEvent(CurrentWeapon.weaponEquipSoundEvent, gameObject);
             EquipWeaponToCharacter(newWeapon);
         }
 
@@ -585,6 +585,21 @@ namespace Hunter.Characters
             //    EquipWeaponToCharacter(Inventory.GetRangedWeaponAtIndex(Inventory.RangedWeaponIndex, weaponContainer));
             //}
         }
+
+        public override void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, weaponAttackedWith);
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent)) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.optionalSecondaryHitSoundEvent)) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.optionalSecondaryHitSoundEvent, gameObject); }
+        }
+
+        public override void Damage(int damage, bool isCritical, Element damageElement)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, damageElement);
+            Fabric.EventManager.Instance?.PostEvent(damageElement.elementSoundEventName, gameObject);
+        }
         #endregion
 
         #endregion
@@ -611,7 +626,6 @@ namespace Hunter.Characters
 
         protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
-            Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
             yield return base.SubtractHealthFromCharacter(damage, isCritical);
         }
 

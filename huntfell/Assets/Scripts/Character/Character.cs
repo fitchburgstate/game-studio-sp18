@@ -155,7 +155,7 @@ namespace Hunter.Characters
         #endregion
 
         #region Unity Functions
-        protected virtual void Awake ()
+        protected virtual void Awake()
         {
             anim = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
@@ -166,13 +166,13 @@ namespace Hunter.Characters
             TargetHealth = totalHealth;
         }
 
-        protected virtual void Start ()
+        protected virtual void Start()
         {
         }
         #endregion
 
         #region Combat Related Functions
-        public void EquipWeaponToCharacter (Weapon weapon)
+        public void EquipWeaponToCharacter(Weapon weapon)
         {
             if (weapon != null)
             {
@@ -188,7 +188,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void EquipElementToWeapon (Element element)
+        public void EquipElementToWeapon(Element element)
         {
             if (CurrentWeapon != null)
             {
@@ -196,7 +196,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
+        public virtual void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             if (invincible || IsDying) { return; }
 
@@ -206,7 +206,7 @@ namespace Hunter.Characters
             Damage(damage, isCritical, weaponAttackedWith.WeaponElement);
         }
 
-        private IEnumerator SlowTimeCritical ()
+        private IEnumerator SlowTimeCritical()
         {
             Time.timeScale = 0.25f;
             yield return new WaitForSecondsRealtime(0.35f);
@@ -216,7 +216,7 @@ namespace Hunter.Characters
             Time.timeScale = 1;
         }
 
-        public virtual void Damage (int damage, bool isCritical, Element damageElement)
+        public virtual void Damage(int damage, bool isCritical, Element damageElement)
         {
             if (invincible || IsDying) { return; }
 
@@ -229,6 +229,19 @@ namespace Hunter.Characters
 
                 damageAction = SubtractHealthFromCharacter(damage, isCritical);
                 StartCoroutine(damageAction);
+
+                if (isCritical)
+                {
+                    Fabric.EventManager.Instance.PostEvent("Player Hit [High]", gameObject);
+                }
+                else if (damage > 3)
+                {
+                    Fabric.EventManager.Instance.PostEvent("Player Hit [Medium]", gameObject);
+                }
+                else
+                {
+                    Fabric.EventManager.Instance.PostEvent("Player Hit [Low]", gameObject);
+                }
             }
 
             if (effectsModule != null)
@@ -238,7 +251,7 @@ namespace Hunter.Characters
             }
         }
 
-        protected virtual IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected virtual IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
             TargetHealth -= damage;
 
@@ -255,7 +268,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void Heal (int restore, bool isCritical)
+        public void Heal(int restore, bool isCritical)
         {
             if (IsDying || CurrentHealth == totalHealth) { return; }
 
@@ -274,7 +287,7 @@ namespace Hunter.Characters
 
         }
 
-        protected virtual IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
+        protected virtual IEnumerator AddHealthToCharacter(int restoreAmount, bool isCritical)
         {
             var healTarget = restoreAmount + TargetHealth;
             var cachedTarget = TargetHealth;
@@ -294,7 +307,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void Kill ()
+        public void Kill()
         {
             if (IsDying) { return; }
 
@@ -302,7 +315,7 @@ namespace Hunter.Characters
             StartCoroutine(deathAction);
         }
 
-        protected virtual IEnumerator KillCharacter ()
+        protected virtual IEnumerator KillCharacter()
         {
             yield return new WaitForSeconds(5);
             Destroy(gameObject);

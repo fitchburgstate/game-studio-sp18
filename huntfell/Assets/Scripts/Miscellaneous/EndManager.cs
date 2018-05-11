@@ -8,7 +8,7 @@ namespace Hunter {
 
         void Start () {
             Destroy(GameObject.Find(GameManager.CANVASNAME));
-            Fabric.EventManager.Instance.PostEvent("Combat to Expo Music");
+            Fabric.EventManager.Instance.PostEvent("Music - Regular Combat to Expo");
             StartCoroutine(WaitThenLoad());
         }
 
