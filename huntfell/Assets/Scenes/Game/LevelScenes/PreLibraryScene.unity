@@ -113,7 +113,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: e33dbaf20cc79914ca1a457239c79589, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 3938dff51e9cd4042812e82014369c9c, type: 2}
 --- !u!4 &18131026 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4003777158951544, guid: e0aca14bc2a41204f97f8f3a1377f10c,
@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 47158563}
   - component: {fileID: 47158562}
   - component: {fileID: 47158561}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Tile_Doorway_Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2383,7 +2383,7 @@ GameObject:
   - component: {fileID: 446582916}
   - component: {fileID: 446582915}
   - component: {fileID: 446582914}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Tile_Hallway_WallDoor (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2799,36 +2799,6 @@ Transform:
   m_Father: {fileID: 1637331428}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 509.792, z: 0}
---- !u!1 &500834537
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 500834538}
-  m_Layer: 0
-  m_Name: PreLibraryLighting
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &500834538
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 500834537}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1130315131}
-  - {fileID: 1802476163}
-  m_Father: {fileID: 1043294170}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &501022845
 GameObject:
   m_ObjectHideFlags: 0
@@ -3229,7 +3199,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 885070383}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Environment_WallDoor_Hallway (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3376,6 +3346,34 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!1 &570988938
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 570988939}
+  m_Layer: 0
+  m_Name: GalleryEnemyGroup1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &570988939
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 570988938}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1639920100}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &575212176
 GameObject:
   m_ObjectHideFlags: 0
@@ -3971,7 +3969,7 @@ GameObject:
   - component: {fileID: 730026257}
   - component: {fileID: 730026256}
   - component: {fileID: 730026255}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Tile_Hallway_WallDoor (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4059,7 +4057,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh283388
+  m_Name: pb_Mesh474872
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
@@ -4193,7 +4191,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 161316327}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Environment_WallDoor_Hallway (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5375,7 +5373,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1273569722}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Environment_WallDoor_Hallway (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6585,7 +6583,6 @@ Transform:
   - {fileID: 1841720739}
   - {fileID: 146639377}
   - {fileID: 1639920100}
-  - {fileID: 500834538}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7166,7 +7163,7 @@ GameObject:
   - component: {fileID: 1110133854}
   - component: {fileID: 1110133853}
   - component: {fileID: 1110133852}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Tile_Hallway_WallDoor (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7439,113 +7436,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!1 &1130315130
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1130315131}
-  - component: {fileID: 1130315132}
-  m_Layer: 0
-  m_Name: Light Probe Group
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1130315131
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1130315130}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.8, y: 0, z: 60.3}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 500834538}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!220 &1130315132
-LightProbeGroup:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1130315130}
-  m_Enabled: 1
-  m_SourcePositions:
-  - {x: 0.306242, y: 3.3530319, z: 4.966831}
-  - {x: 6.389879, y: 3.3530319, z: -3.045658}
-  - {x: 0.306242, y: -0.06482124, z: 4.966831}
-  - {x: 6.389879, y: -0.06482124, z: -3.045658}
-  - {x: -2.5083313, y: 3.3530319, z: -5.9384117}
-  - {x: -16.980824, y: 3.3530319, z: -3.9563637}
-  - {x: -2.5083313, y: -0.06482124, z: -5.9384117}
-  - {x: -16.980824, y: -0.06482124, z: -3.9563637}
-  - {x: 6.389879, y: 3.3530319, z: 1.764904}
-  - {x: 6.389879, y: -0.06482124, z: 1.764904}
-  - {x: 6.389879, y: 3.3530319, z: 8.826908}
-  - {x: 6.389879, y: -0.06482124, z: 8.826908}
-  - {x: -4.2120056, y: 3.3530319, z: 8.826908}
-  - {x: -4.2120056, y: -0.06482124, z: 8.826908}
-  - {x: -6.6187706, y: 3.3530319, z: -1.784874}
-  - {x: -6.6187706, y: -0.06482124, z: -1.784874}
-  - {x: 0.306242, y: 3.3530319, z: 6.1052895}
-  - {x: 0.306242, y: -0.06482124, z: 6.1052895}
-  - {x: -2.6110516, y: 3.3530319, z: 4.966831}
-  - {x: -2.6110516, y: -0.06482124, z: 4.966831}
-  - {x: -2.6110516, y: 3.3530319, z: 6.1052895}
-  - {x: -2.6110516, y: -0.06482124, z: 6.1052895}
-  - {x: -6.6490135, y: 3.3530319, z: 6.3187523}
-  - {x: -6.6490135, y: -0.06482124, z: 6.3187523}
-  - {x: -6.6490135, y: 3.3530319, z: 2.9211655}
-  - {x: -6.6490135, y: -0.06482124, z: 2.9211655}
-  - {x: -13.889095, y: 3.3530319, z: 2.9211655}
-  - {x: -13.889095, y: -0.06482124, z: 2.9211655}
-  - {x: -25.111229, y: 3.3530319, z: 4.278675}
-  - {x: -25.111229, y: -0.06482124, z: 4.278675}
-  - {x: -21.883343, y: 3.3530319, z: 4.278675}
-  - {x: -21.883343, y: -0.06482124, z: 4.278675}
-  - {x: -13.858883, y: 3.3530319, z: 6.571392}
-  - {x: -13.858883, y: -0.06482124, z: 6.571392}
-  - {x: -6.6187706, y: 3.3530319, z: 0.41729736}
-  - {x: -6.6187706, y: -0.06482124, z: 0.41729736}
-  - {x: -27.765892, y: 3.3530319, z: 2.9211655}
-  - {x: -27.765892, y: -0.06482124, z: 2.9211655}
-  - {x: -27.765892, y: 3.3530319, z: 9.950092}
-  - {x: -27.765892, y: -0.06482124, z: 9.950092}
-  - {x: -21.008465, y: 3.3530319, z: 9.950092}
-  - {x: -21.008465, y: -0.06482124, z: 9.950092}
-  - {x: -20.043118, y: 3.3530319, z: 12.363453}
-  - {x: -20.043118, y: -0.06482124, z: 12.363453}
-  - {x: -14.824226, y: 3.3530319, z: 12.453953}
-  - {x: -14.824226, y: -0.06482124, z: 12.453953}
-  - {x: -6.490391, y: 3.3530319, z: -7.6579247}
-  - {x: -6.490391, y: -0.06482124, z: -7.6579247}
-  - {x: -4.1373653, y: 3.3530319, z: -10.010948}
-  - {x: -4.1373653, y: -0.06482124, z: -10.010948}
-  - {x: 6.3607445, y: 3.3530319, z: -10.071281}
-  - {x: 6.3607445, y: -0.06482124, z: -10.071281}
-  - {x: 3.072546, y: 3.3530319, z: -5.9384117}
-  - {x: 3.072546, y: -0.06482124, z: -5.9384117}
-  - {x: -2.5083313, y: 3.3530319, z: -7.537258}
-  - {x: -2.5083313, y: -0.06482124, z: -7.537258}
-  - {x: 3.072546, y: 3.3530319, z: -7.537258}
-  - {x: 3.072546, y: -0.06482124, z: -7.537258}
-  - {x: -27.765892, y: 3.3530319, z: -3.9568977}
-  - {x: -27.765892, y: -0.06482124, z: -3.9568977}
-  - {x: -27.765892, y: 3.3530319, z: -1.784874}
-  - {x: -27.765892, y: -0.06482124, z: -1.784874}
-  - {x: -27.765892, y: 3.3530319, z: 0.41729736}
-  - {x: -27.765892, y: -0.06482124, z: 0.41729736}
-  - {x: -16.634289, y: 3.3530319, z: 2.9211655}
-  - {x: -16.634289, y: -0.06482124, z: 2.9211655}
-  - {x: -18.112469, y: 3.3530319, z: 2.9211655}
-  - {x: -18.112469, y: -0.06482124, z: 2.9211655}
-  - {x: -6.5808945, y: 3.3530319, z: -3.9563637}
-  - {x: -6.5808945, y: -0.06482124, z: -3.9563637}
 --- !u!1 &1139868579
 GameObject:
   m_ObjectHideFlags: 0
@@ -7561,7 +7451,7 @@ GameObject:
   - component: {fileID: 1139868583}
   - component: {fileID: 1139868582}
   - component: {fileID: 1139868581}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Tile_Doorway_Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10821,6 +10711,7 @@ Transform:
   m_Children:
   - {fileID: 113192199}
   - {fileID: 1617043177}
+  - {fileID: 570988939}
   m_Father: {fileID: 1043294170}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11991,64 +11882,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!1 &1802476162
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1802476163}
-  - component: {fileID: 1802476165}
-  - component: {fileID: 1802476164}
-  m_Layer: 14
-  m_Name: DangerPP
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1802476163
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1802476162}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -36.67, y: 1.51, z: 61.89}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 500834538}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1802476164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1802476162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 851abc57d4a966a40a9ea9cd7dbc60fd, type: 2}
-  isGlobal: 0
-  blendDistance: 0.2
-  weight: 1
-  priority: 0
---- !u!65 &1802476165
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1802476162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 34.71, y: 4, z: 23.4}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1815227152
 GameObject:
   m_ObjectHideFlags: 0
@@ -14406,7 +14239,7 @@ GameObject:
   - component: {fileID: 2133987756}
   - component: {fileID: 2133987755}
   - component: {fileID: 2133987754}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Tile_Doorway_Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
