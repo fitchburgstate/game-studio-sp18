@@ -31,7 +31,7 @@ namespace Hunter
             {
                 foreach (var item in startingItems)
                 {
-                    TryAddItem(item);
+                    TryAddItem(item, false);
                 }
             }
         }
@@ -211,13 +211,28 @@ namespace Hunter
         {
             return new List<DiaryItem>(diaryEntries.Keys);
         }
+
+        public List<BestiaryItem> GetAllBestiaries ()
+        {
+            return new List<BestiaryItem>(bestiaryEntries.Keys);
+        }
+
+        public List<MapItem> GetAllMaps ()
+        {
+            return new List<MapItem>(mapEntries.Keys);
+        }
+
+        public List<ElementModItem> GetAllElements ()
+        {
+            return new List<ElementModItem>(elementMods.Keys);
+        }
         #endregion
 
         //Method for simply giving the player an instance of item data from which we spawn it's interactble prefab too
-        public bool TryAddItem(InventoryItem item) 
+        public bool TryAddItem(InventoryItem item, bool showPrompt) 
         {
             var spawnedItem = SpawnInteractableItem(item);
-            if(!TryAddItem(item, spawnedItem))
+            if(!TryAddItem(item, spawnedItem, showPrompt))
             {
                 Destroy(spawnedItem);
                 return false;
@@ -235,7 +250,7 @@ namespace Hunter
             return Instantiate(item.InteractableItemPrefab);
         }
 
-        public bool TryAddItem (InventoryItem item, InteractableInventoryItem spawnedInteractableItem)
+        public bool TryAddItem (InventoryItem item, InteractableInventoryItem spawnedInteractableItem, bool showPrompt)
         {
             if (item is MeleeWeaponItem && !meleeWeapons.ContainsKey(item as MeleeWeaponItem))
             {
@@ -272,7 +287,7 @@ namespace Hunter
             }
 
             Debug.Log($"Added the item ({item.itemName} / {item.name}) to your inventory.");
-            if(HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(item.itemName, item.icon); }
+            if(HUDManager.instance != null && showPrompt) { HUDManager.instance.ShowItemPickupPrompt(item.itemName, item.icon); }
 
             spawnedInteractableItem?.transform.SetParent(transform);
             spawnedInteractableItem?.gameObject.SetActive(false);

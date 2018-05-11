@@ -37,7 +37,7 @@ namespace Hunter
         public virtual void FireInteraction (Character characterTriggeringInteraction)
         {
             var player = characterTriggeringInteraction as Player;
-            if (player != null && player.Inventory.TryAddItem(itemData, this))
+            if (player != null && player.Inventory.TryAddItem(itemData, this, true))
             {
                 if(!string.IsNullOrEmpty(tutorialText) && tutorialIcon != null)
                 {

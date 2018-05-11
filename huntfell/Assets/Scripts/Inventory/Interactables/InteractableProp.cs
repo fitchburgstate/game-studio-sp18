@@ -248,7 +248,7 @@ namespace Hunter
 
             foreach (var item in itemsToSpawn)
             {
-                (characterFromInteraction as Player).Inventory.TryAddItem(item);
+                (characterFromInteraction as Player).Inventory.TryAddItem(item, true);
             }
         }
 
