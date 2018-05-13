@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4078726384862512}
   - component: {fileID: 135371534568248880}
   - component: {fileID: 114389596829044266}
-  - component: {fileID: 114866295280726048}
+  - component: {fileID: 114933766500101258}
   m_Layer: 18
   m_Name: Decanter Interactable Item
   m_TagString: Untagged
@@ -179,7 +179,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 12288
---- !u!114 &114866295280726048
+--- !u!114 &114933766500101258
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -187,23 +187,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 1142822250917844}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e7dd4adf0a4f1541b4fc6edcc45601b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemsToSpawn: []
-  giveItemsDirectly: 1
-  elementTypeForInteraction: 0
-  overrideImportance: 0
-  interactionSuccessMessage: Picked up "Hunters Decanter"
-  interactionFailMessage: 
-  propType: 0
-  destructionForce: 10
-  brokenPropPrefab: {fileID: 0}
-  propEvent:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  itemData: {fileID: 11400000, guid: b9951e608a50bf74194fdc657c880fc6, type: 2}
+  itemBounceTime: 0.75
+  itemTotalBounces: 3
+  itemBounceHeight: 1.25
+  itemHeightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  itemMaxSpawnDistance: 3
+  tutorialText: 
+  tutorialIcon: {fileID: 0}
 --- !u!135 &135371534568248880
 SphereCollider:
   m_ObjectHideFlags: 1
