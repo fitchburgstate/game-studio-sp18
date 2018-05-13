@@ -2852,15 +2852,15 @@ MonoBehaviour:
   currentHealth: 0
   targetHealth: 0
   healthModificationSpeed: 3
-  speed: 5
+  speed: 3
   turnSpeed: 200
   enemyElementOption: 0
   invincibilityFrames: 5
   itemsToSpawn: []
-  showDebugLogs: 1
+  showDebugLogs: 0
   canChangeElements: 1
   moveFasterWhileAttacking: 1
-  speedBoost: 1.66
+  speedBoost: 2.3
   phaseTwoMobs:
   - {fileID: 0}
   - {fileID: 0}
@@ -2905,6 +2905,9 @@ MonoBehaviour:
     m_Bits: 14336
   canlunge: 1
   phase: 1
+  healAmount: 5
+  healInterval: 1.5
+  silverDebuffLength: 15
 --- !u!114 &114367483855498478
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2920,9 +2923,14 @@ MonoBehaviour:
   baseDamage: 12
   critPercent: 15
   attackSpeed: 1
+  finisherAttackSpeed: 1.5
   recoverySpeed: 1
+  finisherCooldown: 2
+  finishingMove: 0
+  bigAttackEffect: 0
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 5
+  finisherHitBoxFrames: 10
   swingParticleSystem: {fileID: 0}
   equipEffects: []
 --- !u!114 &114439244766452288
@@ -2940,9 +2948,14 @@ MonoBehaviour:
   baseDamage: 5
   critPercent: 10
   attackSpeed: 1
+  finisherAttackSpeed: 1.5
   recoverySpeed: 1
+  finisherCooldown: 2
+  finishingMove: 0
+  bigAttackEffect: 0
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 8
+  finisherHitBoxFrames: 10
   swingParticleSystem: {fileID: 0}
   equipEffects: []
 --- !u!114 &114464757335411560
@@ -3021,9 +3034,14 @@ MonoBehaviour:
   baseDamage: 5
   critPercent: 10
   attackSpeed: 1
+  finisherAttackSpeed: 1.5
   recoverySpeed: 1
+  finisherCooldown: 2
+  finishingMove: 0
+  bigAttackEffect: 0
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 8
+  finisherHitBoxFrames: 10
   swingParticleSystem: {fileID: 0}
   equipEffects: []
 --- !u!114 &114680862541972250

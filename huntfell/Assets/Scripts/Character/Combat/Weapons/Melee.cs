@@ -78,6 +78,11 @@ namespace Hunter.Characters
             }
         }
 
+        protected void OnEnable ()
+        {
+            ActivateMeleeEffect(Utility.ElementToElementOption(WeaponElement));
+        }
+
         private void OnTriggerEnter (Collider target)
         {
             var damageableObject = target.GetComponent<IDamageable>();

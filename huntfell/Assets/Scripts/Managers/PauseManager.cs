@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Hunter.Characters;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 namespace Hunter
 {
@@ -25,13 +27,16 @@ namespace Hunter
         [Header("Pause Page Elements")]
         public GameObject pauseLeftPageRoot;
         public GameObject pauseRightPageRoot;
+        public GameObject controlsLeftPage;
+        public GameObject controlsRightPage;
+        [Space]
+        public Button defaultButton;
         public Image fireMaladiteIcon;
         public Image iceMaladiteIcon;
         public Image electricMaladiteIcon;
         public Image silverMaladiteIcon;
         public Image decanterFirstIcon;
         public Image decanterSecondIcon;
-        public Image controlsLayoutBackground;
 
         [Header("Modular Page Elements")]
         public GameObject modularLeftPageRoot;
@@ -87,12 +92,19 @@ namespace Hunter
         private List<BestiaryItem> gargoyleEntries;
         private List<BestiaryItem> werewolfEntries;
 
-
         public bool IsGamePaused
         {
             get
             {
                 return menuCanvas != null && menuCanvas.gameObject.activeSelf;
+            }
+        }
+
+        public bool IsControlsOpen
+        {
+            get
+            {
+                return controlsLeftPage.activeSelf || controlsRightPage.activeSelf;
             }
         }
 
@@ -134,21 +146,35 @@ namespace Hunter
             menuCanvas.gameObject.SetActive(false);
         }
 
-        public void PauseGame (Player player)
+        public void PauseGame (Player player, int tabToOpen)
         {
             Time.timeScale = 0;
             playerWhoPaused = player;
 
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.DeviceManager.PauseInputEnabled = true;
+                GameManager.instance.DeviceManager.GameInputEnabled = false;
+            }
+
             Fabric.EventManager.Instance?.PostEvent("UI Start Game");
             menuCanvas.gameObject.SetActive(true);
 
-            CurrentTabIndex = 0;
+            CurrentTabIndex = Mathf.Clamp(tabToOpen, 0, 4);
         }
 
         public void UnpauseGame ()
         {
+            if (IsControlsOpen) { return; }
+
             Time.timeScale = 1;
             playerWhoPaused = null;
+
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.DeviceManager.PauseInputEnabled = false;
+                GameManager.instance.DeviceManager.GameInputEnabled = true;
+            }
 
             Fabric.EventManager.Instance?.PostEvent("UI Navigation Back");
 
@@ -166,6 +192,27 @@ namespace Hunter
             bestiaryPageIndex = 0;
 
             menuCanvas.gameObject.SetActive(false);
+        }
+
+        public void QuitToMainMenu ()
+        {
+            if (IsControlsOpen) { return; }
+
+            GameManager.instance?.QuitToMenu();
+        }
+
+        public void OpenControls ()
+        {
+            if (IsControlsOpen) { return; }
+
+            controlsLeftPage.SetActive(true);
+            controlsRightPage.SetActive(true);
+        }
+
+        public void CloseControls ()
+        {
+            controlsLeftPage.SetActive(false);
+            controlsRightPage.SetActive(false);
         }
 
         public void SwitchTabs ()
@@ -223,6 +270,8 @@ namespace Hunter
             pauseLeftPageRoot.SetActive(true);
             pauseRightPageRoot.SetActive(true);
 
+            StartCoroutine(SelectDefaultButton());
+
             foreach(var element in elementEntries)
             {
                 switch (element.elementOption)
@@ -250,6 +299,13 @@ namespace Hunter
             {
                 decanterSecondIcon.enabled = true;
             }
+        }
+
+        private IEnumerator SelectDefaultButton ()
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            yield return null;
+            EventSystem.current.SetSelectedGameObject(defaultButton.gameObject);
         }
         #endregion
 
@@ -316,7 +372,7 @@ namespace Hunter
         {
             if(entries.Count == 0)
             {
-                bestiaryLeftPageTitle.text = "?";
+                bestiaryLeftPageTitle.text = "Undiscovered Beast";
                 return;
             }
 
@@ -349,7 +405,7 @@ namespace Hunter
         {
             if (entries.Count == 0)
             {
-                bestiaryRightPageTitle.text = "?";
+                bestiaryRightPageTitle.text = "Undiscovered Beast";
                 return;
             }
 
@@ -403,12 +459,12 @@ namespace Hunter
                     //Even numbered entries go on the left page, odd numbered ones go to the right
                     if (i % 2 == 0)
                     {
-                        modularLeftPageTitle.text = "?";
+                        modularLeftPageTitle.text = "Undiscovered Map";
                         //modularLeftPageText.text = "Nothing here yet.";
                     }
                     else
                     {
-                        modularRightPageTitle.text = "?";
+                        modularRightPageTitle.text = "Undiscovered Map";
                         //modularRightPageText.text = "Nothing here yet.";
                     }
                 }
@@ -418,11 +474,13 @@ namespace Hunter
                     {
                         modularLeftPageTitle.text = mapEntries[i].itemName;
                         modularLeftPageBackground.sprite = mapEntries[i].mapSprite;
+                        modularLeftPageBackground.enabled = true;
                     }
                     else
                     {
                         modularRightPageTitle.text = mapEntries[i].itemName;
                         modularRightPageBackground.sprite = mapEntries[i].mapSprite;
+                        modularRightPageBackground.enabled = true;
                     }
                 }
             }
@@ -450,7 +508,7 @@ namespace Hunter
 
             if (forwards)
             {
-                if(journalPageIndex + 2 > journalEntries.Count) { return; }
+                if(journalPageIndex + 2 >= journalEntries.Count) { return; }
                 journalPageIndex += 2;
             }
             else
@@ -471,13 +529,11 @@ namespace Hunter
                     //Even numbered entries go on the left page, odd numbered ones go to the right
                     if (i % 2 == 0)
                     {
-                        modularLeftPageTitle.text = "?";
-                        modularLeftPageText.text = "";
+                        modularLeftPageTitle.text = modularLeftPageText.text = "";
                     }
                     else
                     {
-                        modularRightPageTitle.text = "?";
-                        modularRightPageText.text = "";
+                        modularRightPageTitle.text = modularRightPageText.text = "";
                     }
                 }
                 else
@@ -521,7 +577,7 @@ namespace Hunter
 
             if (forwards)
             {
-                if (diaryPageIndex + 2 > diaryEntries.Count) { return; }
+                if (diaryPageIndex + 2 >= diaryEntries.Count) { return; }
                 diaryPageIndex += 2;
             }
             else
@@ -542,13 +598,11 @@ namespace Hunter
                     //Even numbered entries go on the left page, odd numbered ones go to the right
                     if (i % 2 == 0)
                     {
-                        modularLeftPageTitle.text = "?";
-                        modularLeftPageText.text = "";
+                        modularLeftPageTitle.text = modularLeftPageText.text = "";
                     }
                     else
                     {
-                        modularRightPageTitle.text = "?";
-                        modularRightPageText.text = "";
+                        modularRightPageTitle.text = modularRightPageText.text = "";
                     }
                 }
                 else
@@ -580,7 +634,7 @@ namespace Hunter
             bestiaryLeftPageFirstSketch.enabled = bestiaryLeftPageSecondSketch.enabled = bestiaryLeftPageThirdSketch.enabled = bestiaryRightPageFirstSketch.enabled = bestiaryRightPageSecondSketch.enabled = bestiaryRightPageThirdSketch.enabled = modularLeftPageBackground.enabled = modularRightPageBackground.enabled = fireMaladiteIcon.enabled = iceMaladiteIcon.enabled = electricMaladiteIcon.enabled = silverMaladiteIcon.enabled = decanterFirstIcon.enabled = decanterSecondIcon.enabled = false;
 
             //Reset all text in pages
-            bestiaryLeftPageFirstEntry.text = bestiaryLeftPageSecondEntry.text = bestiaryLeftPageThirdEntry.text = bestiaryRightPageFirstEntry.text = bestiaryRightPageSecondEntry.text = bestiaryRightPageThirdEntry.text = modularLeftPageText.text = modularRightPageText.text = "";
+            bestiaryLeftPageFirstEntry.text = bestiaryLeftPageSecondEntry.text = bestiaryLeftPageThirdEntry.text = bestiaryRightPageFirstEntry.text = bestiaryRightPageSecondEntry.text = bestiaryRightPageThirdEntry.text = modularLeftPageText.text = modularRightPageText.text = modularLeftPageTitle.text = modularRightPageTitle.text = "";
 
             leftArrow.gameObject.SetActive(false);
             rightArrow.gameObject.SetActive(false);
@@ -590,6 +644,8 @@ namespace Hunter
             modularRightPageRoot.SetActive(false);
             bestiaryLeftPageRoot.SetActive(false);
             bestiaryRightPageRoot.SetActive(false);
+            controlsLeftPage.SetActive(false);
+            controlsRightPage.SetActive(false);
         }
     }
 }

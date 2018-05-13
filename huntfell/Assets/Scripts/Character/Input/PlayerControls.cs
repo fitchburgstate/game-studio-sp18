@@ -18,7 +18,7 @@ namespace Hunter {
         public const ControlsLayout DEFAULT_LAYOUT = ControlsLayout.Keyboard_and_Mouse;
         public const ControlsLayout DEFAULT_CONTROLLER_LAYOUT = ControlsLayout.Controller_Face;
 
-        public UIInput UI { get; private set; }
+        public PauseInput Pause { get; private set; }
         public GameInput Game { get; private set; }
         #endregion
 
@@ -28,7 +28,7 @@ namespace Hunter {
             public abstract void SetDevice (InputDevice device);
         }
 
-        public class UIInput : InputActions
+        public class PauseInput : InputActions
         {
             public PlayerAction ConfirmButton { get; private set; }
             public PlayerAction CancelButton { get; private set; }
@@ -45,7 +45,7 @@ namespace Hunter {
 
             public PlayerOneAxisAction TabsAxis { get; private set; }
 
-            public UIInput ()
+            public PauseInput ()
             {
                 ConfirmButton = CreatePlayerAction("Confirm");
                 CancelButton = CreatePlayerAction("Cancel");
@@ -77,6 +77,7 @@ namespace Hunter {
                     MenuButton.AddDefaultBinding(InputControlType.Start);
 
                     JournalsButton.AddDefaultBinding(InputControlType.Select);
+                    JournalsButton.AddDefaultBinding(InputControlType.Back);
 
                     cyclePage_Negative.AddDefaultBinding(InputControlType.LeftStickLeft);
 
@@ -300,9 +301,9 @@ namespace Hunter {
         private void RefreshBindings ()
         {
             //Debug.Log("Erasing current bindings...");
-            UI?.Destroy();
+            Pause?.Destroy();
             Game?.Destroy();
-            UI = new UIInput();
+            Pause = new PauseInput();
             Game = new GameInput();
         }
 
@@ -310,7 +311,7 @@ namespace Hunter {
         {
             RefreshBindings();
             //Debug.Log("Setting the bindings to use the layout " + layout);
-            UI?.SetBindings(layout);
+            Pause?.SetBindings(layout);
             Game?.SetBindings(layout);
         }
 
@@ -318,7 +319,7 @@ namespace Hunter {
         {
             if(device != null) { /*Debug.Log("Attaching new device: " + device.Name);*/ }
             else { Debug.LogWarning("No valid devices were detected, falling back to Active Input."); }
-            UI?.SetDevice(device);
+            Pause?.SetDevice(device);
             Game?.SetDevice(device);
         }
     }

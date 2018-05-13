@@ -13,7 +13,7 @@ namespace Hunter
         private bool hasToggledSet = false;
 
         [Header("Toggle between Set A and B Settings")]
-        public bool setToggle;
+        public bool toggleBetweenSets;
         public bool disableSetBAtStart = true;
         public List<GameObject> gameobjectSetA = new List<GameObject>();
         public List<GameObject> gameobjectSetB = new List<GameObject>();
@@ -62,7 +62,7 @@ namespace Hunter
         {
             if (other.gameObject == Player)
             {
-                if (setToggle)
+                if (toggleBetweenSets)
                 {
                     RoomToggle();
                     setA = !setA;
