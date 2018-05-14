@@ -19,6 +19,8 @@ namespace Hunter
         public string tutorialText;
         public Sprite tutorialIcon;
 
+        public string itemPickupSoundEvent;
+
         protected Collider interactableItemCollider;
 
         public bool IsImportant
@@ -29,37 +31,37 @@ namespace Hunter
             }
         }
 
-        private void Awake ()
+        private void Awake()
         {
             interactableItemCollider = GetComponent<Collider>();
         }
 
-        public virtual void FireInteraction (Character characterTriggeringInteraction)
+        public virtual void FireInteraction(Character characterTriggeringInteraction)
         {
             var player = characterTriggeringInteraction as Player;
             if (player != null && player.Inventory.TryAddItem(itemData, this, true))
             {
-                if(!string.IsNullOrEmpty(tutorialText) && tutorialIcon != null)
+                if (!string.IsNullOrEmpty(tutorialText) && tutorialIcon != null)
                 {
                     HUDManager.instance?.ShowTutorialPrompt(tutorialText, tutorialIcon);
                 }
             }
         }
 
-        public void SpawnFromProp (Vector3 spawnPosition)
+        public void SpawnFromProp(Vector3 spawnPosition)
         {
             interactableItemCollider.enabled = false;
 
             var tempPosition = Vector3.zero;
-            if(Utility.RandomNavMeshPoint(spawnPosition, 1, out tempPosition))
+            if (Utility.RandomNavMeshPoint(spawnPosition, 1, out tempPosition))
             {
                 spawnPosition = tempPosition;
             }
-            StartCoroutine(PlaySpawnAnimation(spawnPosition)); 
-            
+            StartCoroutine(PlaySpawnAnimation(spawnPosition));
+
         }
 
-        private IEnumerator PlaySpawnAnimation (Vector3 targetPosition)
+        private IEnumerator PlaySpawnAnimation(Vector3 targetPosition)
         {
             for (var currentBounce = 1; currentBounce <= itemTotalBounces; currentBounce++)
             {
@@ -84,7 +86,7 @@ namespace Hunter
             yield return null;
         }
 
-        public void SpawnOnGround (Vector3 spawnPosition)
+        public void SpawnOnGround(Vector3 spawnPosition)
         {
             var targetPosition = transform.position;
 

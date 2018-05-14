@@ -229,12 +229,6 @@ namespace Hunter.Characters
 
         #endregion
 
-        public void InitPlayerUI()
-        {
-            Inventory.AddStartingItems();
-            UpdateDecanters();
-        }
-
         #region Player Movement
         public void Move(Vector3 moveDirection, Vector3 lookDirection)
         {
@@ -734,6 +728,7 @@ namespace Hunter.Characters
             // COROUTINE RESUMES HERE
             interactableItem.FireInteraction(this);
             RemoveNearbyInteractable(interactableItem);
+            Fabric.EventManager.Instance?.PostEvent(interactableItem.itemPickupSoundEvent, gameObject);
 
             pickupAction = null;
         }
@@ -782,6 +777,12 @@ namespace Hunter.Characters
         #endregion
 
         #region Helper / Unused Functions
+        public void InitPlayerUI()
+        {
+            Inventory.AddStartingItems();
+            UpdateDecanters();
+        }
+
         private float SignedAngle(Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);

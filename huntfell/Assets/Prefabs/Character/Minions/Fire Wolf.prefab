@@ -3696,9 +3696,17 @@ MonoBehaviour:
   baseDamage: 8
   critPercent: 20
   attackSpeed: 1
+  finisherAttackSpeed: 1.5
   recoverySpeed: 0.8
+  finisherCooldown: 2
+  finishingMove: 0
+  bigAttackEffect: 0
+  weaponEquipSoundEvent: 
+  weaponHitSoundEvent: Wolf Attack
+  optionalSecondaryHitSoundEvent: 
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 7
+  finisherHitBoxFrames: 10
   swingParticleSystem: {fileID: 0}
   equipEffects: []
 --- !u!114 &114494934002656636

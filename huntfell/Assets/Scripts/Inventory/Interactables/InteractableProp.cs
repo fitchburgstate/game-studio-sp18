@@ -196,6 +196,7 @@ namespace Hunter
             gameObject.SetActive(false);
             var spawnedBrokenProp = Instantiate(brokenPropPrefab, transform.position, transform.rotation);
             SendBrokenPropFlying(spawnedBrokenProp, forceDirection);
+            Fabric.EventManager.Instance?.PostEvent("Breakablew Object", gameObject);
         }
 
         // Everything to do with Prop Interaction as far as items and firing events on other gameObjects
