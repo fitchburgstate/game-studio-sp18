@@ -112,14 +112,14 @@ namespace Hunter.Characters
         {
             if (invincible || IsDying) { return; }
             base.Damage(damage, isCritical, weaponAttackedWith);
-            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent)) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent) && weaponAttackedWith != null) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
         }
 
         public override void Damage(int damage, bool isCritical, Element damageElement)
         {
             if (invincible || IsDying) { return; }
             base.Damage(damage, isCritical, damageElement);
-            if (!string.IsNullOrWhiteSpace(damageElement.elementSoundEventName)) { Fabric.EventManager.Instance?.PostEvent(damageElement.elementSoundEventName, gameObject); }
+            if (!string.IsNullOrWhiteSpace(damageElement.elementSoundEventName) && damageElement != null) { Fabric.EventManager.Instance?.PostEvent(damageElement.elementSoundEventName, gameObject); }
         }
         #endregion
 

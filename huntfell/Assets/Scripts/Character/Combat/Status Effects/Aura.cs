@@ -72,10 +72,7 @@ namespace Hunter
             if (other.tag == "Player")
             {
                 ApplyEffect(character);
-                if (string.IsNullOrWhiteSpace(soundEventName))
-                {
-                    Fabric.EventManager.Instance?.PostEvent(soundEventName, gameObject);
-                }
+                if (!string.IsNullOrWhiteSpace(soundEventName) && soundEventName != null) { Fabric.EventManager.Instance?.PostEvent(soundEventName, gameObject); }
             }
         }
 

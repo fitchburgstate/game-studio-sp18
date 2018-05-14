@@ -130,7 +130,7 @@ namespace Hunter
         {
             if (currentlyInteracting || characterWhoAttacked.tag != "Player") { return; }
 
-            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent)) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent) && weaponAttackedWith != null) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
 
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.WeaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
@@ -196,7 +196,7 @@ namespace Hunter
             gameObject.SetActive(false);
             var spawnedBrokenProp = Instantiate(brokenPropPrefab, transform.position, transform.rotation);
             SendBrokenPropFlying(spawnedBrokenProp, forceDirection);
-            Fabric.EventManager.Instance?.PostEvent("Breakablew Object", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Breakable Object", gameObject);
         }
 
         // Everything to do with Prop Interaction as far as items and firing events on other gameObjects

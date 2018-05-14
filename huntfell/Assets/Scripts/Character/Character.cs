@@ -232,15 +232,15 @@ namespace Hunter.Characters
 
                 if (isCritical)
                 {
-                    Fabric.EventManager.Instance.PostEvent("Player Hit [High]", gameObject);
+                    Fabric.EventManager.Instance?.PostEvent("Player Hit [High]", gameObject);
                 }
                 else if (damage > 3)
                 {
-                    Fabric.EventManager.Instance.PostEvent("Player Hit [Medium]", gameObject);
+                    Fabric.EventManager.Instance?.PostEvent("Player Hit [Medium]", gameObject);
                 }
                 else
                 {
-                    Fabric.EventManager.Instance.PostEvent("Player Hit [Low]", gameObject);
+                    Fabric.EventManager.Instance?.PostEvent("Player Hit [Low]", gameObject);
                 }
             }
 

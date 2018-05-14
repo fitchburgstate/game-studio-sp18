@@ -554,8 +554,8 @@ namespace Hunter.Characters
                 return;
             }
             //TODO This should really be referencing a clip on the new weapon being equipped and playing that instead
-            Fabric.EventManager.Instance?.PostEvent(CurrentWeapon.weaponEquipSoundEvent, gameObject);
             EquipWeaponToCharacter(newWeapon);
+            if (!string.IsNullOrWhiteSpace(CurrentWeapon.weaponEquipSoundEvent) && CurrentWeapon != null) { Fabric.EventManager.Instance?.PostEvent(CurrentWeapon.weaponEquipSoundEvent, gameObject); }
         }
 
         public void CycleElements(bool cycleUp)
@@ -589,15 +589,15 @@ namespace Hunter.Characters
         {
             if (invincible || IsDying) { return; }
             base.Damage(damage, isCritical, weaponAttackedWith);
-            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent)) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
-            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.optionalSecondaryHitSoundEvent)) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.optionalSecondaryHitSoundEvent, gameObject); }
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent) && weaponAttackedWith != null) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.optionalSecondaryHitSoundEvent) && weaponAttackedWith != null) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.optionalSecondaryHitSoundEvent, gameObject); }
         }
 
         public override void Damage(int damage, bool isCritical, Element damageElement)
         {
             if (invincible || IsDying) { return; }
             base.Damage(damage, isCritical, damageElement);
-            Fabric.EventManager.Instance?.PostEvent(damageElement.elementSoundEventName, gameObject);
+            if (!string.IsNullOrWhiteSpace(damageElement.elementSoundEventName) && damageElement != null) { Fabric.EventManager.Instance?.PostEvent(damageElement.elementSoundEventName, gameObject); }
         }
         #endregion
 
@@ -733,7 +733,7 @@ namespace Hunter.Characters
             // COROUTINE RESUMES HERE
             interactableItem.FireInteraction(this);
             RemoveNearbyInteractable(interactableItem);
-            Fabric.EventManager.Instance?.PostEvent(interactableItem.itemPickupSoundEvent, gameObject);
+            if (!string.IsNullOrWhiteSpace(interactableItem.itemPickupSoundEvent) && interactableItem != null) { Fabric.EventManager.Instance?.PostEvent(interactableItem.itemPickupSoundEvent, gameObject); }
 
             pickupAction = null;
         }

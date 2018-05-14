@@ -39,7 +39,7 @@ namespace Hunter
                 musicSoundEvent = "Music - Regular Combat to Expo";
             }
 
-            if (musicSoundEvent != tempSoundEvent) { Fabric.EventManager.Instance?.PostEvent(musicSoundEvent); }
+            if ((musicSoundEvent != tempSoundEvent) && (!string.IsNullOrWhiteSpace(musicSoundEvent)) && (musicSoundEvent != null)) { Fabric.EventManager.Instance?.PostEvent(musicSoundEvent); }
             tempSoundEvent = musicSoundEvent;
         }
 
@@ -67,7 +67,7 @@ namespace Hunter
                 musicSoundEvent = "Music - Regular Combat to Expo";
             }
 
-            if (musicSoundEvent != tempSoundEvent) { Fabric.EventManager.Instance?.PostEvent(musicSoundEvent); }
+            if ((musicSoundEvent != tempSoundEvent) && (!string.IsNullOrWhiteSpace(musicSoundEvent)) && (musicSoundEvent != null)) { Fabric.EventManager.Instance?.PostEvent(musicSoundEvent); }
             tempSoundEvent = musicSoundEvent;
         }
         #endregion
