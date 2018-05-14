@@ -13,8 +13,9 @@ namespace Hunter
             if (characterTriggeringInteraction is Player)
             {
                 (characterTriggeringInteraction as Player).PotionCount++;
+                if (HUDManager.instance != null) { HUDManager.instance.ShowItemPickupPrompt(itemData.itemName, itemData.icon); }
+                gameObject.SetActive(false);
             }
-            gameObject.SetActive(false);
         }
     }
 }

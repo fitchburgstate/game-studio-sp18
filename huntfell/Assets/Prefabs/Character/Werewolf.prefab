@@ -2856,7 +2856,9 @@ MonoBehaviour:
   turnSpeed: 200
   enemyElementOption: 0
   invincibilityFrames: 5
-  itemsToSpawn: []
+  itemsToSpawn:
+  - {fileID: 11400000, guid: 5e3785d69fd150c44890c16d005f9575, type: 2}
+  endPortal: {fileID: 0}
   showDebugLogs: 0
   canChangeElements: 1
   moveFasterWhileAttacking: 1
@@ -2905,8 +2907,8 @@ MonoBehaviour:
     m_Bits: 14336
   canlunge: 1
   phase: 1
-  healAmount: 5
-  healInterval: 0.5
+  healAmount: 10
+  healInterval: 1.25
   silverDebuffLength: 15
 --- !u!114 &114367483855498478
 MonoBehaviour:

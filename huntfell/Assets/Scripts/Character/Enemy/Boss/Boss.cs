@@ -2,6 +2,8 @@
 {
     public class Boss : Enemy
     {
+        public InteractableGameEndPortal endPortal;
+
         public override float CurrentHealth
         {
             get
@@ -34,6 +36,12 @@
                     HUDManager.instance?.SetBossTargetHealthBar(targetHealth / totalHealth);
                 }
             }
+        }
+
+        protected override void Start ()
+        {
+            base.Start();
+            endPortal?.gameObject.SetActive(false);
         }
     }
 }

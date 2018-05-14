@@ -281,7 +281,7 @@ namespace Hunter
                 return;
             }
 
-            promptText.text = "Obtained the " + itemName;
+            promptText.text = $"Obtained <i>{itemName}</i>";
             promptIcon.sprite = itemIcon;
 
             if (promptFadeAction != null)

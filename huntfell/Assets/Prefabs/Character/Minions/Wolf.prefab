@@ -2876,8 +2876,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1058027423640836}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 0.6, z: 4}
+  m_LocalRotation: {x: -0, y: 0.4984295, z: -0, w: 0.86693025}
+  m_LocalPosition: {x: 31.03, y: 0.455, z: 14.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4750315558255530}
@@ -3049,8 +3049,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1204062619370018}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.555, z: 0}
+  m_LocalRotation: {x: -0, y: 0.92120546, z: -0, w: 0.3890766}
+  m_LocalPosition: {x: -0.064355366, y: -0.55500007, z: 0.31621772}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4792408177706122}
@@ -3058,7 +3058,7 @@ Transform:
   - {fileID: 4495621350465278}
   m_Father: {fileID: 4640604088762514}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 134.20601, z: 0}
 --- !u!4 &4752967080387262
 Transform:
   m_ObjectHideFlags: 1
@@ -3634,6 +3634,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
+  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   meleeWeapon: {fileID: 114910431859789410}
   justFound: 0
 --- !u!114 &114337567584915600
@@ -3653,7 +3654,7 @@ MonoBehaviour:
   retreat: 1
   idle: 1
   wander: 1
-  maxDistance: 5
+  maxDistance: 1
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
   randomPointTarget: {x: 0, y: 0, z: 0}
@@ -3847,7 +3848,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 2d23584d8e21ee747be09c5d4675c469, type: 2}
+  - {fileID: 2100000, guid: 57a234ca7b895ed49b9428fab294cc7a, type: 2}
   - {fileID: 2100000, guid: 8e947765a5010d9498402456563377fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -3950,7 +3951,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 0.5
   m_WalkableMask: 1
-  m_ObstacleAvoidanceType: 1
+  m_ObstacleAvoidanceType: 0
 --- !u!198 &198213357320879680
 ParticleSystem:
   m_ObjectHideFlags: 1

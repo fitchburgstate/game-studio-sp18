@@ -135,15 +135,15 @@ namespace Hunter
         private void Update ()
         {
             //Inputs used for UI outside of Pause Menu
-            PressedMenu = controls.Pause.MenuButton.WasPressed;
-            PressedJournal = controls.Pause.JournalsButton.WasPressed;
-
             PressedConfirm = controls.Pause.ConfirmButton.WasPressed;
             PressedCancel = controls.Pause.CancelButton.WasPressed;
 
             //Inputs Unique to Pause Menu
             if (PauseInputEnabled)
             {
+                PressedMenu = controls.Pause.MenuButton.WasPressed;
+                PressedJournal = controls.Pause.JournalsButton.WasPressed;
+
                 PressedPageLeft = controls.Pause.PagesAxis.WasPressed && controls.Pause.PagesAxis.Value < 0;
                 PressedPageRight = controls.Pause.PagesAxis.WasPressed && controls.Pause.PagesAxis.Value > 0;
 
@@ -174,6 +174,9 @@ namespace Hunter
                 PressedDash = controls.Game.DashButton.WasPressed;
                 PressedInteract = controls.Game.InteractButton.WasPressed;
                 PressedPotion = controls.Game.PotionButton.WasPressed;
+
+                PressedMenu = controls.Pause.MenuButton.WasPressed;
+                PressedJournal = controls.Pause.JournalsButton.WasPressed;
             }
         }
     }

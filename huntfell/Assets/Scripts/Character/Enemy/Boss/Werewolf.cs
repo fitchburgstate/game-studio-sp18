@@ -478,6 +478,7 @@ namespace Hunter.Characters
             agent.enabled = false;
             characterController.enabled = false;
             yield return SpawnInteractableItems();
+            endPortal?.gameObject.SetActive(true);
         }
         #endregion
 

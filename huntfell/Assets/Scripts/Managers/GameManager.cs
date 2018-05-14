@@ -199,7 +199,7 @@ namespace Hunter
 
             foreach (var spawnPoint in spawnPoints)
             {
-                if (!spawnPoint.activated) { continue; }
+                if (!spawnPoint.activated || !spawnPoint.gameObject.activeSelf) { continue; }
 
                 var directionToTarget = spawnPoint.transform.position - currentPosition;
                 var dSqrToTarget = directionToTarget.sqrMagnitude;
