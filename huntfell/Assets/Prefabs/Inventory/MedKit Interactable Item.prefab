@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 4116321519066230}
   - component: {fileID: 114083323323700330}
   - component: {fileID: 135665978696345862}
+  - component: {fileID: 114895072847270812}
   m_Layer: 13
   m_Name: MedKit Interactable Item
   m_TagString: Untagged
@@ -162,7 +163,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1072239622342918}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.7052412, y: 0.09999999, z: 9.022201}
+  m_LocalPosition: {x: -34.045677, y: -0.16324867, z: 57.936874}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4643078341577342}
@@ -409,6 +410,22 @@ MonoBehaviour:
   tutorialText: 
   tutorialIcon: {fileID: 0}
   healthAmount: 30
+--- !u!114 &114895072847270812
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1072239622342918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: cba2409e678d3964aa9ce323dfadef31, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!135 &135665978696345862
 SphereCollider:
   m_ObjectHideFlags: 1

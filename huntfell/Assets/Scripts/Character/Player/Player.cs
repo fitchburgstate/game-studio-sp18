@@ -168,6 +168,7 @@ namespace Hunter.Characters
             {
                 potionCount = value;
                 HUDManager.instance?.EnableDecanter(potionCount - 1);
+                UpdateDecanters();
             }
         }
         #endregion

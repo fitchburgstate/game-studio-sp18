@@ -3622,6 +3622,8 @@ MonoBehaviour:
   currentHealth: 0
   targetHealth: 0
   healthModificationSpeed: 2.5
+  speed: 5
+  turnSpeed: 175
   enemyElementOption: 0
   invincibilityFrames: 5
   itemsToSpawn:
@@ -3632,8 +3634,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
-  speed: 5
-  turnSpeed: 175
   meleeWeapon: {fileID: 114910431859789410}
   justFound: 0
 --- !u!114 &114337567584915600
@@ -3650,12 +3650,15 @@ MonoBehaviour:
   attack: 1
   turn: 1
   moveTo: 1
+  retreat: 1
   idle: 1
-  wander: 0
-  maxDistance: 0
+  wander: 1
+  maxDistance: 5
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
   randomPointTarget: {x: 0, y: 0, z: 0}
+  spawnPosition: {x: 0, y: 0, z: 0}
+  inCombat: 0
 --- !u!114 &114439845392436766
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3793,9 +3796,14 @@ MonoBehaviour:
   baseDamage: 6
   critPercent: 15
   attackSpeed: 1
+  finisherAttackSpeed: 1.5
   recoverySpeed: 1.2
+  finisherCooldown: 2
+  finishingMove: 0
+  bigAttackEffect: 0
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 5
+  finisherHitBoxFrames: 10
   swingParticleSystem: {fileID: 0}
   equipEffects: []
 --- !u!114 &114993634938025572

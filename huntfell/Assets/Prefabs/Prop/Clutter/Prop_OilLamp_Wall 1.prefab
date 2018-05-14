@@ -26,7 +26,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1512800532582068
 GameObject:
@@ -38,13 +38,12 @@ GameObject:
   - component: {fileID: 4981043973985486}
   - component: {fileID: 33115210436418736}
   - component: {fileID: 23303456502176536}
-  - component: {fileID: 65760346298411402}
   m_Layer: 13
   m_Name: polySurface230
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1581422856788818
 GameObject:
@@ -61,7 +60,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1893786637125930
 GameObject:
@@ -72,13 +71,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4553620174298556}
   - component: {fileID: 95543995878257870}
-  - component: {fileID: 65575751263673054}
   m_Layer: 13
   m_Name: Prop_OilLamp_Wall 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1958124579078488
 GameObject:
@@ -95,7 +93,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4461559560988990
 Transform:
@@ -129,15 +127,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1893786637125930}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.70710677}
-  m_LocalPosition: {x: 8.822047, y: 6.519342, z: 20.535252}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -41.664, y: -0.176, z: 61.507}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4981043973985486}
   - {fileID: 4649073969886948}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4649073969886948
 Transform:
   m_ObjectHideFlags: 1
@@ -207,30 +205,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1512800532582068}
   m_Mesh: {fileID: 4300000, guid: 5ab8543213870e94db31461d8fd99408, type: 3}
---- !u!65 &65575751263673054
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1893786637125930}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.28, y: 0.12, z: 0.14}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65760346298411402
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1512800532582068}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.06, y: 0.59962445, z: 0.39331374}
-  m_Center: {x: 0.15, y: 0, z: -0.00000047683716}
 --- !u!95 &95543995878257870
 Animator:
   serializedVersion: 3
@@ -308,7 +282,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1349276065
+  randomSeed: -884282527
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3669,7 +3643,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1639042080
+  randomSeed: 145873413
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -7030,7 +7004,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1889123584
+  randomSeed: -1416519411
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -9594,7 +9568,7 @@ ParticleSystem:
       type: 0
       properties: 0
   LightsModule:
-    enabled: 1
+    enabled: 0
     ratio: 1
     light: {fileID: 108695982249341984, guid: ef33f8d8c4e3d5c4a9708b17abbd1183, type: 2}
     randomDistribution: 1

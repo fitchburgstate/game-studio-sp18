@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 33220677570142194}
   - component: {fileID: 23508225859200838}
   - component: {fileID: 95673273586081528}
-  - component: {fileID: 65799754312988748}
   m_Layer: 13
   m_Name: Prop_FireGrate_Black
   m_TagString: Untagged
@@ -36,13 +35,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1335197968573284}
-  m_LocalRotation: {x: 0.000000018947363, y: 0.4984295, z: -0.0000000108935225, w: 0.86693025}
-  m_LocalPosition: {x: -2.3692064, y: -0.054700002, z: 18.26677}
+  m_LocalRotation: {x: 0.000000015482303, y: 0.70582366, z: -0.000000015426265, w: 0.7083876}
+  m_LocalPosition: {x: -48.137764, y: -0.014205575, z: 1.8983251}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 89.79201, z: 0}
 --- !u!23 &23508225859200838
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -84,18 +83,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1335197968573284}
   m_Mesh: {fileID: 4300000, guid: c6c4b71acf994c440a453d2f9c56a6c9, type: 3}
---- !u!65 &65799754312988748
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1335197968573284}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.4713832, y: 0.1744354, z: 0.8837851}
-  m_Center: {x: -0.15213883, y: 0.08721772, z: 0.44189262}
 --- !u!95 &95673273586081528
 Animator:
   serializedVersion: 3
