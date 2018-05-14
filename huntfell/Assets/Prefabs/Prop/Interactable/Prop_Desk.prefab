@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23497135992660452}
   - component: {fileID: 95199986937363014}
   - component: {fileID: 114547925370678046}
+  - component: {fileID: 65313432801015354}
   m_Layer: 13
   m_Name: Prop_Desk
   m_TagString: Untagged
@@ -36,8 +37,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1827092929458074}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.85298395, y: -9.758207, z: -5.798825}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -43.45, y: 0.6324998, z: 69.74}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,6 +85,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1827092929458074}
   m_Mesh: {fileID: 4300000, guid: adf6580eb30cd094caf504ed2ec932a2, type: 3}
+--- !u!65 &65313432801015354
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1827092929458074}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 115.071976, y: 146.5217, z: 221.39587}
+  m_Center: {x: 0.000022888187, y: -0.0000038146973, z: -0.00001525879}
 --- !u!95 &95199986937363014
 Animator:
   serializedVersion: 3
@@ -113,10 +126,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemsToSpawn: []
-  elementTypeForInteraction: 0
-  animationName: 
   giveItemsDirectly: 0
-  requiresDamage: 0
+  elementTypeForInteraction: 0
+  overrideImportance: 0
   interactionSuccessMessage: 
   interactionFailMessage: 
   propType: 0

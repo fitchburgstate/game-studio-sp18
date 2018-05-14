@@ -22,7 +22,9 @@ GameObject:
   - component: {fileID: 33971222319094400}
   - component: {fileID: 23784424328348720}
   - component: {fileID: 95335788228631420}
-  m_Layer: 0
+  - component: {fileID: 65934636393690076}
+  - component: {fileID: 114936904919221424}
+  m_Layer: 13
   m_Name: Prop_ArmChair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1320549244040388}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.7088728, y: -1.5756283, z: -0.9302926}
+  m_LocalPosition: {x: -77.1904, y: 0.718699, z: 44.438713}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children: []
   m_Father: {fileID: 0}
@@ -56,10 +58,10 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: f78d39b14bb92e84f9156da931a86247, type: 2}
-  - {fileID: 2100000, guid: f78d39b14bb92e84f9156da931a86247, type: 2}
-  - {fileID: 2100000, guid: f78d39b14bb92e84f9156da931a86247, type: 2}
-  - {fileID: 2100000, guid: f78d39b14bb92e84f9156da931a86247, type: 2}
+  - {fileID: 2100000, guid: 81d86b4a1ac2cda4284b49ff92bbf05b, type: 2}
+  - {fileID: 2100000, guid: 81d86b4a1ac2cda4284b49ff92bbf05b, type: 2}
+  - {fileID: 2100000, guid: 81d86b4a1ac2cda4284b49ff92bbf05b, type: 2}
+  - {fileID: 2100000, guid: 81d86b4a1ac2cda4284b49ff92bbf05b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -86,6 +88,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1320549244040388}
   m_Mesh: {fileID: 4300000, guid: b186d5e538756ff48927c313c1ea4064, type: 3}
+--- !u!65 &65934636393690076
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1320549244040388}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 91.932144, y: 200.27153, z: 109.92633}
+  m_Center: {x: 0.000005722046, y: 9.579926, z: 0.000045776367}
 --- !u!95 &95335788228631420
 Animator:
   serializedVersion: 3
@@ -103,3 +117,29 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114936904919221424
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1320549244040388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToSpawn: []
+  giveItemsDirectly: 0
+  elementTypeForInteraction: 0
+  overrideImportance: 0
+  interactionSuccessMessage: 
+  interactionFailMessage: 
+  propType: 1
+  destructionForce: 10
+  brokenPropPrefab: {fileID: 1154050126676946, guid: 82744fb6f827da94bb3b2f9cddcb70ec,
+    type: 2}
+  propEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null

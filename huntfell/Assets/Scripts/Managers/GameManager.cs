@@ -57,19 +57,21 @@ namespace Hunter
                 return;
             }
 
-            if (!Application.isEditor || loadTitleScreen)
-            {
-                LoadNewScene("UI_Title_Menu", true);
-                titleScreenCM.Priority = 2;
-                if (GameObject.Find("Audio") == null)
-                {
-                    LoadNewScene("Audio", true);
-                }
-            }
 
             DeviceManager = GetComponent<DeviceManager>();
             director = GetComponentInChildren<PlayableDirector>();
             spawnPoints = new List<SpawnPoint>(FindObjectsOfType<SpawnPoint>());
+
+            if (loadTitleScreen) { LoadTitleScreen(); }
+            else { StartGame(); }
+
+            if (GameObject.Find("Audio") == null)
+            {
+                LoadNewScene("Audio", true);
+            }
+
+            Time.timeScale = 1;
+            StartCoroutine(FadeScreen(fadeDuration, Color.black, FadeType.In));
         }
 
         private void Start()
@@ -80,7 +82,7 @@ namespace Hunter
 
         #region Scene Management
 
-        public IEnumerator StartGame(CanvasGroup titleScreenCanvasGroup)
+        public IEnumerator IntroCutscene(CanvasGroup titleScreenCanvasGroup)
         {
             Fabric.EventManager.Instance?.PostEvent("Stop Main Menu Loop, Start Game");
             yield return Utility.FadeCanvasGroup(titleScreenCanvasGroup, fadeCurve, 2, FadeType.In);
@@ -97,13 +99,27 @@ namespace Hunter
                 yield return new WaitForSeconds((float)director.duration);
             }
 
-            SceneManager.LoadScene("SpencerWithers_Hud_Scene", LoadSceneMode.Additive);
-            SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
-            yield return null;
-            FindObjectOfType<Player>()?.InitPlayerUI();
-            DeviceManager.gameInputEnabled = true;
+            StartGame();
+        }
 
+        private void StartGame ()
+        {
+            SceneManager.LoadScene("SpencerWithers_Hud_Scene", LoadSceneMode.Additive);
+            SceneManager.LoadScene("SpencerWithers_Pause_Scene", LoadSceneMode.Additive);
             Fabric.EventManager.Instance?.PostEvent("Music - Start Expo");
+            DeviceManager.GameInputEnabled = true;
+        }
+
+        public void QuitToMenu ()
+        {
+            DeviceManager.PauseInputEnabled = false;
+            LoadNewScene(0, false);
+        }
+
+        private void LoadTitleScreen ()
+        {
+            LoadNewScene("UI_Title_Menu", true);
+            titleScreenCM.Priority = 2;
         }
 
         public void LoadNewScene(string sceneName, bool loadAdditively)
@@ -118,11 +134,28 @@ namespace Hunter
             }
         }
 
+        public void LoadNewScene (int sceneIndex, bool loadAdditively)
+        {
+            if (loadAdditively)
+            {
+                SceneManager.LoadScene(sceneIndex, LoadSceneMode.Additive);
+            }
+            else
+            {
+                StartCoroutine(ChangeActiveScene(sceneIndex));
+            }
+        }
+
         private IEnumerator ChangeActiveScene(string sceneName)
         {
             yield return FadeScreen(fadeDuration, Color.black, FadeType.Out);
             SceneManager.LoadScene(sceneName);
-            yield return FadeScreen(fadeDuration, Color.black, FadeType.In);
+        }
+
+        private IEnumerator ChangeActiveScene (int sceneIndex)
+        {
+            yield return FadeScreen(fadeDuration, Color.black, FadeType.Out);
+            SceneManager.LoadScene(sceneIndex);
         }
 
         #endregion

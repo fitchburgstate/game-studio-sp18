@@ -73,9 +73,8 @@ namespace Hunter.Characters
 
         // Attack Combo
         [Space]
-        public bool attackQueued = true;
-        public int currentAttackIndex = 0;
-        public int acceptingAttackFrames = 6;
+        private bool attackQueued = true;
+        private int currentAttackIndex = 0;
         private bool moving;
         private bool movingAttack;
         private bool standingAttack;
@@ -115,7 +114,10 @@ namespace Hunter.Characters
             set
             {
                 base.CurrentHealth = value;
-                HUDManager.instance?.SetPlayerCurrentHealthBar(currentHealth / totalHealth);
+                if (HUDManager.instance != null)
+                {
+                    HUDManager.instance?.SetPlayerCurrentHealthBar(currentHealth / totalHealth);
+                }
 
                 //if (currentHealth <= 0)
                 //{
@@ -134,7 +136,10 @@ namespace Hunter.Characters
             set
             {
                 base.TargetHealth = value;
-                HUDManager.instance?.SetPlayerTargetHealthBar(targetHealth / totalHealth);
+                if (HUDManager.instance != null)
+                {
+                    HUDManager.instance?.SetPlayerTargetHealthBar(targetHealth / totalHealth);
+                }
             }
         }
 
@@ -163,6 +168,7 @@ namespace Hunter.Characters
             {
                 potionCount = value;
                 HUDManager.instance?.EnableDecanter(potionCount - 1);
+                UpdateDecanters();
             }
         }
         #endregion
@@ -187,10 +193,7 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
-            if (GameManager.instance != null && !GameManager.instance.loadTitleScreen && Application.isEditor)
-            {
-                InitPlayerUI();
-            }
+
             CheckInteractImage();
         }
 
@@ -384,7 +387,6 @@ namespace Hunter.Characters
             invincible = false;
             yield return null;
 
-            //Putting this here incase attacking breaks, the player can dash to reset it
             dashAction = null;
         }
 
@@ -497,7 +499,10 @@ namespace Hunter.Characters
         {
             Debug.Log("Starting cooldown");
             attackQueued = false;
-            CurrentWeapon.bigAttackEffect = false;
+            if (CurrentWeapon != null)
+            {
+                CurrentWeapon.bigAttackEffect = false;
+            }
             movingAttack = false;
             standingAttack = false;
 
@@ -633,12 +638,13 @@ namespace Hunter.Characters
             invincible = true;
             agent.enabled = false;
             characterController.enabled = false;
-            GameManager.instance.DeviceManager.gameInputEnabled = false;
 
             anim.SetFloat("dirX", 0);
             anim.SetFloat("dirY", 0);
             anim.SetBool("moving", false);
             anim.SetTrigger("death");
+
+            StartCoroutine(AttackCooldown(0));
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.Out);
 
@@ -665,7 +671,6 @@ namespace Hunter.Characters
             invincible = false;
             agent.enabled = true;
             characterController.enabled = true;
-            GameManager.instance.DeviceManager.gameInputEnabled = true;
 
             deathAction = null;
             yield return null;

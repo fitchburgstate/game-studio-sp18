@@ -12,11 +12,9 @@ namespace Hunter
 
         private bool acceptingInput = true;
 
-        private void Start ()
+        private void Awake ()
         {
             deviceManager = GameManager.instance?.DeviceManager;
-            deviceManager.gameInputEnabled = false;
-            deviceManager.uiInputEnabled = true;
         }
 
         private void Update ()
@@ -24,7 +22,7 @@ namespace Hunter
             if (acceptingInput & (deviceManager.PressedConfirm || deviceManager.PressedCancel))
             {
                 acceptingInput = false;
-                GameManager.instance?.StartCoroutine(GameManager.instance.StartGame(titleScreenCanvasGroup));
+                GameManager.instance?.StartCoroutine(GameManager.instance.IntroCutscene(titleScreenCanvasGroup));
             }
         }
     }

@@ -9,14 +9,12 @@ namespace Hunter.Characters
         #region Variables
         private DeviceManager deviceManager;
 
-        private bool inPauseMenu = false;
-
         private Player player;
         private IAttack attackCharacter;
         private IMoveable moveCharacter;
         #endregion
 
-        private void Start()
+        private void Start ()
         {
             //Whoever this script is on is being controlled by the Player, so naturally they should be tagged as such
             transform.tag = "Player";
@@ -27,85 +25,61 @@ namespace Hunter.Characters
             player = GetComponent<Player>();
         }
 
-        private void Update()
+        private void Update ()
         {
             //Game Input Actions
-            if (!inPauseMenu)
+            var moveDirection = new Vector3(deviceManager.Move.x, 0, deviceManager.Move.y);
+            var lookDirection = moveDirection;
+
+            if (moveCharacter != null) { moveCharacter.Move(moveDirection, lookDirection); }
+
+            if (deviceManager.PressedAttack && attackCharacter != null) { attackCharacter.Attack(); }
+
+            else if (deviceManager.PressedDash && moveCharacter != null) { moveCharacter.Dash(); }
+
+            else if (deviceManager.PressedInteract) { moveCharacter.Interact(); }
+
+            else if (deviceManager.PressedPotion && player != null) { player.UsePotion(); }
+
+            else if ((deviceManager.PressedElementDown || deviceManager.PressedElementUp) && attackCharacter != null)
             {
-                var moveDirection = new Vector3(deviceManager.Move.x, 0, deviceManager.Move.y);
-                var lookDirection = moveDirection;
-
-                if (moveCharacter != null)
-                {
-                    moveCharacter.Move(moveDirection, lookDirection);
-                }
-
-                if (deviceManager.PressedAttack && attackCharacter != null)
-                {
-                    attackCharacter.Attack();
-                }
-                else if (deviceManager.PressedDash && moveCharacter != null)
-                {
-                    moveCharacter.Dash();
-                }
-                else if (deviceManager.PressedInteract)
-                {
-                    moveCharacter.Interact();
-                }
-                else if (deviceManager.PressedPotion && player != null)
-                {
-                    player.UsePotion();
-                }
-                //else if (deviceManager.PressedSwitchRanged || deviceManager.PressedSwitchMelee && attackCharacter != null)
-                //{
-                //    attackCharacter.SwitchWeaponType(deviceManager.PressedSwitchMelee);
-                //}
-                else if ((deviceManager.PressedElementDown || deviceManager.PressedElementUp) && attackCharacter != null)
-                {
-                    attackCharacter.CycleElements(deviceManager.PressedElementUp);
-                }
-                else if ((deviceManager.PressedWeaponDown || deviceManager.PressedWeaponUp) && attackCharacter != null)
-                {
-                    attackCharacter.CycleWeapons(deviceManager.PressedWeaponUp);
-                }
-
-
-                if (deviceManager.PressedMenu || deviceManager.PressedJournal)
-                {
-                    if (PauseManager.instance == null)
-                    {
-                        Debug.LogWarning("Can't pause the game because the pause scene was never loaded.");
-                    }
-                    else
-                    {
-                        PauseManager.instance.PauseGame(GetComponent<Player>());
-                        inPauseMenu = true;
-                    }
-                }
+                attackCharacter.CycleElements(deviceManager.PressedElementUp);
             }
-            //UI Input Actions
-            else
+
+            else if ((deviceManager.PressedWeaponDown || deviceManager.PressedWeaponUp) && attackCharacter != null)
             {
-                if (deviceManager.PressedMenu || deviceManager.PressedJournal || deviceManager.PressedCancel)
+                attackCharacter.CycleWeapons(deviceManager.PressedWeaponUp);
+            }
+
+            //Pause Game
+            if (PauseManager.instance != null)
+            {
+                if (PauseManager.instance.IsGamePaused)
                 {
-                    PauseManager.instance.UnpauseGame();
-                    inPauseMenu = false;
+                    if (deviceManager.PressedMenu || deviceManager.PressedJournal)
+                    {
+                        PauseManager.instance.UnpauseGame();
+                    }
+
+                    else if (deviceManager.PressedCancel)
+                    {
+                        if (PauseManager.instance.IsControlsOpen) { PauseManager.instance.CloseControls(); }
+                        else { PauseManager.instance.UnpauseGame(); }
+                    }
+
+                    else if (deviceManager.PressedPageRight) { PauseManager.instance.SwitchPage(true); }
+
+                    else if (deviceManager.PressedPageLeft) { PauseManager.instance.SwitchPage(false); }
+
+                    else if (deviceManager.PressedTabRight) { PauseManager.instance.CurrentTabIndex++; }
+
+                    else if (deviceManager.PressedTabLeft) { PauseManager.instance.CurrentTabIndex--; }
                 }
-                else if (deviceManager.PressedPageRight)
+                else
                 {
-                    PauseManager.instance.SwitchPage(true);
-                }
-                else if (deviceManager.PressedPageLeft)
-                {
-                    PauseManager.instance.SwitchPage(false);
-                }
-                else if (deviceManager.PressedTabRight)
-                {
-                    PauseManager.instance.CurrentTabIndex++;
-                }
-                else if (deviceManager.PressedTabLeft)
-                {
-                    PauseManager.instance.CurrentTabIndex--;
+                    if (deviceManager.PressedMenu) { PauseManager.instance.PauseGame(player, 0); }
+
+                    else if (deviceManager.PressedJournal) { PauseManager.instance.PauseGame(player, 1); }
                 }
             }
         }

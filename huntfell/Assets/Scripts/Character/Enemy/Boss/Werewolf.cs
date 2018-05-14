@@ -346,12 +346,17 @@ namespace Hunter.Characters
             gameObject.AddComponent<HealOverTime>().InitializeEffect(healAmount, healInterval, 0, null, this, null);
         }
 
-        private IEnumerator SilverDebuff()
+        private void RemoveWerewolfHealing()
         {
             var hot = GetComponent<HealOverTime>();
-            if (hot == null) { yield break; }
+            if (hot == null) { return; }
             Destroy(hot);
-            while (silverDebuffElapsed < silverDebuffLength)
+        }
+
+        private IEnumerator SilverDebuff ()
+        {
+            RemoveWerewolfHealing();
+            while(silverDebuffElapsed < silverDebuffLength)
             {
                 silverDebuffElapsed += Time.deltaTime;
                 yield return null;
@@ -461,14 +466,15 @@ namespace Hunter.Characters
                 HUDManager.instance?.FadeBossHealth(FadeType.In);
             }
 
+            rightClawWeapon.gameObject.SetActive(false);
             BossInputModuleInstance.leftClawLightning.Stop();
             BossInputModuleInstance.rightClawLightning.Stop();
             BossInputModuleInstance.leftClawFire.Stop();
             BossInputModuleInstance.rightClawFire.Stop();
             BossInputModuleInstance.leftClawIce.Stop();
             BossInputModuleInstance.rightClawIce.Stop();
-            BossInputModuleInstance.enabled = false;
 
+            BossInputModuleInstance.enabled = false;
             agent.enabled = false;
             characterController.enabled = false;
             yield return SpawnInteractableItems();
@@ -711,8 +717,16 @@ namespace Hunter.Characters
             agent.enabled = false;
             invincible = true;
 
+
             if (!outsideOfArena)
             {
+                if(silverDebuffAction != null)
+                {
+                    StopCoroutine(silverDebuffAction);
+                    silverDebuffAction = null;
+                }
+                RemoveWerewolfHealing();
+
                 anim.SetTrigger("arenaExit");
 
                 // PAUSE HERE FOR ANIMATION EVENT
@@ -773,6 +787,7 @@ namespace Hunter.Characters
                 agent.enabled = true;
                 invincible = false;
                 outsideOfArena = false;
+                AddWerewolfHealing();
             }
 
             arenaExitAction = null;

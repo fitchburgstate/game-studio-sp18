@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Hunter.Characters;
 
 namespace Hunter
 {
@@ -123,6 +124,8 @@ namespace Hunter
                 bossHealthCanvasGroup = bossHealthBar.transform.parent.GetComponent<CanvasGroup>();
                 bossHealthCanvasGroup.alpha = 0;
             }
+
+            FindObjectOfType<Player>()?.InitPlayerUI();
         }
 
         #region Weapon Wheel

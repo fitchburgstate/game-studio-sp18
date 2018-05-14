@@ -12,7 +12,10 @@
             set
             {
                 base.CurrentHealth = value;
-                HUDManager.instance?.SetBossCurrentHealthBar(currentHealth / totalHealth);
+                if (HUDManager.instance != null)
+                {
+                    HUDManager.instance?.SetBossCurrentHealthBar(currentHealth / totalHealth);
+                }
             }
         }
 
@@ -26,7 +29,10 @@
             set
             {
                 base.TargetHealth = value;
-                HUDManager.instance?.SetBossTargetHealthBar(targetHealth / totalHealth);
+                if (HUDManager.instance != null)
+                {
+                    HUDManager.instance?.SetBossTargetHealthBar(targetHealth / totalHealth);
+                }
             }
         }
     }
