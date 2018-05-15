@@ -94,6 +94,18 @@ namespace Hunter
             }
         }
 
+        public void SetRumble(float intensity)
+        {
+            StartCoroutine(DoRumble(intensity));
+        }
+
+        private IEnumerator DoRumble (float intensity)
+        {
+            currentDevice.Vibrate(intensity);
+            yield return new WaitForSeconds(1);
+            currentDevice.StopVibration();
+        }
+
         private void NewDeviceAttatched (InputDevice device)
         {
             controls.SetDeviceAll(device);

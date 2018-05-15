@@ -113,6 +113,15 @@ namespace Hunter.Characters
             if (invincible || IsDying) { return; }
             base.Damage(damage, isCritical, weaponAttackedWith);
             if (weaponAttackedWith != null && !string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent)) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
+
+            //if (isCritical)
+            //{
+            //    GameManager.instance?.DeviceManager.SetRumble(1);
+            //}
+            //else
+            //{
+            //    GameManager.instance?.DeviceManager.SetRumble(0.25f);
+            //}
         }
 
         public override void Damage(int damage, bool isCritical, Element damageElement)

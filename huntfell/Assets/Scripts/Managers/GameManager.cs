@@ -58,6 +58,9 @@ namespace Hunter
                 return player;
             }
         }
+
+        public List<Minion> MinionsInPlayerRadius { get; private set; } = new List<Minion>();
+        private string currentMusicEvent;
         #endregion
 
         #region Unity Functions
@@ -206,6 +209,42 @@ namespace Hunter
         #endregion
 
         #region Helper Functions
+        public void RemoveMinionFromRadius (Minion minion)
+        {
+            if (MinionsInPlayerRadius.Contains(minion))
+            {
+                MinionsInPlayerRadius.Remove(minion);
+                Debug.Log($"Removed {minion.name} from the radius.");
+            }
+
+            if (MinionsInPlayerRadius.Count < 1)
+            {
+                PostMusicEvent("Music - Regular Combat to Expo");
+            }
+        }
+
+        public void AddMinionToRadius (Minion minion)
+        {
+            if (!MinionsInPlayerRadius.Contains(minion))
+            {
+                MinionsInPlayerRadius.Add(minion);
+                Debug.Log($"Added {minion.name} to the radius.");
+            }
+
+            if (MinionsInPlayerRadius.Count > 0)
+            {
+                PostMusicEvent("Music - Expo to Regular Combat");
+            }
+        }
+
+        private void PostMusicEvent (string musicSoundEvent)
+        {
+            if (musicSoundEvent != currentMusicEvent && !string.IsNullOrWhiteSpace(musicSoundEvent))
+            {
+                Fabric.EventManager.Instance?.PostEvent(musicSoundEvent);
+                currentMusicEvent = musicSoundEvent;
+            }
+        }
 
         public IEnumerator FadeScreen(Color fadeColor, FadeType fadeType)
         {

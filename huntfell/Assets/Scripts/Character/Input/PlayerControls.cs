@@ -75,9 +75,12 @@ namespace Hunter {
                     // This is in controller bindings anyways just for debugging and shit
                     MenuButton.AddDefaultBinding(Key.Escape);
                     MenuButton.AddDefaultBinding(InputControlType.Start);
+                    MenuButton.AddDefaultBinding(InputControlType.Menu);
+                    MenuButton.AddDefaultBinding(InputControlType.Options);
 
                     JournalsButton.AddDefaultBinding(InputControlType.Select);
                     JournalsButton.AddDefaultBinding(InputControlType.Back);
+                    JournalsButton.AddDefaultBinding(InputControlType.View);
 
                     cyclePage_Negative.AddDefaultBinding(InputControlType.LeftStickLeft);
 
@@ -257,14 +260,13 @@ namespace Hunter {
                     lookAxis_PositiveY.AddDefaultBinding(Mouse.PositiveY);
 
                     // Weapon Management Bindings
-                    cycleElement_Positive.AddDefaultBinding(Key.LeftShift);
                     cycleElement_Negative.AddDefaultBinding(Key.LeftControl);
+                    cycleElement_Positive.AddDefaultBinding(Key.LeftShift);
 
-                    cycleWeapon_Positive.AddDefaultBinding(Mouse.PositiveScrollWheel);
                     cycleWeapon_Negative.AddDefaultBinding(Mouse.NegativeScrollWheel);
-
-                    WeaponTypeMeleeButton.AddDefaultBinding(Key.Key1);
-                    WeaponTypeRangedButton.AddDefaultBinding(Key.Key2);
+                    cycleWeapon_Positive.AddDefaultBinding(Mouse.PositiveScrollWheel);
+                    cycleWeapon_Negative.AddDefaultBinding(Key.Key1);
+                    cycleWeapon_Positive.AddDefaultBinding(Key.Key2);
 
                     // Main Bindings
                     AttackButton.AddDefaultBinding(Mouse.LeftButton);

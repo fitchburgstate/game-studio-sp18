@@ -480,7 +480,7 @@ namespace Hunter.Characters
             if (currentAttackIndex >= 3)
             {
                 StartCoroutine(SetStaminaBar(1, CurrentWeapon.finisherCooldown));
-                attackFinisherCooldown = AttackCooldown(CurrentWeapon.finisherCooldown);
+                attackFinisherCooldown = FinisherCooldown(CurrentWeapon.finisherCooldown);
                 StartCoroutine(attackFinisherCooldown);
             }
             else if (attackQueued)
@@ -497,27 +497,46 @@ namespace Hunter.Characters
 
         public IEnumerator AttackCooldown(float cooldownLength)
         {
-            Debug.Log("Starting cooldown");
+            Debug.Log("Starting regular cooldown");
+            currentAttackIndex = 0;
+
             attackQueued = false;
-            if (CurrentWeapon != null)
-            {
-                CurrentWeapon.bigAttackEffect = false;
-            }
             movingAttack = false;
             standingAttack = false;
 
             yield return new WaitForSeconds(cooldownLength);
 
-            currentAttackIndex = 0;
-
+            attackAction = null;
             anim.ResetTrigger("firstSwing");
             anim.ResetTrigger("secondSwing");
             anim.ResetTrigger("thirdSwing");
 
-            attackAction = null;
             attackCooldown = null;
+            Debug.Log("Ending regular cooldown");
+        }
+
+        public IEnumerator FinisherCooldown (float cooldownLength)
+        {
+            Debug.Log("Starting finisher cooldown");
+            currentAttackIndex = 0;
+
+            attackQueued = false;
+            movingAttack = false;
+            standingAttack = false;
+            if (CurrentWeapon != null)
+            {
+                CurrentWeapon.bigAttackEffect = false;
+            }
+
+            yield return new WaitForSeconds(cooldownLength);
+
+            attackAction = null;
+            anim.ResetTrigger("firstSwing");
+            anim.ResetTrigger("secondSwing");
+            anim.ResetTrigger("thirdSwing");
+
             attackFinisherCooldown = null;
-            Debug.Log("Ending cooldown");
+            Debug.Log("Ending finisher cooldown");
         }
 
         #region Non-Core Attack Functions
@@ -606,7 +625,7 @@ namespace Hunter.Characters
         #region Player Health
         public void UsePotion()
         {
-            if (PerformingMinorAction || PotionShardCount < maxShardsPerPotion || TargetHealth == totalHealth)
+            if (PotionShardCount < maxShardsPerPotion || TargetHealth == totalHealth)
             {
                 Debug.LogWarning("Cannot use potion at this time.");
                 return;
@@ -680,7 +699,7 @@ namespace Hunter.Characters
         #region Player Interaction
         public void Interact()
         {
-            if (PerformingMajorAction) { return; }
+            if (PerformingMajorAction || PerformingMinorAction) { return; }
 
             if (nearbyInteractables.Count == 0) { return; }
 

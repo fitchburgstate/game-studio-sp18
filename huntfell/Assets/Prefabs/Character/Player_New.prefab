@@ -445,7 +445,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1239556300139936
 GameObject:
   m_ObjectHideFlags: 1
@@ -721,7 +721,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1351413584056496
 GameObject:
   m_ObjectHideFlags: 1
@@ -1477,7 +1477,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1693591917299512
 GameObject:
   m_ObjectHideFlags: 1
@@ -2321,7 +2321,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1282463547878574}
   m_LocalRotation: {x: 0, y: 0.9848078, z: -0, w: -0.17364809}
-  m_LocalPosition: {x: -41, y: -0.099, z: -47.8}
+  m_LocalPosition: {x: -41, y: -2.078, z: -47.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4975580352999854}
@@ -4618,12 +4618,15 @@ MonoBehaviour:
   inspectorElementType: 0
   baseDamage: 20
   critPercent: 0
-  attackSpeed: 0.75
-  finisherAttackSpeed: 1
+  attackSpeed: 0.8
+  finisherAttackSpeed: 1.15
   recoverySpeed: 0.6
-  finisherCooldown: 1.5
+  finisherCooldown: 1.25
   finishingMove: 2
   bigAttackEffect: 0
+  weaponEquipSoundEvent: 
+  weaponHitSoundEvent: 
+  optionalSecondaryHitSoundEvent: 
   characterHoldingWeapon: {fileID: 114827496115031498}
   hitBoxFrames: 10
   finisherHitBoxFrames: 10
@@ -4681,13 +4684,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inspectorElementType: 0
   baseDamage: 10
-  critPercent: 10
-  attackSpeed: 1.25
+  critPercent: 5
+  attackSpeed: 1.2
   finisherAttackSpeed: 1.5
-  recoverySpeed: 0.5
-  finisherCooldown: 2
+  recoverySpeed: 0.25
+  finisherCooldown: 0.75
   finishingMove: 0
   bigAttackEffect: 0
+  weaponEquipSoundEvent: 
+  weaponHitSoundEvent: 
+  optionalSecondaryHitSoundEvent: 
   characterHoldingWeapon: {fileID: 114827496115031498}
   hitBoxFrames: 10
   finisherHitBoxFrames: 10
@@ -4793,14 +4799,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inspectorElementType: 0
-  baseDamage: 14
-  critPercent: 5
+  baseDamage: 15
+  critPercent: 0
   attackSpeed: 1
   finisherAttackSpeed: 1.5
   recoverySpeed: 0.3
-  finisherCooldown: 1.25
+  finisherCooldown: 1
   finishingMove: 1
   bigAttackEffect: 0
+  weaponEquipSoundEvent: 
+  weaponHitSoundEvent: 
+  optionalSecondaryHitSoundEvent: 
   characterHoldingWeapon: {fileID: 114827496115031498}
   hitBoxFrames: 10
   finisherHitBoxFrames: 10
@@ -5172,7 +5181,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2.25
   m_BaseOffset: 0
-  m_WalkableMask: 1
+  m_WalkableMask: 9
   m_ObstacleAvoidanceType: 4
 --- !u!198 &198001881538629034
 ParticleSystem:
