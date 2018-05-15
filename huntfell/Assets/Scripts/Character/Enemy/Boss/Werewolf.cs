@@ -225,7 +225,7 @@ namespace Hunter.Characters
         #endregion
 
         #region Unity Functions
-        protected override void Start ()
+        protected override void Start()
         {
             base.Start();
             agent.speed = speed;
@@ -245,7 +245,7 @@ namespace Hunter.Characters
             AddWerewolfHealing();
         }
 
-        private void Update ()
+        private void Update()
         {
             if (anim != null)
             {
@@ -303,14 +303,14 @@ namespace Hunter.Characters
         #endregion
 
         #region Werewolf Movement
-        public void Move (Transform target)
+        public void Move(Transform target)
         {
             if (PerformingMajorAction) { return; }
             isAttacking = false;
             Move(target, speed);
         }
 
-        public void Move (Transform target, float finalSpeed)
+        public void Move(Transform target, float finalSpeed)
         {
             if (PerformingMajorAction) { return; }
             var finalTarget = new Vector3(target.position.x, RotationTransform.localPosition.y, target.position.z);
@@ -325,7 +325,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void Turn (Transform target)
+        public void Turn(Transform target)
         {
             if (PerformingMajorAction) { return; }
             isAttacking = false;
@@ -338,15 +338,15 @@ namespace Hunter.Characters
 
         #region Werewolf Combat
 
-        private void AddWerewolfHealing ()
+        private void AddWerewolfHealing()
         {
             // Only one heal at a time
-            if(GetComponent<HealOverTime>() != null) { return; }
+            if (GetComponent<HealOverTime>() != null) { return; }
 
             gameObject.AddComponent<HealOverTime>().InitializeEffect(healAmount, healInterval, 0, null, this, null);
         }
 
-        private void RemoveWerewolfHealing ()
+        private void RemoveWerewolfHealing()
         {
             var hot = GetComponent<HealOverTime>();
             if (hot == null) { return; }
@@ -365,14 +365,14 @@ namespace Hunter.Characters
             silverDebuffAction = null;
         }
 
-        public override void Damage (int damage, bool isCritical, Element damageElement)
+        public override void Damage(int damage, bool isCritical, Element damageElement)
         {
             base.Damage(damage, isCritical, damageElement);
-            if(damageElement is Element.Silver)
+            if (damageElement is Element.Silver)
             {
                 silverDebuffElapsed = 0;
 
-                if(silverDebuffAction != null) { return; }
+                if (silverDebuffAction != null) { return; }
                 silverDebuffAction = SilverDebuff();
                 StartCoroutine(silverDebuffAction);
             }
@@ -380,7 +380,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Begins the attack coroutine.
         /// </summary>
-        public void Attack ()
+        public void Attack()
         {
             if (attackAction != null) { return; }
             else if (IsDying) { return; }
@@ -392,7 +392,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Usually activated within the animation itself, this activates the hitbox of the current weapon.
         /// </summary>
-        public void WeaponAnimationEvent ()
+        public void WeaponAnimationEvent()
         {
             CurrentWeapon?.StartAttackFromAnimationEvent();
         }
@@ -403,7 +403,7 @@ namespace Hunter.Characters
         /// animation blending that's occurring during the animations, sometimes the animation events are 
         /// getting cut off before they can be completed.
         /// </summary>
-        public IEnumerator AttackAnimation ()
+        public IEnumerator AttackAnimation()
         {
             yield return new WaitUntil(WerewolfHowlingCheck);
             yield return new WaitUntil(WerewolfLungingCheck);
@@ -452,7 +452,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Function used to kill the boss once it's health reaches 0.
         /// </summary>
-        protected override IEnumerator KillCharacter ()
+        protected override IEnumerator KillCharacter()
         {
             if (rightClawWeapon != null) { EquipWeaponToCharacter(rightClawWeapon); }
             rightClawWeapon.baseDamage = 65;
@@ -486,7 +486,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Begins the lunge coroutine.
         /// </summary>
-        public void Lunge ()
+        public void Lunge()
         {
             if (lungeAction != null) { return; }
             else if (IsDying) { return; }
@@ -498,7 +498,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Usually activated within the animation itself, this continues the Lunge coroutine.
         /// </summary>
-        public void LungeAnimationEvent ()
+        public void LungeAnimationEvent()
         {
             if (lungeAction == null)
             {
@@ -512,7 +512,7 @@ namespace Hunter.Characters
         /// The main logic for the bosses' lunge action. The coroutine should be paused part way through
         /// and resumed by an animation event.
         /// </summary>
-        private IEnumerator LungeAnimation ()
+        private IEnumerator LungeAnimation()
         {
             yield return new WaitUntil(WerewolfAttackingCheck);
             yield return new WaitUntil(WerewolfHowlingCheck);
@@ -570,6 +570,7 @@ namespace Hunter.Characters
             var lungeTarget = closestNavMeshPointToTarget;
 
             anim.SetTrigger("lungeAscend");
+            Fabric.EventManager.Instance?.PostEvent("Werewolf Lunge Attack");
 
             yield return new WaitForSeconds(BossInputModuleInstance.lungeAscend.length);
             // PAUSE HERE FOR ANIMATION EVENT
@@ -618,7 +619,7 @@ namespace Hunter.Characters
         /// <summary>
         /// The Cooldown Coroutine associated with the Lunge attack.
         /// </summary>
-        private IEnumerator LungeCooldown ()
+        private IEnumerator LungeCooldown()
         {
             yield return new WaitForSeconds(lungeCooldownTime);
             canlunge = true;
@@ -630,7 +631,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Initiates the Howl Coroutine once the werewolf enters the second and third phases.
         /// </summary>
-        public void Howl ()
+        public void Howl()
         {
             if (howlAction != null) { return; }
             if (IsDying) { return; }
@@ -642,7 +643,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Initiates the ArenaExitOrEnter Coroutine once the werewolf enters the second phase.
         /// </summary>
-        public void InitiateArenaExitOrEnter ()
+        public void InitiateArenaExitOrEnter()
         {
             if (arenaExitAction != null) { return; }
 
@@ -653,7 +654,7 @@ namespace Hunter.Characters
         /// <summary>
         /// Usually activated within the animation itself, this continues the Lunge coroutine.
         /// </summary>
-        public void ArenaExitOrEnterAnimationEvent ()
+        public void ArenaExitOrEnterAnimationEvent()
         {
             if (arenaExitAction == null)
             {
@@ -666,7 +667,7 @@ namespace Hunter.Characters
         /// <summary>
         /// The main logic for the bosses' howl.
         /// </summary>
-        private IEnumerator HowlAnimation ()
+        private IEnumerator HowlAnimation()
         {
             yield return new WaitUntil(WerewolfAttackingCheck);
             yield return new WaitUntil(WerewolfLungingCheck);
@@ -707,7 +708,7 @@ namespace Hunter.Characters
         /// <summary>
         /// The main logic for the bosses arena exit or entrance during a phase change.
         /// </summary>
-        private IEnumerator ArenaExitOrEnter ()
+        private IEnumerator ArenaExitOrEnter()
         {
             yield return new WaitUntil(WerewolfAttackingCheck);
             yield return new WaitUntil(WerewolfLungingCheck);
@@ -796,7 +797,7 @@ namespace Hunter.Characters
         /// <summary>
         /// This function changes the current element of the werewolves' weapons to a new element depending on the phase.
         /// </summary>
-        private void ChangeWeaponElements ()
+        private void ChangeWeaponElements()
         {
             var randomElementIndex = Random.Range(0, randomElementsList.Count);
             var randomElement = randomElementsList[randomElementIndex];
@@ -856,7 +857,7 @@ namespace Hunter.Characters
         /// This exists so once another coroutines begin it will wait until the Attack coroutine is finished
         /// before continuing.
         /// </summary>
-        private bool WerewolfAttackingCheck ()
+        private bool WerewolfAttackingCheck()
         {
             if (!isAttacking) { return true; }
             else { return false; }
@@ -867,7 +868,7 @@ namespace Hunter.Characters
         /// This exists so once another coroutines begin it will wait until the Howl coroutine is finished
         /// before continuing.
         /// </summary>
-        private bool WerewolfHowlingCheck ()
+        private bool WerewolfHowlingCheck()
         {
             if (!isHowling) { return true; }
             else { return false; }
@@ -878,7 +879,7 @@ namespace Hunter.Characters
         /// This exists so once another coroutines begin it will wait until the Lunge coroutine is finished
         /// before continuing.
         /// </summary>
-        private bool WerewolfLungingCheck ()
+        private bool WerewolfLungingCheck()
         {
             if (!isLunging) { return true; }
             else { return false; }
@@ -886,57 +887,57 @@ namespace Hunter.Characters
         #endregion
 
         #region Unused Functions
-        public void Move (Vector3 target, float finalSpeed)
+        public void Move(Vector3 target, float finalSpeed)
         {
             // This feature will not be implemented.
         }
 
-        public void Wander (Vector3 target)
+        public void Wander(Vector3 target)
         {
             // This feature will not be implemented.
         }
 
-        public void Idle ()
+        public void Idle()
         {
             // This feature will not be implemented.
         }
 
-        public void Move (Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
+        public void Move(Vector3 moveDirection, Vector3 lookDirection, Vector3 animLookDirection)
         {
             // This feature will not be implemented.
         }
 
-        public void Dash ()
+        public void Dash()
         {
             // This feature will not be implemented.
         }
 
-        public void Interact ()
+        public void Interact()
         {
             // This feature will not be implemented.
         }
 
-        public void CycleWeapons (bool cycleUp)
+        public void CycleWeapons(bool cycleUp)
         {
             // This feature will not be implemented.
         }
 
-        public void CycleElements (bool cycleUp)
+        public void CycleElements(bool cycleUp)
         {
             // This feature will not be implemented.
         }
 
-        public void SwitchWeaponType (bool switchToMelee)
+        public void SwitchWeaponType(bool switchToMelee)
         {
             // This feature will not be implemented.
         }
 
-        public void AttackAnimationEvent ()
+        public void AttackAnimationEvent()
         {
             // This feature will not be implemented.
         }
 
-        public void Move (Vector3 moveDirection, Vector3 lookDirection)
+        public void Move(Vector3 moveDirection, Vector3 lookDirection)
         {
             // This feature will not be implemented.
         }

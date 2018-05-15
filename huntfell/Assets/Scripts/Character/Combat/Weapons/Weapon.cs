@@ -39,6 +39,12 @@ namespace Hunter.Characters
 
         public bool bigAttackEffect = false;
 
+        public string weaponEquipSoundEvent;
+
+        public string weaponHitSoundEvent;
+
+        public string optionalSecondaryHitSoundEvent;
+
         [HideInInspector]
         public Character characterHoldingWeapon;
         protected Element weaponElement = null;
@@ -65,7 +71,7 @@ namespace Hunter.Characters
 
         public abstract void StartAttackFromAnimationEvent();
 
-        protected virtual int CalculateDamage (Element weaponElement, Element enemyElementType, bool isCritical)
+        protected virtual int CalculateDamage(Element weaponElement, Element enemyElementType, bool isCritical)
         {
             var critMult = isCritical ? CRITICAL_HIT_MULTIPLIER : 1.0f;
             var elementMult = 1.0f;
@@ -97,7 +103,7 @@ namespace Hunter.Characters
         protected bool ShouldAttackBeCritical(int percent)
         {
             if (bigAttackEffect || percent == 100) { return true; }
-            else if(percent == 0) { return false; }
+            else if (percent == 0) { return false; }
 
             var rng = new RNGCryptoServiceProvider();
             var buffer = new byte[4];

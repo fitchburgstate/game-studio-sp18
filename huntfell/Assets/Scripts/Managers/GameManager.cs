@@ -74,13 +74,17 @@ namespace Hunter
             StartCoroutine(FadeScreen(fadeDuration, Color.black, FadeType.In));
         }
 
+        private void Start()
+        {
+            Fabric.EventManager.Instance?.PostEvent("Music - Start Main Menu Loop");
+        }
         #endregion
 
         #region Scene Management
 
         public IEnumerator IntroCutscene(CanvasGroup titleScreenCanvasGroup)
         {
-            Fabric.EventManager.Instance?.PostEvent("UI Start Game");
+            Fabric.EventManager.Instance?.PostEvent("Stop Main Menu Loop, Start Game");
             yield return Utility.FadeCanvasGroup(titleScreenCanvasGroup, fadeCurve, 2, FadeType.In);
 
             SceneManager.UnloadSceneAsync("UI_Title_Menu");
@@ -102,7 +106,7 @@ namespace Hunter
         {
             SceneManager.LoadScene("SpencerWithers_Hud_Scene", LoadSceneMode.Additive);
             SceneManager.LoadScene("SpencerWithers_Pause_Scene", LoadSceneMode.Additive);
-            Fabric.EventManager.Instance?.PostEvent("Expo to Combat Music");
+            Fabric.EventManager.Instance?.PostEvent("Music - Start Expo");
             DeviceManager.GameInputEnabled = true;
         }
 
@@ -199,7 +203,7 @@ namespace Hunter
 
             foreach (var spawnPoint in spawnPoints)
             {
-                if (!spawnPoint.activated || !spawnPoint.gameObject.activeSelf) { continue; }
+                if (!spawnPoint.activated || !spawnPoint.gameObject.activeInHierarchy) { continue; }
 
                 var directionToTarget = spawnPoint.transform.position - currentPosition;
                 var dSqrToTarget = directionToTarget.sqrMagnitude;

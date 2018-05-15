@@ -6,22 +6,13 @@ namespace Hunter
     public class GameobjectToggle : MonoBehaviour
     {
         #region Variables
-        [Header("Single Activation Set Settings")]
-        public bool disableSetAtStart = true;
-        public List<GameObject> singleActivationGameobjectSet = new List<GameObject>();
+        [Header("Global Settings")]
+        public List<GameObject> gameobjectSet = new List<GameObject>();
+        [Tooltip("If true, the set will be toggled each time the player passed through the trigger. If false, the set will be activated and then the trigger will be destroyed.")]
+        public bool toggleGameobjectSet = true;
+        public bool disableGameobjectSetAtStart = false;
 
-        private bool hasToggledSet = false;
-
-        [Header("Toggle between Set A and B Settings")]
-        public bool toggleBetweenSets;
-        public bool disableSetBAtStart = true;
-        public List<GameObject> gameobjectSetA = new List<GameObject>();
-        public List<GameObject> gameobjectSetB = new List<GameObject>();
-
-        [Header("Debug Options")]
-        public bool showDebugLogs = false;
-
-        private bool setA = true;
+        private bool setIsActive;
         private GameObject player;
         #endregion
 
@@ -39,105 +30,87 @@ namespace Hunter
         #region Unity Functions
         private void Start()
         {
-            hasToggledSet = false;
-
-            if (singleActivationGameobjectSet != null && disableSetAtStart)
+            if (gameobjectSet != null && disableGameobjectSetAtStart)
             {
-                foreach (var minion in singleActivationGameobjectSet)
+                foreach (var objectToChange in gameobjectSet)
                 {
-                    minion.SetActive(false);
+                    objectToChange.SetActive(false);
                 }
+                setIsActive = false;
             }
-
-            if (gameobjectSetB != null && disableSetBAtStart)
+            else if (gameobjectSet != null)
             {
-                foreach (var room in gameobjectSetB)
-                {
-                    room.SetActive(false);
-                }
+                setIsActive = true;
             }
         }
 
-        private void OnTriggerExit(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject == Player)
             {
-                if (toggleBetweenSets)
+                if (toggleGameobjectSet)
                 {
-                    RoomToggle();
-                    setA = !setA;
+                    ToggleSet();
                 }
-
-                if (!hasToggledSet) { MinionToggle(); }
+                else
+                {
+                    SingleActivation();
+                }
             }
         }
         #endregion
 
-        #region Room Toggle Functions
-        private void RoomToggle()
+        #region Toggle Functions
+        private void ToggleSet()
         {
-            if (setA)
+            if (setIsActive) // Set to inactive
             {
-                if (gameobjectSetA != null)
+                foreach (var objectToChange in gameobjectSet)
                 {
-                    foreach (var room in gameobjectSetA)
-                    {
-                        room.SetActive(false);
-                    }
+                    objectToChange.SetActive(false);
                 }
-
-                if (gameobjectSetB != null)
-                {
-                    foreach (var room in gameobjectSetB)
-                    {
-                        room.SetActive(true);
-                    }
-                }
-                if (showDebugLogs) { Debug.Log("Shut off the first floor, and activated the second floor."); }
+                setIsActive = false;
             }
-            else if (!setA)
+            else // Set to active
             {
-                if (gameobjectSetA != null)
+                foreach (var objectToChange in gameobjectSet)
                 {
-                    foreach (var room in gameobjectSetA)
-                    {
-                        room.SetActive(true);
-                    }
+                    objectToChange.SetActive(true);
                 }
-
-                if (gameobjectSetB != null)
-                {
-                    foreach (var room in gameobjectSetB)
-                    {
-                        room.SetActive(false);
-                    }
-                }
-                if (showDebugLogs) { Debug.Log("Shut off the second floor, and activated the first floor."); }
+                setIsActive = true;
             }
         }
         #endregion
 
-        #region Minions to Spawn Functions
-        private void MinionToggle()
+        #region Single Activation Functions
+        private void SingleActivation()
         {
-            if (singleActivationGameobjectSet != null)
+            // Set gameobjects to active, then destroy this trigger
+            foreach (var objectToChange in gameobjectSet)
             {
-                foreach (var minion in singleActivationGameobjectSet)
-                {
-                    minion.SetActive(true);
-                }
+                objectToChange.SetActive(true);
             }
-            hasToggledSet = true;
+
+            Destroy(gameObject);
         }
         #endregion
 
         #region Gizmos Function
         private void OnDrawGizmos()
         {
-            var gizmoColor = new Color(0f, 0f, 1f, .5f);
+            var toggleColor = new Color(0f, 1f, 0f, .5f);
+            var disableAtStartToggleColor = new Color(1f, 0f, 0f, .5f);
+
+            var singleActivationColor = new Color(0f, 0f, 1f, .5f);
+            var disableAtStartSingleActivationColor = new Color(1f, 0f, 1f, .5f);
+
             var size = Vector3.one;
 
-            Gizmos.color = gizmoColor;
+            if (toggleGameobjectSet && !disableGameobjectSetAtStart) { Gizmos.color = toggleColor; }
+            else if (toggleGameobjectSet && disableGameobjectSetAtStart) { Gizmos.color = disableAtStartToggleColor; }
+            else if (!toggleGameobjectSet && !disableGameobjectSetAtStart) { Gizmos.color = singleActivationColor; }
+            else { Gizmos.color = disableAtStartSingleActivationColor; }
+
             Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
             Gizmos.DrawCube(Vector3.zero, size);
         }

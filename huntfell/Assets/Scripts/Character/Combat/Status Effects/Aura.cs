@@ -38,6 +38,8 @@ namespace Hunter
         public float effectLifeTime = 0;
         public bool leavingAuraDestroysEffect = true;
 
+        public string soundEventName;
+
         private List<Character> charactersInRadius = new List<Character>();
         private Dictionary<Character, StatusEffect> affectedCharacters = new Dictionary<Character, StatusEffect>();
         private LineRenderer auraRadius;
@@ -50,13 +52,13 @@ namespace Hunter
         public bool AuraActive { get; private set; } = false;
         #endregion
 
-        private void Start ()
+        private void Start()
         {
             InitalizeAuraRadius();
             if (activateOnStart) { EnableAura(); }
         }
 
-        private void OnTriggerEnter (Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             var character = other.gameObject.GetComponent<Character>();
             if (character == null) { return; }
@@ -70,11 +72,11 @@ namespace Hunter
             if (other.tag == "Player")
             {
                 ApplyEffect(character);
-                //Fabric.EventManager.Instance?.PostEvent("Bat Aggro", gameObject);
+                if (!string.IsNullOrWhiteSpace(soundEventName) && soundEventName != null) { Fabric.EventManager.Instance?.PostEvent(soundEventName, gameObject); }
             }
         }
 
-        private void OnTriggerExit (Collider other)
+        private void OnTriggerExit(Collider other)
         {
             var character = other.gameObject.GetComponent<Character>();
             if (character == null) { return; }
@@ -91,7 +93,7 @@ namespace Hunter
             }
         }
 
-        public void ApplyEffect (Character characterToAffect)
+        public void ApplyEffect(Character characterToAffect)
         {
             if (affectedCharacters.ContainsKey(characterToAffect)) { return; }
 
@@ -114,11 +116,11 @@ namespace Hunter
             affectedCharacters.Add(characterToAffect, addedEffect);
         }
 
-        private void ApplyEffectAll ()
+        private void ApplyEffectAll()
         {
             foreach (var character in charactersInRadius)
             {
-                if(character == null)
+                if (character == null)
                 {
                     charactersInRadius.Remove(character);
                     continue;
@@ -127,7 +129,7 @@ namespace Hunter
             }
         }
 
-        public void RemoveEffect (Character affectedCharacter)
+        public void RemoveEffect(Character affectedCharacter)
         {
             if (!affectedCharacters.ContainsKey(affectedCharacter)) { return; }
 
@@ -141,7 +143,7 @@ namespace Hunter
             affectedCharacters.Remove(affectedCharacter);
         }
 
-        private void RemoveEffectAll ()
+        private void RemoveEffectAll()
         {
             foreach (var character in charactersInRadius)
             {
@@ -154,7 +156,7 @@ namespace Hunter
             }
         }
 
-        public void EnableAura ()
+        public void EnableAura()
         {
             AuraActive = true;
             ApplyEffectAll();
@@ -163,7 +165,7 @@ namespace Hunter
             if (auraParticleSystem != null) { auraParticleSystem.Play(); }
         }
 
-        public void DisableAura ()
+        public void DisableAura()
         {
             AuraActive = false;
             if (leavingAuraDestroysEffect) { RemoveEffectAll(); }
@@ -172,7 +174,7 @@ namespace Hunter
             if (auraParticleSystem != null) { auraParticleSystem.Stop(); }
         }
 
-        private void InitalizeAuraRadius ()
+        private void InitalizeAuraRadius()
         {
             var sphereCollider = gameObject.AddComponent<SphereCollider>();
             sphereCollider.radius = auraRadiusSize;
@@ -200,7 +202,7 @@ namespace Hunter
             }
         }
 
-        private void OnDrawGizmosSelected ()
+        private void OnDrawGizmosSelected()
         {
             if (!Application.isPlaying)
             {

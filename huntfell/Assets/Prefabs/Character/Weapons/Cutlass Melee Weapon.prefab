@@ -311,9 +311,17 @@ MonoBehaviour:
   baseDamage: 10
   critPercent: 10
   attackSpeed: 1.25
-  recoverySpeed: 0.5
+  finisherAttackSpeed: 0.5
+  recoverySpeed: 0.25
+  finisherCooldown: 2
+  finishingMove: 0
+  bigAttackEffect: 0
+  weaponEquipSoundEvent: Player Equip Sword
+  weaponHitSoundEvent: Player Sword Hit
+  optionalSecondaryHitSoundEvent: 
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 10
+  finisherHitBoxFrames: 10
   swingParticleSystem: {fileID: 198003281727481110}
   equipEffects:
   - elementEffect: 1

@@ -118,7 +118,7 @@ namespace Hunter
             set
             {
                 // Our tab index ranges from 0 to 4 since there are 5 total tabs in the pause menu, this prevents under/over flow
-                if(value < 0 || value > 4) { return; }
+                if (value < 0 || value > 4) { return; }
                 currentTabIndex = value;
                 SwitchTabs();
             }
@@ -126,7 +126,7 @@ namespace Hunter
 
         private Player playerWhoPaused;
 
-        private void Awake ()
+        private void Awake()
         {
             if (instance == null)
             {
@@ -146,7 +146,7 @@ namespace Hunter
             menuCanvas.gameObject.SetActive(false);
         }
 
-        public void PauseGame (Player player, int tabToOpen)
+        public void PauseGame(Player player, int tabToOpen)
         {
             Time.timeScale = 0;
             playerWhoPaused = player;
@@ -157,13 +157,13 @@ namespace Hunter
                 GameManager.instance.DeviceManager.GameInputEnabled = false;
             }
 
-            Fabric.EventManager.Instance?.PostEvent("UI Start Game");
+            Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
             menuCanvas.gameObject.SetActive(true);
 
             CurrentTabIndex = Mathf.Clamp(tabToOpen, 0, 4);
         }
 
-        public void UnpauseGame ()
+        public void UnpauseGame()
         {
             if (IsControlsOpen) { return; }
 
@@ -176,7 +176,7 @@ namespace Hunter
                 GameManager.instance.DeviceManager.GameInputEnabled = true;
             }
 
-            Fabric.EventManager.Instance?.PostEvent("UI Navigation Back");
+            Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
 
             journalEntries = null;
             diaryEntries = null;
@@ -194,14 +194,14 @@ namespace Hunter
             menuCanvas.gameObject.SetActive(false);
         }
 
-        public void QuitToMainMenu ()
+        public void QuitToMainMenu()
         {
             if (IsControlsOpen) { return; }
 
             GameManager.instance?.QuitToMenu();
         }
 
-        public void OpenControls ()
+        public void OpenControls()
         {
             if (IsControlsOpen) { return; }
 
@@ -209,13 +209,13 @@ namespace Hunter
             controlsRightPage.SetActive(true);
         }
 
-        public void CloseControls ()
+        public void CloseControls()
         {
             controlsLeftPage.SetActive(false);
             controlsRightPage.SetActive(false);
         }
 
-        public void SwitchTabs ()
+        public void SwitchTabs()
         {
             if (playerWhoPaused == null) { return; }
             ResetAllPages();
@@ -260,9 +260,9 @@ namespace Hunter
         }
 
         #region Pause
-        public void DisplayPause ()
+        public void DisplayPause()
         {
-            if(elementEntries == null)
+            if (elementEntries == null)
             {
                 elementEntries = playerWhoPaused.Inventory.GetAllElements();
             }
@@ -272,7 +272,7 @@ namespace Hunter
 
             StartCoroutine(SelectDefaultButton());
 
-            foreach(var element in elementEntries)
+            foreach (var element in elementEntries)
             {
                 switch (element.elementOption)
                 {
@@ -291,17 +291,17 @@ namespace Hunter
                 }
             }
 
-            if(playerWhoPaused.PotionCount > 0)
+            if (playerWhoPaused.PotionCount > 0)
             {
                 decanterFirstIcon.enabled = true;
             }
-            if(playerWhoPaused.PotionCount > 1)
+            if (playerWhoPaused.PotionCount > 1)
             {
                 decanterSecondIcon.enabled = true;
             }
         }
 
-        private IEnumerator SelectDefaultButton ()
+        private IEnumerator SelectDefaultButton()
         {
             EventSystem.current.SetSelectedGameObject(null);
             yield return null;
@@ -310,7 +310,7 @@ namespace Hunter
         #endregion
 
         #region Bestiary
-        public void EnableBestiaryTab ()
+        public void EnableBestiaryTab()
         {
             if (bestiaryEntries == null)
             {
@@ -325,11 +325,10 @@ namespace Hunter
             bestiaryHeader.fontStyle = FontStyles.Bold;
             bestiaryLeftPageRoot.SetActive(true);
             bestiaryRightPageRoot.SetActive(true);
-            //Fabric.EventManager.Instance?.PostEvent("UI Page Flip");
             DisplayBestiaryPages();
         }
 
-        private void FlipBestiaryPage (bool forwards)
+        private void FlipBestiaryPage(bool forwards)
         {
             if (bestiaryEntries == null) { return; }
 
@@ -347,7 +346,7 @@ namespace Hunter
             DisplayBestiaryPages();
         }
 
-        private void DisplayBestiaryPages ()
+        private void DisplayBestiaryPages()
         {
             switch (bestiaryPageIndex)
             {
@@ -370,7 +369,7 @@ namespace Hunter
 
         private void DisplayLeftBestiaryPage(List<BestiaryItem> entries)
         {
-            if(entries.Count == 0)
+            if (entries.Count == 0)
             {
                 bestiaryLeftPageTitle.text = "Undiscovered Beast";
                 return;
@@ -401,7 +400,7 @@ namespace Hunter
             }
         }
 
-        private void DisplayRightBestiaryPage (List<BestiaryItem> entries)
+        private void DisplayRightBestiaryPage(List<BestiaryItem> entries)
         {
             if (entries.Count == 0)
             {
@@ -419,13 +418,13 @@ namespace Hunter
                         bestiaryRightPageFirstEntry.text = entries[i].bookContents;
                         bestiaryRightPageFirstSketch.sprite = entries[i].entrySketch;
                         bestiaryRightPageFirstSketch.enabled = true;
-                        break;  
-                    case 1:     
+                        break;
+                    case 1:
                         bestiaryRightPageSecondEntry.text = entries[i].bookContents;
                         bestiaryRightPageSecondSketch.sprite = entries[i].entrySketch;
                         bestiaryRightPageSecondSketch.enabled = true;
-                        break;  
-                    case 2:     
+                        break;
+                    case 2:
                         bestiaryRightPageThirdEntry.text = entries[i].bookContents;
                         bestiaryRightPageThirdSketch.sprite = entries[i].entrySketch;
                         bestiaryRightPageThirdSketch.enabled = true;
@@ -436,9 +435,9 @@ namespace Hunter
         #endregion
 
         #region Map
-        public void EnableMapTab ()
+        public void EnableMapTab()
         {
-            if(mapEntries == null)
+            if (mapEntries == null)
             {
                 mapEntries = playerWhoPaused.Inventory.GetAllMaps();
             }
@@ -450,7 +449,7 @@ namespace Hunter
             DisplayMaps();
         }
 
-        private void DisplayMaps ()
+        private void DisplayMaps()
         {
             for (int i = 0; i < 2; i++)
             {
@@ -488,7 +487,7 @@ namespace Hunter
         #endregion
 
         #region Journal
-        public void EnableJournalTab ()
+        public void EnableJournalTab()
         {
             if (journalEntries == null)
             {
@@ -502,25 +501,25 @@ namespace Hunter
             DisplayJournalPages();
         }
 
-        private void FlipJournalPage (bool forwards)
+        private void FlipJournalPage(bool forwards)
         {
-            if(journalEntries == null) { return; }
+            if (journalEntries == null) { return; }
 
             if (forwards)
             {
-                if(journalPageIndex + 2 >= journalEntries.Count) { return; }
+                if (journalPageIndex + 2 >= journalEntries.Count) { return; }
                 journalPageIndex += 2;
             }
             else
             {
-                if(journalPageIndex - 2 < 0) { return; }
+                if (journalPageIndex - 2 < 0) { return; }
                 journalPageIndex -= 2;
             }
-            
+
             DisplayJournalPages();
         }
 
-        private void DisplayJournalPages ()
+        private void DisplayJournalPages()
         {
             for (int i = journalPageIndex; i < journalPageIndex + 2; i++)
             {
@@ -557,7 +556,7 @@ namespace Hunter
         #endregion
 
         #region Diaries
-        public void EnableDiaryTab ()
+        public void EnableDiaryTab()
         {
             if (diaryEntries == null)
             {
@@ -571,7 +570,7 @@ namespace Hunter
             DisplayDiaryPages();
         }
 
-        private void FlipDiaryPage (bool forwards)
+        private void FlipDiaryPage(bool forwards)
         {
             if (diaryEntries == null) { return; }
 
@@ -589,7 +588,7 @@ namespace Hunter
             DisplayDiaryPages();
         }
 
-        private void DisplayDiaryPages ()
+        private void DisplayDiaryPages()
         {
             for (int i = diaryPageIndex; i < diaryPageIndex + 2; i++)
             {
@@ -625,7 +624,7 @@ namespace Hunter
         }
         #endregion
 
-        private void ResetAllPages ()
+        private void ResetAllPages()
         {
             //Reset tab styling
             diaryHeader.fontStyle = journalHeader.fontStyle = mapHeader.fontStyle = bestiaryHeader.fontStyle = pauseHeader.fontStyle = FontStyles.Normal;

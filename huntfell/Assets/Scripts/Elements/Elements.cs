@@ -20,8 +20,9 @@ namespace Hunter
     {
         public Sprite elementHUDSprite;
         public Color elementColor = Color.white;
+        public string elementSoundEventName;
         protected Type weakness = null;
-        
+
         public Type Weakness
         {
             get
@@ -32,28 +33,31 @@ namespace Hunter
 
         public class Fire : Element
         {
-            public Fire ()
+            public Fire()
             {
                 weakness = typeof(Electric);
                 elementColor = Color.red;
+                elementSoundEventName = "Element - Blaze Hit";
             }
         }
 
         public class Ice : Element
         {
-            public Ice ()
+            public Ice()
             {
                 weakness = typeof(Fire);
                 elementColor = Color.cyan;
+                elementSoundEventName = "Element - Frost Hit";
             }
         }
 
         public class Electric : Element
         {
-            public Electric ()
+            public Electric()
             {
                 weakness = typeof(Ice);
                 elementColor = Color.yellow;
+                elementSoundEventName = "Element - Storm Hit";
             }
         }
 
@@ -68,9 +72,10 @@ namespace Hunter
 
         public class Silver : Element
         {
-            public Silver ()
+            public Silver()
             {
                 elementColor = Color.white;
+                elementSoundEventName = "Element - Silver Hit";
             }
         }
     }

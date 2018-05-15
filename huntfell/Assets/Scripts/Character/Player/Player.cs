@@ -232,12 +232,6 @@ namespace Hunter.Characters
 
         #endregion
 
-        public void InitPlayerUI ()
-        {
-            Inventory.AddStartingItems();
-            UpdateDecanters();
-        }
-
         #region Player Movement
         public void Move(Vector3 moveDirection, Vector3 lookDirection)
         {
@@ -284,7 +278,7 @@ namespace Hunter.Characters
         #region Non-Core Movement Functions
         public void FootstepSoundAnimationEvent()
         {
-            Fabric.EventManager.Instance?.PostEvent("Footstep", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Player Footstep - Wood", gameObject);
         }
 
         public void Move(Transform target)
@@ -426,7 +420,7 @@ namespace Hunter.Characters
         {
             if (PerformingMajorAction || CurrentWeapon == null || attackCooldown != null) { return; }
 
-            if(attackAction != null)
+            if (attackAction != null)
             {
                 if (currentAttackIndex < 3)
                 {
@@ -479,7 +473,7 @@ namespace Hunter.Characters
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public void EndOfAttackAnimationEvent ()
+        public void EndOfAttackAnimationEvent()
         {
             currentAttackIndex++;
 
@@ -529,7 +523,7 @@ namespace Hunter.Characters
         #region Non-Core Attack Functions
         public void MeleeWeaponSwingAnimationEvent()
         {
-            Fabric.EventManager.Instance?.PostEvent("Player Sword Swing", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Player Melee Swing", gameObject);
         }
 
         public void SwordSwingParticleAnimationEvent()
@@ -560,9 +554,8 @@ namespace Hunter.Characters
                 return;
             }
             //TODO This should really be referencing a clip on the new weapon being equipped and playing that instead
-            if (newWeapon is Melee) { Fabric.EventManager.Instance?.PostEvent("Player Draw Sword", gameObject); }
-            //else if (newWeapon is Ranged) { Fabric.EventManager.Instance?.PostEvent("Player Draw Luger", gameObject); }
             EquipWeaponToCharacter(newWeapon);
+            if (!string.IsNullOrWhiteSpace(CurrentWeapon.weaponEquipSoundEvent) && CurrentWeapon != null) { Fabric.EventManager.Instance?.PostEvent(CurrentWeapon.weaponEquipSoundEvent, gameObject); }
         }
 
         public void CycleElements(bool cycleUp)
@@ -591,6 +584,21 @@ namespace Hunter.Characters
             //    EquipWeaponToCharacter(Inventory.GetRangedWeaponAtIndex(Inventory.RangedWeaponIndex, weaponContainer));
             //}
         }
+
+        public override void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, weaponAttackedWith);
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent) && weaponAttackedWith != null) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.optionalSecondaryHitSoundEvent) && weaponAttackedWith != null) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.optionalSecondaryHitSoundEvent, gameObject); }
+        }
+
+        public override void Damage(int damage, bool isCritical, Element damageElement)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, damageElement);
+            if (damageElement != null && !string.IsNullOrWhiteSpace(damageElement.elementSoundEventName)) { Fabric.EventManager.Instance?.PostEvent(damageElement.elementSoundEventName, gameObject); }
+        }
         #endregion
 
         #endregion
@@ -617,7 +625,6 @@ namespace Hunter.Characters
 
         protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
-            Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
             yield return base.SubtractHealthFromCharacter(damage, isCritical);
         }
 
@@ -726,6 +733,7 @@ namespace Hunter.Characters
             // COROUTINE RESUMES HERE
             interactableItem.FireInteraction(this);
             RemoveNearbyInteractable(interactableItem);
+            if (!string.IsNullOrWhiteSpace(interactableItem.itemPickupSoundEvent) && interactableItem != null) { Fabric.EventManager.Instance?.PostEvent(interactableItem.itemPickupSoundEvent, gameObject); }
 
             pickupAction = null;
         }
@@ -774,6 +782,12 @@ namespace Hunter.Characters
         #endregion
 
         #region Helper / Unused Functions
+        public void InitPlayerUI()
+        {
+            Inventory.AddStartingItems();
+            UpdateDecanters();
+        }
+
         private float SignedAngle(Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);

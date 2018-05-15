@@ -9,6 +9,7 @@ namespace Hunter {
 
         [SerializeField]
         private Melee meleeWeaponPrefab;
+
         public Melee MeleeWeaponPrefab
         {
             get
