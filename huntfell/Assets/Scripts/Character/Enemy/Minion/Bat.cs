@@ -19,7 +19,7 @@ namespace Hunter.Characters
         public void Move(Vector3 target, float finalSpeed)
         {
             if (IsDying) { return; }
-            var finalTarget = new Vector3(target.x, RotationTransform.localPosition.y, target.z);
+            var finalTarget = new Vector3(target.x, target.y, target.z);
 
             MoveToCalculations(turnSpeed, finalSpeed, finalTarget);
         }
