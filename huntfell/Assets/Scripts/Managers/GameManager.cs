@@ -41,6 +41,23 @@ namespace Hunter
         private PlayableDirector director;
         public CinemachineVirtualCamera isometricFollowCM;
         public CinemachineVirtualCamera titleScreenCM;
+
+        [Header("Toggle Floor Settings")]
+        public List<GameObject> firstFloor = new List<GameObject>();
+        public List<GameObject> secondFloor = new List<GameObject>();
+
+        private GameObject player;
+        #endregion
+
+        #region Properties
+        public GameObject Player
+        {
+            get
+            {
+                if (player == null) { player = GameObject.FindGameObjectWithTag("Player"); }
+                return player;
+            }
+        }
         #endregion
 
         #region Unity Functions
@@ -78,6 +95,34 @@ namespace Hunter
         {
             Fabric.EventManager.Instance?.PostEvent("Music - Start Main Menu Loop");
         }
+
+        private void Update()
+        {
+            if (Player.transform.position.y < -1)
+            {
+                for (var i = 0; i < firstFloor.Count; i++)
+                {
+                    if (firstFloor[i].activeInHierarchy == true) { firstFloor[i].SetActive(false); }
+                }
+
+                for (var i = 0; i < secondFloor.Count; i++)
+                {
+                    if (secondFloor[i].activeInHierarchy == false) { secondFloor[i].SetActive(true); }
+                }
+            }
+            else if (Player.transform.position.y > -1)
+            {
+                for (var i = 0; i < firstFloor.Count; i++)
+                {
+                    if (firstFloor[i].activeInHierarchy == false) { firstFloor[i].SetActive(true); }
+                }
+
+                for (var i = 0; i < secondFloor.Count; i++)
+                {
+                    if (secondFloor[i].activeInHierarchy == true) { secondFloor[i].SetActive(false); }
+                }
+            }
+        }
         #endregion
 
         #region Scene Management
@@ -102,7 +147,7 @@ namespace Hunter
             StartGame();
         }
 
-        private void StartGame ()
+        private void StartGame()
         {
             SceneManager.LoadScene("SpencerWithers_Hud_Scene", LoadSceneMode.Additive);
             SceneManager.LoadScene("SpencerWithers_Pause_Scene", LoadSceneMode.Additive);
@@ -110,13 +155,13 @@ namespace Hunter
             DeviceManager.GameInputEnabled = true;
         }
 
-        public void QuitToMenu ()
+        public void QuitToMenu()
         {
             DeviceManager.PauseInputEnabled = false;
             LoadNewScene(0, false);
         }
 
-        private void LoadTitleScreen ()
+        private void LoadTitleScreen()
         {
             LoadNewScene("UI_Title_Menu", true);
             titleScreenCM.Priority = 2;
@@ -134,7 +179,7 @@ namespace Hunter
             }
         }
 
-        public void LoadNewScene (int sceneIndex, bool loadAdditively)
+        public void LoadNewScene(int sceneIndex, bool loadAdditively)
         {
             if (loadAdditively)
             {
@@ -152,7 +197,7 @@ namespace Hunter
             SceneManager.LoadScene(sceneName);
         }
 
-        private IEnumerator ChangeActiveScene (int sceneIndex)
+        private IEnumerator ChangeActiveScene(int sceneIndex)
         {
             yield return FadeScreen(fadeDuration, Color.black, FadeType.Out);
             SceneManager.LoadScene(sceneIndex);

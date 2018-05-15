@@ -1647,7 +1647,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1840781645732888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.9, y: 0, z: -17.95}
+  m_LocalPosition: {x: 102.33802, y: 0, z: 42.709602}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4898874713604180}
@@ -2578,7 +2578,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1338188667760872}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.41749114, z: -0, w: 0.90868104}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2587,7 +2587,7 @@ Transform:
   - {fileID: 4068385627400054}
   m_Father: {fileID: 4097453954179014}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -49.353, z: 0}
 --- !u!4 &4917875934045240
 Transform:
   m_ObjectHideFlags: 1
@@ -2853,7 +2853,7 @@ MonoBehaviour:
   targetHealth: 0
   healthModificationSpeed: 3
   speed: 3
-  turnSpeed: 200
+  turnSpeed: 225
   enemyElementOption: 0
   invincibilityFrames: 5
   itemsToSpawn:
@@ -2868,6 +2868,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   phaseThreeMobs:
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -3006,7 +3008,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDetectionDistance: 5
   maxDetectionDistance: 14
-  fieldOfViewRange: 100
+  fieldOfViewRange: 80
   detectionLayers:
     serializedVersion: 2
     m_Bits: 256

@@ -63,6 +63,7 @@ namespace Hunter
         #region Toggle Functions
         private void ToggleSet()
         {
+
             if (setIsActive) // Set to inactive
             {
                 foreach (var objectToChange in gameobjectSet)

@@ -224,11 +224,11 @@ namespace Hunter.Characters.AI
             if (Selection.Contains(this.gameObject))
             {
                 //Debug.Log("Attack Value: " + attackValue);
-                Debug.Log("Idle Value: " + idleValue);
+                //Debug.Log("Idle Value: " + idleValue);
                 //Debug.Log("Wander Value: " + wanderValue);
                 //Debug.Log("Turn Value: " + turnValue);
                 //Debug.Log("MoveTo Value: " + moveToValue);
-                Debug.Log("Retreat Value: " + retreatValue);
+                //Debug.Log("Retreat Value: " + retreatValue);
             }
 #endif
             #endregion
