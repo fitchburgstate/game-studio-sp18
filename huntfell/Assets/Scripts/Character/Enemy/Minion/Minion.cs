@@ -45,6 +45,7 @@ namespace Hunter.Characters
         protected override IEnumerator KillCharacter ()
         {
             effectsModule?.DisableHealthBars();
+            GameManager.instance?.RemoveMinionFromRadius(this);
             return base.KillCharacter();
         }
         #endregion

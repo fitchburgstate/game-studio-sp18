@@ -372,6 +372,8 @@ namespace Hunter
             if (entries.Count == 0)
             {
                 bestiaryLeftPageTitle.text = "Undiscovered Beast";
+                bestiaryLeftPageFirstEntry.text = bestiaryLeftPageSecondEntry.text = bestiaryLeftPageThirdEntry.text = "";
+                bestiaryLeftPageFirstSketch.enabled = bestiaryLeftPageSecondSketch.enabled = bestiaryLeftPageThirdSketch.enabled = false;
                 return;
             }
 
@@ -405,6 +407,8 @@ namespace Hunter
             if (entries.Count == 0)
             {
                 bestiaryRightPageTitle.text = "Undiscovered Beast";
+                bestiaryRightPageFirstEntry.text = bestiaryRightPageSecondEntry.text = bestiaryRightPageThirdEntry.text = "";
+                bestiaryRightPageFirstSketch.enabled = bestiaryRightPageSecondSketch.enabled = bestiaryRightPageThirdSketch.enabled = false;
                 return;
             }
 
