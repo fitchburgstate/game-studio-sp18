@@ -1557,8 +1557,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1984009420628480}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5, y: 1.4, z: 0}
+  m_LocalRotation: {x: -0, y: 0.4984295, z: -0, w: 0.86693025}
+  m_LocalPosition: {x: 23.35, y: 1.447, z: -1.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4980536220125468}
@@ -2216,12 +2216,13 @@ MonoBehaviour:
   totalHealth: 30
   currentHealth: 0
   targetHealth: 0
-  healthModificationSpeed: 1
+  healthModificationSpeed: 3
   speed: 2.5
   turnSpeed: 175
   enemyElementOption: 0
   invincibilityFrames: 5
   itemsToSpawn:
+  - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
   - {fileID: 11400000, guid: c9261105d8730e445afae75d3c20b409, type: 2}
 --- !u!114 &114083481070958220
@@ -2416,6 +2417,7 @@ MonoBehaviour:
   effectInterval: 1
   effectLifeTime: 0
   leavingAuraDestroysEffect: 1
+  soundEventName: Bat Aggro Screech
 --- !u!114 &114572385561238990
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2573,7 +2575,7 @@ NavMeshAgent:
   m_Height: 2.84
   m_BaseOffset: 1.5
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 1
+  m_ObstacleAvoidanceType: 0
 --- !u!198 &198001698343220342
 ParticleSystem:
   m_ObjectHideFlags: 1

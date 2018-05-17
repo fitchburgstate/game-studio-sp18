@@ -41,10 +41,31 @@ namespace Hunter
         private PlayableDirector director;
         public CinemachineVirtualCamera isometricFollowCM;
         public CinemachineVirtualCamera titleScreenCM;
+
+        [Header("Toggle Floor Settings")]
+        public List<GameObject> firstFloor = new List<GameObject>();
+        public List<GameObject> secondFloor = new List<GameObject>();
+
+        private GameObject player;
+        #endregion
+
+        #region Properties
+        public GameObject Player
+        {
+            get
+            {
+                if (player == null) { player = GameObject.FindGameObjectWithTag("Player"); }
+                return player;
+            }
+        }
+
+        public List<Minion> MinionsInPlayerRadius { get; private set; } = new List<Minion>();
+        public Boss BossInRadius { get; private set; }
+        private string currentMusicEvent;
         #endregion
 
         #region Unity Functions
-        private void Awake ()
+        private void Awake()
         {
 
             if (instance == null)
@@ -57,28 +78,57 @@ namespace Hunter
                 return;
             }
 
-            if (!Application.isEditor || loadTitleScreen)
-            {
-                LoadNewScene("UI_Title_Menu", true);
-                titleScreenCM.Priority = 2;
-                if (GameObject.Find("Audio") == null)
-                {
-                    LoadNewScene("Audio", true);
-                }
-            }
 
             DeviceManager = GetComponent<DeviceManager>();
             director = GetComponentInChildren<PlayableDirector>();
             spawnPoints = new List<SpawnPoint>(FindObjectsOfType<SpawnPoint>());
+
+            if (loadTitleScreen) { LoadTitleScreen(); }
+            else { StartGame(); }
+
+            if (GameObject.Find("Audio") == null)
+            {
+                LoadNewScene("Audio", true);
+            }
+
+            Time.timeScale = 1;
+            StartCoroutine(FadeScreen(fadeDuration, Color.black, FadeType.In));
         }
 
+        private void Update()
+        {
+            if (Player.transform.position.y < -1)
+            {
+                for (var i = 0; i < firstFloor.Count; i++)
+                {
+                    if (firstFloor[i].activeInHierarchy == true) { firstFloor[i].SetActive(false); }
+                }
+
+                for (var i = 0; i < secondFloor.Count; i++)
+                {
+                    if (secondFloor[i].activeInHierarchy == false) { secondFloor[i].SetActive(true); }
+                }
+            }
+            else if (Player.transform.position.y > -1)
+            {
+                for (var i = 0; i < firstFloor.Count; i++)
+                {
+                    if (firstFloor[i].activeInHierarchy == false) { firstFloor[i].SetActive(true); }
+                }
+
+                for (var i = 0; i < secondFloor.Count; i++)
+                {
+                    if (secondFloor[i].activeInHierarchy == true) { secondFloor[i].SetActive(false); }
+                }
+            }
+        }
         #endregion
 
         #region Scene Management
-        
-        public IEnumerator StartGame (CanvasGroup titleScreenCanvasGroup)
+
+        public IEnumerator IntroCutscene(CanvasGroup titleScreenCanvasGroup)
         {
-            Fabric.EventManager.Instance?.PostEvent("UI Start Game");
+            Fabric.EventManager.Instance?.PostEvent("Stop Main Menu Loop, Start Game");
             yield return Utility.FadeCanvasGroup(titleScreenCanvasGroup, fadeCurve, 2, FadeType.In);
 
             SceneManager.UnloadSceneAsync("UI_Title_Menu");
@@ -93,11 +143,27 @@ namespace Hunter
                 yield return new WaitForSeconds((float)director.duration);
             }
 
-            SceneManager.LoadScene("UI_Hud", LoadSceneMode.Additive);
-            SceneManager.LoadScene("UI_Pause_Menu", LoadSceneMode.Additive);
-            DeviceManager.gameInputEnabled = true;
+            StartGame();
+        }
 
-            Fabric.EventManager.Instance.PostEvent("Expo to Combat Music");
+        private void StartGame()
+        {
+            SceneManager.LoadScene("SpencerWithers_Hud_Scene", LoadSceneMode.Additive);
+            SceneManager.LoadScene("SpencerWithers_Pause_Scene", LoadSceneMode.Additive);
+            Fabric.EventManager.Instance?.PostEvent("Music - Start Expo");
+            DeviceManager.GameInputEnabled = true;
+        }
+
+        public void QuitToMenu()
+        {
+            DeviceManager.PauseInputEnabled = false;
+            LoadNewScene(0, false);
+        }
+
+        private void LoadTitleScreen()
+        {
+            LoadNewScene("UI_Title_Menu", true);
+            titleScreenCM.Priority = 2;
         }
 
         public void LoadNewScene(string sceneName, bool loadAdditively)
@@ -112,18 +178,104 @@ namespace Hunter
             }
         }
 
+        public void LoadNewScene(int sceneIndex, bool loadAdditively)
+        {
+            if (loadAdditively)
+            {
+                SceneManager.LoadScene(sceneIndex, LoadSceneMode.Additive);
+            }
+            else
+            {
+                StartCoroutine(ChangeActiveScene(sceneIndex));
+            }
+        }
+
         private IEnumerator ChangeActiveScene(string sceneName)
         {
             yield return FadeScreen(fadeDuration, Color.black, FadeType.Out);
             SceneManager.LoadScene(sceneName);
-            yield return FadeScreen(fadeDuration, Color.black, FadeType.In);
+        }
+
+        private IEnumerator ChangeActiveScene(int sceneIndex)
+        {
+            yield return FadeScreen(fadeDuration, Color.black, FadeType.Out);
+            SceneManager.LoadScene(sceneIndex);
         }
 
         #endregion
 
         #region Helper Functions
+        public void ResetRadius ()
+        {
+            MinionsInPlayerRadius.Clear();
+            BossInRadius = null;
+            PostMusicEvent("Music - Stop Boss Combat");
+            PostMusicEvent("Music - Start Expo");
+            HUDManager.instance?.FadeBossHealth(FadeType.In);
+        }
 
-        public IEnumerator FadeScreen (Color fadeColor, FadeType fadeType)
+        public void RemoveMinionFromRadius (Minion minion)
+        {
+            if (MinionsInPlayerRadius.Contains(minion))
+            {
+                MinionsInPlayerRadius.Remove(minion);
+                Debug.Log($"Removed {minion.name} from the radius.");
+            }
+
+            if (MinionsInPlayerRadius.Count < 1 && BossInRadius == null)
+            {
+                PostMusicEvent("Music - Regular Combat to Expo");
+            }
+        }
+
+        public void AddMinionToRadius (Minion minion)
+        {
+            if (!MinionsInPlayerRadius.Contains(minion))
+            {
+                MinionsInPlayerRadius.Add(minion);
+                Debug.Log($"Added {minion.name} to the radius.");
+            }
+
+            if (MinionsInPlayerRadius.Count > 0 && BossInRadius == null)
+            {
+                PostMusicEvent("Music - Expo to Regular Combat");
+            }
+        }
+
+        public void RemoveBossFromRadius(Boss boss)
+        {
+            if(BossInRadius == boss)
+            {
+                BossInRadius = null;
+                HUDManager.instance?.FadeBossHealth(FadeType.In);
+
+                PostMusicEvent("Music - Stop Boss Combat");
+            }
+        }
+
+        public void AddBossToRadius (Boss boss)
+        {
+            if (BossInRadius == null)
+            {
+                BossInRadius = boss;
+                HUDManager.instance?.FadeBossHealth(FadeType.Out);
+
+                PostMusicEvent("Music - Stop Combat");
+                PostMusicEvent("Music - Stop Expo");
+                PostMusicEvent("Music - Start Boss Combat");
+            }
+        }
+
+        private void PostMusicEvent (string musicSoundEvent)
+        {
+            if (musicSoundEvent != currentMusicEvent && !string.IsNullOrWhiteSpace(musicSoundEvent))
+            {
+                Fabric.EventManager.Instance?.PostEvent(musicSoundEvent);
+                currentMusicEvent = musicSoundEvent;
+            }
+        }
+
+        public IEnumerator FadeScreen(Color fadeColor, FadeType fadeType)
         {
             yield return FadeScreen(fadeDuration, fadeColor, fadeType);
         }
@@ -164,7 +316,7 @@ namespace Hunter
 
             foreach (var spawnPoint in spawnPoints)
             {
-                if (!spawnPoint.activated) { continue; }
+                if (!spawnPoint.activated || !spawnPoint.gameObject.activeInHierarchy) { continue; }
 
                 var directionToTarget = spawnPoint.transform.position - currentPosition;
                 var dSqrToTarget = directionToTarget.sqrMagnitude;

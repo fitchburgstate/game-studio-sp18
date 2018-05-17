@@ -54,9 +54,7 @@ namespace Hunter.Characters
             }
             set
             {
-                //if (IsDying) { return; }
                 currentHealth = Mathf.Clamp(value, TargetHealth, totalHealth);
-
                 if (currentHealth <= 0)
                 {
                     Kill();
@@ -72,7 +70,6 @@ namespace Hunter.Characters
             }
             set
             {
-                //if (IsDying) { return; }
                 targetHealth = Mathf.Clamp(value, 0, totalHealth);
                 if (targetHealth > currentHealth)
                 {
@@ -165,11 +162,12 @@ namespace Hunter.Characters
             characterController = GetComponent<CharacterController>();
             effectsModule = GetComponentInChildren<VisualEffectsModule>();
             if (effectsModule == null) { Debug.LogWarning($"{name} doesn't have an Effect Controller childed to it. No effects will play for it.", gameObject); }
+
+            TargetHealth = totalHealth;
         }
 
         protected virtual void Start()
         {
-            TargetHealth = totalHealth;
         }
         #endregion
 
@@ -198,8 +196,10 @@ namespace Hunter.Characters
             }
         }
 
-        public void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
+        public virtual void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
         {
+            if (invincible || IsDying) { return; }
+
             //If you are attacked with a weapon (not things like dots) and your target health is already at 0, critical hit you deadski
             if (TargetHealth == 0) { isCritical = true; }
             if (isCritical && damage > 0) { StartCoroutine(SlowTimeCritical()); }
@@ -216,7 +216,7 @@ namespace Hunter.Characters
             Time.timeScale = 1;
         }
 
-        public void Damage(int damage, bool isCritical, Element damageElement)
+        public virtual void Damage(int damage, bool isCritical, Element damageElement)
         {
             if (invincible || IsDying) { return; }
 
@@ -229,6 +229,19 @@ namespace Hunter.Characters
 
                 damageAction = SubtractHealthFromCharacter(damage, isCritical);
                 StartCoroutine(damageAction);
+
+                if (isCritical)
+                {
+                    Fabric.EventManager.Instance?.PostEvent("Player Hit [High]", gameObject);
+                }
+                else if (damage > 3)
+                {
+                    Fabric.EventManager.Instance?.PostEvent("Player Hit [Medium]", gameObject);
+                }
+                else
+                {
+                    Fabric.EventManager.Instance?.PostEvent("Player Hit [Low]", gameObject);
+                }
             }
 
             if (effectsModule != null)
@@ -305,7 +318,7 @@ namespace Hunter.Characters
         protected virtual IEnumerator KillCharacter()
         {
             yield return new WaitForSeconds(5);
-            gameObject.SetActive(false);
+            Destroy(gameObject);
             deathAction = null;
         }
         #endregion

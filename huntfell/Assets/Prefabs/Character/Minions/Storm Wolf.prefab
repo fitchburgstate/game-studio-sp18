@@ -1879,8 +1879,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1428960619483910}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.5, y: 0.81, z: 4}
+  m_LocalRotation: {x: -0, y: 0.4984295, z: -0, w: 0.86693025}
+  m_LocalPosition: {x: 62.707478, y: 4.266097, z: 80.71036}
   m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_Children:
   - {fileID: 4863656748212302}
@@ -3592,7 +3592,7 @@ MonoBehaviour:
   totalHealth: 140
   currentHealth: 0
   targetHealth: 0
-  healthModificationSpeed: 1
+  healthModificationSpeed: 3
   speed: 5
   turnSpeed: 175
   enemyElementOption: 3
@@ -3622,8 +3622,8 @@ MonoBehaviour:
   moveTo: 1
   retreat: 1
   idle: 1
-  wander: 0
-  maxDistance: 0
+  wander: 1
+  maxDistance: 5
   urgeWeights: {fileID: 11400000, guid: 56548f57007bb434eadd403bb5e3ef69, type: 2}
   target: {fileID: 0}
   randomPointTarget: {x: 0, y: 0, z: 0}
@@ -3732,9 +3732,17 @@ MonoBehaviour:
   baseDamage: 8
   critPercent: 20
   attackSpeed: 1
+  finisherAttackSpeed: 1.5
   recoverySpeed: 0.8
+  finisherCooldown: 2
+  finishingMove: 0
+  bigAttackEffect: 0
+  weaponEquipSoundEvent: 
+  weaponHitSoundEvent: Wolf Attack
+  optionalSecondaryHitSoundEvent: 
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 7
+  finisherHitBoxFrames: 10
   swingParticleSystem: {fileID: 0}
   equipEffects: []
 --- !u!114 &114960037722449868

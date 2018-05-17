@@ -66,9 +66,9 @@ namespace Hunter.Characters
         private Vector3 startPoint;
         #endregion
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
+            base.Awake();
             startPoint = transform.position;
         }
 

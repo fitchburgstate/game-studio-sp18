@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Hunter.Characters
@@ -12,7 +10,6 @@ namespace Hunter.Characters
     public sealed class Player : Character, IMoveable, IAttack
     {
         #region Variables
-
         [Header("Combat Options")]
         public Transform weaponContainer;
         public float gunTrailLength = 1.5f;
@@ -62,15 +59,25 @@ namespace Hunter.Characters
         public Image interactPromptImage;
 
         // Action Coroutine Refs
-        private IEnumerator attackAction;
         private IEnumerator attackFinisherCooldown;
-        private IEnumerator dashAction;
+        private IEnumerator attackCooldown;
         private IEnumerator dashCooldown;
+        private IEnumerator attackAction;
+        private IEnumerator dashAction;
         private IEnumerator pickupAction;
+        private IEnumerator inputFramesAction;
 
         // Inventory and Items
         public PlayerInventory Inventory { get; private set; }
         private List<IInteractable> nearbyInteractables = new List<IInteractable>();
+
+        // Attack Combo
+        [Space]
+        private bool attackQueued = true;
+        private int currentAttackIndex = 0;
+        private bool moving;
+        private bool movingAttack;
+        private bool standingAttack;
         #endregion
 
         #region Properties
@@ -94,7 +101,7 @@ namespace Hunter.Characters
         {
             get
             {
-                return attackFinisherCooldown != null || dashCooldown != null;
+                return dashCooldown != null || attackFinisherCooldown != null;
             }
         }
 
@@ -107,7 +114,10 @@ namespace Hunter.Characters
             set
             {
                 base.CurrentHealth = value;
-                HUDManager.instance?.SetCurrentHealthBar(currentHealth / totalHealth);
+                if (HUDManager.instance != null)
+                {
+                    HUDManager.instance?.SetPlayerCurrentHealthBar(currentHealth / totalHealth);
+                }
 
                 //if (currentHealth <= 0)
                 //{
@@ -126,7 +136,10 @@ namespace Hunter.Characters
             set
             {
                 base.TargetHealth = value;
-                HUDManager.instance?.SetTargetHealthBar(targetHealth / totalHealth);
+                if (HUDManager.instance != null)
+                {
+                    HUDManager.instance?.SetPlayerTargetHealthBar(targetHealth / totalHealth);
+                }
             }
         }
 
@@ -155,6 +168,7 @@ namespace Hunter.Characters
             {
                 potionCount = value;
                 HUDManager.instance?.EnableDecanter(potionCount - 1);
+                UpdateDecanters();
             }
         }
         #endregion
@@ -170,7 +184,7 @@ namespace Hunter.Characters
         {
             base.Start();
 
-            if(GameManager.instance != null)
+            if (GameManager.instance != null)
             {
                 transform.forward = GameManager.instance.isometricFollowCM.transform.forward;
             }
@@ -179,8 +193,7 @@ namespace Hunter.Characters
                 transform.forward = Camera.main.transform.forward;
             }
             startingPosition = transform.position;
-            UpdateDecanters();
-            Inventory.AddStartingItems();
+
             CheckInteractImage();
         }
 
@@ -189,7 +202,7 @@ namespace Hunter.Characters
             var interactableItem = other.GetComponent<IInteractable>();
             if (interactableItem != null)
             {
-                if(other.GetComponent<InteractablePotionShard>() != null)
+                if (other.GetComponent<InteractablePotionShard>() != null)
                 {
                     interactableItem.FireInteraction(this);
                 }
@@ -201,7 +214,7 @@ namespace Hunter.Characters
             }
 
             var tutorialTrigger = other.GetComponent<TutorialTrigger>();
-            if(tutorialTrigger != null && HUDManager.instance != null)
+            if (tutorialTrigger != null && HUDManager.instance != null)
             {
                 HUDManager.instance.ShowTutorialPrompt(tutorialTrigger.tutorialText, tutorialTrigger.controlSprite);
                 tutorialTrigger.gameObject.SetActive(false);
@@ -216,19 +229,20 @@ namespace Hunter.Characters
                 RemoveNearbyInteractable(interactableItem);
             }
         }
-        
+
         #endregion
 
         #region Player Movement
         public void Move(Vector3 moveDirection, Vector3 lookDirection)
         {
             // We do not want the player to be able to move during any big actions (dash, pickup, death, etc)
-            if (PerformingMajorAction) { return; }
+            if (PerformingMajorAction || standingAttack) { return; }
 
             //Setting animation params
             anim.SetFloat("dirX", moveDirection.x);
             anim.SetFloat("dirY", moveDirection.z);
-            anim.SetBool("moving", moveDirection.magnitude != 0);
+            moving = moveDirection.magnitude != 0;
+            anim.SetBool("moving", moving);
 
             //Cacheing Rotation Transform since its used for both movement and rotation
             var characterRoot = RotationTransform;
@@ -264,7 +278,7 @@ namespace Hunter.Characters
         #region Non-Core Movement Functions
         public void FootstepSoundAnimationEvent()
         {
-            Fabric.EventManager.Instance?.PostEvent("Footstep", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Player Footstep - Wood", gameObject);
         }
 
         public void Move(Transform target)
@@ -301,6 +315,8 @@ namespace Hunter.Characters
             var characterForward = RotationTransform.forward;
             var dashDirectionTarget = new Vector3();
 
+            invincible = true;
+
             // Raycast to determine target point for dodge destination on the X and Z axis
             var hit = new RaycastHit();
             var ray = new Ray(startPosition, characterForward);
@@ -332,14 +348,14 @@ namespace Hunter.Characters
             }
 
             var dashTarget = Utility.GetClosestPointOnNavMesh(floorPointFromDashTarget, agent, transform);
-            if (Physics.Linecast(startPosition, dashTarget, out hit, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxHorizontalDistance)
+            if (Physics.Linecast(startPosition, dashTarget, out hit, dashFinalCheckBlockingLayers) || Mathf.Abs(startPosition.y - dashTarget.y) > dashMaxVerticalDistance)
             {
-                Debug.LogWarning($"Your dash would have brought you somewhere you weren't supposed to go! {hit.transform.name}");
+                Debug.LogWarning($"Your dash would have brought you somewhere you weren't supposed to go!");
                 dashAction = null;
                 yield break;
             }
 
-            anim.SetTrigger("DodgeRoll");
+            anim.SetTrigger("dodgeRoll");
             StartCoroutine(SetStaminaBar(0, 0.3f));
 
             // PAUSE HERE FOR ANIMATION EVENT
@@ -367,12 +383,14 @@ namespace Hunter.Characters
             // Dont want players to be able to spam dash, so we have a cooldown which resets the Coroutine reference after (If that reference isn't null, that means we're still dashing)
             dashCooldown = DashCooldown();
             StartCoroutine(dashCooldown);
+
+            invincible = false;
             yield return null;
 
             dashAction = null;
         }
 
-        private IEnumerator DashCooldown ()
+        private IEnumerator DashCooldown()
         {
             StartCoroutine(SetStaminaBar(1, dashCoolDown));
             yield return new WaitForSeconds(dashCoolDown);
@@ -384,14 +402,14 @@ namespace Hunter.Characters
         {
             if (HUDManager.instance == null) { yield break; }
 
-            var startFill = HUDManager.instance.staminaBar.fillAmount;
+            var startFill = HUDManager.instance.playerStaminaBar.fillAmount;
             var startTime = Time.time;
             var percentComplete = 0f;
             while (percentComplete < 1)
             {
                 var elapsedTime = Time.time - startTime;
                 percentComplete = Mathf.Clamp01(elapsedTime / totalTime);
-                HUDManager.instance.staminaBar.fillAmount = Mathf.Lerp(startFill, targetFill, percentComplete);
+                HUDManager.instance.playerStaminaBar.fillAmount = Mathf.Lerp(startFill, targetFill, percentComplete);
                 yield return null;
             }
         }
@@ -400,10 +418,54 @@ namespace Hunter.Characters
         #region Player Combat
         public void Attack()
         {
-            if (PerformingMajorAction || PerformingMinorAction || CurrentWeapon == null) { return; }
+            if (PerformingMajorAction || CurrentWeapon == null || attackCooldown != null) { return; }
 
+            if (attackAction != null)
+            {
+                if (currentAttackIndex < 3)
+                {
+                    attackQueued = true;
+                }
+                return;
+            }
             attackAction = PlayAttackAnimation();
             StartCoroutine(attackAction);
+        }
+
+        public IEnumerator PlayAttackAnimation()
+        {
+            Debug.Log("Starting Attack " + currentAttackIndex);
+            attackQueued = false;
+            switch (currentAttackIndex)
+            {
+                case 0:
+                    movingAttack = moving;
+                    standingAttack = !moving;
+                    anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
+
+                    anim.SetTrigger("firstSwing");
+                    break;
+                case 1:
+                    anim.SetTrigger("secondSwing");
+                    break;
+                case 2:
+                    if (ActionsOnCooldown || movingAttack)
+                    {
+                        Debug.Log("no third swing");
+                        goto default;
+                    }
+                    CurrentWeapon.bigAttackEffect = true;
+                    anim.SetInteger("finisher", (int)CurrentWeapon.finishingMove);
+                    anim.SetFloat("attackSpeed", CurrentWeapon.finisherAttackSpeed);
+                    anim.SetTrigger("thirdSwing");
+                    StartCoroutine(SetStaminaBar(0, 0.3f));
+                    break;
+                default:
+                    attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
+                    StartCoroutine(attackCooldown);
+                    break;
+            }
+            yield return null;
         }
 
         public void AttackAnimationEvent()
@@ -411,26 +473,77 @@ namespace Hunter.Characters
             CurrentWeapon.StartAttackFromAnimationEvent();
         }
 
-        public IEnumerator PlayAttackAnimation()
+        public void EndOfAttackAnimationEvent()
         {
-            anim.SetFloat("attackSpeed", CurrentWeapon.attackSpeed);
-            if (CurrentWeapon is Melee)
+            currentAttackIndex++;
+
+            if (currentAttackIndex >= 3)
             {
-                anim.SetTrigger("melee");
+                StartCoroutine(SetStaminaBar(1, CurrentWeapon.finisherCooldown));
+                attackFinisherCooldown = FinisherCooldown(CurrentWeapon.finisherCooldown);
+                StartCoroutine(attackFinisherCooldown);
             }
-            else if (CurrentWeapon is Ranged)
+            else if (attackQueued)
             {
-                anim.SetTrigger("ranged");
+                attackAction = PlayAttackAnimation();
+                StartCoroutine(attackAction);
+            }
+            else
+            {
+                attackCooldown = AttackCooldown(CurrentWeapon.recoverySpeed);
+                StartCoroutine(attackCooldown);
+            }
+        }
+
+        public IEnumerator AttackCooldown(float cooldownLength)
+        {
+            Debug.Log("Starting regular cooldown");
+            currentAttackIndex = 0;
+
+            attackQueued = false;
+            movingAttack = false;
+            standingAttack = false;
+
+            yield return new WaitForSeconds(cooldownLength);
+
+            attackAction = null;
+            anim.ResetTrigger("firstSwing");
+            anim.ResetTrigger("secondSwing");
+            anim.ResetTrigger("thirdSwing");
+
+            attackCooldown = null;
+            Debug.Log("Ending regular cooldown");
+        }
+
+        public IEnumerator FinisherCooldown (float cooldownLength)
+        {
+            Debug.Log("Starting finisher cooldown");
+            currentAttackIndex = 0;
+
+            attackQueued = false;
+            movingAttack = false;
+            standingAttack = false;
+
+            if (CurrentWeapon != null)
+            {
+                CurrentWeapon.bigAttackEffect = false;
             }
 
-            yield return new WaitForSeconds(CurrentWeapon.recoverySpeed);
+            yield return new WaitForSeconds(cooldownLength);
+
             attackAction = null;
+            anim.ResetTrigger("firstSwing");
+            anim.ResetTrigger("secondSwing");
+            anim.ResetTrigger("thirdSwing");
+
+            attackFinisherCooldown = null;
+            Debug.Log("Ending finisher cooldown");
         }
 
         #region Non-Core Attack Functions
         public void MeleeWeaponSwingAnimationEvent()
         {
-            Fabric.EventManager.Instance?.PostEvent("Player Sword Swing", gameObject);
+            Fabric.EventManager.Instance?.PostEvent("Player Melee Swing", gameObject);
         }
 
         public void SwordSwingParticleAnimationEvent()
@@ -461,9 +574,8 @@ namespace Hunter.Characters
                 return;
             }
             //TODO This should really be referencing a clip on the new weapon being equipped and playing that instead
-            if (newWeapon is Melee) { Fabric.EventManager.Instance?.PostEvent("Player Draw Sword", gameObject); }
-            //else if (newWeapon is Ranged) { Fabric.EventManager.Instance?.PostEvent("Player Draw Luger", gameObject); }
             EquipWeaponToCharacter(newWeapon);
+            if (!string.IsNullOrWhiteSpace(CurrentWeapon.weaponEquipSoundEvent) && CurrentWeapon != null) { Fabric.EventManager.Instance?.PostEvent(CurrentWeapon.weaponEquipSoundEvent, gameObject); }
         }
 
         public void CycleElements(bool cycleUp)
@@ -481,7 +593,7 @@ namespace Hunter.Characters
             }
         }
 
-        public void SwitchWeaponType (bool switchToMelee)
+        public void SwitchWeaponType(bool switchToMelee)
         {
             //if (switchToMelee && !(CurrentWeapon is Melee))
             //{
@@ -492,15 +604,30 @@ namespace Hunter.Characters
             //    EquipWeaponToCharacter(Inventory.GetRangedWeaponAtIndex(Inventory.RangedWeaponIndex, weaponContainer));
             //}
         }
+
+        public override void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, weaponAttackedWith);
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent) && weaponAttackedWith != null) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.optionalSecondaryHitSoundEvent) && weaponAttackedWith != null) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.optionalSecondaryHitSoundEvent, gameObject); }
+        }
+
+        public override void Damage(int damage, bool isCritical, Element damageElement)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, damageElement);
+            if (damageElement != null && !string.IsNullOrWhiteSpace(damageElement.elementSoundEventName)) { Fabric.EventManager.Instance?.PostEvent(damageElement.elementSoundEventName, gameObject); }
+        }
         #endregion
 
         #endregion
 
         #region Player Health
-
-        public void UsePotion ()
+        public void UsePotion()
         {
-            if(PerformingMinorAction || PotionShardCount < maxShardsPerPotion || TargetHealth == totalHealth) {
+            if (PotionShardCount < maxShardsPerPotion || TargetHealth == totalHealth)
+            {
                 Debug.LogWarning("Cannot use potion at this time.");
                 return;
             }
@@ -508,39 +635,40 @@ namespace Hunter.Characters
             PotionShardCount -= maxShardsPerPotion;
         }
 
-        private void UpdateDecanters ()
+        private void UpdateDecanters()
         {
-            for (int i = 0; i < potionCount; i++)
+            for (var i = 0; i < potionCount; i++)
             {
                 HUDManager.instance?.SetDecanterInfo(i, PotionShardCount, maxShardsPerPotion);
             }
         }
 
-        protected override IEnumerator SubtractHealthFromCharacter (int damage, bool isCritical)
+        protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
-            Fabric.EventManager.Instance?.PostEvent("Player Hit", gameObject);
             yield return base.SubtractHealthFromCharacter(damage, isCritical);
         }
 
-        protected override IEnumerator AddHealthToCharacter (int restoreAmount, bool isCritical)
+        protected override IEnumerator AddHealthToCharacter(int restoreAmount, bool isCritical)
         {
             yield return base.AddHealthToCharacter(restoreAmount, isCritical);
         }
 
-        protected override IEnumerator KillCharacter ()
+        protected override IEnumerator KillCharacter()
         {
             invincible = true;
             agent.enabled = false;
             characterController.enabled = false;
-            GameManager.instance.DeviceManager.gameInputEnabled = false;
 
             anim.SetFloat("dirX", 0);
             anim.SetFloat("dirY", 0);
             anim.SetBool("moving", false);
-            anim.SetTrigger("isDead");
+            anim.SetTrigger("death");
+
+            StartCoroutine(AttackCooldown(0));
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.Out);
 
+            GameManager.instance?.ResetRadius();
             var spawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
             var spawnPosition = startingPosition;
             if (spawnPoint != null) { spawnPosition = spawnPoint.transform.position; }
@@ -564,7 +692,6 @@ namespace Hunter.Characters
             invincible = false;
             agent.enabled = true;
             characterController.enabled = true;
-            GameManager.instance.DeviceManager.gameInputEnabled = true;
 
             deathAction = null;
             yield return null;
@@ -574,7 +701,7 @@ namespace Hunter.Characters
         #region Player Interaction
         public void Interact()
         {
-            if (PerformingMajorAction) { return; }
+            if (PerformingMajorAction || PerformingMinorAction) { return; }
 
             if (nearbyInteractables.Count == 0) { return; }
 
@@ -611,11 +738,11 @@ namespace Hunter.Characters
         {
             var footHeightDif = Mathf.Abs(interactableItem.transform.position.y - transform.position.y);
             var handHeightDif = Mathf.Abs(interactableItem.transform.position.y - weaponContainer.transform.position.y);
-            var triggerName = "PickupLow";
+            var triggerName = "pickupLow";
 
             if (handHeightDif < footHeightDif)
             {
-                triggerName = "PickupHigh";
+                triggerName = "pickupHigh";
             }
 
             anim.SetTrigger(triggerName);
@@ -627,6 +754,7 @@ namespace Hunter.Characters
             // COROUTINE RESUMES HERE
             interactableItem.FireInteraction(this);
             RemoveNearbyInteractable(interactableItem);
+            if (!string.IsNullOrWhiteSpace(interactableItem.itemPickupSoundEvent) && interactableItem != null) { Fabric.EventManager.Instance?.PostEvent(interactableItem.itemPickupSoundEvent, gameObject); }
 
             pickupAction = null;
         }
@@ -659,13 +787,13 @@ namespace Hunter.Characters
             return false;
         }
 
-        private void AddNearbyInteractable (IInteractable interactableItem)
+        private void AddNearbyInteractable(IInteractable interactableItem)
         {
             nearbyInteractables.Add(interactableItem);
             CheckInteractImage();
         }
 
-        public void RemoveNearbyInteractable (IInteractable interactableItem)
+        public void RemoveNearbyInteractable(IInteractable interactableItem)
         {
             nearbyInteractables.Remove(interactableItem);
             CheckInteractImage();
@@ -675,6 +803,12 @@ namespace Hunter.Characters
         #endregion
 
         #region Helper / Unused Functions
+        public void InitPlayerUI()
+        {
+            Inventory.AddStartingItems();
+            UpdateDecanters();
+        }
+
         private float SignedAngle(Vector3 a, Vector3 b)
         {
             return Vector3.Angle(a, b) * Mathf.Sign(Vector3.Cross(a, b).y);

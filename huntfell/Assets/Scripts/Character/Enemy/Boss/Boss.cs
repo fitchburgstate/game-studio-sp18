@@ -1,58 +1,47 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
-
-namespace Hunter.Characters
+﻿namespace Hunter.Characters
 {
     public class Boss : Enemy
     {
-        #region Variables
-        /// <summary>
-        /// Determines what in the scene is the bosses' health bar GUI.
-        /// </summary>
-        [Header("Health Bar Options")]
-        public Image bossHealthBar;
+        public InteractableGameEndPortal endPortal;
 
-        /// <summary>
-        /// Determines what is the parent of the bosses' health bar GUI.
-        /// </summary>
-        protected Transform bossHealthBarParent;
-        #endregion
+        public override float CurrentHealth
+        {
+            get
+            {
+                return base.CurrentHealth;
+            }
 
-        #region Unity Functions
-        protected override void Start()
+            set
+            {
+                base.CurrentHealth = value;
+                if (HUDManager.instance != null)
+                {
+                    HUDManager.instance?.SetBossCurrentHealthBar(currentHealth / totalHealth);
+                }
+            }
+        }
+
+        public override float TargetHealth
+        {
+            get
+            {
+                return base.TargetHealth;
+            }
+
+            set
+            {
+                base.TargetHealth = value;
+                if (HUDManager.instance != null)
+                {
+                    HUDManager.instance?.SetBossTargetHealthBar(targetHealth / totalHealth);
+                }
+            }
+        }
+
+        protected override void Start ()
         {
             base.Start();
-            if (bossHealthBar != null)
-            {
-                bossHealthBarParent = bossHealthBar.transform.parent;
-                bossHealthBarParent.gameObject.SetActive(false);
-            }
+            endPortal?.gameObject.SetActive(false);
         }
-        #endregion
-
-        #region SubtractHealthFromCharacter Function
-        /// <summary>
-        /// Subtracts health from the character as well as adjusting the health bar accordingly.
-        /// </summary>
-        protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
-        {
-            bossHealthBarParent?.gameObject.SetActive(true);
-            var targetHealth = CurrentHealth - damage;
-            if (bossHealthBar != null)
-            {
-                bossHealthBar.fillAmount = targetHealth / totalHealth;
-            }
-            else { Debug.LogWarning($"{name} does not have a health bar set in the inspector."); }
-            CurrentHealth = targetHealth;
-            invincible = true;
-            for (var i = 0; i < invincibilityFrames; i++)
-            {
-                yield return null;
-            }
-            invincible = false;
-            yield return null;
-        }
-        #endregion
     }
 }

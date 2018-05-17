@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4109888515157928}
   - component: {fileID: 33215290081164064}
   - component: {fileID: 23727628424105258}
-  m_Layer: 13
+  m_Layer: 18
   m_Name: Diary Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4691399908714428}
   - component: {fileID: 198676412672929410}
   - component: {fileID: 199582846217022098}
-  m_Layer: 13
+  m_Layer: 18
   m_Name: Shineparticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,8 @@ GameObject:
   - component: {fileID: 4222506581369254}
   - component: {fileID: 114045486143716978}
   - component: {fileID: 135876100575899602}
-  m_Layer: 0
+  - component: {fileID: 114827503146278084}
+  m_Layer: 18
   m_Name: Diary2 Interactable Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b8edfc6dfffcab44bf2ad588ff67ab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: a1b70932eb5fc2248849cf1a68b4b486, type: 2}
+  itemData: {fileID: 11400000, guid: 094beba703a347342bd7c59d1597a192, type: 2}
   itemBounceTime: 0.75
   itemTotalBounces: 3
   itemBounceHeight: 1.25
@@ -186,6 +187,22 @@ MonoBehaviour:
   itemMaxSpawnDistance: 3
   tutorialText: 
   tutorialIcon: {fileID: 0}
+--- !u!114 &114827503146278084
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1298824524410500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: 2cb2c6e79493ade44861f7c6d4d16b4d, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!135 &135876100575899602
 SphereCollider:
   m_ObjectHideFlags: 1

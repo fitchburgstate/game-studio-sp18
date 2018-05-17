@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 4224288468178810}
   - component: {fileID: 95432217249276366}
   - component: {fileID: 114039490474315702}
+  - component: {fileID: 65792701777150152}
   m_Layer: 13
   m_Name: Prop_Bookcase_4
   m_TagString: Untagged
@@ -125,7 +126,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1695349893118910}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -2.2, y: -0.43400002, z: 6.5980005}
+  m_LocalPosition: {x: 0, y: -0.43400002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4224288468178810}
@@ -138,7 +139,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1384169280768096}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2074332, y: 0.6939664, z: -8.323001}
+  m_LocalPosition: {x: -50.094, y: 0.5048649, z: 6.639}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4746681135962462}
@@ -156,7 +157,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1995331485869326}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -2.146, y: -0.405, z: 7.214}
+  m_LocalPosition: {x: 0, y: -0.405, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4224288468178810}
@@ -169,7 +170,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1492624396988150}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.031433, y: 0.9274887, z: 7.033001}
+  m_LocalPosition: {x: 0, y: 0.9274887, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children: []
   m_Father: {fileID: 4224288468178810}
@@ -182,7 +183,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1890212603931436}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -2.061, y: 1.642, z: 7.445}
+  m_LocalPosition: {x: 0, y: 1.642, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4224288468178810}
@@ -195,7 +196,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1184698733571590}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -2.061, y: 0.616, z: 6.719}
+  m_LocalPosition: {x: 0, y: 0.616, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4224288468178810}
@@ -406,6 +407,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1890212603931436}
   m_Mesh: {fileID: 4300000, guid: d4c0a5559d4bb5d488fa317e95ec220a, type: 3}
+--- !u!65 &65792701777150152
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1384169280768096}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.63, y: 3, z: 1.49}
+  m_Center: {x: 0, y: 0.92, z: 0}
 --- !u!95 &95212704930610284
 Animator:
   serializedVersion: 3
@@ -520,10 +533,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemsToSpawn: []
-  elementTypeForInteraction: 0
-  animationName: 
   giveItemsDirectly: 0
-  requiresDamage: 0
+  elementTypeForInteraction: 0
+  overrideImportance: 0
   interactionSuccessMessage: 
   interactionFailMessage: 
   propType: 0

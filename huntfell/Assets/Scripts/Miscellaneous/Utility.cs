@@ -97,7 +97,7 @@ namespace Hunter
                 float curvePos = 0;
                 while (curvePos < 1)
                 {
-                    curvePos += (Time.deltaTime / fadeDuration);
+                    curvePos += (Time.unscaledDeltaTime / fadeDuration);
                     if (fadeType == FadeType.In)
                     {
                         canvasGroup.alpha = fadeCurve.Evaluate(1 - curvePos);
@@ -106,7 +106,7 @@ namespace Hunter
                     {
                         canvasGroup.alpha = fadeCurve.Evaluate(curvePos);
                     }
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                 }
             }
         }

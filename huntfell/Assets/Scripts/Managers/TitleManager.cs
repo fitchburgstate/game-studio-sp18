@@ -15,8 +15,7 @@ namespace Hunter
         private void Start ()
         {
             deviceManager = GameManager.instance?.DeviceManager;
-            deviceManager.gameInputEnabled = false;
-            deviceManager.uiInputEnabled = true;
+            Fabric.EventManager.Instance?.PostEvent("Music - Start Main Menu Loop");
         }
 
         private void Update ()
@@ -24,7 +23,7 @@ namespace Hunter
             if (acceptingInput & (deviceManager.PressedConfirm || deviceManager.PressedCancel))
             {
                 acceptingInput = false;
-                GameManager.instance?.StartCoroutine(GameManager.instance.StartGame(titleScreenCanvasGroup));
+                GameManager.instance?.StartCoroutine(GameManager.instance.IntroCutscene(titleScreenCanvasGroup));
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Hunter.Characters
 {
@@ -58,7 +59,7 @@ namespace Hunter.Characters
         public void Move(Transform target, float finalSpeed)
         {
             if (IsDying) { return; }
-            var finalTarget = new Vector3(target.position.x, RotationTransform.localPosition.y, target.position.z);
+            var finalTarget = new Vector3(target.position.x, target.position.y, target.position.z);
 
             if (target != null)
             {

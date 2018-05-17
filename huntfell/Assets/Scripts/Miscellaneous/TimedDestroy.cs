@@ -50,6 +50,7 @@ namespace Hunter
         {
             yield return new WaitForSeconds(destroyWaitTime);
             Destroy(destroyTarget);
+            Destroy(this);
         }
     }
 }

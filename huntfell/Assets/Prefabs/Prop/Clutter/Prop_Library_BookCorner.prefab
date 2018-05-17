@@ -22,7 +22,8 @@ GameObject:
   - component: {fileID: 33581179657993566}
   - component: {fileID: 23697705774765054}
   - component: {fileID: 95543387525029408}
-  - component: {fileID: 114017164493346712}
+  - component: {fileID: 65107125635761626}
+  - component: {fileID: 65865019865100114}
   m_Layer: 13
   m_Name: Prop_Library_BookCorner
   m_TagString: Untagged
@@ -36,13 +37,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1368721163057258}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0.70711, z: -0, w: -0.70710367}
+  m_LocalPosition: {x: -63.07, y: 5.3075, z: 14.809}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -269.999, z: 0}
 --- !u!23 &23697705774765054
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -84,6 +85,30 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1368721163057258}
   m_Mesh: {fileID: 4300000, guid: cb3443ec29e289f4d8e286e440118985, type: 3}
+--- !u!65 &65107125635761626
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1368721163057258}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.482984, y: 3.4967096, z: 0.75}
+  m_Center: {x: 0, y: 0, z: -1.38}
+--- !u!65 &65865019865100114
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1368721163057258}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.75, y: 3.4967096, z: 3.4829838}
+  m_Center: {x: -1.38, y: 0, z: 0}
 --- !u!95 &95543387525029408
 Animator:
   serializedVersion: 3
@@ -101,29 +126,3 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114017164493346712
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1368721163057258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee5e9e984e8c12944841676a9bcd37cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemsToSpawn: []
-  elementTypeForInteraction: 0
-  animationName: 
-  giveItemsDirectly: 0
-  requiresDamage: 0
-  interactionSuccessMessage: 
-  interactionFailMessage: 
-  propType: 0
-  destructionForce: 50
-  brokenPropPrefab: {fileID: 0}
-  propEvent:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null

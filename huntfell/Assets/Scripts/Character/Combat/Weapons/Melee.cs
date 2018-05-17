@@ -20,6 +20,7 @@ namespace Hunter.Characters
         #region Variables
         [Header("Melee Options")]
         public float hitBoxFrames = 5;
+        public float finisherHitBoxFrames = 10;
         public ParticleSystem swingParticleSystem;
 
         [Space]
@@ -37,13 +38,13 @@ namespace Hunter.Characters
         {
             get
             {
-                return weaponElement;
+                return base.WeaponElement;
             }
 
             set
             {
-                weaponElement = value;
-                ActivateMeleeEffect(Utility.ElementToElementOption(weaponElement));
+                base.WeaponElement = value;
+                ActivateMeleeEffect(Utility.ElementToElementOption(value));
             }
         }
 
@@ -56,8 +57,9 @@ namespace Hunter.Characters
         private Collider meleeHitBox;
         #endregion
 
-        protected void Awake ()
+        protected override void Awake ()
         {
+            base.Awake();
             weaponRenderer = GetComponentInChildren<MeshRenderer>();
             if (weaponRenderer != null)
             {
@@ -68,13 +70,17 @@ namespace Hunter.Characters
             DisableHitbox();
         }
 
-        protected override void Start ()
+        protected void Start ()
         {
-            base.Start();
             if (swingParticleSystem != null)
             {
                 swingParticleSystem.Stop();
             }
+        }
+
+        protected void OnEnable ()
+        {
+            ActivateMeleeEffect(Utility.ElementToElementOption(WeaponElement));
         }
 
         private void OnTriggerEnter (Collider target)
@@ -107,10 +113,12 @@ namespace Hunter.Characters
 
         private IEnumerator OpenAndCloseHitBox ()
         {
+            var frames = hitBoxFrames;
+            if (bigAttackEffect) { frames = finisherHitBoxFrames; }
             EnableHitbox();
-            for (var i = 0; i < hitBoxFrames; i++)
+            for (var i = 0; i < frames + 1; i++)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
             }
             DisableHitbox();
         }

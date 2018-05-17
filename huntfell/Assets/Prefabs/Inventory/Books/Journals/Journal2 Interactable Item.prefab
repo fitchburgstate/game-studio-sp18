@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33006073251979460}
   - component: {fileID: 23142591527461886}
   - component: {fileID: 95096942849431622}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Journal Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,8 @@ GameObject:
   - component: {fileID: 4271613562557398}
   - component: {fileID: 114276408772889202}
   - component: {fileID: 135655572334881934}
-  m_Layer: 0
+  - component: {fileID: 114222911211762238}
+  m_Layer: 18
   m_Name: Journal2 Interactable Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +57,7 @@ GameObject:
   - component: {fileID: 4308492023892130}
   - component: {fileID: 198394195452904510}
   - component: {fileID: 199841265604064910}
-  m_Layer: 13
+  m_Layer: 18
   m_Name: Shineparticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,6 +164,22 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114222911211762238
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1564193512737540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb3c3725357fb24cacb7fe69682527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugLine: 0
+  shaderToOverlay: {fileID: 4800000, guid: 2cb2c6e79493ade44861f7c6d4d16b4d, type: 3}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!114 &114276408772889202
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -174,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b8edfc6dfffcab44bf2ad588ff67ab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: 9808ae810e44aab41afd6bfd0564d33b, type: 2}
+  itemData: {fileID: 11400000, guid: 61946f6bb2d93f64187eeaa5180478d4, type: 2}
   itemBounceTime: 0.75
   itemTotalBounces: 3
   itemBounceHeight: 1.25
@@ -212,7 +229,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1564193512737540}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

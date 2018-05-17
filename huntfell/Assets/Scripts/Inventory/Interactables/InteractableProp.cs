@@ -72,7 +72,8 @@ namespace Hunter
             }
         }
 
-        public float TargetHealth {
+        public float TargetHealth
+        {
             get
             {
                 return 0;
@@ -83,31 +84,31 @@ namespace Hunter
             }
         }
 
-        public void Damage (int damage, bool isCritical, Weapon weaponAttackedWith)
+        public void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
         {
             FireInteraction(weaponAttackedWith.characterHoldingWeapon, weaponAttackedWith);
         }
 
-        public void Damage (int damage, bool isCritical, Element damageElement)
+        public void Damage(int damage, bool isCritical, Element damageElement)
         {
             // We dont want interactions to trigger when hit by non-weapon damage such as AOE effects
             return;
         }
 
-        public void Heal (int restore, bool isCritical)
+        public void Heal(int restore, bool isCritical)
         {
             // We dont want props to heal lol
             return;
         }
 
-        public void Kill ()
+        public void Kill()
         {
             //no murdering props pls
             return;
         }
 
         // What should the prop do when it is interacted with through the interact input
-        public void FireInteraction (Character characterFromInteraction)
+        public void FireInteraction(Character characterFromInteraction)
         {
             if (currentlyInteracting || characterFromInteraction.tag != "Player") { return; }
             //If there is an element required you have to hit it with your weapon
@@ -125,11 +126,11 @@ namespace Hunter
         }
 
         // What should the prop do when it is attacked, considering elemental types as well since elements are equipped to weapons
-        private void FireInteraction (Character characterWhoAttacked, Weapon weaponAttackedWith)
+        private void FireInteraction(Character characterWhoAttacked, Weapon weaponAttackedWith)
         {
             if (currentlyInteracting || characterWhoAttacked.tag != "Player") { return; }
 
-            Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
+            if (!string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent) && weaponAttackedWith != null) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
 
             var weaponElementOption = Utility.ElementToElementOption(weaponAttackedWith.WeaponElement);
             if (elementTypeForInteraction == ElementOption.None || weaponElementOption == elementTypeForInteraction)
@@ -143,7 +144,7 @@ namespace Hunter
                     case PropType.Destructible:
                         DestructProp(characterWhoAttacked.RotationTransform.forward);
                         //With destructible objects, on trigger exit doesnt get called when you swap out the prop for its destroyed counterpart so we have to manually remove it from the players nearby items list
-                        if(characterWhoAttacked is Player) { (characterWhoAttacked as Player).RemoveNearbyInteractable(this); }
+                        if (characterWhoAttacked is Player) { (characterWhoAttacked as Player).RemoveNearbyInteractable(this); }
                         break;
                     default:
                         ShakeProp();
@@ -156,12 +157,12 @@ namespace Hunter
             }
         }
 
-        private void ShakeProp ()
+        private void ShakeProp()
         {
             StartCoroutine(ShakeGameObject(0.25f, 0.2f));
         }
 
-        private IEnumerator ShakeGameObject (float duration, float magnitude)
+        private IEnumerator ShakeGameObject(float duration, float magnitude)
         {
             var elapsed = 0.0f;
             var originalObjectPos = gameObject.transform.localPosition;
@@ -172,7 +173,7 @@ namespace Hunter
 
                 var percentComplete = Mathf.Clamp01(elapsed / duration);
                 //var damper = 1.0f - Mathf.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
-                var damper = 0.5f -percentComplete;
+                var damper = 0.5f - percentComplete;
                 var x = (Random.value * 2.0f - 1.0f);
                 var y = (Random.value * 2.0f - 1.0f);
                 x *= magnitude * damper;
@@ -187,7 +188,7 @@ namespace Hunter
             currentlyInteracting = false;
         }
 
-        private void DestructProp (Vector3 forceDirection)
+        private void DestructProp(Vector3 forceDirection)
         {
             // Disable the regular prop and swap in the broken prefab
             // GetComponent<MeshRenderer>().enabled = false;
@@ -195,10 +196,11 @@ namespace Hunter
             gameObject.SetActive(false);
             var spawnedBrokenProp = Instantiate(brokenPropPrefab, transform.position, transform.rotation);
             SendBrokenPropFlying(spawnedBrokenProp, forceDirection);
+            Fabric.EventManager.Instance?.PostEvent("Breakable Object", gameObject);
         }
 
         // Everything to do with Prop Interaction as far as items and firing events on other gameObjects
-        private void ExecutePropInteractions (Character characterFromInteraction)
+        private void ExecutePropInteractions(Character characterFromInteraction)
         {
             if (giveItemsDirectly)
             {
@@ -219,7 +221,7 @@ namespace Hunter
             }
         }
 
-        private IEnumerator SpawnInteractableItems (Character characterFromInteraction)
+        private IEnumerator SpawnInteractableItems(Character characterFromInteraction)
         {
             foreach (var item in itemsToSpawn)
             {
@@ -242,33 +244,33 @@ namespace Hunter
             yield return null;
         }
 
-        private void GiveItemsDirectly (Character characterFromInteraction)
+        private void GiveItemsDirectly(Character characterFromInteraction)
         {
-            if(!(characterFromInteraction is Player)) { return; }
+            if (!(characterFromInteraction is Player)) { return; }
 
             foreach (var item in itemsToSpawn)
             {
-                (characterFromInteraction as Player).Inventory.TryAddItem(item);
+                (characterFromInteraction as Player).Inventory.TryAddItem(item, true);
             }
         }
 
         // Destructible Prop Pieces Handeling, this should probably be moves to a seperate component that is put on the broken prop prefab
-        private void SendBrokenPropFlying (GameObject brokenProp, Vector3 forceDirection)
+        private void SendBrokenPropFlying(GameObject brokenProp, Vector3 forceDirection)
         {
             var pieces = brokenProp.GetComponentsInChildren<Rigidbody>();
-            foreach(var piece in pieces)
+            foreach (var piece in pieces)
             {
                 piece.isKinematic = false;
                 piece.AddForce(forceDirection * destructionForce, ForceMode.VelocityChange);
             }
         }
 
-        private void ShowSuccessMessage ()
+        private void ShowSuccessMessage()
         {
             if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionSuccessMessage)) { HUDManager.instance.ShowHintPrompt(interactionSuccessMessage); }
         }
 
-        private void ShowFailMessage ()
+        private void ShowFailMessage()
         {
             if (HUDManager.instance != null && !string.IsNullOrEmpty(interactionFailMessage)) { HUDManager.instance.ShowHintPrompt(interactionFailMessage); }
         }

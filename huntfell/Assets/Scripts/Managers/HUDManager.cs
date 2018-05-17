@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Hunter.Characters;
 
-namespace Hunter {
-    public class HUDManager : MonoBehaviour {
+namespace Hunter
+{
+    public class HUDManager : MonoBehaviour
+    {
 
         [Serializable]
         public struct DecanterInfo
@@ -22,10 +25,13 @@ namespace Hunter {
         public CanvasGroup hudCanvasGroup;
 
         [Header("Health and Stamina")]
-        public Image healthBar;
-        public Image woundBar;
-        public Image staminaBar;
+        public Image playerHealthBar;
+        public Image playerWoundBar;
+        public Image playerStaminaBar;
         public List<DecanterInfo> decanters;
+        [Space]
+        public Image bossHealthBar;
+        public Image bossWoundBar;
 
         [Header("Weapons and Elements")]
         [SerializeField]
@@ -58,6 +64,7 @@ namespace Hunter {
 
         private CanvasGroup promptCanvasGroup;
         private CanvasGroup tutorialCanvasGroup;
+        private CanvasGroup bossHealthCanvasGroup;
 
         //private GameObject journalParent;
 
@@ -65,12 +72,6 @@ namespace Hunter {
         private IEnumerator tutorialFadeAction;
 
         private IEnumerator staminaBarAction;
-
-        private IEnumerator healthBarAction;
-        private float targetHealthBarFill;
-
-        private IEnumerator woundBarAction;
-        private float targetWoundBarFill;
 
         private IEnumerator elementWheelAction;
         private int currentElementWheelIndex = 0;
@@ -91,22 +92,22 @@ namespace Hunter {
                 Destroy(gameObject);
             }
 
-            if(promptText != null && promptIcon != null)
+            if (promptText != null && promptIcon != null)
             {
                 promptCanvasGroup = promptText.transform.parent.GetComponent<CanvasGroup>();
             }
-            if(tutorialText != null && tutorialIcon != null)
+            if (tutorialText != null && tutorialIcon != null)
             {
                 tutorialCanvasGroup = tutorialText.transform.parent.GetComponent<CanvasGroup>();
             }
-            if(hudCanvasGroup != null)
+            if (hudCanvasGroup != null)
             {
                 hudCanvasGroup.alpha = 0;
                 StartCoroutine(Utility.FadeCanvasGroup(hudCanvasGroup, fadeCurve, 1, FadeType.Out));
             }
-            if(elementSockets != null && elementSockets.Count > 0)
+            if (elementSockets != null && elementSockets.Count > 0)
             {
-                foreach(var socket in elementSockets)
+                foreach (var socket in elementSockets)
                 {
                     socket.enabled = false;
                 }
@@ -118,24 +119,16 @@ namespace Hunter {
                     socket.enabled = false;
                 }
             }
+            if (bossHealthBar != null)
+            {
+                bossHealthCanvasGroup = bossHealthBar.transform.parent.GetComponent<CanvasGroup>();
+                bossHealthCanvasGroup.alpha = 0;
+            }
+
+            FindObjectOfType<Player>()?.InitPlayerUI();
         }
 
-        //public void UpdateWeaponImage(Sprite newSprite)
-        //{
-        //    //inactiveWeapon.sprite = activeWeapon.sprite;
-        //    //activeWeapon.sprite = newSprite;
-        //}
-
-        //public void UpdateElementImage (Sprite newSprite)
-        //{
-        //    if(newSprite == null)
-        //    {
-        //        activeElement.sprite = nullElementSprite;
-        //        return;
-        //    }
-        //    activeElement.sprite = newSprite;
-        //}
-
+        #region Weapon Wheel
         public void AddNewElementToSocket (Sprite elementIcon)
         {
             if (elementSockets != null && elementSockets.Count > 0)
@@ -168,10 +161,10 @@ namespace Hunter {
             }
         }
 
-        public void DimElementSockets(List<int> indexList)
+        public void DimElementSockets (List<int> indexList)
         {
             //Start at one to not include null element since all weapons can equip it
-            for (int i = 1; i < elementSockets.Count; i++)
+            for (var i = 1; i < elementSockets.Count; i++)
             {
                 if (indexList.Contains(i))
                 {
@@ -184,10 +177,10 @@ namespace Hunter {
             }
         }
 
-        public void MoveElementWheel(int elementIndex)
+        public void MoveElementWheel (int elementIndex)
         {
             targetElementWheelIndex = elementIndex;
-            if(elementWheelAction != null) { return; }
+            if (elementWheelAction != null) { return; }
 
             elementWheelAction = ElementWheelAnimation();
             StartCoroutine(elementWheelAction);
@@ -198,13 +191,13 @@ namespace Hunter {
             DisableElementSocketHighlight(currentElementWheelIndex);
 
             //This gets the total amount of element slots with respect to index notation and then converts it to a 'divide by zero' safe fraction
-            float eMod = 1.0f / (elementSockets.Count - 1.0f);
+            var eMod = 1.0f / (elementSockets.Count - 1.0f);
 
             // Converts the index values to blend tree percentage values
-            float targetWheelAmount = targetElementWheelIndex * eMod;
-            float currentWheelAmount = currentElementWheelIndex * eMod;
+            var targetWheelAmount = targetElementWheelIndex * eMod;
+            var currentWheelAmount = currentElementWheelIndex * eMod;
 
-            while(targetWheelAmount != currentWheelAmount)
+            while (targetWheelAmount != currentWheelAmount)
             {
                 var step = Time.deltaTime * wheelSpeed;
                 targetWheelAmount = targetElementWheelIndex * eMod;
@@ -213,7 +206,7 @@ namespace Hunter {
                 {
                     currentWheelAmount = Mathf.Clamp(currentWheelAmount + step, 0, targetWheelAmount);
                 }
-                else if(currentWheelAmount > targetWheelAmount)
+                else if (currentWheelAmount > targetWheelAmount)
                 {
                     currentWheelAmount = Mathf.Clamp(currentWheelAmount - step, targetWheelAmount, 1);
                 }
@@ -240,11 +233,11 @@ namespace Hunter {
         {
 
             //This gets the total amount of weapon slots with respect to index notation and then converts it to a 'divide by zero' safe fraction
-            float wMod = 1.0f / (weaponSockets.Count - 1.0f);
+            var wMod = 1.0f / (weaponSockets.Count - 1.0f);
 
             // Converts the index values to blend tree percentage values
-            float targetWheelAmount = targetWeaponWheelIndex * wMod;
-            float currentWheelAmount = currentWeaponWheelIndex * wMod;
+            var targetWheelAmount = targetWeaponWheelIndex * wMod;
+            var currentWheelAmount = currentWeaponWheelIndex * wMod;
 
             while (targetWheelAmount != currentWheelAmount)
             {
@@ -268,17 +261,19 @@ namespace Hunter {
             weaponWheelAction = null;
         }
 
-        public void EnableElementSocketHighlight(int index)
+        public void EnableElementSocketHighlight (int index)
         {
             elementSockets[index].transform.GetChild(0).gameObject.SetActive(true);
         }
 
-        public void DisableElementSocketHighlight(int index)
+        public void DisableElementSocketHighlight (int index)
         {
             elementSockets[index].transform.GetChild(0).gameObject.SetActive(false);
         }
+        #endregion
 
-        public void ShowItemPickupPrompt(string itemName, Sprite itemIcon)
+        #region Prompts
+        public void ShowItemPickupPrompt (string itemName, Sprite itemIcon)
         {
             if (promptText == null || promptIcon == null)
             {
@@ -286,7 +281,7 @@ namespace Hunter {
                 return;
             }
 
-            promptText.text = "Obtained the " + itemName;
+            promptText.text = $"Obtained <i>{itemName}</i>";
             promptIcon.sprite = itemIcon;
 
             if (promptFadeAction != null)
@@ -308,7 +303,7 @@ namespace Hunter {
             promptText.text = text;
             promptIcon.sprite = hintSprite;
 
-            if(promptFadeAction != null)
+            if (promptFadeAction != null)
             {
                 StopCoroutine(promptFadeAction);
             }
@@ -318,7 +313,8 @@ namespace Hunter {
 
         public void ShowTutorialPrompt (string text, Sprite controlIcon)
         {
-            if(tutorialText == null || tutorialIcon == null) {
+            if (tutorialText == null || tutorialIcon == null)
+            {
                 Debug.LogWarning("Could not show the tutorial prompt because the elements haven't been set in the inspector.", gameObject);
                 return;
             }
@@ -334,7 +330,7 @@ namespace Hunter {
             StartCoroutine(tutorialFadeAction);
         }
 
-        private IEnumerator FadePromptInAndOut(CanvasGroup canvasGroup, float fadeDuration, float stayDuration)
+        private IEnumerator FadePromptInAndOut (CanvasGroup canvasGroup, float fadeDuration, float stayDuration)
         {
             canvasGroup.gameObject.SetActive(true);
             yield return Utility.FadeCanvasGroup(canvasGroup, fadeCurve, fadeDuration, FadeType.Out);
@@ -342,152 +338,28 @@ namespace Hunter {
             yield return Utility.FadeCanvasGroup(canvasGroup, fadeCurve, fadeDuration, FadeType.In);
             canvasGroup.gameObject.SetActive(false);
         }
+        #endregion
 
-        /// <summary>
-        /// Smoothly moves the red health bar up or down based on a speed value for consistency with different amounts of damage being dealt
-        /// </summary>
-        /// <param name="targetFill"></param>
-        /// <param name="fillSpeed"></param>
-        public void SetTargetHealthBar(float targetFill, float fillSpeed)
-        {
-            targetHealthBarFill = targetFill;
-            if(healthBarAction != null)
-            {
-                return;
-            }
-            healthBarAction = SmoothHealthBarFill(fillSpeed);
-            StartCoroutine(healthBarAction);
-        }
-
+        #region Player Health
         /// <summary>
         /// Stops any other health bar actions and instantly moves the health bar to the targetFill
         /// </summary>
         /// <param name="targetFill"></param>
-        public void SetTargetHealthBar (float targetFill)
+        public void SetPlayerTargetHealthBar (float targetFill)
         {
-            if (healthBarAction != null)
-            {
-                StopCoroutine(healthBarAction);
-                healthBarAction = null;
-            }
-            targetHealthBarFill = targetFill;
-            healthBar.fillAmount = targetHealthBarFill;
-        }
-
-        /// <summary>
-        /// Smoothly moves the orange health bar up or down based on a speed value for consistency with different amounts of damage being dealt
-        /// </summary>
-        /// <param name="targetFill"></param>
-        /// <param name="fillSpeed"></param>
-        public void SetCurrentHealthBar(float targetFill, float fillSpeed)
-        {
-            targetWoundBarFill = targetFill;
-            if(woundBarAction != null)
-            {
-                return;
-            }
-            //Want to make sure everytime we restart the woundbar that it is exactly where the health bar was before it got lowered to represent the target health, since wound bar represents actual health
-            woundBar.fillAmount = healthBar.fillAmount;
-            woundBarAction = SmoothWoundBarFill(fillSpeed);
-            StartCoroutine(woundBarAction);
+            playerHealthBar.fillAmount = targetFill;
         }
 
         /// <summary>
         /// Stops any other wound bar actions and instantly moves the wound bar to the targetFill
         /// </summary>
         /// <param name="targetFill"></param>
-        public void SetCurrentHealthBar (float targetFill)
+        public void SetPlayerCurrentHealthBar (float targetFill)
         {
-            if (woundBarAction != null)
-            {
-                StopCoroutine(woundBarAction);
-                woundBarAction = null;
-            }
-            targetWoundBarFill = targetFill;
-            woundBar.fillAmount = targetWoundBarFill;
+            playerWoundBar.fillAmount = targetFill;
         }
 
-        /// <summary>
-        /// Smoothly moves the yellow stamina bar up or down based on a totalTime value for how long the fill should take
-        /// </summary>
-        /// <param name="targetFill"></param>
-        /// <param name="totalTime"></param>
-        public void SetStaminaBar(float targetFill, float totalTime)
-        {
-            if(staminaBarAction != null)
-            {
-                StopCoroutine(staminaBarAction);
-            }
-            staminaBarAction = SmoothStaminaBarFill(targetFill, totalTime);
-            StartCoroutine(staminaBarAction);
-        }
-
-        private IEnumerator SmoothHealthBarFill(float fillSpeed)
-        {
-            fillSpeed = Mathf.Abs(fillSpeed);
-
-            while(healthBar.fillAmount != targetHealthBarFill)
-            {
-                var step = Time.deltaTime * fillSpeed;
-                if (healthBar.fillAmount < targetHealthBarFill)
-                {
-                    healthBar.fillAmount = Mathf.Clamp(healthBar.fillAmount + step, healthBar.fillAmount, targetHealthBarFill);
-                }
-                else
-                {
-                    healthBar.fillAmount = Mathf.Clamp(healthBar.fillAmount - step, targetHealthBarFill, healthBar.fillAmount);
-                }
-                yield return null;
-            }
-
-            healthBarAction = null;
-        }
-
-        private IEnumerator SmoothWoundBarFill (float fillSpeed)
-        {
-            fillSpeed = Mathf.Abs(fillSpeed);
-
-            while(woundBar.fillAmount != targetWoundBarFill && woundBar.fillAmount > healthBar.fillAmount)
-            {
-                var step = Time.deltaTime * fillSpeed;
-                if(woundBar.fillAmount < targetWoundBarFill)
-                {
-                    woundBar.fillAmount = Mathf.Clamp(woundBar.fillAmount + step, woundBar.fillAmount, targetWoundBarFill);
-                }
-                else
-                {
-                    woundBar.fillAmount = Mathf.Clamp(woundBar.fillAmount - step, targetWoundBarFill, woundBar.fillAmount);
-                }
-                yield return null;
-            }
-
-            woundBarAction = null;
-        }
-
-        private IEnumerator SmoothStaminaBarFill(float targetFill, float totalTime)
-        {
-            if (totalTime <= 0)
-            {
-                staminaBar.fillAmount = targetFill;
-            }
-            else
-            {
-                var startFill = staminaBar.fillAmount;
-                var startTime = Time.time;
-                var percentComplete = 0f;
-                while (percentComplete < 1)
-                {
-                    var elapsedTime = Time.time - startTime;
-                    percentComplete = Mathf.Clamp01(elapsedTime / totalTime);
-                    staminaBar.fillAmount = Mathf.Lerp(startFill, targetFill, percentComplete);
-                    yield return null;
-                }
-            }
-
-            staminaBarAction = null;
-        }
-
-        public void EnableDecanter(int decanterIndex)
+        public void EnableDecanter (int decanterIndex)
         {
             if (decanterIndex >= decanters.Count)
             {
@@ -499,7 +371,7 @@ namespace Hunter {
 
         public void SetDecanterInfo (int decanterIndex, int currentShards, int maxShards)
         {
-            if(decanterIndex >= decanters.Count)
+            if (decanterIndex >= decanters.Count)
             {
                 Debug.LogWarning($"You tried to edit a decanter at index {decanterIndex} but there are only {decanters.Count} assigned in the inspector.");
                 return;
@@ -510,7 +382,7 @@ namespace Hunter {
             decanter.fillImage.fillAmount = targetFill;
             decanter.shardsText.text = $"{adjustedCurrentShards}/{maxShards}";
 
-            if(targetFill == 1)
+            if (targetFill == 1)
             {
                 decanter.shardsText.gameObject.SetActive(false);
                 decanter.inputImage.gameObject.SetActive(true);
@@ -521,5 +393,71 @@ namespace Hunter {
                 decanter.shardsText.gameObject.SetActive(true);
             }
         }
+        #endregion
+
+        #region Boss Health
+        public void FadeBossHealth (FadeType fadeType)
+        {
+            StartCoroutine(Utility.FadeCanvasGroup(bossHealthCanvasGroup, fadeCurve, 1, fadeType));
+        }
+
+        /// <summary>
+        /// Stops any other health bar actions and instantly moves the health bar to the targetFill
+        /// </summary>
+        /// <param name="targetFill"></param>
+        public void SetBossTargetHealthBar (float targetFill)
+        {
+            bossHealthBar.fillAmount = targetFill;
+        }
+
+        /// <summary>
+        /// Stops any other wound bar actions and instantly moves the wound bar to the targetFill
+        /// </summary>
+        /// <param name="targetFill"></param>
+        public void SetBossCurrentHealthBar (float targetFill)
+        {
+            bossWoundBar.fillAmount = targetFill;
+        }
+        #endregion
+
+        #region Player Stamina
+        /// <summary>
+        /// Smoothly moves the yellow stamina bar up or down based on a totalTime value for how long the fill should take
+        /// </summary>
+        /// <param name="targetFill"></param>
+        /// <param name="totalTime"></param>
+        public void SetStaminaBar (float targetFill, float totalTime)
+        {
+            if (staminaBarAction != null)
+            {
+                StopCoroutine(staminaBarAction);
+            }
+            staminaBarAction = PlayerSmoothStaminaBarFill(targetFill, totalTime);
+            StartCoroutine(staminaBarAction);
+        }
+
+        private IEnumerator PlayerSmoothStaminaBarFill (float targetFill, float totalTime)
+        {
+            if (totalTime <= 0)
+            {
+                playerStaminaBar.fillAmount = targetFill;
+            }
+            else
+            {
+                var startFill = playerStaminaBar.fillAmount;
+                var startTime = Time.time;
+                var percentComplete = 0f;
+                while (percentComplete < 1)
+                {
+                    var elapsedTime = Time.time - startTime;
+                    percentComplete = Mathf.Clamp01(elapsedTime / totalTime);
+                    playerStaminaBar.fillAmount = Mathf.Lerp(startFill, targetFill, percentComplete);
+                    yield return null;
+                }
+            }
+
+            staminaBarAction = null;
+        }
+        #endregion
     }
 }

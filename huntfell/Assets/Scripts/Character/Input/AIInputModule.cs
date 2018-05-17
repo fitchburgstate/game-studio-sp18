@@ -155,11 +155,11 @@ namespace Hunter.Characters.AI
 
             var currentState = FindNextState(distanceToTarget, distanceToPoint, distanceToSpawn);
 
-            #region Debug Logs
+           #region Debug Logs
 #if UNITY_EDITOR
             if (Selection.Contains(this.gameObject))
             {
-                Debug.Log(currentState);
+                //Debug.Log(currentState);
                 //Debug.Log("enemyInVisionCone: " + enemyInVisionCone);
             }
 #endif
@@ -224,11 +224,11 @@ namespace Hunter.Characters.AI
             if (Selection.Contains(this.gameObject))
             {
                 //Debug.Log("Attack Value: " + attackValue);
-                Debug.Log("Idle Value: " + idleValue);
+                //Debug.Log("Idle Value: " + idleValue);
                 //Debug.Log("Wander Value: " + wanderValue);
                 //Debug.Log("Turn Value: " + turnValue);
                 //Debug.Log("MoveTo Value: " + moveToValue);
-                Debug.Log("Retreat Value: " + retreatValue);
+                //Debug.Log("Retreat Value: " + retreatValue);
             }
 #endif
             #endregion

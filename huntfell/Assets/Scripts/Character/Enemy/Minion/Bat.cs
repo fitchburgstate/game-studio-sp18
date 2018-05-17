@@ -11,7 +11,6 @@ namespace Hunter.Characters
         protected override void Start()
         {
             base.Start();
-            Fabric.EventManager.Instance?.PostEvent("Bat Start Wing Loop", gameObject);
             agent.updateRotation = false;
         }
         #endregion
@@ -20,7 +19,7 @@ namespace Hunter.Characters
         public void Move(Vector3 target, float finalSpeed)
         {
             if (IsDying) { return; }
-            var finalTarget = new Vector3(target.x, RotationTransform.localPosition.y, target.z);
+            var finalTarget = new Vector3(target.x, target.y, target.z);
 
             MoveToCalculations(turnSpeed, finalSpeed, finalTarget);
         }
@@ -36,10 +35,9 @@ namespace Hunter.Characters
         #endregion
 
         #region Bat Combat
-        protected override IEnumerator KillCharacter ()
+        protected override IEnumerator KillCharacter()
         {
             anim.SetTrigger("death");
-            Fabric.EventManager.Instance?.PostEvent("Bat Stop Wing Loop", gameObject);
             GetComponentInChildren<Aura>()?.DisableAura();
             yield return base.KillCharacter();
         }

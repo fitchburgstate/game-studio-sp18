@@ -113,7 +113,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 0d7e5c73b700ba34399fc8e3b6857a74, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!1 &78660903
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,7 +413,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 125, y: 50}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1042279567
 MonoBehaviour:
@@ -435,7 +435,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: alpha 0.7.1
+  m_text: 'Version 1.01
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aeb787ce7ed3eda47bb4534a82639e3c, type: 2}
   m_sharedMaterial: {fileID: 21317416483095208, guid: aeb787ce7ed3eda47bb4534a82639e3c,
@@ -503,10 +505,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1042279567}
-    characterCount: 11
+    characterCount: 13
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 4
+    spaceCount: 2
+    wordCount: 3
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -644,7 +646,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 125, y: -100}
-  m_SizeDelta: {x: 800, y: 250}
+  m_SizeDelta: {x: 700, y: 375}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1809592751
 MonoBehaviour:

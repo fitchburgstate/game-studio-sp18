@@ -6,6 +6,14 @@ using UnityEngine.AI;
 
 namespace Hunter.Characters
 {
+    public enum EnemyType
+    {
+        Wolf,
+        Bat,
+        Gargoyle,
+        Thomas
+    }
+
     public abstract class Enemy : Character
     {
         #region Variables
@@ -43,6 +51,8 @@ namespace Hunter.Characters
         /// An instance of the AIInputModule component attached to the enemy.
         /// </summary>
         private AIInputModule aiInputModuleInstance;
+
+        private Player playerScript;
         #endregion
 
         #region Properties
@@ -52,6 +62,15 @@ namespace Hunter.Characters
             {
                 if (aiInputModuleInstance == null) { aiInputModuleInstance = GetComponent<AIInputModule>(); }
                 return aiInputModuleInstance;
+            }
+        }
+
+        public Player PlayerScript
+        {
+            get
+            {
+                if (playerScript == null) { playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); }
+                return playerScript;
             }
         }
         #endregion
@@ -67,7 +86,6 @@ namespace Hunter.Characters
         #region Combat Related Functions
         protected override IEnumerator SubtractHealthFromCharacter(int damage, bool isCritical)
         {
-            Fabric.EventManager.Instance?.PostEvent("Player Sword Hit", gameObject);
             yield return base.SubtractHealthFromCharacter(damage, isCritical);
             StartCoroutine(InvincibilityFrames());
         }
@@ -88,6 +106,29 @@ namespace Hunter.Characters
             characterController.enabled = false;
             yield return SpawnInteractableItems();
             yield return base.KillCharacter();
+        }
+
+        public override void Damage(int damage, bool isCritical, Weapon weaponAttackedWith)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, weaponAttackedWith);
+            if (weaponAttackedWith != null && !string.IsNullOrWhiteSpace(weaponAttackedWith.weaponHitSoundEvent)) { Fabric.EventManager.Instance?.PostEvent(weaponAttackedWith.weaponHitSoundEvent, gameObject); }
+
+            //if (isCritical)
+            //{
+            //    GameManager.instance?.DeviceManager.SetRumble(1);
+            //}
+            //else
+            //{
+            //    GameManager.instance?.DeviceManager.SetRumble(0.25f);
+            //}
+        }
+
+        public override void Damage(int damage, bool isCritical, Element damageElement)
+        {
+            if (invincible || IsDying) { return; }
+            base.Damage(damage, isCritical, damageElement);
+            if (damageElement != null && !string.IsNullOrWhiteSpace(damageElement.elementSoundEventName)) { Fabric.EventManager.Instance?.PostEvent(damageElement.elementSoundEventName, gameObject); }
         }
         #endregion
 
@@ -125,13 +166,13 @@ namespace Hunter.Characters
                     }
                     else
                     {
-                        Debug.LogWarning("The path is partially invalid.", gameObject);
+                        //Debug.LogWarning("The path is partially invalid.", gameObject);
                     }
                     return;
                 }
                 else if (navMeshPath.status == NavMeshPathStatus.PathInvalid)
                 {
-                    Debug.LogWarning("The path was invalid.", gameObject);
+                    //Debug.LogWarning("The path was invalid.", gameObject);
 
                     if (AIInputModuleInstance != null)
                     {
@@ -149,7 +190,7 @@ namespace Hunter.Characters
             }
             else
             {
-                Debug.LogError("The navmeshpath is null.", gameObject);
+                //Debug.LogError("The navmeshpath is null.", gameObject);
             }
         }
         #endregion

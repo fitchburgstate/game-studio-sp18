@@ -21,6 +21,8 @@ namespace Hunter
         public bool PressedJournal { get; private set; }
         public bool PressedPageLeft { get; private set; }
         public bool PressedPageRight { get; private set; }
+        public bool PressedTabLeft { get; private set; }
+        public bool PressedTabRight { get; private set; }
 
         public bool PressedElementUp { get; private set; }
         public bool PressedElementDown { get; private set; }
@@ -37,8 +39,34 @@ namespace Hunter
         public bool overrideLayout;
         public ControlsLayout inspectorLayout;
 
-        public bool uiInputEnabled = true;
-        public bool gameInputEnabled = true;
+        private bool pauseInputEnabled = false;
+        private bool gameInputEnabled = false;
+
+        public bool PauseInputEnabled
+        {
+            get
+            {
+                return pauseInputEnabled;
+            }
+
+            set
+            {
+                pauseInputEnabled = value;
+            }
+        }
+
+        public bool GameInputEnabled
+        {
+            get
+            {
+                return gameInputEnabled;
+            }
+
+            set
+            {
+                gameInputEnabled = value;
+            }
+        }
 
         #endregion
 
@@ -64,6 +92,18 @@ namespace Hunter
                     break;
                 }
             }
+        }
+
+        public void SetRumble(float intensity)
+        {
+            StartCoroutine(DoRumble(intensity));
+        }
+
+        private IEnumerator DoRumble (float intensity)
+        {
+            currentDevice.Vibrate(intensity);
+            yield return new WaitForSeconds(1);
+            currentDevice.StopVibration();
         }
 
         private void NewDeviceAttatched (InputDevice device)
@@ -106,23 +146,31 @@ namespace Hunter
 
         private void Update ()
         {
-            //UI Inputs
-            if (uiInputEnabled)
+            //Inputs used for UI outside of Pause Menu
+            PressedConfirm = controls.Pause.ConfirmButton.WasPressed;
+            PressedCancel = controls.Pause.CancelButton.WasPressed;
+
+            //Inputs Unique to Pause Menu
+            if (PauseInputEnabled)
             {
-                PressedMenu = controls.UI.MenuButton.WasPressed;
-                PressedJournal = controls.UI.JournalsButton.WasPressed;
+                PressedMenu = controls.Pause.MenuButton.WasPressed;
+                PressedJournal = controls.Pause.JournalsButton.WasPressed;
 
-                PressedConfirm = controls.UI.ConfirmButton.WasPressed;
-                PressedCancel = controls.UI.CancelButton.WasPressed;
+                PressedPageLeft = controls.Pause.PagesAxis.WasPressed && controls.Pause.PagesAxis.Value < 0;
+                PressedPageRight = controls.Pause.PagesAxis.WasPressed && controls.Pause.PagesAxis.Value > 0;
 
-                PressedPageLeft = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value < 0;
-                PressedPageRight = controls.UI.PagesAxis.WasPressed && controls.UI.PagesAxis.Value > 0;
+                PressedTabLeft = controls.Pause.TabsAxis.WasPressed && controls.Pause.TabsAxis.Value < 0;
+                PressedTabRight = controls.Pause.TabsAxis.WasPressed && controls.Pause.TabsAxis.Value > 0;
             }
 
-            //Game Inputs
-            if (gameInputEnabled)
+            //Inputs used to control game actions
+            if (GameInputEnabled)
             {
-                Move = controls.Game.MoveAxes.Value;
+                //Doing this so if your joystick gets caught at a close to but non-zero value, the character doesnt creep forward which prevents you from attacking
+                var tempMove = controls.Game.MoveAxes.Value;
+                if(Mathf.Abs(tempMove.x) < 0.1f) { tempMove.x = 0; }
+                if(Mathf.Abs(tempMove.y) < 0.1f) { tempMove.y = 0; }
+                Move = tempMove;
                 Look = controls.Game.LookAxes.Value;
 
                 PressedElementDown = controls.Game.ElementsAxis.WasPressed && controls.Game.ElementsAxis.Value < 0;
@@ -138,6 +186,9 @@ namespace Hunter
                 PressedDash = controls.Game.DashButton.WasPressed;
                 PressedInteract = controls.Game.InteractButton.WasPressed;
                 PressedPotion = controls.Game.PotionButton.WasPressed;
+
+                PressedMenu = controls.Pause.MenuButton.WasPressed;
+                PressedJournal = controls.Pause.JournalsButton.WasPressed;
             }
         }
     }

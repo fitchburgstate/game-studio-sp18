@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace Hunter.Characters.AI
@@ -99,7 +101,7 @@ namespace Hunter.Characters.AI
         #endregion
 
         #region Unity Functions
-        protected override void Start()
+        protected override void Start ()
         {
             urgeWeights = ScriptableObject.CreateInstance<UrgeWeights>();
             enemy = GetComponent<Enemy>();
@@ -115,7 +117,7 @@ namespace Hunter.Characters.AI
             #endregion
         }
 
-        protected override void FixedUpdate()
+        protected override void FixedUpdate ()
         {
             if (!inCombat)
             {
@@ -194,7 +196,7 @@ namespace Hunter.Characters.AI
         /// <summary>
         /// Finds the next most desired state by determining multiple factors present within the environment.
         /// </summary>
-        public override UtilityBasedAI FindNextState(float distanceToTarget, float distanceToPoint, float distanceToSpawn)
+        public override UtilityBasedAI FindNextState (float distanceToTarget, float distanceToPoint, float distanceToSpawn)
         {
             var attackValue = 0f;
             var idleValue = 0f;
@@ -229,15 +231,15 @@ namespace Hunter.Characters.AI
 
             var largestValue = new Dictionary<UtilityBasedAI, float>
             {
-                { attackAction, attackValue },
                 { idleAction, idleValue },
+                { attackAction, attackValue },
                 { wanderAction, wanderValue },
                 { turnAction, turnValue },
                 { moveToAction, moveToValue },
                 { lungeAction, lungeValue },
                 { retreatAction, retreatValue }
             };
-            var max = largestValue.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
+            var max = largestValue.Aggregate((l, r) => l.Value >= r.Value ? l : r).Key;
 
             return max;
         }

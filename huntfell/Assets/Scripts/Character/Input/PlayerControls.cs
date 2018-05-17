@@ -18,7 +18,7 @@ namespace Hunter {
         public const ControlsLayout DEFAULT_LAYOUT = ControlsLayout.Keyboard_and_Mouse;
         public const ControlsLayout DEFAULT_CONTROLLER_LAYOUT = ControlsLayout.Controller_Face;
 
-        public UIInput UI { get; private set; }
+        public PauseInput Pause { get; private set; }
         public GameInput Game { get; private set; }
         #endregion
 
@@ -28,7 +28,7 @@ namespace Hunter {
             public abstract void SetDevice (InputDevice device);
         }
 
-        public class UIInput : InputActions
+        public class PauseInput : InputActions
         {
             public PlayerAction ConfirmButton { get; private set; }
             public PlayerAction CancelButton { get; private set; }
@@ -40,7 +40,12 @@ namespace Hunter {
 
             public PlayerOneAxisAction PagesAxis { get; private set; }
 
-            public UIInput ()
+            private PlayerAction cycleTab_Negative;
+            private PlayerAction cycleTab_Positive;
+
+            public PlayerOneAxisAction TabsAxis { get; private set; }
+
+            public PauseInput ()
             {
                 ConfirmButton = CreatePlayerAction("Confirm");
                 CancelButton = CreatePlayerAction("Cancel");
@@ -51,6 +56,11 @@ namespace Hunter {
                 cyclePage_Positive = CreatePlayerAction("Page Right");
 
                 PagesAxis = CreateOneAxisPlayerAction(cyclePage_Negative, cyclePage_Positive);
+
+                cycleTab_Negative = CreatePlayerAction("Tab Left");
+                cycleTab_Positive = CreatePlayerAction("Tab Right");
+
+                TabsAxis = CreateOneAxisPlayerAction(cycleTab_Negative, cycleTab_Positive);
             }
 
             public override void SetBindings (ControlsLayout layout)
@@ -65,12 +75,20 @@ namespace Hunter {
                     // This is in controller bindings anyways just for debugging and shit
                     MenuButton.AddDefaultBinding(Key.Escape);
                     MenuButton.AddDefaultBinding(InputControlType.Start);
+                    MenuButton.AddDefaultBinding(InputControlType.Menu);
+                    MenuButton.AddDefaultBinding(InputControlType.Options);
 
                     JournalsButton.AddDefaultBinding(InputControlType.Select);
+                    JournalsButton.AddDefaultBinding(InputControlType.Back);
+                    JournalsButton.AddDefaultBinding(InputControlType.View);
 
-                    cyclePage_Negative.AddDefaultBinding(InputControlType.LeftBumper);
+                    cyclePage_Negative.AddDefaultBinding(InputControlType.LeftStickLeft);
 
-                    cyclePage_Positive.AddDefaultBinding(InputControlType.RightBumper);
+                    cyclePage_Positive.AddDefaultBinding(InputControlType.LeftStickRight);
+
+                    cycleTab_Negative.AddDefaultBinding(InputControlType.LeftBumper);
+
+                    cycleTab_Positive.AddDefaultBinding(InputControlType.RightBumper);
                 }
                 else if (layout == ControlsLayout.Keyboard_and_Mouse)
                 {
@@ -86,6 +104,10 @@ namespace Hunter {
                     cyclePage_Negative.AddDefaultBinding(Key.A);
 
                     cyclePage_Positive.AddDefaultBinding(Key.D);
+
+                    cycleTab_Negative.AddDefaultBinding(Key.LeftControl);
+
+                    cycleTab_Positive.AddDefaultBinding(Key.LeftShift);
                 }
                 else
                 {
@@ -238,14 +260,13 @@ namespace Hunter {
                     lookAxis_PositiveY.AddDefaultBinding(Mouse.PositiveY);
 
                     // Weapon Management Bindings
-                    cycleElement_Positive.AddDefaultBinding(Key.LeftShift);
                     cycleElement_Negative.AddDefaultBinding(Key.LeftControl);
+                    cycleElement_Positive.AddDefaultBinding(Key.LeftShift);
 
-                    cycleWeapon_Positive.AddDefaultBinding(Mouse.PositiveScrollWheel);
                     cycleWeapon_Negative.AddDefaultBinding(Mouse.NegativeScrollWheel);
-
-                    WeaponTypeMeleeButton.AddDefaultBinding(Key.Key1);
-                    WeaponTypeRangedButton.AddDefaultBinding(Key.Key2);
+                    cycleWeapon_Positive.AddDefaultBinding(Mouse.PositiveScrollWheel);
+                    cycleWeapon_Negative.AddDefaultBinding(Key.Key1);
+                    cycleWeapon_Positive.AddDefaultBinding(Key.Key2);
 
                     // Main Bindings
                     AttackButton.AddDefaultBinding(Mouse.LeftButton);
@@ -282,9 +303,9 @@ namespace Hunter {
         private void RefreshBindings ()
         {
             //Debug.Log("Erasing current bindings...");
-            UI?.Destroy();
+            Pause?.Destroy();
             Game?.Destroy();
-            UI = new UIInput();
+            Pause = new PauseInput();
             Game = new GameInput();
         }
 
@@ -292,7 +313,7 @@ namespace Hunter {
         {
             RefreshBindings();
             //Debug.Log("Setting the bindings to use the layout " + layout);
-            UI?.SetBindings(layout);
+            Pause?.SetBindings(layout);
             Game?.SetBindings(layout);
         }
 
@@ -300,7 +321,7 @@ namespace Hunter {
         {
             if(device != null) { /*Debug.Log("Attaching new device: " + device.Name);*/ }
             else { Debug.LogWarning("No valid devices were detected, falling back to Active Input."); }
-            UI?.SetDevice(device);
+            Pause?.SetDevice(device);
             Game?.SetDevice(device);
         }
     }

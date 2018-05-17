@@ -309,25 +309,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inspectorElementType: 0
   baseDamage: 10
-  critPercent: 10
-  attackSpeed: 1.25
-  recoverySpeed: 0.5
+  critPercent: 5
+  attackSpeed: 1.2
+  finisherAttackSpeed: 1.5
+  recoverySpeed: 0.25
+  finisherCooldown: 0.75
+  finishingMove: 0
+  bigAttackEffect: 0
+  weaponEquipSoundEvent: 
+  weaponHitSoundEvent: 
+  optionalSecondaryHitSoundEvent: 
   characterHoldingWeapon: {fileID: 0}
   hitBoxFrames: 10
-  swingParticleSystem: {fileID: 198003281727481110}
+  finisherHitBoxFrames: 10
+  swingParticleSystem: {fileID: 0}
   equipEffects:
   - elementEffect: 1
     equipMaterials: []
-    equipParticleSystem: {fileID: 198567242927320792}
+    equipParticleSystem: {fileID: 0}
   - elementEffect: 2
     equipMaterials: []
-    equipParticleSystem: {fileID: 198353032100638956}
+    equipParticleSystem: {fileID: 0}
   - elementEffect: 3
     equipMaterials: []
-    equipParticleSystem: {fileID: 198066191142626696}
+    equipParticleSystem: {fileID: 0}
   - elementEffect: 4
     equipMaterials: []
-    equipParticleSystem: {fileID: 198586023901701314}
+    equipParticleSystem: {fileID: 0}
 --- !u!198 &198003281727481110
 ParticleSystem:
   m_ObjectHideFlags: 1
