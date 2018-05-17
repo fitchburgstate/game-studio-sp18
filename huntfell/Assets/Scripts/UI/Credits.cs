@@ -24,6 +24,13 @@ namespace Hunter {
 
             var fadeCanvas = GameObject.Find(GameManager.CANVASNAME);
             if(fadeCanvas != null) { Destroy(fadeCanvas); }
+
+            var audio = GameObject.Find("Audio");
+            if(audio != null)
+            {
+                Destroy(audio);
+            }
+            SceneManager.LoadScene("Audio", LoadSceneMode.Additive);
         }
 
         private void Update ()
@@ -31,6 +38,7 @@ namespace Hunter {
             if (inputEnabled && (deviceManager.PressedConfirm || deviceManager.PressedCancel))
             {
                 inputEnabled = false;
+                closeCanvasGroup.alpha = 0;
                 SceneManager.LoadScene(0);
             }
         }
