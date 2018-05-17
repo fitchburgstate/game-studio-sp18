@@ -6,7 +6,7 @@ HuntFell is an isometric action-adventure about slaying your way through an aban
 
 As a novice monster hunter you’ll explore the manor, fight monsters, read journal entries left behind by the manor’s former inhabitants, and equip special elemental modifiers to your weapons that will aid you in solving puzzles in the environment and fighting special enemies. The story will be revealed, and you’ll have to reckon with its fatal consequences in a climactic encounter.
 
-HuntFell is available for download at [stoppedlock.itch.io/huntfell]. Feel free to leave a comment there, we'd love to hear your feedback! :)
+HuntFell is available for download on [Itch.io](stoppedlock.itch.io/huntfell). Feel free to leave a comment there, we'd love to hear your feedback! :)
 
 ### Controls
 
@@ -34,44 +34,62 @@ HuntFell is available for download at [stoppedlock.itch.io/huntfell]. Feel free 
 
 ### Credits
 
-Stopped Clock Studios is the Fitchburg State University Game Studio class for Spring 2018 in collaboration with musicians from the Berklee College of Music in Boston, MA. We plan on releasing two games, HuntFell and Pizza Time, in May 2018, before we all graduate.
+**Stopped Clock Studios** is the Fitchburg State University Game Studio class for Spring 2018 in collaboration with musicians from the Berklee College of Music in Boston, MA. We developed and released two games, HuntFell and Pizza Time, in May 2018, before we all graduated.
 
-Production
-    Ethan Thibault, Lead Producer
-    Sam Guiod, Co-Producer
+**Production**
 
-Art
-    Mike Duprey, Lead Artist
-    Mike DiFranza, Animator
-    Frank Gallagher, Asset Artist
-    Ryan Hill, Character Artist
-    Brandon Voeuk, UI Artist
-    Nathan Goldman, Environment Artist
-    Jonathan Stewart, VFX / Technical Artist
-    Dany Louis, Asset Artist
+- Ethan Thibault, Lead Producer
 
-Engineering
-    Connor Botts, Lead Engineer
-    Erick Eiben, Engineer
-    Randy Horton, Engineer
-    Rob Grzechowiak, Engineer
-    Jonathan Nneji, Engineer
+- Sam Guiod, Co-Producer
 
-Design & QA
-    Alex Napolitan, Lead Designer
-    Mac L’abbe, Level Designer
-    Spencer Withers, UI Designer
+**Art**
 
-Sound Design by Joe Marchuk and Ethan Thibault
+- Mike Duprey, Lead Artist
 
-Original Music by Dan Tauber, Adam Kallibjian, Mikhail Wolohojian
+- Mike DiFranza, Animator
 
-Narrative Design by Sam Guiod, Alex Napolitan Spencer Withers, Frank Gallagher, and Ethan Thibault
+- Frank Gallagher, Asset Artist
 
-Logo Design by Kenny Howell and Brandon Voeuk
+- Ryan Hill, Character Artist
 
-Executive Producers: Jeff Warmouth and Les Nelken
+- Brandon Voeuk, UI Artist
 
-Special Thanks to: Pete Paquette, Emily Muller, Kamina Vincent, Alex Webb, Abby L’Abbé, Elaine Duprey, Haley Szidat, Mikkaela Scott, Ann Goldman, Vathdy Voeuk, Mala Dos, Amy Hu, Vannak Chim, Kristen Stewart, Elizabeth Thompson, Charles Perry, Mary Perry, Lorraine Botts, Gilbert Larrabee, Nancy Pierce, George Withers
+- Nathan Goldman, Environment Artist
 
-Shoutout to Pets: Arlo, Lily, Flash Donatello, Charlie, Murray, Bernie, Bunny, Misha Moo, Storm, Jean Grey, Logan, Cat
+- Jonathan Stewart, VFX / Technical Artist
+
+- Dany Louis, Asset Artist
+
+**Engineering**
+
+- Connor Botts, Lead Engineer
+
+- Erick Eiben, Engineer
+
+- Randy Horton, Engineer
+
+- Rob Grzechowiak, Engineer
+
+- Jonathan Nneji, Engineer
+
+**Design & QA**
+
+- Alex Napolitan, Lead Designer
+
+- Mac L’abbe, Level Designer
+
+- Spencer Withers, UI Designer
+
+**Sound Design** by Joe Marchuk and Ethan Thibault
+
+**Original Music** by Dan Tauber, Adam Kallibjian, Mikhail Wolohojian
+
+**Narrative Design** by Sam Guiod, Alex Napolitan Spencer Withers, Frank Gallagher, and Ethan Thibault
+
+**Logo Design** by Kenny Howell and Brandon Voeuk
+
+**Executive Producers**: Jeff Warmouth and Les Nelken
+
+**Special Thanks** to: Pete Paquette, Emily Muller, Kamina Vincent, Alex Webb, Abby L’Abbé, Elaine Duprey, Haley Szidat, Mikkaela Scott, Ann Goldman, Vathdy Voeuk, Mala Dos, Amy Hu, Vannak Chim, Kristen Stewart, Elizabeth Thompson, Charles Perry, Mary Perry, Lorraine Botts, Gilbert Larrabee, Nancy Pierce, George Withers
+
+**Shoutout to Pets**: Arlo, Lily, Flash Donatello, Charlie, Murray, Bernie, Bunny, Misha Moo, Storm, Jean Grey, Logan, Cat
