@@ -60,6 +60,7 @@ namespace Hunter
         }
 
         public List<Minion> MinionsInPlayerRadius { get; private set; } = new List<Minion>();
+        public Boss BossInRadius { get; private set; }
         private string currentMusicEvent;
         #endregion
 
@@ -92,11 +93,6 @@ namespace Hunter
 
             Time.timeScale = 1;
             StartCoroutine(FadeScreen(fadeDuration, Color.black, FadeType.In));
-        }
-
-        private void Start()
-        {
-            Fabric.EventManager.Instance?.PostEvent("Music - Start Main Menu Loop");
         }
 
         private void Update()
@@ -209,6 +205,15 @@ namespace Hunter
         #endregion
 
         #region Helper Functions
+        public void ResetRadius ()
+        {
+            MinionsInPlayerRadius.Clear();
+            BossInRadius = null;
+            PostMusicEvent("Music - Stop Boss Combat");
+            PostMusicEvent("Music - Start Expo");
+            HUDManager.instance?.FadeBossHealth(FadeType.In);
+        }
+
         public void RemoveMinionFromRadius (Minion minion)
         {
             if (MinionsInPlayerRadius.Contains(minion))
@@ -217,7 +222,7 @@ namespace Hunter
                 Debug.Log($"Removed {minion.name} from the radius.");
             }
 
-            if (MinionsInPlayerRadius.Count < 1)
+            if (MinionsInPlayerRadius.Count < 1 && BossInRadius == null)
             {
                 PostMusicEvent("Music - Regular Combat to Expo");
             }
@@ -231,9 +236,33 @@ namespace Hunter
                 Debug.Log($"Added {minion.name} to the radius.");
             }
 
-            if (MinionsInPlayerRadius.Count > 0)
+            if (MinionsInPlayerRadius.Count > 0 && BossInRadius == null)
             {
                 PostMusicEvent("Music - Expo to Regular Combat");
+            }
+        }
+
+        public void RemoveBossFromRadius(Boss boss)
+        {
+            if(BossInRadius == boss)
+            {
+                BossInRadius = null;
+                HUDManager.instance?.FadeBossHealth(FadeType.In);
+
+                PostMusicEvent("Music - Stop Boss Combat");
+            }
+        }
+
+        public void AddBossToRadius (Boss boss)
+        {
+            if (BossInRadius == null)
+            {
+                BossInRadius = boss;
+                HUDManager.instance?.FadeBossHealth(FadeType.Out);
+
+                PostMusicEvent("Music - Stop Combat");
+                PostMusicEvent("Music - Stop Expo");
+                PostMusicEvent("Music - Start Boss Combat");
             }
         }
 

@@ -13,6 +13,14 @@ namespace Hunter
             if (minion != null)
             {
                 GameManager.instance?.AddMinionToRadius(minion);
+                return;
+            }
+
+            var boss = other.GetComponent<Boss>();
+            if(boss != null)
+            {
+                GameManager.instance?.AddBossToRadius(boss);
+                return;
             }
         }
 
@@ -22,6 +30,14 @@ namespace Hunter
             if (minion != null)
             {
                 GameManager.instance?.RemoveMinionFromRadius(minion);
+                return;
+            }
+
+            var boss = other.GetComponent<Boss>();
+            if (boss != null)
+            {
+                //GameManager.instance?.RemoveBossFromRadius(boss);
+                return;
             }
         }
         #endregion

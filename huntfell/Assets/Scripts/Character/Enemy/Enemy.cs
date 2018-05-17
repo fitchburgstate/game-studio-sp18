@@ -11,7 +11,7 @@ namespace Hunter.Characters
         Wolf,
         Bat,
         Gargoyle,
-        Werewolf
+        Thomas
     }
 
     public abstract class Enemy : Character

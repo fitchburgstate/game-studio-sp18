@@ -319,7 +319,7 @@ namespace Hunter
                 wolfEntries = new List<BestiaryItem>(bestiaryEntries.Where(entry => entry.enemyType == EnemyType.Wolf).OrderBy(entry => entry.entryOrder));
                 batEntries = new List<BestiaryItem>(bestiaryEntries.Where(entry => entry.enemyType == EnemyType.Bat).OrderBy(entry => entry.entryOrder));
                 gargoyleEntries = new List<BestiaryItem>(bestiaryEntries.Where(entry => entry.enemyType == EnemyType.Gargoyle).OrderBy(entry => entry.entryOrder));
-                werewolfEntries = new List<BestiaryItem>(bestiaryEntries.Where(entry => entry.enemyType == EnemyType.Werewolf).OrderBy(entry => entry.entryOrder));
+                werewolfEntries = new List<BestiaryItem>(bestiaryEntries.Where(entry => entry.enemyType == EnemyType.Thomas).OrderBy(entry => entry.entryOrder));
             }
 
             bestiaryHeader.fontStyle = FontStyles.Bold;
@@ -376,6 +376,16 @@ namespace Hunter
                 bestiaryLeftPageFirstSketch.enabled = bestiaryLeftPageSecondSketch.enabled = bestiaryLeftPageThirdSketch.enabled = false;
                 return;
             }
+            else if(entries.Count == 1)
+            {
+                bestiaryLeftPageSecondEntry.text = bestiaryLeftPageThirdEntry.text = "";
+                bestiaryLeftPageSecondSketch.enabled = bestiaryLeftPageThirdSketch.enabled = false;
+            }
+            else if (entries.Count == 2)
+            {
+                bestiaryLeftPageThirdEntry.text = "";
+                bestiaryLeftPageThirdSketch.enabled = false;
+            }
 
             bestiaryLeftPageTitle.text = entries[0].enemyType.ToString();
             for (int i = 0; i < 3; i++)
@@ -410,6 +420,16 @@ namespace Hunter
                 bestiaryRightPageFirstEntry.text = bestiaryRightPageSecondEntry.text = bestiaryRightPageThirdEntry.text = "";
                 bestiaryRightPageFirstSketch.enabled = bestiaryRightPageSecondSketch.enabled = bestiaryRightPageThirdSketch.enabled = false;
                 return;
+            }
+            else if (entries.Count == 1)
+            {
+                bestiaryRightPageSecondEntry.text = bestiaryRightPageThirdEntry.text = "";
+                bestiaryRightPageSecondSketch.enabled = bestiaryRightPageThirdSketch.enabled = false;
+            }
+            else if (entries.Count == 2)
+            {
+                bestiaryRightPageThirdEntry.text = "";
+                bestiaryRightPageThirdSketch.enabled = false;
             }
 
             bestiaryRightPageTitle.text = entries[0].enemyType.ToString();

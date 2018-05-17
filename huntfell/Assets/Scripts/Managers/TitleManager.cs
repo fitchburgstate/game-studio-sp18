@@ -12,9 +12,10 @@ namespace Hunter
 
         private bool acceptingInput = true;
 
-        private void Awake ()
+        private void Start ()
         {
             deviceManager = GameManager.instance?.DeviceManager;
+            Fabric.EventManager.Instance?.PostEvent("Music - Start Main Menu Loop");
         }
 
         private void Update ()

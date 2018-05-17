@@ -523,6 +523,7 @@ namespace Hunter.Characters
             attackQueued = false;
             movingAttack = false;
             standingAttack = false;
+
             if (CurrentWeapon != null)
             {
                 CurrentWeapon.bigAttackEffect = false;
@@ -667,6 +668,7 @@ namespace Hunter.Characters
 
             yield return GameManager.instance?.FadeScreen(Color.black, FadeType.Out);
 
+            GameManager.instance?.ResetRadius();
             var spawnPoint = GameManager.instance?.GetClosestSpawnPoint(transform.position);
             var spawnPosition = startingPosition;
             if (spawnPoint != null) { spawnPosition = spawnPoint.transform.position; }

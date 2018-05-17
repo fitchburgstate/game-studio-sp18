@@ -159,8 +159,6 @@ namespace Hunter.Characters
         /// Used to reference the BossInputModule attached to the boss.
         /// </summary>
         private BossInputModule bossInputModuleInstance;
-
-        private bool healthBarActive = false;
         #endregion
 
         #endregion
@@ -256,12 +254,6 @@ namespace Hunter.Characters
             else
             {
                 Debug.LogWarning("There is no animator controller; floats dirX and dirY, and bool moving are not being set.");
-            }
-
-            if (!healthBarActive && BossInputModuleInstance.inCombat && HUDManager.instance != null)
-            {
-                HUDManager.instance.FadeBossHealth(FadeType.Out);
-                healthBarActive = true;
             }
 
             switch (phase)
@@ -461,11 +453,8 @@ namespace Hunter.Characters
             anim.SetTrigger("death");
 
             yield return new WaitForSeconds(1.5f);
-            if (healthBarActive)
-            {
-                HUDManager.instance?.FadeBossHealth(FadeType.In);
-            }
 
+            GameManager.instance?.RemoveBossFromRadius(this);
             rightClawWeapon.gameObject.SetActive(false);
             BossInputModuleInstance.leftClawLightning.Stop();
             BossInputModuleInstance.rightClawLightning.Stop();

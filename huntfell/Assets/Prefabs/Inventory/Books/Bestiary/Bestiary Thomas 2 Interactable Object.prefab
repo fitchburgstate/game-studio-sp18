@@ -53,14 +53,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1222257062889866}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -67.097916, y: -0.15168548, z: 62.777027}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4781847416826966}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!4 &4781847416826966
 Transform:
   m_ObjectHideFlags: 1
@@ -174,6 +174,7 @@ MonoBehaviour:
   itemMaxSpawnDistance: 3
   tutorialText: 
   tutorialIcon: {fileID: 0}
+  itemPickupSoundEvent: 
 --- !u!114 &114992550961832374
 MonoBehaviour:
   m_ObjectHideFlags: 1
